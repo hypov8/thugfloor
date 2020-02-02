@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="thugfloor" />
+		<Option makefile="makefile" />
+		<Option pch_mode="2" />
+		<Option compiler="msvctk" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/Release/gamex86" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="3" />
+				<Option compiler="msvctk" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="/Ox" />
+					<Add option="/Og" />
+					<Add option="/W3" />
+					<Add option="/DBUILD_DLL" />
+					<Add option="/DNDEBUG" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Linker>
+			<Add option="/def:game.def" />
+			<Add library="navlib/NavLib.lib" />
+		</Linker>
+		<Unit filename="ai_bitch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_bitch.h" />
+		<Unit filename="ai_bitch_tables.h" />
+		<Unit filename="ai_bum_sit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_bum_sit.h" />
+		<Unit filename="ai_dog.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_dog.h" />
+		<Unit filename="ai_dog_tables.h" />
+		<Unit filename="ai_punk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_punk.h" />
+		<Unit filename="ai_punk_tables.h" />
+		<Unit filename="ai_runt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_runt.h" />
+		<Unit filename="ai_runt_tables.h" />
+		<Unit filename="ai_shorty.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_shorty.h" />
+		<Unit filename="ai_shorty_tables.h" />
+		<Unit filename="ai_thug.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_thug.h" />
+		<Unit filename="ai_thug_sit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_thug_sit.h" />
+		<Unit filename="ai_thug_sit_tables.h" />
+		<Unit filename="ai_thug_tables.h" />
+		<Unit filename="ai_whore.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_whore.h" />
+		<Unit filename="ai_whore_tables.h" />
+		<Unit filename="defines.h" />
+		<Unit filename="ep_all.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ep_all.h" />
+		<Unit filename="ep_crystalpalace.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ep_log.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ep_log.h" />
+		<Unit filename="ep_posionville.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ep_radiocity.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ep_shipyards.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ep_skidrow.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ep_steeltown.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ep_trainyard.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="file.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="file.h" />
+		<Unit filename="g_ai.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_ai.h" />
+		<Unit filename="g_ai_ents.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_ai_fight.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_ai_memory.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_cast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_chase.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_cmds.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_combat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_func.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_func.h" />
+		<Unit filename="g_items.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_joe_misc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_local.h" />
+		<Unit filename="g_main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_misc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_nav.h" />
+		<Unit filename="g_pawn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_phys.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_save.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_spawn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_svcmds.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_target.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_teamplay.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_teamplay.h" />
+		<Unit filename="g_trigger.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_weapon.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="game.h" />
+		<Unit filename="m_bbox.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="m_move.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="m_player.h" />
+		<Unit filename="p_client.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="p_hud.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="p_view.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="p_weapon.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="q_shared.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="q_shared.h" />
+		<Unit filename="tourney.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unlagged.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="veh_defs.h" />
+		<Unit filename="vehicles.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vehicles.h" />
+		<Unit filename="versioncheck.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="versioncheck.h" />
+		<Unit filename="voice.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="voice.h" />
+		<Unit filename="voice_bitch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="voice_bitch.h" />
+		<Unit filename="voice_punk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="voice_punk.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
