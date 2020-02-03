@@ -547,7 +547,7 @@ CheckDMRules
 void CheckDMRules (void)
 {
 	int			i;
-//	gclient_t	*cl;
+	gclient_t	*cl;
 	int		count=0;
 	edict_t	*doot;
 
@@ -562,6 +562,7 @@ void CheckDMRules (void)
 	if ((count == 0) && (level.framenum > 12000))
 		ResetServer ();
 
+    #if 1 //FREDZ for testing rounds
 	if (timelimit->value)
 	{
 		if (level.framenum > (level.startframe + ((int)timelimit->value) * 600 - 1))
@@ -570,7 +571,6 @@ void CheckDMRules (void)
 			if (count == 0)
 				ResetServer();
 			else
-#if 1 //hypov8
 				if (level.waveNum < 11) //11 waves?
 				{
 					level.waveNum++;
@@ -578,29 +578,42 @@ void CheckDMRules (void)
 				}
 				else
 				{
-#endif
 					if (!allow_map_voting)
 						EndDMLevel ();
 					else
 						SetupMapVote();
 				}
-
 			return;
 		}
 	}
+	#endif
 
-#if 1 //hypov8
-	if (timelimit->value)
-	{
-		if (level.framenum > (level.startframe + ((int)timelimit->value) * 600 - 35) && !(level.framenum % 10))
-		{
-			gi.WriteByte(svc_stufftext);
-			gi.WriteString("play world/pawnomatic/menubuzz.wav\n");
-			gi.multicast(vec3_origin, MULTICAST_ALL);
-		}
-	}
+    for (i=0 ; i<maxclients->value ; i++)
+    {
+        cl = game.clients + i;
 
-#endif
+		if (!g_edicts[i+1].inuse)
+            continue;
+
+        if (cl->resp.score >= 10)//FREDZ depence on
+        {
+            gi.bprintf (PRINT_HIGH, "Wave ended.\n");
+
+            if (level.waveNum < 11) //11 waves?
+            {
+                level.waveNum++;
+                WaveEnd(); //hypov8 note: timelimit is wavetime.
+            }
+            else
+            {
+                if (!allow_map_voting)
+                    EndDMLevel ();
+                else
+                    SetupMapVote();
+            }
+            return;
+        }
+    }
 
 /*
 	if (fraglimit->value && (int)teamplay->value!=1) // MH: ignore fraglimit in bagman
@@ -1154,10 +1167,8 @@ void G_RunFrame (void)
 //	if (level.modeset == MATCHSETUP)//Only used to setup team games.
 //		CheckIdleMatchSetup ();//Check if server need to be reseted when no players
 
-#if 1 //hypov8
 	if (level.modeset == WAVE_IDLE)
 		WaveIdle();
-#endif
 
 	if (level.modeset == WAVE_START)
 		CheckStartWave ();
@@ -1170,7 +1181,11 @@ void G_RunFrame (void)
 //		CheckEndMatch ();
 
 	if (level.modeset == WAVE_ACTIVE)
-		CheckDMRules ();
+    {
+        CheckEndGame ();
+        CheckDMRules ();//FREDZ maybe remove
+    }
+
 
 	if (level.modeset == ENDGAMEVOTE)
 		CheckEndVoteTime ();

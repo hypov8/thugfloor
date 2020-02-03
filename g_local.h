@@ -61,18 +61,16 @@
 //#define MATCHSPAWN			STARTINGMATCH
 #define ENDGAME				9 // MH: end of game without map vote
 */
-//FREDZ new names copied from mm2
+//FREDZ new names
 #define PREGAME			0
-#define WAVE_SPAWN_PLYR		1
+#define WAVE_SPAWN_PLYR	1
 #define WAVE_ACTIVE		2
 #define ENDGAME			3
 #define	ENDGAMEVOTE		4
-#define MATCHSETUP		5
+//#define MATCHSETUP		5
 #define WAVE_START		6
 #define WAVE_IDLE		7
 #define WAVE_END		8
-//#define MATCHSPAWN		7
-//#define MATCH			8
 
 
 
@@ -116,12 +114,12 @@
 #define EYECAM_CHASE		2
 
 // playing types
-#define SPECTATING			1
 #define PLAYING				0
+#define SPECTATING			1
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.04"
+#define	GAMEVERSION	"Thug Floor v0.05"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -572,7 +570,7 @@ typedef struct
 	int			frameStartTime;
 
     int		waveReady;
-	int     waveNum; //FREDZ!!!
+	int     waveNum;
 } level_locals_t;
 
 
@@ -988,6 +986,7 @@ extern	gitem_t	itemlist[];
 //
 void Cmd_Help_f (edict_t *ent, int page);
 void Cmd_Score_f (edict_t *ent);
+void Cmd_Motd_f (edict_t *ent);//FREDZ
 void Cmd_BanDicks_f(edict_t *ent, int type);
 //void InitMaps (void);
 
@@ -1304,6 +1303,7 @@ void HideWeapon (edict_t *ent);
 void FetchClientEntData (edict_t *ent);
 void ErrorMSGBox(edict_t *ent, char *string);
 void Cmd_Spec_f (edict_t *self);
+void EndDMLevel (void);//FREDZ
 
 //
 //	g_pawn.c
@@ -1331,29 +1331,21 @@ void ChaseStop(edict_t *ent); // MH:
 //
 // Papa 10.6.99
 
-//void PublicSetup ();
-void MatchSetup ();
-void MatchStart();
-void WaveStart();
-//void Start_Match ();
+
+void WaveStart();//hypov8
 void SetupMapVote ();
 void CheckStartPub();
 void CheckStartWave ();
 void CheckAllPlayersSpawned ();
-//void CheckIdleMatchSetup ();
-//void CheckEndMatch ();
 void CheckVote();
 void CheckEndVoteTime ();
-//void MatchEnd();
+void CheckEndGame();//FREDZ
 void ResetServer();
+void WaveEnd();//hypov8
+void WaveIdle();//hypov8
 int	CheckNameBan (char *name);
 int	CheckPlayerBan (char *userinfo);
 edict_t *GetAdmin(); // MH: get the current admin
-
-#if 1 //hypov8
-void WaveEnd();
-void WaveIdle();
-#endif
 
 
 void TestScoreboardMessage (edict_t *ent);
@@ -1477,7 +1469,7 @@ typedef struct
 	int			lastpacket;	// MH: time last packet was received
 	int			noantilag;	// MH: is antilag disabled
 
-	int         playing_ingame;      //FREDZ is the player in the game or dead
+	int         player_dead;      //FREDZ is the player in the game or dead
 	// MH: textbuf removed (not needed now with kpded2)
 
 } client_persistant_t;

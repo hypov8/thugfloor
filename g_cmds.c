@@ -501,24 +501,19 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 
 	self->check_idle = level.framenum; // MH: reset idle timer
 
-#if 1 //hypov8
-	/*if (level.waveNum > 1)
-		return;*/
 
-	if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_SPAWN_PLYR)
+	if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_SPAWN_PLYR)//hypov8
 	{
 		if (self->client->pers.spectator == SPECTATING)
 			gi.cprintf(self,PRINT_HIGH,"You will join the next wave\n");
 		self->client->pers.spectator = PLAYER_READY;
 		return;
 	}
-#endif
 
 	//if ((!teamplay->value)) // MH: separated spectator check
 	{
 		if (self->client->pers.spectator != SPECTATING) // MH: separated from line above
 			return;
-
 		// FREDZ - server overflow protection (MH: copied from KPZ)
 		if (level.framenum < (self->switch_teams_frame + 20))
 		{
@@ -527,11 +522,10 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 		}
 		self->switch_teams_frame = level.framenum;
 		//FREDZ end
-
 		self->client->pers.spectator = PLAYING;
-#if 1 //hypov8
-		self->client->pers.spectator = PLAYER_READY; //dont enter a current wave
-#endif
+
+		self->client->pers.spectator = PLAYER_READY; //hypov8dont enter a current wave
+
 		self->flags &= ~FL_GODMODE;
 		self->health = 0;
 		meansOfDeath = MOD_RESTART;
@@ -1814,10 +1808,8 @@ void Cmd_ToggleCam_f ( edict_t *ent )
 	if (ent->client->pers.spectator == SPECTATING)
 		return;
 
-#if 1 //hypov8
-	if (ent->client->pers.spectator == PLAYER_READY) //dont enter a current wave
+	if (ent->client->pers.spectator == PLAYER_READY) //hypov8 dont enter a current wave
 		return;
-#endif
 
 	if (ent->flags & FL_CHASECAM)
 	{
@@ -2487,11 +2479,9 @@ void Cmd_Use_f (edict_t *ent)
 			}
 			else*/
 			{
-
 				ent->client->pers.spectator = PLAYING;
-#if 1 //hypov8
-				ent->client->pers.spectator = PLAYER_READY; //dont enter a current wave
-#endif
+
+				ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
 				ent->flags &= ~FL_GODMODE;
 				ent->health = 0;
 				meansOfDeath = MOD_RESTART;
@@ -2527,23 +2517,16 @@ void Cmd_Use_f (edict_t *ent)
 	}*/
 
 
-	if (ent->client->pers.spectator == SPECTATING) {
-
-#if 1 //hypov8
-		/*if (level.waveNum > 1) //hypov8 todo. use above "SPECTATING"
-			return;*/
-
-		if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_SPAWN_PLYR)
+	if (ent->client->pers.spectator == SPECTATING)
+    {
+		if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_SPAWN_PLYR)//hypov8
 		{
 			ent->client->pers.spectator = PLAYER_READY;
 			gi.cprintf(ent, PRINT_HIGH, "You will join the next wave\n");
 		}
 		else
-#endif
-		{
-			Cmd_Join_f(ent, "");
-			return;
-		}
+            Cmd_Join_f( ent, "" );
+		return;
 	}
 
 	// MH: no item use if not in game
@@ -2749,26 +2732,24 @@ void Cmd_InvUse_f (edict_t *ent)
 			ent->client->pers.team = playerlist[index].team;
 			ent->client->resp.time = playerlist[index].time; // MH: set playing time counter instead of enterframe
 			ent->client->pers.spectator = PLAYING;
-#if 1 //hypov8
-			ent->client->pers.spectator = PLAYER_READY; //dont enter a current wave
-#endif
+
+            ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
+
 			ent->flags &= ~FL_GODMODE;
 			ent->health = 0;
 			meansOfDeath = MOD_RESTART;
 			ent->solid = SOLID_NOT;
 //			player_die (ent, ent, ent, 1, vec3_origin, 0, 0);
 			PutClientInServer( ent );
-		} 
-		else 
-		{
+		} else {
 	/*		if (teamplay->value)
 				ent->client->showscores = SCOREBOARD;
 			else */
-			{
+                {
 				ent->client->pers.spectator = PLAYING;
-#if 1 //hypov8
-				ent->client->pers.spectator = PLAYER_READY; //dont enter a current wave
-#endif
+
+				ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
+
 				ent->flags &= ~FL_GODMODE;
 				ent->health = 0;
 				meansOfDeath = MOD_RESTART;
@@ -2834,10 +2815,8 @@ void Cmd_WeapPrev_f (edict_t *ent)
 	if (cl->pers.spectator == SPECTATING)
 		return;
 
-#if 1 //hypov8
-	if (cl->pers.spectator == PLAYER_READY) //dont enter a current wave
+    if (cl->pers.spectator == PLAYER_READY) //hypov8 dont enter a current wave
 		return;
-#endif
 
 	if (ent->movetype == MOVETYPE_NOCLIP)
 		return;
@@ -2910,10 +2889,8 @@ void Cmd_Activate_f (edict_t *ent)
 
 	if (ent->movetype == MOVETYPE_NOCLIP) {
 		if (ent->client->pers.spectator == SPECTATING
-#if 1 //hypov8
-			||	ent->client->pers.spectator == PLAYER_READY //dont enter a current wave
-#endif				
-			)
+      	||	ent->client->pers.spectator == PLAYER_READY //hypov8 dont enter a current wave
+            )
 		{
 			if (maxclients->value > 1)
 			{
@@ -3533,10 +3510,8 @@ void Cmd_WeapNext_f (edict_t *ent)
 	if (cl->pers.spectator == SPECTATING)
 		return;
 
-#if 1 //hypov8
-	if (ent->client->pers.spectator == PLAYER_READY) //dont enter a current wave
+    if (ent->client->pers.spectator == PLAYER_READY) //hypov8 dont enter a current wave
 		return;
-#endif
 
 	if (ent->movetype == MOVETYPE_NOCLIP)
 		return;
@@ -3602,10 +3577,8 @@ void Cmd_WeapLast_f (edict_t *ent)
 	if (cl->pers.spectator == SPECTATING)
 		return;
 
-#if 1 //hypov8
-	if (ent->client->pers.spectator == PLAYER_READY) //dont enter a current wave
+    if (ent->client->pers.spectator == PLAYER_READY) //hypov8 dont enter a current wave
 		return;
-#endif
 
 	if (ent->movetype == MOVETYPE_NOCLIP)
 		return;
@@ -4080,19 +4053,24 @@ void Cmd_PrintSettings_f (edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH,"======================\n\n");
 	switch (level.modeset)
 	{
-//		case PREGAME ://Never active
-		case WAVE_ACTIVE :
-			gi.cprintf(ent, PRINT_HIGH,"Server State       : Public\n"); // MH: aligned with rest of settings
+        case PREGAME :
+			gi.cprintf(ent, PRINT_HIGH,"Server State       : Preparing game\n");
 			break;
-/*		case MATCHSETUP :
-			gi.cprintf(ent, PRINT_HIGH,"Server State       : Match Setup\n"); // MH: aligned with rest of settings
-			break;*/
-/*		case FINALCOUNT :
-			gi.cprintf(ent, PRINT_HIGH,"Server State       : Final Countdown\n"); // MH: aligned with rest of settings
-			break;*/
-/*		case MATCH :
-			gi.cprintf(ent, PRINT_HIGH,"Server State       : Match\n"); // MH: aligned with rest of settings
-			break;*/
+        case WAVE_ACTIVE :
+			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave Active\n");
+			break;
+        case ENDGAMEVOTE :
+			gi.cprintf(ent, PRINT_HIGH,"Server State       : Map Voting\n");
+			break;
+        case WAVE_START :
+			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave Start\n");
+			break;
+        case WAVE_IDLE :
+			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave Idle\n");
+			break;
+        case WAVE_END :
+			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave End\n");
+			break;
 	}
 //	if (level.modeset==MATCHSETUP)
 //		gi.cprintf(ent, PRINT_HIGH,"Matchstart score   : %d : %d\n",team_startcash[0],team_startcash[1]); // MH: aligned with rest of settings
@@ -5297,15 +5275,15 @@ void ErrorMSGBox(edict_t *ent, char *msg)
     gi.WriteString(errmsg);
     gi.unicast(ent, true);
 }
-
-void Cmd_MOTD_f (edict_t *ent)
+/*
+void Cmd_Motd_f (edict_t *ent)//FREDZ broken
 {
 	if (ent->client->showscores == SCORE_MOTD)
 		return;
 
 	ent->client->showscores = SCORE_MOTD;
 	ent->client->resp.scoreboard_frame = 0; // MH: trigger scoreboard update instead of calling DeathmatchScoreboard
-}
+}*/
 
 /*
 =================
@@ -5456,7 +5434,7 @@ void ClientCommand (edict_t *ent)
 	}
 	if (Q_stricmp (cmd, "motd") == 0)//FREDZ
 	{
-		Cmd_MOTD_f (ent);
+		Cmd_Motd_f (ent);
 		return;
 	}
 	if (Q_stricmp (cmd, "help") == 0)

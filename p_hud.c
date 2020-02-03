@@ -4,7 +4,7 @@
 
 static const char *gameheader[] =
 {
-	GAMEVERSION " By FREDZ",
+	GAMEVERSION " By FREDZ and Hypov8",
 	"with parts from Monkey Mod v2.0",
 	"www.kingpin.info",
 	NULL
@@ -45,14 +45,14 @@ int GetGameModeMessage(char *entry, int yofs)
 		-5*strlen(p), yofs + -60-49, p);
 	yofs += 20;
 
-//	if (level.modeset == MATCH)
-//		p = "in match mode. Please don't join in.";
-//	else if (level.modeset == MATCHSETUP)
-//		p = "in match setup mode.";
-//	else if (level.modeset == FINALCOUNT)
-//		p = "and a match is about to start.";
-//	else
-		p = "in public mode, so please join in.";
+	if (level.modeset == PREGAME)
+		p = "Wait until server is ready.";
+	else if (level.modeset == WAVE_IDLE)
+		p = "in setup mode. please join.";
+	else if (level.modeset == WAVE_START)
+		p = "and a game is about to start.";
+	else
+		p = "in game mode.";
 	sprintf (entry+strlen(entry), "xm %i yv %i dmstr 874 \"%s\" ",
 		-5*strlen(p), yofs + -60-49, p);
 	yofs += 20;
@@ -66,7 +66,7 @@ int GetGameModeMessage(char *entry, int yofs)
 
 	{
 		edict_t	*admin = GetAdmin();
-//		if (admin || level.modeset == MATCHSETUP)
+		if (admin || level.modeset == WAVE_IDLE)
 		{
 			char temp[128];
 			if (admin)
@@ -389,7 +389,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 		}
 	}
 
-	if (ent->client->pers.spectator == SPECTATING && (level.modeset == WAVE_ACTIVE/* || level.modeset == MATCH*/))
+	if (ent->client->pers.spectator == SPECTATING && (level.modeset == WAVE_ACTIVE))
 	{
 		GetChaseMessage(ent,entry);
 		j = strlen(entry);
@@ -922,7 +922,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 
 skipscores:
 
-	if (ent->client->pers.spectator == SPECTATING && (level.modeset == WAVE_ACTIVE/* || level.modeset == MATCH*/))
+	if (ent->client->pers.spectator == SPECTATING && (level.modeset == WAVE_ACTIVE))
 	{
 		GetChaseMessage(ent,entry);
 		j = strlen(entry);
@@ -1101,6 +1101,16 @@ skip2:
 	ent->client->resp.scoreboard_frame = 0; // MH: trigger scoreboard update instead of calling DeathmatchScoreboard
 }
 
+void Cmd_Motd_f (edict_t *ent)//FREDZ still broken
+{
+	ent->client->showinventory = false;
+	ent->client->showhelp = false;
+
+	//FREDZ For menu code
+//	ent->client->showscrollmenu = false;
+
+	MOTDScoreboardMessage (ent);
+}
 
 /*
 ==================
@@ -1384,9 +1394,9 @@ void G_SetStats (edict_t *ent)
 
 	// Ridah, 26-may-99, show frag count
 //	if (deathmatch->value && teamplay->value!=1)
-		ent->client->ps.stats[STAT_CASH] = ent->client->resp.score;
+//		ent->client->ps.stats[STAT_CASH] = ent->client->resp.score;
 //	else	// show cash
-//		ent->client->ps.stats[STAT_CASH] = ent->client->pers.currentcash;
+		ent->client->ps.stats[STAT_CASH] = ent->client->pers.currentcash;
 
 	if (level.pawn_time)
 		ent->client->ps.stats[STAT_FORCE_HUD] = 1;
@@ -1680,8 +1690,8 @@ void G_SetStats (edict_t *ent)
 //		else
 //			ent->client->ps.stats[STAT_TIMER] = (((timelimit->value * 600) - level.framenum ) / 600);
 
-//	else if (level.modeset == FINALCOUNT)
-//		ent->client->ps.stats[STAT_TIMER] =	((150 - (level.framenum - level.startframe)) / 10);
+	else if (level.modeset == WAVE_START)//FREDZ
+		ent->client->ps.stats[STAT_TIMER] =	((150 - (level.framenum - level.startframe)) / 10);
 
 	else if (level.intermissiontime) // MH: applies to non-voting intermission too
 		ent->client->ps.stats[STAT_TIMER] =	((270 + 9 - (level.framenum - level.startframe)) / 10); // MH: changed voting time to 27s (music duration)
@@ -1696,6 +1706,11 @@ void G_SetStats (edict_t *ent)
 
 	if (ent->client->ps.stats[STAT_TIMER] < 0 )
 		ent->client->ps.stats[STAT_TIMER] = 0;
+
+    if (level.waveNum >= 0)// && level.modeset == WAVE_ACTIVE)//FREDZ
+        ent->client->ps.stats[STAT_WAVEROUND] = 10 - level.waveNum + 1;
+    else
+        ent->client->ps.stats[STAT_WAVEROUND] = 0;
 
 	// END JOSEPH
 

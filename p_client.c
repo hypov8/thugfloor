@@ -1527,11 +1527,9 @@ void PutClientInServer (edict_t *ent)
 //	if (((deathmatch->value) && (level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT)))
 //		|| (level.modeset == FREEFORALL) || (ent->client->pers.spectator == SPECTATING))
     if ((level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING)
-#if 1 //hypov8
-		|| level.modeset == WAVE_IDLE
-		|| (ent->client->pers.spectator == PLAYER_READY) //dont enter a current wave
-#endif		
-		)
+        || level.modeset == WAVE_IDLE
+		|| (ent->client->pers.spectator == PLAYER_READY) //hypov8 dont enter a current wave
+        )
 	{
 		ent->movetype = MOVETYPE_NOCLIP;
 		ent->solid = SOLID_NOT;
@@ -1915,10 +1913,7 @@ void ClientBeginDeathmatch (edict_t *ent)
 	//FREDZ remove
 	// locate ent at a spawn point (MH: stay at same place if spectating and not dead)
 	if (level.framenum == ent->client->resp.enterframe || ent->client->pers.spectator == PLAYING || ent->client->ps.pmove.pm_type >= PM_DEAD
-#if 1 //hypov8
-		|| ent->client->pers.spectator == PLAYER_READY
-#endif		
-		)
+        || ent->client->pers.spectator == PLAYER_READY)//hypov8
 		PutClientInServer (ent);
 
 	// MH: go to intermission spot during intermission
@@ -1973,20 +1968,15 @@ void ClientBeginDeathmatch (edict_t *ent)
 	else*/
 	{
 		if ((ent->client->pers.spectator == SPECTATING) || (ent->client->showscores == SCORE_REJOIN) || (level.modeset == ENDGAMEVOTE)
-#if 1 //hypov8
-		 || (level.modeset == WAVE_START) 
+         || (level.modeset == WAVE_START)
 		 || (level.modeset == WAVE_IDLE)
-		 || (level.modeset == WAVE_END) //dont enter a current wave
-#endif			
-		)
+		 || (level.modeset == WAVE_END)) //hypov8 dont enter a current wave
 		{
 			ent->movetype = MOVETYPE_NOCLIP;
 			ent->solid = SOLID_NOT;
 			ent->svflags |= SVF_NOCLIENT;
 			ent->client->pers.weapon = NULL;
-#if 0 //hypov8
-			ent->client->pers.spectator = SPECTATING;
-#endif
+//			ent->client->pers.spectator = SPECTATING;
 		}
 		else if (level.modeset != WAVE_SPAWN_PLYR)
 		{
@@ -2898,14 +2888,11 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 /*	if (teamplay->value || ent->client->showscores == SCORE_REJOIN)
 		ent->client->pers.spectator = SPECTATING;
 	else*/
-	
 
-		ent->client->pers.spectator = PLAYING;
-#if 1 //hypov8
-	//if (level.modeset == WAVE_ACTIVE)
-		ent->client->pers.spectator = PLAYER_READY; //dont enter a current wave
-	//else
-#endif
+    ent->client->pers.spectator = PLAYING;//FREDZ order matters
+
+    ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
+
 
 	ent->client->pers.lastpacket = Sys_Milliseconds(); // MH: set last packet time
 
@@ -3792,7 +3779,7 @@ void ClientBeginServerFrame (edict_t *ent)
 */
 
 	client = ent->client;
-#ifndef HYPODEBUG //disable checks when debuging
+
 	// MH: check if they're lagged-out
 	if (client->pers.spectator != SPECTATING && curtime-client->pers.lastpacket >= 5000)
 	{
@@ -3814,7 +3801,7 @@ void ClientBeginServerFrame (edict_t *ent)
             Cmd_Spec_f(ent);
         }
     }
-#endif
+
 	// MH: count play time
 	if (client->pers.spectator != SPECTATING && (/*level.modeset==MATCH ||*/ level.modeset==WAVE_ACTIVE))
 		ent->client->resp.time++;
@@ -3847,7 +3834,7 @@ void ClientBeginServerFrame (edict_t *ent)
 				ent->health = 0;
 				meansOfDeath = MOD_RESTART;
 
-				ent->client->pers.playing_ingame = FALSE;
+				ent->client->pers.player_dead = TRUE;
 
 				ClientBeginDeathmatch( ent );
 				return;

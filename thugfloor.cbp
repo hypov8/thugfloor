@@ -46,6 +46,11 @@
 		</Unit>
 		<Unit filename="ai_punk.h" />
 		<Unit filename="ai_punk_tables.h" />
+		<Unit filename="ai_rat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ai_rat.h" />
+		<Unit filename="ai_rat_tables.h" />
 		<Unit filename="ai_runt.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -8,8 +8,8 @@ typedef struct
 	void	(*spawn)(edict_t *ent);
 } spawn_t;
 
-edict_t spawnlist[100];
-int playernumber;
+//edict_t spawnlist[100];
+//int playernumber;
 
 void SP_item_health (edict_t *self);
 void SP_item_health_small (edict_t *self);
@@ -112,6 +112,7 @@ void SP_cast_bitch (edict_t *ent);
 void SP_cast_dog (edict_t *ent);
 void SP_cast_shorty (edict_t *ent);
 void SP_cast_whore (edict_t *ent);
+void SP_cast_rat (edict_t *ent);
 
 // AI stuff
 void SP_ai_boundary (edict_t *ent);
@@ -460,6 +461,7 @@ spawn_t	spawns[] = {
 	{"cast_thug_sit", SP_cast_thug_sit},//FREDZ never used in kingpin orginale maps
 	{"cast_bitch", SP_cast_bitch},
 	{"cast_dog", SP_cast_dog},
+    {"cast_rat", SP_cast_rat},
 // Ridah, done.
 
 	{"cast_runt", SP_cast_runt},
@@ -1524,19 +1526,18 @@ char *thugfloor_statusbar =
 // health
 "hnum "
 
+// cash
+"cnum "
+
+// Bagged cash
+//"bagcash "
+
 // ammo
 "if 2 "
 "anum 2 "
 // weapon clip
 "wanum "
 "endif "
-
-// Ridah, 26-may-99, show frag count
-"frags "
-
-"talk "
-
-"hire "
 
 // picked up item
 "if 17 "
@@ -1545,12 +1546,22 @@ char *thugfloor_statusbar =
 
 // timer
 "if 10 "
-"yt 65 "
+"yt 100 "
 "xr -75 "
 "string \"Time Left\" "
-"yt 80 "
+"yt 115 "
 "xr -55 "
 "num 2 10 "
+"endif "
+
+// FREDZ waves
+"if 23 "
+"	yt  190	"
+"	xr	-95 "
+"string \"Waves Left\" "
+"	yt	205 "
+"	xr	-55 "
+"	num 2 23"
 "endif "
 ;
 

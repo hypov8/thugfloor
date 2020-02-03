@@ -1820,6 +1820,12 @@ void SP_cast_punk(edict_t *self)
 	VectorSet (self->mins, -16, -16, -24);
 	VectorSet (self->maxs,  16,  16,  48);
 
+    if (!self->cast_group)//FREDZ
+	    self->cast_group = 2;
+
+    if (!self->moral)//FREDZ attack faster
+	    self->moral = 7;
+
     if (!self->art_skins)
 	{	// use default skins
 		self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "001 001 001"); // MH: crash fix

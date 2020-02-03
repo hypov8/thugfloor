@@ -1,7 +1,5 @@
 #include "g_local.h"
 
-#define DIRECTSTART 0//FREDZ
-
 int	 vote_set[9];        // stores votes for next map
 
 char admincode[16];		 // the admincode
@@ -99,17 +97,16 @@ void PublicSetup ()  // returns the server into ffa mode and resets all the cvar
 	gi.bprintf(PRINT_HIGH,"The server is once again public.\n");
 }
 */
-
+/*
 void MatchSetup () // Places the server in prematch mode
 {
 	edict_t		*self;
 	int			i;
-//	int         players = FALSE;
-//int         total_players_inserver = 0;
-	int count = 0;
+	int         count = 0;
 
     level.modeset = WAVE_SPAWN_PLYR;
 	level.startframe = level.framenum;
+
 
 	for_each_player (self,i)//FREDZ put everybody in spec
 	{
@@ -117,12 +114,7 @@ void MatchSetup () // Places the server in prematch mode
 			continue;
 
 		meansOfDeath = MOD_RESTART;
-
-#if 1 //hypov8
-		self->client->pers.spectator = PLAYER_READY; //dont enter a current wave
-#else
-		self->client->pers.spectator = SPECTATING;
-#endif
+		self->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
 		self->flags &= ~FL_GODMODE;
 		self->health = 0;
 
@@ -130,27 +122,20 @@ void MatchSetup () // Places the server in prematch mode
 		count++;
 	}
 
-#if 1 //hypov8
-	if (count)
-	{    
+	if (count)//hypov8
+	{
 		gi.bprintf(PRINT_HIGH,"The server is now ready to setup a wave.\n");
 		WaveStart();
 	}
 	else
-	{	
+	{
 		gi.bprintf(PRINT_HIGH,"Players need to join to start a wave.\n");
 
-		//put server into idle. 
+		//put server into idle.
 		level.modeset = WAVE_IDLE;
 	}
-#else
-    //FREDZ
-    if (self->client->pers.spectator != SPECTATING)
-        MatchStart();
-#endif
-
 }
-
+*/
 void ResetServer () // completely resets the server including map
 {
 	char command[64];
@@ -174,13 +159,13 @@ void ResetServer () // completely resets the server including map
 }
 
 //int team_startcash[2]={0,0};
-#if 0
+/*
 void MatchStart()  // start the match
 {
 	int			i;
 	edict_t		*self;
 
-	level.player_num=0;
+	level.player_num = 0;
 	level.modeset = WAVE_START;
 	level.startframe = level.framenum;
 	gi.bprintf (PRINT_HIGH,"Game is starting in 15 seconds.\n");
@@ -206,10 +191,9 @@ void MatchStart()  // start the match
             continue;
 
         meansOfDeath = MOD_RESTART;
-		self->client->pers.spectator = SPECTATING;
-#if 1 //hypov8
-		self->client->pers.spectator = PLAYER_READY; //dont enter a current wave
-#endif
+        self->client->pers.spectator = SPECTATING;
+
+        self->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
 
         self->flags &= ~FL_GODMODE;
         self->health = 0;
@@ -220,8 +204,8 @@ void MatchStart()  // start the match
 	gi.WriteString( va("play world/cypress%i.wav", 2+(rand()%4)) );
 	gi.multicast (vec3_origin, MULTICAST_ALL);
 }
-#endif
 
+*/
 void SpawnPlayer () // Here I spawn players - 1 per server frame in hopes of reducing overflows
 {
 	edict_t		*self;
@@ -238,22 +222,19 @@ void SpawnPlayer () // Here I spawn players - 1 per server frame in hopes of red
 		if (!self->client->resp.is_spawn && self->client->pers.spectator != SPECTATING) // MH: don't spawn spectators
 //        if (!self->client->resp.is_spawn)//FREDZ give problems to join
 		{
-//gi.dprintf("Spawn %d\n",i+1);
-#if 1 //hypov8
-			if (self->client->pers.spectator != PLAYING)
-#endif
-			{
-				self->flags &= ~FL_GODMODE;
-				self->health = 0;
-				meansOfDeath = MOD_RESTART;
-				team1 = true;
-				self->client->pers.spectator = PLAYING;
-				//			player_die (self, self, self, 1, vec3_origin, 0, 0);
-				ClientBeginDeathmatch(self);
-			}
-			self->client->resp.is_spawn = true;
-            self->client->pers.playing_ingame = TRUE;//FREDZ
-			break;
+            if (self->client->pers.spectator != PLAYING) //hypov8
+            {
+                self->flags &= ~FL_GODMODE;
+                self->health = 0;
+                meansOfDeath = MOD_RESTART;
+                team1 = true;
+                self->client->pers.spectator = PLAYING;
+    //			player_die (self, self, self, 1, vec3_origin, 0, 0);
+                ClientBeginDeathmatch( self );
+                self->client->resp.is_spawn = true;
+                self->client->pers.player_dead = FALSE;//FREDZ
+                break;
+            }
 		}
 	}
 	if (!team1)
@@ -319,7 +300,10 @@ void Start_Match () // Starts the match
 	level.is_spawn = false;
 	for_each_player(self,i)
 	{
-		gi.centerprintf(self,"The Match has begun."); // MH: linefeed removed
+        if (level.waveNum == 1)//FREDZ not working?
+			self->client->pers.currentcash += 300;//Give some cash
+
+		gi.centerprintf(self,"The wave has begun.");
 		self->client->resp.is_spawn = false;
 	}
 
@@ -398,38 +382,31 @@ void MatchEnd () // end of the match
 
 }
 */
-
-#if 1 //hypov8
-void WaveEnd () // end of the match
+void GameEND ()//FREDZ
+{
+    if (!allow_map_voting)
+        EndDMLevel ();
+    else
+        SetupMapVote();
+}
+void WaveEnd () //hypov8 end of the match
 {
 	edict_t *self;
-	int i, count=0;
+	int     i;
+	int     count_players = 0;
 
 	level.modeset = WAVE_END;
 
 	for_each_player(self,i)
 	{
 		if (self->client->pers.spectator != SPECTATING)
-		{
-			/*HideWeapon(self);
-			self->client->pers.spectator = PLAYER_READY; //dont enter a current wave
-	
-			if (self->client->flashlight) 
-				self->client->flashlight = false;
-			gi.centerprintf(self, "Wave has ended!");
-			self->flags &= ~FL_GODMODE;
-			self->health = 0;
-			meansOfDeath = MOD_RESTART;
-			ClientBeginDeathmatch(self);
-			*/
-			count++;
-		}
+			count_players++;
 	}
 
-	if (!count)
+	if (!count_players)
 	{
 		gi.bprintf(PRINT_HIGH, "Players need to join to start a wave.\n");
-		//put server in idle. 
+		//put server in idle.
 		WaveIdle();
 	}
 	else
@@ -451,30 +428,33 @@ void WaveStart()  // start the match
 }
 
 
-// inital game begin or end of the match with no players
+//hypov8 inital game begin or end of the match with no players
 void WaveIdle()
 {
 	edict_t *self;
-	int i, count=0;
+	int     i;
+	int     count_players = 0;
+    int     count_players_inserver=0;
 
 	level.modeset = WAVE_IDLE;
 
 	for_each_player(self,i)
 	{
 		if (self->client->pers.spectator != SPECTATING)
-			count++;
+			count_players++;
+
+        count_players_inserver++;
 	}
 
-	if ((count == 0) && (level.framenum > 12000))
+	if ((count_players_inserver == 0) && (level.framenum > 12000))
 		ResetServer ();
 
-	if (count)
-	{    
+	if (count_players)
+	{
 		gi.bprintf(PRINT_HIGH,"The server is now ready to start a wave.\n");
 		WaveStart();
 	}
 }
-#endif
 
 void CheckAllPlayersSpawned () // when starting a match this function is called until all the players are in the game
 {
@@ -484,11 +464,8 @@ void CheckAllPlayersSpawned () // when starting a match this function is called 
 	else*/
 		SpawnPlayer ();
 
-//	if ((level.is_spawn) && (level.modeset == STARTINGMATCH))
-//		level.modeset = MATCH;
 	if ((level.is_spawn) && (level.modeset == WAVE_SPAWN_PLYR))
 		level.modeset = WAVE_ACTIVE;
-
 
 }
 /*
@@ -505,30 +482,31 @@ void CheckIdleMatchSetup () // restart the server if its empty in matchsetup mod
 }
 */
 
-void CheckStartWave () // 15 countdown before matches
+void CheckStartWave ()  // 15 countdown before matches
 {
-	edict_t *self;
-	int i, count=0;
+    edict_t *self;
+	int      i;
+	int      count_players = 0;
 
 	if (level.framenum >= level.startframe + 145)
 	{
 		Start_Match ();
 		return;
 	}
-
-#if 1 //hypov8
 	//stop counter if nobody wants to play
-	for_each_player(self,i)	{
-		if (self->client->pers.spectator != SPECTATING)
-			count++;
-	}
-	if (!count)	
+	for_each_player(self,i)
 	{
-		gi.bprintf(PRINT_HIGH,"Players need to join to start a wave.\n");
-		WaveIdle();
+		if (self->client->pers.spectator != SPECTATING)
+			count_players++;
+	}
+	if (!count_players)
+	{
+//		gi.bprintf(PRINT_HIGH,"Players need to join to start a wave.\n");
+//		WaveIdle();
+        gi.bprintf(PRINT_HIGH,"Players not playing, other map.\n");
+        GameEND ();
 		return;
 	}
-#endif
 
 	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 49))
 		gi.bprintf(PRINT_HIGH,"Wave %i will start in %d seconds!\n", level.waveNum + 1, (140 - (level.framenum - level.startframe)) / 10);
@@ -537,21 +515,12 @@ void CheckStartWave () // 15 countdown before matches
 
 void CheckStartPub () // 30 second countdown before server starts (MH: reduced from 35s)
 {
- //   edict_t		*self;
-//    int         i;
-
-#if !DIRECTSTART
- /*   for_each_player(self,i)
-	{
-		gi.centerprintf(self,"Waiting 30secs until all players connected.");
-	}*/
 
 	if (level.framenum >= 300)
-#endif
 	{
-#if 1 //hypov8
-		int i, count = 0;
 		edict_t		*self;
+        int         i;
+		int         count = 0;
 
 		for_each_player(self,i)
 			count++;
@@ -560,25 +529,46 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 			gi.bprintf(PRINT_HIGH, "Players need to join to start a wave.\n");
 
 		WaveIdle();
-#else
-		MatchSetup ();
-#endif
+
+		return;
+	}
+}
+void CheckEndGame ()//FREDZ only starts if people have joined
+{
+    edict_t *self;
+    int		i;
+    int     count_players = 0;
+    int     count_players_inserver = 0;
+    int     count_players_dead = 0;
+
+    for_each_player (self,i)
+    {
+        if (self->client->pers.player_dead = FALSE)
+            count_players_dead++;
+
+        if (self->client->pers.spectator != SPECTATING)
+			count_players++;
+
+        count_players_inserver++;
+    }
+
+	if (count_players_inserver == 0)
+		ResetServer ();
+
+	if (!count_players)
+	{
+		gi.bprintf(PRINT_HIGH, "No players anymore playing.\n");
+		GameEND ();
 		return;
 	}
 
-/*
-    #if !DIRECTSTART
-	// MH: buzz last 4 seconds
-	if (level.framenum >= 260 && !(level.framenum % 10))
-	{
-		gi.WriteByte(svc_stufftext);
-		gi.WriteString("play world/pawnomatic/menubuzz.wav\n");
-		gi.multicast(vec3_origin, MULTICAST_ALL);
-	}
-    #endif
-    */
-}
+    if (count_players_dead == count_players)
+    {
+        gi.bprintf(PRINT_HIGH, "All players dead, new map.\n");
+        GameEND ();
+    }
 
+}
 //void getTeamTags();
 /*
 void CheckEndMatch () // check if time,frag,cash limits have been reached in a match

@@ -1,4 +1,4 @@
-mframe_t	dog_frames_amb[] = 
+mframe_t	dog_frames_amb[] =
 {
 	ai_stand,	  0.000, dog_talk_think,	// frame 0
 	ai_stand,	  0.000, dog_talk_think,	// frame 1
@@ -15,7 +15,7 @@ mframe_t	dog_frames_amb[] =
 };
 mmove_t	dog_move_amb = {FRAME_amb_01, FRAME_amb_12, dog_frames_amb, dog_end_stand};
 
-mframe_t	dog_frames_pant[] = 
+mframe_t	dog_frames_pant[] =
 {
 	ai_stand,	  0.000, dog_talk_think,	// frame 0
 	ai_stand,	  0.000, dog_talk_think,	// frame 1
@@ -34,7 +34,7 @@ mframe_t	dog_frames_pant[] =
 };
 mmove_t	dog_move_pant = {FRAME_pant_01, FRAME_pant_14, dog_frames_pant, dog_end_stand};
 
-mframe_t	dog_frames_sniff[] = 
+mframe_t	dog_frames_sniff[] =
 {
 	ai_stand,	  0.000, dog_talk_think,	// frame 0
 	ai_stand,	  0.000, dog_talk_think,	// frame 1
@@ -59,7 +59,7 @@ mframe_t	dog_frames_sniff[] =
 };
 mmove_t	dog_move_sniff = {FRAME_sniff_01, FRAME_sniff_20, dog_frames_sniff, dog_end_stand};
 
-mframe_t	dog_frames_bark[] = 
+mframe_t	dog_frames_bark[] =
 {
 	ai_stand,	  0.000, dog_talk_think,	// frame 0
 	ai_stand,	  0.000, dog_bark,	// frame 1
@@ -73,7 +73,7 @@ mframe_t	dog_frames_bark[] =
 };
 mmove_t	dog_move_bark = {FRAME_bark_01, FRAME_bark_09, dog_frames_bark, dog_end_stand};
 
-mframe_t	dog_frames_growl[] = 
+mframe_t	dog_frames_growl[] =
 {
 	ai_stand,	  0.000, dog_growl,	// frame 0
 	ai_stand,	  0.000, NULL,	// frame 1
@@ -83,7 +83,7 @@ mframe_t	dog_frames_growl[] =
 };
 mmove_t dog_move_growl = {FRAME_growl_01, FRAME_growl_05, dog_frames_growl, dog_end_stand};
 
-mframe_t	enemy_dog_frames_pee[] = 
+mframe_t	enemy_dog_frames_pee[] =
 {
 	NULL,	  0.000, NULL,	// frame 0
 	NULL,	  0.000, NULL,	// frame 1
@@ -100,7 +100,7 @@ mframe_t	enemy_dog_frames_pee[] =
 };
 mmove_t	enemy_dog_move_pee = {FRAME_pee_01, FRAME_pee_12, enemy_dog_frames_pee, dog_end_stand};
 
-mframe_t	dog_frames_low_atk[] = 
+mframe_t	dog_frames_low_atk[] =
 {
 	ai_turn2,	  0.000, NULL,	// frame 0
 	ai_turn2,	  8.570, dog_bite,	// frame 1
@@ -113,7 +113,7 @@ mframe_t	dog_frames_low_atk[] =
 };
 mmove_t	dog_move_low_atk = {FRAME_low_atk_01, FRAME_low_atk_08, dog_frames_low_atk, AI_EndAttack};
 
-mframe_t	dog_frames_med_atk[] = 
+mframe_t	dog_frames_med_atk[] =
 {
 	ai_turn2,	  0.000, NULL,	// frame 0
 	ai_turn2,	 16.169, NULL,	// frame 1
@@ -125,7 +125,7 @@ mframe_t	dog_frames_med_atk[] =
 };
 mmove_t	dog_move_med_atk = {FRAME_med_atk_01, FRAME_med_atk_07, dog_frames_med_atk, AI_EndAttack};
 
-mframe_t	dog_frames_upr_atk[] = 
+mframe_t	dog_frames_upr_atk[] =
 {
 	NULL,	  0.004, NULL,	// frame 0
 	NULL,	  5.304, dog_pounce,	// frame 1
@@ -140,7 +140,7 @@ mframe_t	dog_frames_upr_atk[] =
 };
 mmove_t	dog_move_upr_atk = {FRAME_upr_atk_01, FRAME_upr_atk_10, dog_frames_upr_atk, AI_EndAttack};
 
-mframe_t	dog_frames_pain1[] = 
+mframe_t	dog_frames_pain1[] =
 {
 	ai_move,	  0.712, NULL,	// frame 0
 	ai_move,	 -0.637, NULL,	// frame 1
@@ -150,7 +150,7 @@ mframe_t	dog_frames_pain1[] =
 };
 mmove_t	dog_move_pain1 = {FRAME_pain1_01, FRAME_pain1_05, dog_frames_pain1, AI_EndAttack};
 
-mframe_t	dog_frames_pain2[] = 
+mframe_t	dog_frames_pain2[] =
 {
 	ai_move,	 -0.405, NULL,	// frame 0
 	ai_move,	 -2.011, NULL,	// frame 1
@@ -162,7 +162,7 @@ mframe_t	dog_frames_pain2[] =
 };
 mmove_t	dog_move_pain2 = {FRAME_pain2_01, FRAME_pain2_07, dog_frames_pain2, AI_EndAttack};
 
-mframe_t	dog_frames_pain3[] = 
+mframe_t	dog_frames_pain3[] =
 {
 	ai_move,	  0.000, NULL,	// frame 0
 	ai_move,	  0.000, NULL,	// frame 1
@@ -172,7 +172,7 @@ mframe_t	dog_frames_pain3[] =
 };
 mmove_t	dog_move_pain3 = {FRAME_pain3_01, FRAME_pain3_05, dog_frames_pain3, AI_EndAttack};
 
-mframe_t	dog_frames_death1[] = 
+mframe_t	dog_frames_death1[] =
 {
 	ai_move,	 -1.383, NULL,	// frame 0
 	ai_move,	-23.848, NULL,	// frame 1
@@ -194,7 +194,7 @@ mframe_t	dog_frames_death1[] =
 };
 mmove_t	dog_move_death1 = {FRAME_death1_01, FRAME_death1_17, dog_frames_death1, AI_EndDeath};
 
-mframe_t	dog_frames_death2[] = 
+mframe_t	dog_frames_death2[] =
 {
 	ai_move,	  0.000, NULL,	// frame 0
 	ai_move,	 -9.109, NULL,	// frame 1
@@ -208,7 +208,7 @@ mframe_t	dog_frames_death2[] =
 };
 mmove_t	dog_move_death2 = {FRAME_death2_01, FRAME_death2_09, dog_frames_death2, AI_EndDeath};
 
-mframe_t	dog_frames_walk[] = 
+mframe_t	dog_frames_walk[] =
 {
 	ai_run,	  0.022, NULL,	// frame 0
 	ai_run,	  0.120, NULL,	// frame 1
@@ -226,7 +226,7 @@ mframe_t	dog_frames_walk[] =
 };
 mmove_t	dog_move_walk = {FRAME_walk_01, FRAME_walk_13, dog_frames_walk, NULL};
 
-mframe_t	dog_frames_trot[] = 
+mframe_t	dog_frames_trot[] =
 {
 	ai_run,	  3.512, NULL,	// frame 0
 	ai_run,	  6.911, NULL,	// frame 1
@@ -239,7 +239,7 @@ mframe_t	dog_frames_trot[] =
 };
 mmove_t	dog_move_trot = {FRAME_trot_01, FRAME_trot_08, dog_frames_trot, AI_EndRun};
 
-mframe_t	dog_frames_run[] = 
+mframe_t	dog_frames_run[] =
 {
 	ai_run,	 11.155, NULL,	// frame 0
 	ai_run,	 25.162, NULL,	// frame 1
@@ -247,8 +247,8 @@ mframe_t	dog_frames_run[] =
 	ai_run,	 21.692, NULL,	// frame 3
 };
 mmove_t	dog_move_run = {FRAME_run_01, FRAME_run_04, dog_frames_run, AI_EndRun};
-//FREDZ run_on_fire does not excist in model frames
-mframe_t	dog_frames_run_on_fire[] = 
+
+mframe_t	dog_frames_run_on_fire[] =
 {
 	ai_onfire_run,	 11.155, NULL,	// frame 0
 	ai_onfire_run,	 25.162, NULL,	// frame 1
@@ -257,8 +257,8 @@ mframe_t	dog_frames_run_on_fire[] =
 };
 mmove_t	dog_move_run_on_fire = {FRAME_run_01, FRAME_run_04, dog_frames_run_on_fire, NULL};
 
-//FREDZ avoid_walk does not excist in model frames
-mframe_t	dog_frames_avoid_walk[] = 
+
+mframe_t	dog_frames_avoid_walk[] =
 {
 	ai_turn,	  3.512, NULL,	// frame 0
 	ai_turn,	  6.911, NULL,	// frame 1
@@ -271,8 +271,8 @@ mframe_t	dog_frames_avoid_walk[] =
 };
 mmove_t	dog_move_avoid_walk = {FRAME_trot_01, FRAME_trot_08, dog_frames_avoid_walk, AI_EndAttack};
 
-//FREDZ avoid_reverse_walk does not excist in model frames
-mframe_t	dog_frames_avoid_reverse_walk[] = 
+
+mframe_t	dog_frames_avoid_reverse_walk[] =
 {
 	ai_turn,	  6.615, NULL,	// frame 0
 	ai_turn,	  4.272, NULL,	// frame 1
@@ -284,8 +284,8 @@ mframe_t	dog_frames_avoid_reverse_walk[] =
 	ai_turn,	  3.512, NULL,	// frame 7
 };
 mmove_t	dog_move_avoid_reverse_walk = {FRAME_trot_08, FRAME_trot_01, dog_frames_avoid_reverse_walk, AI_EndAttack};
-//FREDZ avoid_run does not excist in model frames
-mframe_t	dog_frames_avoid_run[] = 
+
+mframe_t	dog_frames_avoid_run[] =
 {
 	ai_turn,	 11.155, NULL,	// frame 0
 	ai_turn,	 25.162, NULL,	// frame 1
@@ -293,8 +293,8 @@ mframe_t	dog_frames_avoid_run[] =
 	ai_turn,	 21.692, NULL,	// frame 3
 };
 mmove_t	dog_move_avoid_run = {FRAME_run_01, FRAME_run_04, dog_frames_avoid_run, AI_EndAttack};
-//FREDZ avoid_reverse_run does not excist in model frames
-mframe_t	dog_frames_avoid_reverse_run[] = 
+
+mframe_t	dog_frames_avoid_reverse_run[] =
 {
 	ai_turn,	 21.692, NULL,	// frame 0
 	ai_turn,	 27.589, NULL,	// frame 1
