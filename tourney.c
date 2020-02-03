@@ -395,6 +395,7 @@ void WaveEnd () //hypov8 end of the match
 	int     i;
 	int     count_players = 0;
 
+	level.waveNum++;
 	level.modeset = WAVE_END;
 
 	for_each_player(self,i)

@@ -153,6 +153,7 @@
     <ClCompile Include="ai_bum_sit.c" />
     <ClCompile Include="ai_dog.c" />
     <ClCompile Include="ai_punk.c" />
+    <ClCompile Include="ai_rat.c" />
     <ClCompile Include="ai_runt.c" />
     <ClCompile Include="ai_shorty.c" />
     <ClCompile Include="ai_thug.c" />
@@ -215,6 +216,8 @@
     <ClInclude Include="ai_dog_tables.h" />
     <ClInclude Include="ai_punk.h" />
     <ClInclude Include="ai_punk_tables.h" />
+    <ClInclude Include="ai_rat.h" />
+    <ClInclude Include="ai_rat_tables.h" />
     <ClInclude Include="ai_runt.h" />
     <ClInclude Include="ai_runt_tables.h" />
     <ClInclude Include="ai_shorty.h" />

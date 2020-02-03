@@ -572,8 +572,7 @@ void CheckDMRules (void)
 				ResetServer();
 			else
 				if (level.waveNum < 11) //11 waves?
-				{
-					level.waveNum++;
+				{		
 					WaveEnd(); //hypov8 note: timelimit is wavetime.
 				}
 				else
@@ -601,7 +600,6 @@ void CheckDMRules (void)
 
             if (level.waveNum < 11) //11 waves?
             {
-                level.waveNum++;
                 WaveEnd(); //hypov8 note: timelimit is wavetime.
             }
             else
