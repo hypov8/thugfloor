@@ -572,15 +572,13 @@ void CheckDMRules (void)
 				ResetServer();
 			else
 				if (level.waveNum < 11) //11 waves?
-				{		
+				{
 					WaveEnd(); //hypov8 note: timelimit is wavetime.
 				}
 				else
 				{
-					if (!allow_map_voting)
-						EndDMLevel ();
-					else
-						SetupMapVote();
+				    gi.bprintf (PRINT_HIGH, "Player won.\n");
+					GameEND ();//FREDZ
 				}
 			return;
 		}
@@ -604,10 +602,8 @@ void CheckDMRules (void)
             }
             else
             {
-                if (!allow_map_voting)
-                    EndDMLevel ();
-                else
-                    SetupMapVote();
+                gi.bprintf (PRINT_HIGH, "Player won.\n");
+                GameEND ();//FREDZ
             }
             return;
         }

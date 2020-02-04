@@ -7,7 +7,7 @@
 
 
 // current teamplay mode (set by "level.style")
-teamplay_mode_t	teamplay_mode;
+//teamplay_mode_t	teamplay_mode;
 
 #define	CASH_ROLL			10
 #define	CASH_BAG			25

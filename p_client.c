@@ -274,12 +274,14 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 			break;
 		case MOD_LAVA:
 			message = "does a back flip into the lava";
-            if(self->client->pers.fakeThief>0)
+ /*           if(self->client->pers.fakeThief>0)
             {
                 self->client->resp.stole-=self->client->pers.fakeThief; // MH: changed from acchit
-                if(self->client->pers.team==1) team_cash[2]+=self->client->pers.fakeThief;
-                else if(self->client->pers.team==2) team_cash[1]+=self->client->pers.fakeThief;
-            }
+                if(self->client->pers.team==1)
+                    team_cash[2]+=self->client->pers.fakeThief;
+                else if(self->client->pers.team==2)
+                    team_cash[1]+=self->client->pers.fakeThief;
+            }*/
 			break;
 		/*case MOD_EXPLOSIVE:
 		case MOD_BARREL:
@@ -302,19 +304,62 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 		case MOD_SPLASH:
 		case MOD_TRIGGER_HURT:
 			message = "was in the wrong place";
-            if(self->client->pers.fakeThief>0)
+/*			if(self->client->pers.fakeThief>0)
             {
-                self->client->resp.stole-=self->client->pers.fakeThief; // MH: changed from acchit
-                if(self->client->pers.team==1) team_cash[2]+=self->client->pers.fakeThief;
-                else if(self->client->pers.team==2) team_cash[1]+=self->client->pers.fakeThief;
-            }
+                self->client->resp.acchit-=self->client->pers.fakeThief;
+                if(self->client->pers.team==1)
+					team_cash[2]+=self->client->pers.fakeThief;
+                else if(self->client->pers.team==2)
+					team_cash[1]+=self->client->pers.fakeThief;
+            }*/
+			break;
+		case MOD_HURT_ELECTRIC://FREDZ
+			if (IsNeutral(self))
+				message = "electricuted itself";
+			else if (IsFemale(self))
+				message = "electricuted herself";
+			else
+				message = "electricuted himself";
+/*			if(self->client->pers.fakeThief>0)
+            {
+                self->client->resp.acchit-=self->client->pers.fakeThief;
+                if(self->client->pers.team==1)
+					team_cash[2]+=self->client->pers.fakeThief;
+                else if(self->client->pers.team==2)
+					team_cash[1]+=self->client->pers.fakeThief;
+            }*/
+			break;
+		case MOD_HURT_FLAMES://FREDZ fix bagman maps now
+			if (IsNeutral(self))
+				message = "roasted itself";
+			else if (IsFemale(self))
+				message = "roasted herself";
+			else
+				message = "roasted himself";
+/*			if(self->client->pers.fakeThief>0)
+            {
+                self->client->resp.acchit-=self->client->pers.fakeThief;
+                if(self->client->pers.team==1)
+					team_cash[2]+=self->client->pers.fakeThief;
+                else if(self->client->pers.team==2)
+					team_cash[1]+=self->client->pers.fakeThief;
+            }*/
 			break;
     // RAFAEL
 		case MOD_GEKK:
 		case MOD_BRAINTENTACLE:
 			message = "that's gotta hurt";
+            break;
+		case MOD_DOGBITE: //FREDZ
+			message = "killed by a dog";
 			break;
-    }
+		case MOD_RATBITE: //FREDZ
+			message = "killed by a rat";
+			break;
+		case MOD_FISHBITE: //FREDZ
+			message = "killed by a shrimp";
+			break;
+		}
 		if (attacker == self)
 		{
       switch (mod)
@@ -341,9 +386,10 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				else
 					message = "blew himself up";
 				break;
-			case MOD_BFG_BLAST:
+			//FREDZ q2 stuff not used
+/*			case MOD_BFG_BLAST:
 				message = "should have used a smaller gun";
-				break;
+				break;*/
 			// RAFAEL 03-MAY-98
 			case MOD_TRAP:
 			 	message = "sucked into his own trap";
@@ -356,6 +402,57 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				else
 					message = "roasted himself";
 				break;
+			case MOD_TRIGGER_HURT://FREDZ extra check
+				message = "was in the wrong place";
+				if(self->client->pers.fakeThief>0)
+/*				{
+					self->client->resp.acchit-=self->client->pers.fakeThief;
+					if(self->client->pers.team==1)
+						team_cash[2]+=self->client->pers.fakeThief;
+					else if(self->client->pers.team==2)
+						team_cash[1]+=self->client->pers.fakeThief;
+				}*/
+				break;
+			case MOD_HURT_ELECTRIC://FREDZ
+				if (IsNeutral(self))
+					message = "electricuted itself";
+				else if (IsFemale(self))
+					message = "electricuted herself";
+				else
+					message = "electricuted himself";
+/*				if(self->client->pers.fakeThief>0)
+				{
+					self->client->resp.acchit-=self->client->pers.fakeThief;
+					if(self->client->pers.team==1)
+						team_cash[2]+=self->client->pers.fakeThief;
+					else if(self->client->pers.team==2)
+						team_cash[1]+=self->client->pers.fakeThief;
+				}*/
+				break;
+			case MOD_HURT_FLAMES://FREDZ fix bagman maps now
+				if (IsNeutral(self))
+					message = "roasted itself";
+				else if (IsFemale(self))
+					message = "roasted herself";
+				else
+					message = "roasted himself";
+/*				if(self->client->pers.fakeThief>0)
+				{
+					self->client->resp.acchit-=self->client->pers.fakeThief;
+					if(self->client->pers.team==1)
+						team_cash[2]+=self->client->pers.fakeThief;
+					else if(self->client->pers.team==2)
+						team_cash[1]+=self->client->pers.fakeThief;
+				}*/
+				break;
+			default:
+				if (IsNeutral(self))
+					message = "killed itself";
+				else if (IsFemale(self))
+					message = "killed herself";
+				else
+					message = "killed himself";
+				break;
 			}
 		}
 		if (message)
@@ -363,14 +460,21 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 			gi.bprintf (PRINT_MEDIUM, "%s %s.\n", self->client->pers.netname, message);
 			if ((deathmatch->value) && (mod != MOD_RESTART))
 			{
-                //gi.bprintf (PRINT_MEDIUM,"Subtract 1\n");
 				self->client->resp.score--;
 
-/*				if ((int)teamplay->value == TM_GANGBANG) {
+				//FREDZ killstreak
+				// Because we killed ourselves we want to end our kill streak so
+				// we have to check if we had a better streak than before.
+/*				if (self->client->resp.killstreak > self->client->resp.maxkillstreak)
+					self->client->resp.maxkillstreak = self->client->resp.killstreak;
+				// Reset the kill streak.
+				self->client->resp.killstreak = 0;
+
+				if ((int)teamplay->value == 4)//FREDZ 4 was TM_GANGBANG
+				{
 					team_cash[self->client->pers.team]--;
 					UPDATESCORE
 				}*/
-
 			}
 			self->enemy = NULL;
 			return;
@@ -437,6 +541,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				message2 = "'s H.M.G.";
 			// END JOSEPH
 			}
+		}
 			if (message)
 			{
 				gi.bprintf (PRINT_MEDIUM,"%s %s %s%s\n", self->client->pers.netname, message, attacker->client->pers.netname, message2);
@@ -448,10 +553,16 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				{
 					if (ff)
 					{
-                        //gi.bprintf (PRINT_MEDIUM,"Subtract 2\n");
 						attacker->client->resp.score--;
 
-	/*					if ((int)teamplay->value == TM_GANGBANG) {
+						// Oh dear we were just killed so that ends our kill streak.
+/*						if (self->client->resp.killstreak > self->client->resp.maxkillstreak)//FREDZ dunno this correct
+							self->client->resp.maxkillstreak = self->client->resp.killstreak;
+						self->client->resp.killstreak = 0;
+						//FREDZ end killstreak
+
+						if ((int)teamplay->value == 4)//FREDZ 4 was TM_GANGBANG
+						{
 							team_cash[attacker->client->pers.team]--;
 							UPDATESCORE
 						}*/
@@ -460,7 +571,21 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 					{
 						attacker->client->resp.score++;
 
-/*						if ((int)teamplay->value == TM_GANGBANG) {
+						//FREDZ killstreak
+/*						attacker->client->resp.killstreak++;
+						if (attacker->client->resp.killstreak > attacker->client->resp.maxkillstreak)//fix
+							attacker->client->resp.maxkillstreak = attacker->client->resp.killstreak;
+
+
+						// Oh dear we were just killed so that ends our kill streak.
+						if (self->client->resp.killstreak > self->client->resp.maxkillstreak)
+							self->client->resp.maxkillstreak = self->client->resp.killstreak;
+						self->client->resp.killstreak = 0;
+						//FREDZ end killstreak
+
+
+						if ((int)teamplay->value == 4)//FREDZ 4 was TM_GANGBANG
+						{
 							team_cash[attacker->client->pers.team]++;
 							UPDATESCORE
 						}*/
@@ -468,17 +593,277 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				}
 				return;
 			}
+			//FREDZ cast
+		if (attacker->svflags & SVF_MONSTER)
+		{
+			//Bitch
+			if (strcmp(attacker->classname, "cast_bitch"))
+			{
+				switch (mod)
+				{
+				case MOD_BLACKJACK:
+					message = "was mashed by";
+					break;
+				case MOD_PISTOL:
+					message = "was busted by";
+					message2 = "'s cap";
+					break;
+				case MOD_SHOTGUN:
+					message = "accepted";
+					message2 = "'s load";
+					break;
+				case MOD_MACHINEGUN:
+					message = "bows to";
+					message2 = "'s Tommygun";
+					break;
+				case MOD_FLAMETHROWER:
+					message = "roasted in";
+					message2 = "'s torch";
+					break;
+				case MOD_G_SPLASH:
+					message = "was mortally wounded by";
+					message2 = "'s shrapnel";
+					break;
+				case MOD_ROCKET:
+					message = "was minced by";
+					message2 = "'s rocket";
+					break;
+				case MOD_BARMACHINEGUN:
+					message = "was maimed by";
+					message2 = "'s H.M.G.";
+				}
+			}
+			//Runt
+			else if (strcmp(attacker->classname, "cast_runt"))
+			{
+				switch (mod)
+				{
+				case MOD_BLACKJACK:
+					message = "was mashed by";
+					break;
+				case MOD_PISTOL:
+					message = "was busted by";
+					message2 = "'s cap";
+					break;
+				case MOD_SHOTGUN:
+					message = "accepted";
+					message2 = "'s load";
+					break;
+				case MOD_MACHINEGUN:
+					message = "bows to";
+					message2 = "'s Tommygun";
+					break;
+				case MOD_FLAMETHROWER:
+					message = "roasted in";
+					message2 = "'s torch";
+					break;
+				case MOD_G_SPLASH:
+					message = "was mortally wounded by";
+					message2 = "'s shrapnel";
+					break;
+				case MOD_ROCKET:
+					message = "was minced by";
+					message2 = "'s rocket";
+					break;
+				case MOD_BARMACHINEGUN:
+					message = "was maimed by";
+					message2 = "'s H.M.G.";
+				}
+			}
+			//Shorty
+			else if (strcmp(attacker->classname, "cast_shorty"))
+			{
+				switch (mod)
+				{
+				case MOD_BLACKJACK:
+					message = "was mashed by";
+					break;
+				case MOD_PISTOL:
+					message = "was busted by";
+					message2 = "'s cap";
+					break;
+				case MOD_SHOTGUN:
+					message = "accepted";
+					message2 = "'s load";
+					break;
+				case MOD_MACHINEGUN:
+					message = "bows to";
+					message2 = "'s Tommygun";
+					break;
+				case MOD_FLAMETHROWER:
+					message = "roasted in";
+					message2 = "'s torch";
+					break;
+				case MOD_G_SPLASH:
+					message = "was mortally wounded by";
+					message2 = "'s shrapnel";
+					break;
+				case MOD_ROCKET:
+					message = "was minced by";
+					message2 = "'s rocket";
+					break;
+				case MOD_BARMACHINEGUN:
+					message = "was maimed by";
+					message2 = "'s H.M.G.";
+				}
+			}
+			//Thug
+			else if (strcmp(attacker->classname, "cast_thug"))
+			{
+				switch (mod)
+				{
+				case MOD_BLACKJACK:
+					message = "was mashed by";
+					break;
+				case MOD_PISTOL:
+					message = "was busted by";
+					message2 = "'s cap";
+					break;
+				case MOD_SHOTGUN:
+					message = "accepted";
+					message2 = "'s load";
+					break;
+				case MOD_MACHINEGUN:
+					message = "bows to";
+					message2 = "'s Tommygun";
+					break;
+				case MOD_FLAMETHROWER:
+					message = "roasted in";
+					message2 = "'s torch";
+					break;
+				case MOD_G_SPLASH:
+					message = "was mortally wounded by";
+					message2 = "'s shrapnel";
+					break;
+				case MOD_ROCKET:
+					message = "was minced by";
+					message2 = "'s rocket";
+					break;
+				case MOD_BARMACHINEGUN:
+					message = "was maimed by";
+					message2 = "'s H.M.G.";
+				}
+			}
+			//Punk
+			else if (strcmp(attacker->classname, "cast_punk"))
+			{
+				switch (mod)
+				{
+				case MOD_BLACKJACK:
+					message = "was mashed by";
+					break;
+				case MOD_PISTOL:
+					message = "was busted by";
+					message2 = "'s cap";
+					break;
+				case MOD_SHOTGUN:
+					message = "accepted";
+					message2 = "'s load";
+					break;
+				case MOD_MACHINEGUN:
+					message = "bows to";
+					message2 = "'s Tommygun";
+					break;
+				case MOD_FLAMETHROWER:
+					message = "roasted in";
+					message2 = "'s torch";
+					break;
+				case MOD_G_SPLASH:
+					message = "was mortally wounded by";
+					message2 = "'s shrapnel";
+					break;
+				case MOD_ROCKET:
+					message = "was minced by";
+					message2 = "'s rocket";
+					break;
+				case MOD_BARMACHINEGUN:
+					message = "was maimed by";
+					message2 = "'s H.M.G.";
+				}
+			}
+			//Whore
+			else if (strcmp(attacker->classname, "cast_whore"))
+			{
+				switch (mod)
+				{
+				case MOD_BLACKJACK:
+					message = "was mashed by";
+					break;
+				case MOD_PISTOL:
+					message = "was busted by";
+					message2 = "'s cap";
+					break;
+				case MOD_SHOTGUN:
+					message = "accepted";
+					message2 = "'s load";
+					break;
+				case MOD_MACHINEGUN:
+					message = "bows to";
+					message2 = "'s Tommygun";
+					break;
+				case MOD_FLAMETHROWER:
+					message = "roasted in";
+					message2 = "'s torch";
+					break;
+				case MOD_G_SPLASH:
+					message = "was mortally wounded by";
+					message2 = "'s shrapnel";
+					break;
+				case MOD_ROCKET:
+					message = "was minced by";
+					message2 = "'s rocket";
+					break;
+				case MOD_BARMACHINEGUN:
+					message = "was maimed by";
+					message2 = "'s H.M.G.";
+				}
+			}
+			//FREDZ not working :-(
+			//Dog
+/*			else if (strcmp(attacker->classname, "cast_dog"))
+			{
+				switch (mod)
+				{
+				case MOD_DOGBITE: //FREDZ
+					message = "killed by a";
+					break;
+				}
+			}*/
 		}
+		if (message)
+		{
+			if (attacker->name)
+				gi.bprintf (PRINT_MEDIUM,"%s %s %s(%s)%s\n", self->client->pers.netname, message, attacker->name, attacker->classname, message2);
+			else
+				gi.bprintf (PRINT_MEDIUM,"%s %s %s%s\n", self->client->pers.netname, message, attacker->classname, message2);
+
+			//FREDZ killstreak
+			// Because we killed ourselves we want to end our kill streak so
+			// we have to check if we had a better streak than before.
+/*			if (self->client->resp.killstreak > self->client->resp.maxkillstreak)
+				self->client->resp.maxkillstreak = self->client->resp.killstreak;
+			// Reset the kill streak.
+			self->client->resp.killstreak = 0;
+
+			if ((int)teamplay->value == 4)//FREDZ
+			{
+				team_cash[self->client->pers.team]--;
+				UPDATESCORE
+			}*/
+
+			self->client->resp.score--;
+			self->enemy = NULL;
+			return;
+		}//FREDZ end
 	}
 
-//	gi.bprintf (PRINT_MEDIUM,"%s died.\n", self->client->pers.netname);
+	gi.bprintf (PRINT_MEDIUM,"%s died.\n", self->client->pers.netname);
 	if ((deathmatch->value) && (mod != MOD_RESTART))
 	{
+		self->client->resp.score--;
 
-        //gi.bprintf (PRINT_MEDIUM,"Subtract 3\n");
-        self->client->resp.score--;
-
-/*		if ((int)teamplay->value == TM_GANGBANG) {
+/*		if ((int)teamplay->value == 4)//FREDZ 4 was TM_GANGBANG
+		{
 			team_cash[self->client->pers.team]--;
 			UPDATESCORE
 		}*/
@@ -811,6 +1196,9 @@ void InitClientPersistant (gclient_t *client)
 			ammo = FindItem (item->ammo);
 
 			AutoLoadWeapon( client, item, ammo );
+
+            if (level.waveNum == 0)//FREDZ
+                client->pers.currentcash += 300;//Give some cash
 
 	}
 	else	// start holstered in single player
@@ -1541,7 +1929,9 @@ void PutClientInServer (edict_t *ent)
 	{
 		ent->movetype = MOVETYPE_WALK;
 		ent->solid = SOLID_BBOX;
-		ent->svflags &= ~(SVF_DEADMONSTER|SVF_NOCLIENT);
+
+		ent->svflags = SVF_DEADMONSTER;//FREDZ thugfloor should make transparant player from kitmod
+		//ent->svflags &= ~(SVF_DEADMONSTER|SVF_NOCLIENT);
 
 		//give 3 seconds of imortality on each spawn (anti-camp)
 	    if(anti_spawncamp->value)
@@ -3108,6 +3498,13 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	else if (level.pawn_time)
 	{
 		client->ps.pmove.pm_type = PM_FREEZE;
+		return;
+	}
+    //FREDZ
+	else if (ent->client->showscrollmenu)
+	{
+		//client->ps.pmove.pm_type = PM_FREEZE;
+		client->ps.pmove.pm_type = PM_DEAD;
 		return;
 	}
 

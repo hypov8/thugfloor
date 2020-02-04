@@ -1,7 +1,7 @@
 // ....................................................................
 
 // teamplay.h - teamplay defines
-
+/*
 typedef enum
 {
 	TM_NONE,
@@ -18,19 +18,20 @@ typedef enum
 	TEAM_1,
 	TEAM_2,
 } teams_t;
+*/
 
-
+#define	MAX_PLAYER_CASH		9999	// FREDZ singleplayer of coop cash
 #define	MAX_CASH_PLAYER		150		// make this a cvar?
 #define	MAX_BAGCASH_PLAYER	200		// make this a cvar?
 
 // ....................................................................
 
-extern char *team_names[];
+//extern char *team_names[];
 
-extern teamplay_mode_t	teamplay_mode;
+//extern teamplay_mode_t	teamplay_mode;
 extern int		num_cash_items;
 
-extern int	team_cash[3];	// cash per team, 0 is neutral so just ignore
+//extern int	team_cash[3];	// cash per team, 0 is neutral so just ignore
 
 extern float	last_safe_withdrawal[3];
 extern float	last_safe_deposit[3];
@@ -43,6 +44,6 @@ void SP_dm_props_banner (edict_t *self);
 
 // ....................................................................
 // Other declarations
-void Teamplay_ValidateSkin( edict_t *self );
-qboolean Teamplay_ValidateJoinTeam( edict_t *self, int teamindex );
-void Teamplay_InitTeamplay (void);
+//void Teamplay_ValidateSkin( edict_t *self );
+//qboolean Teamplay_ValidateJoinTeam( edict_t *self, int teamindex );
+//void Teamplay_InitTeamplay (void);

@@ -839,8 +839,12 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		cl = &game.clients[sorted[i]];
 		cl_ent = g_edicts + 1 + sorted[i];
 
-		if (cl_ent == ent)
-			tag = "990";
+//		if (cl_ent == ent)//FREDZ not yellow
+//			tag = "990";
+        if (cl_ent->client->pers.player_dead = TRUE && level.modeset == WAVE_ACTIVE)
+            tag = "000";//FREDZ dead people are black
+        else  if (cl_ent->client->pers.spectator == PLAYER_READY && level.modeset == WAVE_ACTIVE)
+            tag = "111";//FREDZ just joined, grey to black
 		else if (cl_ent->client->pers.rconx[0])
 			tag = "096";
 		else if (cl_ent->client->pers.admin > NOT_ADMIN)
@@ -1051,6 +1055,7 @@ void Cmd_Score_f (edict_t *ent)
 
 	ent->client->showinventory = false;
 	ent->client->showhelp = false;
+	ent->client->showscrollmenu = false;//FREDZ For menu code
 
 	if (!deathmatch->value && !coop->value)
 		return;
@@ -1105,6 +1110,7 @@ void Cmd_Motd_f (edict_t *ent)//FREDZ still broken
 {
 	ent->client->showinventory = false;
 	ent->client->showhelp = false;
+	ent->client->showscrollmenu = false;//FREDZ For menu code
 
 	//FREDZ For menu code
 //	ent->client->showscrollmenu = false;
@@ -1234,6 +1240,8 @@ void Cmd_Help_f (edict_t *ent, int page)
 
 	ent->client->showinventory = false;
 	ent->client->showscores = NO_SCOREBOARD;
+
+	ent->client->showscrollmenu = false;//FREDZ For menu code
 
 	if (ent->client->showhelp && (ent->client->pers.game_helpchanged == game.helpchanged) && !(page))
 	{
@@ -1734,14 +1742,14 @@ void G_SetStats (edict_t *ent)
 	if (deathmatch->value)
 	{
 		if (ent->client->pers.health <= 0 || level.intermissiontime
-			|| ent->client->showscores)
+			|| ent->client->showscores || ent->client->showscrollmenu)//FREDZ For menu code
 			ent->client->ps.stats[STAT_LAYOUTS] |= 1;
 		if (ent->client->showinventory && ent->client->pers.health > 0)
 			ent->client->ps.stats[STAT_LAYOUTS] |= 2;
 	}
 	else
 	{
-		if (ent->client->showscores || ent->client->showhelp)
+		if (ent->client->showscores || ent->client->showhelp || ent->client->showscrollmenu)//FREDZ For menu code
 			ent->client->ps.stats[STAT_LAYOUTS] |= 1;
 		if (ent->client->showinventory && ent->client->pers.health > 0)
 			ent->client->ps.stats[STAT_LAYOUTS] |= 2;

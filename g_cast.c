@@ -869,6 +869,11 @@ void cast_use (edict_t *self, edict_t *other, edict_t *activator)
 		return;
     if (!other->client)//FREDZ
 		return;
+	
+	if (strcmp(other->classname, "cast_pawn_o_matic"))//FREDZ
+	{
+		Cmd_InitMenu_f(other);
+	}
 
 	// check for special Episode script handling
 	if (EP_CastUse( self, other, activator ))

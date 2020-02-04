@@ -1,5 +1,7 @@
 #include "g_local.h"
 
+#define DIRECTSTART 1//FREDZ put on 0 for normal game
+
 int	 vote_set[9];        // stores votes for next map
 
 char admincode[16];		 // the admincode
@@ -300,9 +302,6 @@ void Start_Match () // Starts the match
 	level.is_spawn = false;
 	for_each_player(self,i)
 	{
-        if (level.waveNum == 1)//FREDZ not working?
-			self->client->pers.currentcash += 300;//Give some cash
-
 		gi.centerprintf(self,"The wave has begun.");
 		self->client->resp.is_spawn = false;
 	}
@@ -395,7 +394,7 @@ void WaveEnd () //hypov8 end of the match
 	int     i;
 	int     count_players = 0;
 
-	level.waveNum++;
+    level.waveNum++;
 	level.modeset = WAVE_END;
 
 	for_each_player(self,i)
@@ -502,11 +501,15 @@ void CheckStartWave ()  // 15 countdown before matches
 	}
 	if (!count_players)
 	{
-//		gi.bprintf(PRINT_HIGH,"Players need to join to start a wave.\n");
-//		WaveIdle();
+	    #if DIRECTSTART
+		gi.bprintf(PRINT_HIGH,"Players need to join to start a wave.\n");
+		WaveIdle();
+		return;
+        #else
         gi.bprintf(PRINT_HIGH,"Players not playing, other map.\n");
         GameEND ();
 		return;
+        #endif
 	}
 
 	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 49))
@@ -517,7 +520,9 @@ void CheckStartWave ()  // 15 countdown before matches
 void CheckStartPub () // 30 second countdown before server starts (MH: reduced from 35s)
 {
 
+    #if !DIRECTSTART
 	if (level.framenum >= 300)
+    #endif
 	{
 		edict_t		*self;
         int         i;

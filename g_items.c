@@ -505,7 +505,8 @@ qboolean Pickup_Key (edict_t *ent, edict_t *other)
 	// END JOSEPH
 
 	// Rafael no coop
-	if (coop->value)
+	//FREDZ q2 stuff maybe need better fix
+/*	if (coop->value)
 	{
 		if (strcmp(ent->classname, "key_fuse") == 0)
 		{
@@ -521,8 +522,30 @@ qboolean Pickup_Key (edict_t *ent, edict_t *other)
 			other->client->pers.inventory[ITEM_INDEX(ent->item)] = 1;
 		}
 		return true;
-	}
-	if ((strcmp(ent->classname, "item_flashlight") == 0) && other->client->pers.inventory[ITEM_INDEX(ent->item)])
+	}//FREDZ end
+	*/
+	//FREDZ updated, only key_fuse should be pickupd twice but why bother in coop :-p
+	if (((strcmp(ent->classname, "item_flashlight") == 0) ||
+		(strcmp(ent->classname, "item_coil") == 0) ||
+		(strcmp(ent->classname, "item_lizzyhead") == 0) ||
+		(strcmp(ent->classname, "item_oilcan") == 0) ||
+		(strcmp(ent->classname, "item_safedocs") == 0) ||
+		(strcmp(ent->classname, "item_whiskey") == 0) ||
+		(strcmp(ent->classname, "item_watch") == 0) ||
+		(strcmp(ent->classname, "item_valve") == 0) ||
+		(strcmp(ent->classname, "key_fuse") == 0) ||
+		(strcmp(ent->classname, "key_key1") == 0) ||
+		(strcmp(ent->classname, "key_key2") == 0) ||
+		(strcmp(ent->classname, "key_key3") == 0) ||
+		(strcmp(ent->classname, "key_key4") == 0) ||
+		(strcmp(ent->classname, "key_key5") == 0) ||
+		(strcmp(ent->classname, "key_key6") == 0) ||
+		(strcmp(ent->classname, "key_key7") == 0) ||
+		(strcmp(ent->classname, "key_key8") == 0) ||
+		(strcmp(ent->classname, "key_key9") == 0) ||
+		(strcmp(ent->classname, "key_key10") == 0) ||
+		(strcmp(ent->classname, "item_battery") == 0)) &&
+		other->client->pers.inventory[ITEM_INDEX(ent->item)])
 		return false;
 	else
 		other->client->pers.inventory[ITEM_INDEX(ent->item)]++;
@@ -604,9 +627,10 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 	qboolean	weapon;
 
 	weapon = (ent->item->flags & IT_WEAPON);
-	if ( (weapon) && deathmatch->value && ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		count = 1000;
-	else if (ent->count)
+//	if ( (weapon) && deathmatch->value && ( (int)dmflags->value & DF_INFINITE_AMMO ) )//FREDZ disable
+//		count = 1000;
+//	else if (ent->count)
+    if (ent->count)
 		count = ent->count;
 	else
 		count = ent->item->quantity;
@@ -669,17 +693,35 @@ qboolean Pickup_Cash (edict_t *ent, edict_t *other)
 
 	if (ent->currentcash > 0)
 	{
-		if (other->client->pers.currentcash==MAX_CASH_PLAYER) return false;
-		other->client->pers.currentcash += ent->currentcash;
-		if (other->client->pers.currentcash > MAX_CASH_PLAYER)
+/*        if (teamplay->value)//FREDZ
 		{
-			edict_t *cash;
-			cash = SpawnTheWeapon( other, "item_cashroll" );
-			cash->currentcash = (other->client->pers.currentcash - MAX_CASH_PLAYER);
-			other->client->pers.currentcash = MAX_CASH_PLAYER;
+            if (other->client->pers.currentcash==MAX_CASH_PLAYER)
+                return false;
+            other->client->pers.currentcash += ent->currentcash;
+            if (other->client->pers.currentcash > MAX_CASH_PLAYER)
+            {
+                edict_t *cash;
+                cash = SpawnTheWeapon( other, "item_cashroll" );
+                cash->currentcash = (other->client->pers.currentcash - MAX_CASH_PLAYER);
+                other->client->pers.currentcash = MAX_CASH_PLAYER;
+            }
+		}
+        else*/ //FREDZ sp/coop cash
+		{
+			if (other->client->pers.currentcash==MAX_PLAYER_CASH)
+				return false;
+			other->client->pers.currentcash += ent->currentcash;
+			if (other->client->pers.currentcash > MAX_PLAYER_CASH)
+			{
+				edict_t *cash;
+				cash = SpawnTheWeapon( other, "item_cashroll" );
+				cash->currentcash = (other->client->pers.currentcash - MAX_PLAYER_CASH);
+				other->client->pers.currentcash = MAX_PLAYER_CASH;
+			}
 		}
 
 	}
+	/*//FREDZ should not be used
 	else	// negative money is bagged money (used in Teamplay)
 	{
 		ent->currentcash = -ent->currentcash;
@@ -695,8 +737,7 @@ qboolean Pickup_Cash (edict_t *ent, edict_t *other)
 			cash->currentcash = -(other->client->pers.bagcash - MAX_BAGCASH_PLAYER);
 			other->client->pers.bagcash = MAX_BAGCASH_PLAYER;
 		}
-
-	}
+	}*/
 
 	// snap, display to client on the HUD how much they picked up
 	if (client_initial_cash != other->client->pers.currentcash)
@@ -870,7 +911,8 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 
 		if (other->client->pers.inventory[ITEM_INDEX(itemhh)])
 		{
-			other->client->pers.inventory[ITEM_INDEX(itemhh)] += 25;
+//			other->client->pers.inventory[ITEM_INDEX(itemhh)] += 25;
+            other->client->pers.inventory[ITEM_INDEX(itemhh)] += 50;//FREDZ nobody like this part that upgrade is only 25
 			if (other->client->pers.inventory[ITEM_INDEX(itemhh)] > 100)
 				other->client->pers.inventory[ITEM_INDEX(itemhh)] = 100;
 		}
@@ -892,7 +934,8 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 
 		if (other->client->pers.inventory[ITEM_INDEX(itemjh)])
 		{
-			other->client->pers.inventory[ITEM_INDEX(itemjh)] += 25;
+//			other->client->pers.inventory[ITEM_INDEX(itemjh)] += 25;
+            other->client->pers.inventory[ITEM_INDEX(itemjh)] += 50;//FREDZ nobody like this part that upgrade is only 25
 			if (other->client->pers.inventory[ITEM_INDEX(itemjh)] > 100)
 				other->client->pers.inventory[ITEM_INDEX(itemjh)] = 100;
 		}
@@ -914,7 +957,8 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 
 		if (other->client->pers.inventory[ITEM_INDEX(itemlh)])
 		{
-			other->client->pers.inventory[ITEM_INDEX(itemlh)] += 25;
+//			other->client->pers.inventory[ITEM_INDEX(itemlh)] += 25;
+			other->client->pers.inventory[ITEM_INDEX(itemlh)] += 50;//FREDZ nobody like this part that upgrade is only 25
 			if (other->client->pers.inventory[ITEM_INDEX(itemlh)] > 100)
 				other->client->pers.inventory[ITEM_INDEX(itemlh)] = 100;
 		}
@@ -1695,14 +1739,15 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 				return;
 			}
 		}
-		if ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value )
+/*
+		if ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value )//FREDZ disable
 		{
 			if ( (item->flags == IT_AMMO) || (strcmp(ent->classname, "ammo_cylinder") == 0) )
 			{
 				G_FreeEdict (ent);
 				return;
 			}
-		}
+		}*/
 
 		// Ridah, realmode only has pistol, tommy and shotgun
 		if (deathmatch->value && dm_realmode->value==1 && item->classname)//FREDZ realmode 2

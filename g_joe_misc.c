@@ -6166,7 +6166,7 @@ int check_fish_hit_player(edict_t *ent)
 			AngleVectors (dang, forward, NULL, NULL);
 			VectorMA (ent->s.origin, 16, forward, start);
 
-			fire_rat (ent, start, forward, ent->dmg);
+			fire_fish (ent, start, forward, ent->dmg);
 
 			return true;
 		}
@@ -6187,7 +6187,7 @@ void fish_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *sur
 
 	self->debugprint = 1;
 
-	T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, self->dmg, self->dmg, 0, MOD_FISHBITE);
+	T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, self->dmg, self->dmg, 0, MOD_FISHBITE);//FREDZ MOD_FISHBITE was MOD_DOGBITE
 }
 
 void fish_go (edict_t *self)

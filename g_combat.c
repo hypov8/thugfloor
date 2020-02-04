@@ -190,6 +190,8 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 	{
 		cast_memory_t *mem;
 
+		level.killed_monsters++;//FREDZ missing
+
 		// Ridah 5-8-99, so we can shoot through dying characters
 		targ->maxs[2] = 0;
 		gi.linkentity( targ );
@@ -667,7 +669,8 @@ void M_ReactToDamage (edict_t *targ, edict_t *attacker, float damage)
 	}
 
 }
-
+//FREDZ not used
+/*
 // returns TRUE if attacker is on same team (can't damage)
 qboolean CheckTeamDamage (edict_t *targ, edict_t *attacker)
 {
@@ -681,7 +684,7 @@ qboolean CheckTeamDamage (edict_t *targ, edict_t *attacker)
 //		return true;
 //	else
 		return false;
-}
+}*/
 
 // Ridah, health_threshold targetting
 void CheckHealthTarget( edict_t *targ, char *target )
@@ -728,6 +731,31 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	if (targ->cast_info.aiflags & AI_IMMORTAL)
 	{
 		return;
+	}
+
+    // easy mode takes half damage
+	if (deathmatch->value == 0 && targ->client)//FREDZ move to here to fix coop damage
+	{
+       // cprintf (targ, PRINT_HIGH, "7 brace\n");
+		if (skill->value == 0)
+			dmg *= 0.2;		// Ridah, bumped it up a bit, since Rockets were only doing 2% health, 4% would be a bit more reasonable
+		else if (skill->value == 1)
+			dmg *= 0.35;
+		else if (skill->value == 2)
+			dmg *= 0.60;
+		else if (skill->value == 3)
+			dmg *= 0.80;
+
+		if (skill->value >= 2)
+		{
+			if (rand()%(2 + (int)skill->value * 2) > 4)
+				dmg *= 2;			// randomized simulation of head shot
+		}
+
+		if (dmg < 1)
+			dmg = 1;
+
+		// gi.dprintf ("dmg: %5.2f\n", dmg);
 	}
 
 	// friendly fire avoidance
@@ -777,32 +805,8 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
     }
 	meansOfDeath = mod;
 
-	// easy mode takes half damage
-	if (deathmatch->value == 0 && targ->client)
-	{
-       // cprintf (targ, PRINT_HIGH, "7 brace\n");
-		if (skill->value == 0)
-			dmg *= 0.2;		// Ridah, bumped it up a bit, since Rockets were only doing 2% health, 4% would be a bit more reasonable
-		else if (skill->value == 1)
-			dmg *= 0.35;
-		else if (skill->value == 2)
-			dmg *= 0.60;
-		else if (skill->value == 3)
-			dmg *= 0.80;
 
-		if (skill->value >= 2)
-		{
-			if (rand()%(2 + (int)skill->value * 2) > 4)
-				dmg *= 2;			// randomized simulation of head shot
-		}
-
-		if (dmg < 1)
-			dmg = 1;
-
-
-		// gi.dprintf ("dmg: %5.2f\n", dmg);
-	}
-	else if (deathmatch->value && dm_realmode->value && attacker != targ && attacker->client)
+	if (deathmatch->value && dm_realmode->value && attacker != targ && attacker->client)
 	{
       //  cprintf (targ, PRINT_HIGH, "8 brace\n");
 		dmg *= 4;
@@ -815,7 +819,15 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		te_sparks = TE_SPARKS;
 	else if (dflags & DAMAGE_BULLET && mod != MOD_DOGBITE)
 		te_sparks = TE_BULLET_SPARKS;
+	else if (dflags & DAMAGE_BULLET && mod != MOD_RATBITE)
+		te_sparks = TE_BULLET_SPARKS;
+	else if (dflags & DAMAGE_BULLET && mod != MOD_FISHBITE)
+		te_sparks = TE_BULLET_SPARKS;
 	else if (mod != MOD_DOGBITE)
+		te_sparks = TE_SPARKS;
+	else if (mod != MOD_RATBITE)
+		te_sparks = TE_SPARKS;
+	else if (mod != MOD_FISHBITE)
 		te_sparks = TE_SPARKS;
 	else
 		te_sparks = TE_SPARKS;
@@ -938,7 +950,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		else
       //  cprintf (targ, PRINT_HIGH, "9 brace\n");
         // JOSEPH 21-MAY-99
-		if (mod == MOD_DOGBITE)
+        if ((mod == MOD_DOGBITE) && (mod == MOD_RATBITE) && (mod == MOD_FISHBITE)) //FREDZ
 		{
 			if (inflictor->s.origin[2] < targ->s.origin[2]) // legs
 			{
@@ -1748,6 +1760,19 @@ void T_DamageMDX (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t d
 		return;
 	}
 
+    //FREDZ move to here to fix coop damage
+	// easy mode takes half damage
+	if (deathmatch->value == 0 && targ->client)
+	{
+		if (skill->value == 0)
+			damage *= 0.1;		// used to be 50%, so we have to make it 10% to be 1/5 of what it was before
+		else if (skill->value == 1)
+			damage *= 0.6;
+
+		if (!damage)
+			damage = 1;
+	}
+
 	// friendly fire avoidance
 	// if enabled you can't hurt teammates (but you can hurt yourself)
 	// knockback still occurs
@@ -1770,18 +1795,7 @@ void T_DamageMDX (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t d
 		hit=1;
 	meansOfDeath = mod;
 
-	// easy mode takes half damage
-	if (deathmatch->value == 0 && targ->client)
-	{
-		if (skill->value == 0)
-			damage *= 0.1;		// used to be 50%, so we have to make it 10% to be 1/5 of what it was before
-		else if (skill->value == 1)
-			damage *= 0.6;
-
-		if (!damage)
-			damage = 1;
-	}
-	else if (deathmatch->value && dm_realmode->value && attacker != targ && attacker->client)
+	if (deathmatch->value && dm_realmode->value && attacker != targ && attacker->client)
 	{
 		damage *= 4;
 	}

@@ -759,7 +759,7 @@ void hurt_touch_fire (edict_t *self, edict_t *other, cplane_t *plane, csurface_t
 	else
 		dflags = 0;
 
-    T_Damage (other, other, other, vec3_origin, other->s.origin, vec3_origin, self->dmg, self->dmg, dflags, MOD_FLAMETHROWER); // MH: changed from MOD_FLAMETHROWER
+    T_Damage (other, other, other, vec3_origin, other->s.origin, vec3_origin, self->dmg, self->dmg, dflags, MOD_HURT_FLAMES); //FREDZ was MOD_FLAMETHROWE
 	// JOSEPH 29-MAR-99
 	//gi.sound (other, CHAN_BODY, gi.soundindex ("misc/fhit3.wav"), 1, ATTN_NORM, 0);
 	// END JOSEPH
@@ -1102,7 +1102,7 @@ void hurt_touch_electric (edict_t *self, edict_t *other, cplane_t *plane, csurfa
 		{
 			VectorScale (self->movedir, self->speed, other->velocity);
 			gi.sound(other, CHAN_VOICE, gi.soundindex("world/shock.wav"), 1, ATTN_NORM, 0);
-			T_Damage (other, other, other, vec3_origin, other->s.origin, vec3_origin, self->dmg, self->dmg, dflags, MOD_FALLING);
+			T_Damage (other, other, other, vec3_origin, other->s.origin, vec3_origin, self->dmg, self->dmg, dflags, MOD_HURT_ELECTRIC);//FREDZ MOD_FALLING is wrong
 		}
 	}
 

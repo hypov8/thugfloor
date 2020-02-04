@@ -1668,7 +1668,7 @@ void ionripper_sparks (edict_t *self)
 
 	G_FreeEdict (self);
 }
-
+/*
 // RAFAEL
 void ionripper_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
@@ -1695,7 +1695,7 @@ void ionripper_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t
 	}
 
 	G_FreeEdict (self);
-}
+}*/
 
 /*
 // RAFAEL
@@ -1867,7 +1867,7 @@ void fire_heat (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, 
 /*
 	fire_plasma
 */
-
+/*
 void plasma_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	vec3_t		origin;
@@ -1941,7 +1941,7 @@ void fire_plasma (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 
 
 }
-
+*/
 // RAFAEL
 extern void SP_item_foodcube (edict_t *best);
 // RAFAEL
@@ -2578,7 +2578,7 @@ static qboolean fire_concussion (edict_t *self, vec3_t start, vec3_t aimdir, flo
 			{
 
 			}
-			else if (mod != MOD_DOGBITE)
+			else if ((mod != MOD_DOGBITE) && (mod != MOD_RATBITE) && (mod != MOD_FISHBITE))//FREDZ
 			{
 				// JOSEPH 6-MAY-99
 				if (tr.ent->svflags & SVF_PROP)
@@ -2815,7 +2815,7 @@ static qboolean fire_concussion (edict_t *self, vec3_t start, vec3_t aimdir, flo
 
 					if ((tr.ent->svflags & SVF_MONSTER || tr.ent->client))
 					{
-						if (mod != MOD_DOGBITE)
+                        if ((mod != MOD_DOGBITE) && (mod != MOD_RATBITE) && (mod != MOD_FISHBITE)) //FREDZ
 							gi.sound (self, CHAN_AUTO, gi.soundindex ("weapons/melee/pipehitbody.wav"), 1, ATTN_NORM, 0);
 // Ridah, 7-5-99, commented out for demo
 //						else

@@ -806,8 +806,8 @@ extern	int	body_armor_index;
 //#define MOD_TARGET_BLASTER	33
 //FREDZ updated to rocket
 #define MOD_TARGET_ROCKET	33
-#define MOD_RIPPER				34//Q2
-#define MOD_PHALANX				35//Q2
+//#define MOD_RIPPER				34//Q2
+//#define MOD_PHALANX				35//Q2
 #define MOD_BRAINTENTACLE		36
 #define MOD_BLASTOFF			37
 #define MOD_GEKK				38
@@ -1214,6 +1214,7 @@ qboolean fire_crowbar (edict_t *self, vec3_t start, vec3_t forward, int damage, 
 qboolean fire_dogbite (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int mod);
 // JOSEPH 30-APR-99
 void fire_rat (edict_t *self, vec3_t start, vec3_t forward, int damage);
+void fire_fish (edict_t *self, vec3_t start, vec3_t forward, int damage);//FREDZ
 // END JOSEPH
 
 //
@@ -1327,12 +1328,24 @@ void ChaseStart(edict_t *ent);
 void ChaseStop(edict_t *ent); // MH:
 
 //
+// g_scrollmenu.c
+//
+
+void ScrollMenuMessage (edict_t *ent);
+void Cmd_InitMenu_f (edict_t *ent);
+void ScrollMenuBuy (edict_t *ent);
+void ScrollMenuLeft (edict_t *ent);
+void ScrollMenuRight (edict_t *ent);
+void ScrollMenuPrev (edict_t *ent);
+void ScrollMenuNext (edict_t *ent);
+void SP_cast_pawn_o_matic (edict_t *self);
+
+//
 // tourney.c
 //
 // Papa 10.6.99
 
 
-void WaveStart();//hypov8
 void SetupMapVote ();
 void CheckStartPub();
 void CheckStartWave ();
@@ -1341,8 +1354,10 @@ void CheckVote();
 void CheckEndVoteTime ();
 void CheckEndGame();//FREDZ
 void ResetServer();
-void WaveEnd();//hypov8
+void WaveStart();//hypov8
 void WaveIdle();//hypov8
+void WaveEnd();//hypov8
+void GameEND();//FREDZ
 int	CheckNameBan (char *name);
 int	CheckPlayerBan (char *userinfo);
 edict_t *GetAdmin(); // MH: get the current admin
@@ -1645,6 +1660,8 @@ struct gclient_s
 	int			historyHead;	// the head of the history queue
 	clientHistory_t	history[NUM_CLIENT_HISTORY]; // the history queue
 	clientHistory_t	saved;		// the client's saved position
+
+	qboolean	showscrollmenu;		//FREDZ set layout stat
 };
 
 
@@ -2007,10 +2024,17 @@ struct edict_s
 	int			kickdelay;
 	char		*kickmess;
 
+    //FREDZ Scrollable menu variables
+	int			current_menu_side;
+	int			current_menu_left;
+	int			current_menu_right;
+
 	//client idleing (MH: removed last_origin/check_talk/check_shoot)
     int         check_idle;
 
     int         name_change_frame;
+
+    char		*endmap;//FREDZ target_changelevel to reset maps
 
 //	Snap, bunnyhop
 	int			jump_framenum;

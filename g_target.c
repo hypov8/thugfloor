@@ -231,9 +231,9 @@ void target_explosion_explode (edict_t *self)
 
 	{
 		edict_t *breakit;
-		
+
 		breakit = G_Spawn();
-		
+
 		if (breakit)
 		{
 			VectorCopy (self->s.origin, breakit->s.origin);
@@ -279,7 +279,7 @@ Shoots flame when triggered on, does not when triggered off.
 
 "dmg" damage the flame does per frame (default 2)
 "fxdensity 1" starts flame on
-"deadticks" angle adjustment up and down -90 to +90 (deafult 0) 
+"deadticks" angle adjustment up and down -90 to +90 (deafult 0)
 */
 // END JOSEPH
 
@@ -467,7 +467,7 @@ void target_flamethrower (edict_t *self)
 	if (self->fxdensity)
 	{
 		vec3_t forward;
-			
+
 		AngleVectors (self->s.angles, forward, NULL, NULL);
 		fire_target_flamethrower(self, self->s.origin, forward, self->dmg, 0, MOD_FLAMETHROWER);
 
@@ -475,7 +475,7 @@ void target_flamethrower (edict_t *self)
 		self->s.renderfx2 |= RF2_FLAMESHOOTER_MOD;
 
 		self->healspeed++;
-		
+
 		if (self->healspeed > 2)
 			self->healspeed = 0;
 
@@ -494,14 +494,14 @@ void target_flamethrower (edict_t *self)
 void use_target_flamethrower (edict_t *self, edict_t *other, edict_t *activator)
 {
 	self->activator = activator;
-	
+
 	if (!self->fxdensity)
 	{
 		self->fxdensity = 1;
 		target_flamethrower(self);
 	}
 	else
-	{	
+	{
 		self->s.renderfx2 = 0;
 		self->fxdensity = 0;
 	}
@@ -512,16 +512,16 @@ void use_target_flamethrower (edict_t *self, edict_t *other, edict_t *activator)
 void SP_target_flamethrower (edict_t *ent)
 {
 	ent->use = use_target_flamethrower;
-	
+
 	ent->s.modelindex = gi.modelindex("models/weapons/sshell_md2/tris.md2");
 
 	ent->s.renderfx |= RF_BEAM;
 
-	gi.linkentity (ent);	
+	gi.linkentity (ent);
 
 	if (!ent->dmg)
 		ent->dmg = 2;
-	
+
 	ent->s.angles[0] = ent->deadticks;
 
 	if (ent->fxdensity)
@@ -538,7 +538,7 @@ void SP_target_flamethrower (edict_t *ent)
 Spawns a fire.
 
 "fxdensity"  size of fire 1 - 100 (default is 10)
-"deadticks"  random fire sections per frame (deafult 3) 
+"deadticks"  random fire sections per frame (deafult 3)
 "duration "  seconds fire lasts (default 5.0) (-1 keeps on going and going)
 "dmg"        damage per second (default = fxdensity)
 "reactdelay" fire spread factor 0.0 - 10.0 (default 1.0)
@@ -561,17 +561,17 @@ void t_hurt_fire (edict_t *self)
 void t_fire_think( edict_t *ent)
 {
 	int i;
-	
+
 	ent->nextthink = level.time + 0.1;
-	ent->lastduration += 0.1;	
+	ent->lastduration += 0.1;
 
 	for (i = 0; i < ent->deadticks; i++)
 	{
 		vec3_t neworigin;
 
 		VectorCopy(ent->s.origin, neworigin);
-		neworigin[0] += ent->reactdelay * ((rand()&3) * ((0.20*ent->firetype)-(0.10*ent->firetype))); 
-		neworigin[1] += ent->reactdelay * ((rand()&3) * ((0.20*ent->firetype)-(0.10*ent->firetype))); 
+		neworigin[0] += ent->reactdelay * ((rand()&3) * ((0.20*ent->firetype)-(0.10*ent->firetype)));
+		neworigin[1] += ent->reactdelay * ((rand()&3) * ((0.20*ent->firetype)-(0.10*ent->firetype)));
 		gi.WriteByte (svc_temp_entity);
 		gi.WriteByte (TE_SFXFIRET);
 		gi.WritePosition (neworigin);
@@ -579,14 +579,14 @@ void t_fire_think( edict_t *ent)
 		gi.WriteByte (ent->alphalevel);
 		gi.multicast (neworigin, MULTICAST_PVS);
 	}
-	
+
 	// JOSEPH 16-APR-99
 	if (ent->dmg)
 	t_hurt_fire(ent);
 	// END JOSEPH
 
 	// JOSEPH 19-APR-99
-	if ((ent->duration != -1.0) && (ent->lastduration >= ent->duration)) 
+	if ((ent->duration != -1.0) && (ent->lastduration >= ent->duration))
 		G_FreeEdict(ent);
 	// END JOSEPH
 }
@@ -640,7 +640,50 @@ void SP_target_fire (edict_t *self)
 /*QUAKED target_changelevel (1 0 0) (-8 -8 -8) (8 8 8)
 Changes level to "map" when fired
 */
+char *Replace(char *string, char *oldpiece, char *newpiece)
+ {
 
+   int str_index, newstr_index, oldpiece_index, end,
+   new_len, old_len, cpy_len;
+   char *c;
+   static char newstring[16];
+
+   if ((c = (char *) strstr(string, oldpiece)) == NULL)
+      return string;
+
+   new_len        = strlen(newpiece);
+   old_len        = strlen(oldpiece);
+   end            = strlen(string)   - old_len;
+   oldpiece_index = c - string;
+
+
+   newstr_index = 0;
+   str_index = 0;
+   while(str_index <= end && c != NULL)
+   {
+
+      /* Copy characters from the left of matched pattern occurence */
+      cpy_len = oldpiece_index-str_index;
+      strncpy(newstring+newstr_index, string+str_index, cpy_len);
+      newstr_index += cpy_len;
+      str_index    += cpy_len;
+
+      /* Copy replacement characters instead of matched pattern */
+      strcpy(newstring+newstr_index, newpiece);
+      newstr_index += new_len;
+      str_index    += old_len;
+
+      /* Check for another pattern match */
+      if((c = (char *) strstr(string+str_index, oldpiece)) != NULL)
+         oldpiece_index = c - string;
+
+
+   }
+    /* Copy remaining characters from the right of last matched pattern */
+   strcpy(newstring+newstr_index, string+str_index);
+
+   return newstring;
+}
 extern qboolean	changing_levels;
 
 // Ridah 5-8-99
@@ -650,9 +693,54 @@ void use_target_changelevel (edict_t *self, edict_t *other, edict_t *activator)
 {
 	int	i, j, k;
 	edict_t	*e;
+	char	*mapinfo;//FREDZ
+	float		ce_radius;
+	edict_t		*ce_ent = NULL;
+	int			ce_lv;
+	vec3_t		ce_v;
+	char	command [256];
 
 	if (level.intermissiontime)
 		return;		// already activated
+
+	if (self->timestamp > level.time)//FREDZ
+		return;
+
+	if (activator->client->pers.spectator == SPECTATING)//FREDZ
+		return;
+
+	if (deathmatch->value || coop->value)
+	{
+		ce_radius = 256;//FREDZ was 512
+		for ( ce_lv = 0 ; ce_lv < game.maxclients; ce_lv++ )
+		{
+			ce_ent = g_edicts + ce_lv + 1;
+
+			if (!ce_ent->inuse || !ce_ent->client)
+				continue;
+
+			if (ce_ent->client->pers.spectator == SPECTATING)//FREDZ
+				continue;
+
+			if (ce_ent->deadflag == DEAD_DEAD)//FREDZ
+				continue;
+
+			if (ce_ent->health <= 0)//FREDZ if player is dead
+				continue;
+
+			VectorSubtract(activator->s.origin, ce_ent->s.origin, ce_v);
+			if (VectorLength(ce_v) > ce_radius)
+			{
+				mapinfo = self->map;
+				mapinfo = Replace(mapinfo, "$", " from map ");//FREDZ
+				self->timestamp = level.time + 5;//FREDZ
+//				gi.bprintf (PRINT_CHAT, "\n%s is waiting at the level exit.\n", activator->client->pers.netname);
+				gi.bprintf (PRINT_CHAT, "\n>%s< is waiting at the level exit to map %s.\n", activator->client->pers.netname, mapinfo);
+				return;
+			}
+		}
+	}
+
 
 	if (!deathmatch->value && !coop->value)
 	{
@@ -674,8 +762,14 @@ void use_target_changelevel (edict_t *self, edict_t *other, edict_t *activator)
 			gi.bprintf (PRINT_HIGH, "%s exited the level.\n", activator->client->pers.netname);
 	}
 
+	if (self->endmap)//FREDZ no gamemap
+	{
+		Com_sprintf (command, sizeof(command), "map \"%s\"\n", self->endmap);
+		gi.AddCommandString (command);
+		return;
+	}
 	// if going to a new unit, clear cross triggers
-	if (strstr(self->map, "*"))	
+	if (strstr(self->map, "*"))
 		game.serverflags &= ~(SFL_CROSS_TRIGGER_MASK);
 
 	// Ridah, 5-8-99, save this mapname for "pawn_" checking
@@ -694,13 +788,13 @@ void use_target_changelevel (edict_t *self, edict_t *other, edict_t *activator)
 			player = &g_edicts[1];
 
 			activator = player;
-			activator->client->pers.episode_flags |= activator->episode_flags;	
+			activator->client->pers.episode_flags |= activator->episode_flags;
 		}
 	}
 
 if (!deathmatch->value)
 {
-	
+
 	// Ridah, save any followers temporarily so we can carry them through to the next level
 	changing_levels = true;
 
@@ -762,12 +856,12 @@ if (!deathmatch->value)
 				break;
 		}
 	}
-	
+
 }
 
 	BeginIntermission (self, self->map);
 }
-
+extern void SP_cast_pawn_o_matic (edict_t *self);//FREDZ
 void SP_target_changelevel (edict_t *ent)
 {
 	if (!ent->map)
@@ -776,10 +870,43 @@ void SP_target_changelevel (edict_t *ent)
 		G_FreeEdict (ent);
 		return;
 	}
+	if ((!ent->map) && (ent->endmap))
+	{
+		gi.dprintf("target_changelevel without map at %s add a map otherwise endmap doesn't work\n", vtos(ent->s.origin));
+		G_FreeEdict (ent);
+		return;
+	}
+	if (ent->spawnflags & 1)//FREDZ
+	{
+		ent->classname = "cast_pawn_o_matic";
+		SP_cast_pawn_o_matic(ent);
+		return;
+	}
 
+	if (((coop->value) || (deathmatch->value)))// && (!pawnomatic_exit->value))//FREDZ fix
+	{
+		if (strstr( ent->map, "pawn" ))
+		{
+			ent->classname = "cast_pawn_o_matic";
+			SP_cast_pawn_o_matic(ent);
+			return;
+		}
+	}
 	// ugly hack because *SOMEBODY* screwed up their map
-//   if((Q_stricmp(level.mapname, "fact1") == 0) && (Q_stricmp(ent->map, "fact3") == 0))
-//	   ent->map = "fact3$secret1";
+	if (strstr(level.mapname, "bar_sy" ))//FREDZ
+		ent->map = "sy_h$bar_sy";
+
+	if ((strstr(level.mapname, "sy_h" )) && (strstr(ent->targetname, "t187" )))//FREDZ
+		ent->map = "bar_sy$sy_h";
+
+	if ((strstr(level.mapname, "sy_h" )) && (strstr(ent->targetname, "t212" )))//FREDZ
+		ent->map = "sy1$sy_h";
+
+	if ((strstr(level.mapname, "sy1" )) && (strstr(ent->targetname, "t77" )))//FREDZ
+		ent->map = "sy_h$sy1";
+
+	if ((strstr(level.mapname, "sy1" )) && (strstr(ent->targetname, "t233" )))//FREDZ
+		ent->map = "sy2$sy1";
 
 	ent->use = use_target_changelevel;
 	ent->svflags = SVF_NOCLIENT;
@@ -799,7 +926,7 @@ Set "sounds" to one of the following:
   4) slime
   5) lava
   6) blood
-  7) fireworks	
+  7) fireworks
   8) smoke
 
 FOR SMOKE
@@ -837,7 +964,7 @@ void use_target_splash (edict_t *self, edict_t *other, edict_t *activator)
 			if (self->firetype > 32)
 				self->firetype = 32;
 		}
-		
+
 		if (!self->deadticks)
 			self->deadticks = 6;
 		else
@@ -848,9 +975,9 @@ void use_target_splash (edict_t *self, edict_t *other, edict_t *activator)
 			if (self->deadticks > 60)
 				self->deadticks = 60;
 		}
-		
+
 		if (!self->fxdensity)
-			self->fxdensity = 24;		
+			self->fxdensity = 24;
 		else
 		{
 			if (self->fxdensity < 1)
@@ -874,7 +1001,7 @@ void use_target_splash (edict_t *self, edict_t *other, edict_t *activator)
 		for (i=0; i < self->count; i++)
 		{
 			VectorCopy(self->s.origin, origin);
-			
+
 			if ((!self->rotate[0]) && (!self->rotate[1]) && (!self->rotate[2]))
 			{
 			origin[0] += (rand()&15)-8;
@@ -1301,7 +1428,7 @@ void SP_target_mal_laser (edict_t *self)
 		self->s.skinnum = 0xe0e1e2e3;
 
 	G_SetMovedir (self->s.angles, self->movedir);
-	
+
 	if (!self->delay)
 		self->delay = 0.1;
 
@@ -1313,7 +1440,7 @@ void SP_target_mal_laser (edict_t *self)
 
 	VectorSet (self->mins, -8, -8, -8);
 	VectorSet (self->maxs, 8, 8, 8);
-	
+
 	self->nextthink = level.time + self->delay;
 	self->think = mal_laser_think;
 

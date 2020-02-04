@@ -56,7 +56,7 @@ void Move_Done (edict_t *self)
 	ent = self->goalentity;
 
 	//VectorCopy (self->moveinfo.end_origin, self->s.origin);
-	
+
 	// spawn some nodes, if this entity hasn't been routed
 	if ((!ent || (!ent->nav_data.goal_index && (ent->wait < 0 || ent->wait > 0.1))) && nav_dynamic->value && (level.node_data->node_count < (MAX_NODES-2)))
 	{
@@ -244,10 +244,10 @@ void AngleMove_Begin (edict_t *ent)
 		VectorSubtract (ent->moveinfo.end_angles, ent->s.angles, destdelta);
 	else
 		VectorSubtract (ent->moveinfo.start_angles, ent->s.angles, destdelta);
-	
+
 	// calculate length of vector
 	len = VectorLength (destdelta);
-	
+
 	// divide by speed to get time to reach dest
 	traveltime = len / ent->moveinfo.speed;
 
@@ -489,7 +489,7 @@ void plat_blocked (edict_t *self, edict_t *other)
 
 
 void Use_Plat (edict_t *ent, edict_t *other, edict_t *activator)
-{ 
+{
 	if (ent->think)
 		return;		// already down
 	plat_go_down (ent);
@@ -502,15 +502,15 @@ void Touch_Plat_Center (edict_t *ent, edict_t *other, cplane_t *plane, csurface_
 // BEGIN:	Xatrix/Ridah/Navigator/07-apr-1998
 if (!(other->cast_info.aiflags & AI_GRUNT))
 // END:		Xatrix/Ridah/Navigator/07-apr-1998
-	
+
 	if (!other->client)
 		return;
-*/		
+*/
 	if (other->health <= 0)
 		return;
 
 	ent = ent->enemy;	// now point at the plat, not the trigger
-	
+
 	if (ent->moveinfo.state == STATE_BOTTOM)
 // BEGIN:	Xatrix/Ridah/Navigator/08-apr-1998
 	{
@@ -539,13 +539,13 @@ void plat_spawn_inside_trigger (edict_t *ent)
 
 //
 // middle trigger
-//	
+//
 	trigger = G_Spawn();
 	trigger->touch = Touch_Plat_Center;
 	trigger->movetype = MOVETYPE_NONE;
 	trigger->solid = SOLID_TRIGGER;
 	trigger->enemy = ent;
-	
+
 	tmin[0] = ent->mins[0] + 25;
 	tmin[1] = ent->mins[1] + 25;
 	tmin[2] = ent->mins[2];
@@ -558,7 +558,7 @@ void plat_spawn_inside_trigger (edict_t *ent)
 
 	if (ent->spawnflags & PLAT_LOW_TRIGGER)
 		tmax[2] = tmin[2] + 8;
-	
+
 	if (tmax[0] - tmin[0] <= 0)
 	{
 		tmin[0] = (ent->mins[0] + ent->maxs[0]) *0.5;
@@ -569,7 +569,7 @@ void plat_spawn_inside_trigger (edict_t *ent)
 		tmin[1] = (ent->mins[1] + ent->maxs[1]) *0.5;
 		tmax[1] = tmin[1] + 1;
 	}
-	
+
 	VectorCopy (tmin, trigger->mins);
 	VectorCopy (tmax, trigger->maxs);
 
@@ -635,7 +635,7 @@ void SP_func_plat (edict_t *ent)
 
 	ent->use = Use_Plat;
 
-	plat_spawn_inside_trigger (ent);	// the "start moving" trigger	
+	plat_spawn_inside_trigger (ent);	// the "start moving" trigger
 
 	if (ent->targetname)
 	{
@@ -810,13 +810,13 @@ void button_done (edict_t *self)
 void button_return (edict_t *self)
 {
 	int setbutton = 0;
-	
+
 	self->moveinfo.state = STATE_DOWN;
 
 	{
 		int i;
 		edict_t	*e = NULL;
-		
+
 		for (i=1, e=g_edicts+i ; i < globals.num_edicts ; i++,e++)
 		{
 			if ((e->classname) && (!strcmp(e->classname, "func_lift")) &&
@@ -828,7 +828,7 @@ void button_return (edict_t *self)
 			}
 		}
 	}
-	
+
 	if (!setbutton)
 		Move_Calc (self, self->moveinfo.start_origin, button_done);
 
@@ -842,13 +842,13 @@ void button_return (edict_t *self)
 void button_return2 (edict_t *self)
 {
 	int setbutton = 0;
-	
+
 	self->moveinfo.state = STATE_DOWN;
 
 	{
 		int i;
 		edict_t	*e = NULL;
-		
+
 		for (i=1, e=g_edicts+i ; i < globals.num_edicts ; i++,e++)
 		{
 			if ((e->classname) && (!strcmp(e->classname, "func_lift")) &&
@@ -860,10 +860,10 @@ void button_return2 (edict_t *self)
 			}
 		}
 	}
-	
+
 	if (!setbutton)
 		Move_Calc (self, self->moveinfo.start_origin, button_done);
-	
+
 	self->s.frame = 0;
 
 	if (self->health)
@@ -878,13 +878,13 @@ void button_wait (edict_t *self)
 	self->s.effects |= EF_ANIM23;
 
 	G_UseTargets (self, self->activator);
-	
+
 	// RAFAEL
 	if (self->activate_flags & ACTIVATE_AND_OPEN)
 		self->activate_flags &= ~ACTIVATE_AND_OPEN;
-	
+
 	self->s.frame = 1;
-	
+
 	if (self->moveinfo.wait >= 0)
 	{
 		self->nextthink = level.time + self->moveinfo.wait;
@@ -920,7 +920,7 @@ void button_fire (edict_t *self)
 	{
 		int i;
 		edict_t	*e = NULL;
-		
+
 		for (i=1, e=g_edicts+i ; i < globals.num_edicts ; i++,e++)
 		{
 			if ((e->classname) && (!strcmp(e->classname, "func_lift")) &&
@@ -932,7 +932,7 @@ void button_fire (edict_t *self)
 			}
 		}
 	}
-	Move_Calc (self, self->moveinfo.end_origin, button_wait);	
+	Move_Calc (self, self->moveinfo.end_origin, button_wait);
 	// END JOSEPH
 }
 
@@ -942,21 +942,21 @@ void button_use (edict_t *self, edict_t *other, edict_t *activator)
 	if (self->owner && (self->owner->spawnflags & DOOR_NOMONSTER) && (other->svflags & SVF_MONSTER))
 		return;
 	// END JOSEPH
-	
+
 	// RAFAEL
 	if (self->activate_flags & ACTIVATE_GENERAL && activator->client)
 	{
 		if (!(self->activate_flags & ACTIVATE_AND_OPEN))
 		{
-			//gi.dprintf ("activator: %s next to button\n", activator->classname);	
+			//gi.dprintf ("activator: %s next to button\n", activator->classname);
 			return;
 		}
 		else
 		{
-			//gi.dprintf ("activator: %s used the button\n", activator->classname);	
+			//gi.dprintf ("activator: %s used the button\n", activator->classname);
 		}
 	}
-	
+
 	self->activator = activator;
 	button_fire (self);
 }
@@ -973,12 +973,12 @@ void button_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *s
 	{
 		if (!(self->activate_flags & ACTIVATE_AND_OPEN))
 		{
-			// gi.dprintf ("other: %s next to button\n", other->classname);	
+			// gi.dprintf ("other: %s next to button\n", other->classname);
 			return;
 		}
 		else
 		{
-			// gi.dprintf ("other: %s used the button\n", other->classname);	
+			// gi.dprintf ("other: %s used the button\n", other->classname);
 		}
 	}
 
@@ -1009,7 +1009,7 @@ void func_button_sound (edict_t *ent, int buttonsound)
 			break;
 		case 3:
 			ent->moveinfo.sound_start = gi.soundindex  ("world/switches/valve.wav");
-			break;		
+			break;
 		case 4:
 			ent->moveinfo.sound_start = gi.soundindex  ("world/switches/wheel.wav");
 			break;
@@ -1042,10 +1042,10 @@ void SP_func_button (edict_t *ent)
 	{
 		func_button_sound (ent, ent->sounds);
 	}
-	
+
 	//if (ent->sounds != 1)
 	//	ent->moveinfo.sound_start = gi.soundindex ("world/switches/butn2.wav");
-	
+
 	if (!ent->speed)
 		ent->speed = 40;
 	if (!ent->accel)
@@ -1112,7 +1112,7 @@ void func_door_sound (edict_t *ent, int doorsound)
 			ent->moveinfo.sound_start = gi.soundindex  ("world/doors/dr2_strt.wav");
 			ent->moveinfo.sound_middle = gi.soundindex  ("world/doors/dr2_mid.wav");
 			ent->moveinfo.sound_end2 = gi.soundindex  ("world/doors/dr2_endb.wav");
-			break;		
+			break;
 		case 4:
 			ent->moveinfo.sound_start = gi.soundindex  ("world/doors/dr3_strt.wav");
 			ent->moveinfo.sound_middle = gi.soundindex  ("world/doors/dr3_mid.wav");
@@ -1164,7 +1164,7 @@ DOORS
 ======================================================================
 */
 
-/*QUAKED func_door (0 .5 .8) ? START_OPEN AUTO_OPEN CRUSHER NOMONSTER ANIMATED TOGGLE ANIMATED_FAST SURF2_ALPHA 
+/*QUAKED func_door (0 .5 .8) ? START_OPEN AUTO_OPEN CRUSHER NOMONSTER ANIMATED TOGGLE ANIMATED_FAST SURF2_ALPHA
 TOGGLE		wait in both the start and end states for a trigger event.
 START_OPEN	the door to moves to its destination when spawned, and operate in reverse.  It is used to temporarily or permanently close off an area when triggered (not useful for touch or takedamage doors).
 NOMONSTER	monsters will not trigger this door
@@ -1180,14 +1180,14 @@ NOMONSTER	monsters will not trigger this door
 "sounds"    default = 2;
 1)	silent
 2)	Medium metal sliding rollup door
-3)	Wooden swinging door 
+3)	Wooden swinging door
 4)	Metal swinging door
 5)	Metal light sliding TRAIN door
 6)	Very large rolling metal door
 7)  Metal swing-up garage door
 8)  Wooden swinging door two
 9)  Wooden drawer
-10) Metal drawer  
+10) Metal drawer
 */
 
 // END JOSEPH
@@ -1238,7 +1238,7 @@ void door_hit_bottom (edict_t *self)
 			// Close end
 			gi.sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self->moveinfo.sound_end2, 1, ATTN_STATIC, 0);
 		else if (self->moveinfo.sound_end)
-			gi.sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self->moveinfo.sound_end, 1, ATTN_STATIC, 0);		
+			gi.sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self->moveinfo.sound_end, 1, ATTN_STATIC, 0);
 		self->s.sound = 0;
 	}
 	self->moveinfo.state = STATE_BOTTOM;
@@ -1253,7 +1253,7 @@ void door_go_down (edict_t *self)
 			// Close start
 			gi.sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self->moveinfo.sound_start2, 1, ATTN_STATIC, 0);
 		else if (self->moveinfo.sound_start)
-			gi.sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self->moveinfo.sound_start, 1, ATTN_STATIC, 0); 
+			gi.sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self->moveinfo.sound_start, 1, ATTN_STATIC, 0);
 		if (self->moveinfo.sound_middle2)
 			self->s.sound = self->moveinfo.sound_middle2;
 		else
@@ -1264,7 +1264,7 @@ void door_go_down (edict_t *self)
 		self->takedamage = DAMAGE_YES;
 		self->health = self->max_health;
 	}
-	
+
 	self->moveinfo.state = STATE_DOWN;
 	if (strcmp(self->classname, "func_door") == 0)
 		Move_Calc (self, self->moveinfo.start_origin, door_hit_bottom);
@@ -1288,7 +1288,7 @@ void door_go_up (edict_t *self, edict_t *activator)
 			self->nextthink = level.time + self->moveinfo.wait;
 		return;
 	}
-	
+
 	if (!(self->flags & FL_TEAMSLAVE))
 	{
 		if (self->moveinfo.sound_start)
@@ -1376,26 +1376,26 @@ void door_use (edict_t *self, edict_t *other, edict_t *activator)
 		{
 			if (!(self->activate_flags & ACTIVATE_AND_OPEN))
 			{
-				//gi.dprintf ("activator: %s next to door\n", activator->classname);	
+				//gi.dprintf ("activator: %s next to door\n", activator->classname);
 				return;
 			}
 			else
 			{
 				self->activate_flags &= ~ACTIVATE_AND_OPEN;
-				//gi.dprintf ("activator: %s used the door\n", activator->classname);	
+				//gi.dprintf ("activator: %s used the door\n", activator->classname);
 			}
 		}
 		else if (!activator->client /*&& activator->cast_group == 1*/ && self->key)
 		{
 			return;
 		}
-		
+
 		// HACK to stop rockets from opening doors
 		else if (activator->movetype == MOVETYPE_FLYMISSILE)
 			return;
 	}
 
-	
+
 	// hack this may cause us problems test first
 	if (self->flags & FL_TEAMSLAVE)
 		return;
@@ -1414,7 +1414,7 @@ void door_use (edict_t *self, edict_t *other, edict_t *activator)
 			return;
 		}
 	}
-	
+
 	// trigger all paired doors
 	for (ent = self ; ent ; ent = ent->teamchain)
 	{
@@ -1449,26 +1449,26 @@ void door_use (edict_t *self, edict_t *other, edict_t *activator)
 		{
 			if (!(self->activate_flags & ACTIVATE_AND_OPEN))
 			{
-				//gi.dprintf ("activator: %s next to door\n", activator->classname);	
+				//gi.dprintf ("activator: %s next to door\n", activator->classname);
 				return;
 			}
 			else
 			{
 				self->activate_flags &= ~ACTIVATE_AND_OPEN;
-				//gi.dprintf ("activator: %s used the door\n", activator->classname);	
+				//gi.dprintf ("activator: %s used the door\n", activator->classname);
 			}
 		}
 		else if (!activator->client /*&& activator->cast_group == 1*/ && self->key)
 		{
 			return;
 		}
-		
+
 		// HACK to stop rockets from opening doors
 		else if (activator->movetype == MOVETYPE_FLYMISSILE)
 			return;
 	}
 
-	
+
 	if (self->flags & FL_TEAMSLAVE)
 	{
 		// this will help the teamed door to open if the activated door is FL_TEAMSLAVE
@@ -1494,7 +1494,7 @@ void door_use (edict_t *self, edict_t *other, edict_t *activator)
 						return;
 					}
 				}
-				
+
 				// trigger all paired doors
 				for (ent = teammaster ; ent ; ent = ent->teamchain)
 				{
@@ -1514,14 +1514,14 @@ void door_use (edict_t *self, edict_t *other, edict_t *activator)
 				}
 
 			}
-			else 
+			else
 				return;
 
 		}
 		else
 			return;
 	}
-	else 
+	else
 	{
 		if (self->spawnflags & DOOR_TOGGLE)
 		{
@@ -1537,7 +1537,7 @@ void door_use (edict_t *self, edict_t *other, edict_t *activator)
 				return;
 			}
 		}
-		
+
 		// trigger all paired doors
 		for (ent = self ; ent ; ent = ent->teamchain)
 		{
@@ -1571,7 +1571,7 @@ void Touch_DoorTrigger (edict_t *self, edict_t *other, cplane_t *plane, csurface
 		return;
 
 	if (other->cast_group == 1)
-		; 
+		;
 	else if (	(self->owner->spawnflags & DOOR_NOMONSTER) && (other->svflags & SVF_MONSTER)
 		&&	((self->owner->cast_group != 1) || (other->cast_group != 1) || (!other->leader)))	// Ridah 25-May-99, new flag for use on Bar doors so friendly guys don't get so stuck
 		return;
@@ -1640,7 +1640,7 @@ void Think_SpawnDoorTrigger (edict_t *ent)
 		AddPointToBounds (other->absmax, mins, maxs);
 	}
 
-	// expand 
+	// expand
 	mins[0] -= 60;
 	mins[1] -= 60;
 	maxs[0] += 60;
@@ -1667,14 +1667,14 @@ void door_blocked  (edict_t *self, edict_t *other)
 
 	if (!(other->svflags & SVF_MONSTER) && !(other->client) )
 	{
-		
+
 		// give it a chance to go away on it's own terms (like gibs)
 		T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, 100000, 1, 0, MOD_CRUSH);
 		// if it's still there, nuke it
 		if (other)
 			BecomeExplosion1 (other);
 		return;
-		
+
 	}
 
 	if (!strcmp (self->classname, "func_door_rotating"))
@@ -1694,7 +1694,7 @@ void door_blocked  (edict_t *self, edict_t *other)
 		if (other->groundentity == self)
 			if (developer->value)
 				gi.dprintf ("%s inflicting damage on %s\n", self->classname, other->classname);
-		
+
 		// Ridah, small objects shouldn't hurt
 		if (VectorDistance( self->absmin, self->absmax) > 200)
 			T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, self->dmg, 1, 0, MOD_CRUSH);
@@ -1782,10 +1782,10 @@ void SP_func_door (edict_t *ent)
 
 	ent->blocked = door_blocked;
 	ent->use = door_use;
-	
+
 	if (!ent->speed)
 		ent->speed = 100;
-	
+
 	if (!ent->accel)
 		ent->accel = ent->speed;
 	if (!ent->decel)
@@ -1827,7 +1827,7 @@ void SP_func_door (edict_t *ent)
 		gi.soundindex ("misc/talk.wav");
 		ent->touch = door_touch;
 	}
-	
+
 	ent->moveinfo.speed = ent->speed;
 	ent->moveinfo.accel = ent->accel;
 	ent->moveinfo.decel = ent->decel;
@@ -1860,7 +1860,7 @@ void SP_func_door (edict_t *ent)
 	// RAFAEL
 	if (!(ent->spawnflags & 2))
 		ent->activate_flags |= ACTIVATE_GENERAL;
-	
+
 }
 
 // JOSEPH 20-MAY-99
@@ -1890,14 +1890,14 @@ REVERSE will cause the door to rotate in the opposite direction.
 "sounds"    default = 2;
 1)	silent
 2)	Medium metal sliding rollup door
-3)	Wooden swinging door 
+3)	Wooden swinging door
 4)	Metal swinging door
 5)	Metal light sliding TRAIN door
 6)	Very large rolling metal door
 7)  Metal swing-up garage door
 8)  Wooden swinging door two
 9)  Wooden drawer
-10) Metal drawer  
+10) Metal drawer
 */
 // END JOSEPH
 
@@ -1970,7 +1970,7 @@ void SP_func_door_rotating (edict_t *ent)
 		ent->die = door_killed;
 		ent->max_health = ent->health;
 	}
-	
+
 	if (ent->targetname && ent->message)
 	{
 		gi.soundindex ("misc/talk.wav");
@@ -1997,7 +1997,7 @@ void SP_func_door_rotating (edict_t *ent)
 	gi.linkentity (ent);
 
 	ent->nextthink = level.time + FRAMETIME;
-	
+
 	//if (ent->health || ent->targetname)
 	//	ent->think = Think_CalcMoveSpeed;
 	//else
@@ -2011,7 +2011,7 @@ void SP_func_door_rotating (edict_t *ent)
 	// RAFAEL
 	//if (!(ent->spawnflags & 256))
 	ent->activate_flags |= ACTIVATE_GENERAL;
-	
+
 	if ((ent->spawnflags & 4))
 		ent->s.renderfx2 |= RF2_SURF_ALPHA;
 
@@ -2022,7 +2022,7 @@ void SP_func_door_rotating (edict_t *ent)
 /*QUAKED func_subdoor_base (0 .5 .8) ? X REVERSE CRUSHER NOMONSTER ANIMATED TOGGLE X_AXIS Y_AXIS AUTO_OPEN
 
 The func_subdoor_handle1 will rotate 90 deg then the door will open with func_subdoor_handle2.
-  
+
 TOGGLE causes the door to wait in both the start and end states for a trigger event.
 
 NOMONSTER	monsters will not trigger this door
@@ -2034,7 +2034,7 @@ check either the X_AXIS or Y_AXIS box to change that.
 You also need a:
 
  func_subdoor_handle1 - Handle with origin in the center
- 
+
  func_subdoor_handle2 - Handle with origin at the door origin
 
  Both handles are in the same area in level space
@@ -2061,7 +2061,7 @@ REVERSE will cause the door to rotate in the opposite direction.
 /*QUAKED func_subdoor_handle1 (0 .5 .8) ? X REVERSE X X X X X_AXIS Y_AXIS
 
 Will rotate 90 deg with the func_subdoor_base.
-  
+
 You need to have an origin brush in the center of this entity. The center of that brush will be
 the point around which it is rotated. It will rotate around the Z axis by default. You can
 check either the X_AXIS or Y_AXIS box to change that.
@@ -2110,8 +2110,8 @@ void Think_stop_handle (edict_t *self)
 		self->handle->svflags |= SVF_NOCLIENT;
 		self->handle2->svflags &= ~SVF_NOCLIENT;
 	}
-	
-	door_use_subdoor (self->save_self->owner, self->save_other, self->save_other);	
+
+	door_use_subdoor (self->save_self->owner, self->save_other, self->save_other);
 }
 
 void Touch_DoorTrigger_subdoor (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
@@ -2120,7 +2120,7 @@ void Touch_DoorTrigger_subdoor (edict_t *self, edict_t *other, cplane_t *plane, 
 	float	deg;
 	float	traveltime;
 	float	frames;
-	
+
 	if (other->health <= 0)
 		return;
 
@@ -2129,17 +2129,17 @@ void Touch_DoorTrigger_subdoor (edict_t *self, edict_t *other, cplane_t *plane, 
 
 	if (level.time < self->touch_debounce_time)
 		return;
-	
+
 	self->touch_debounce_time = level.time + 1.0;
-	
+
 	if ((self->owner->doorflag) && (!self->owner->firstnode))
 	{
-		if (self->owner->handle->duration) 
+		if (self->owner->handle->duration)
 			traveltime = self->owner->handle->duration;
 				else traveltime = 0.5;
-		
+
 		deg = 90;
-		
+
 		self->owner->firstnode = 1;
 
 		self->owner->save_self = self;
@@ -2153,11 +2153,11 @@ void Touch_DoorTrigger_subdoor (edict_t *self, edict_t *other, cplane_t *plane, 
 				Taxis = PITCH;
 			else // Z_AXIS
 				Taxis = YAW;
-		
+
             self->owner->handle->avelocity[Taxis] = (deg / traveltime);
-			
+
 			if (self->owner->handle->spawnflags & DOOR_REVERSE)
-				self->owner->handle->avelocity[Taxis] = -(self->owner->handle->avelocity[Taxis]);	
+				self->owner->handle->avelocity[Taxis] = -(self->owner->handle->avelocity[Taxis]);
 		}
 		if (traveltime < FRAMETIME)
 		{
@@ -2191,32 +2191,32 @@ void Think_SpawnDoorTrigger_subdoor (edict_t *ent)
 {
 	edict_t		*other, *handle, *chainent;
 	vec3_t		mins, maxs;
-	
+
 	// Kill trigger if door is a slave
 	if (ent->flags & FL_TEAMSLAVE)
 	{
 		return;
 	}
-    	
+
 	// Set pointers to all slaves from master
 	for (chainent = ent->teammaster; chainent; chainent = chainent->teamchain)
 	{
 		if (chainent->handleflag)
 		{
-			ent->handle = chainent; 
+			ent->handle = chainent;
 		}
 		else if (chainent->handle2flag)
 		{
-			ent->handle2 = chainent; 		
+			ent->handle2 = chainent;
 		}
 	}
-	
+
 	// JOSEPH 1-OCT-98
-	// Pre-rotate handle1 to match handle2 
+	// Pre-rotate handle1 to match handle2
 	if (ent->handle)
 	{
 		handle = ent->handle;
-		
+
 		if (ent->spawnflags & DOOR_X_AXIS)
 		{
 			if(ent->spawnflags & DOOR_REVERSE)
@@ -2237,7 +2237,7 @@ void Think_SpawnDoorTrigger_subdoor (edict_t *ent)
 			else
 			{
 				handle->s.angles[1] -= 90;
-			}		
+			}
 		}
 		else // Z_AXIS
 		{
@@ -2248,33 +2248,33 @@ void Think_SpawnDoorTrigger_subdoor (edict_t *ent)
 			else
 			{
 				handle->s.angles[2] -= 90;
-			}		
+			}
 		}
 	}
 	// END JOSEPH
-	
+
 	// Set handle2 to move like door
 	if (ent->handle2)
 	{
 		handle = ent->handle2;
-			
+
 		VectorClear (handle->s.angles);
-			
+
 		VectorCopy (ent->movedir, handle->movedir);
-			
+
 		VectorCopy (handle->s.angles, handle->pos1);
-			
+
 		VectorMA (handle->s.angles, ent->moveinfo.distance, handle->movedir, handle->pos2);
-			
+
 		handle->moveinfo.distance = ent->moveinfo.distance;
 
 		handle->speed = ent->speed;
 		handle->accel = ent->accel;
 		handle->decel = ent->decel;
-			
+
 		handle->wait = ent->wait;
 		handle->dmg = ent->dmg;
-			
+
 		// if it starts open, switch the positions
 		if (ent->spawnflags & DOOR_START_OPEN)
 		{
@@ -2289,16 +2289,16 @@ void Think_SpawnDoorTrigger_subdoor (edict_t *ent)
 		handle->moveinfo.accel = handle->accel;
 		handle->moveinfo.decel = handle->decel;
 		handle->moveinfo.wait  = handle->wait = -1;
-			
+
 		VectorCopy (handle->s.origin, handle->moveinfo.start_origin);
 		VectorCopy (handle->pos1, handle->moveinfo.start_angles);
 		VectorCopy (handle->s.origin, handle->moveinfo.end_origin);
 		VectorCopy (handle->pos2, handle->moveinfo.end_angles);
-			
+
 		gi.linkentity (handle);
-    	
+
 	}
-	
+
 	if (ent->flags & FL_TEAMSLAVE)
 		return;		// only the team leader spawns a trigger
 
@@ -2311,7 +2311,7 @@ void Think_SpawnDoorTrigger_subdoor (edict_t *ent)
 		AddPointToBounds (other->absmax, mins, maxs);
 	}
 
-	// expand 
+	// expand
 	mins[0] -= 60;
 	mins[1] -= 60;
 	maxs[0] += 60;
@@ -2336,14 +2336,14 @@ void SP_func_subdoor_base (edict_t *ent)
 
 	// set the axis of rotation
 	VectorClear(ent->movedir);
-	
+
 	if (ent->spawnflags & DOOR_X_AXIS)
 		ent->movedir[2] = 1.0;
 	else if (ent->spawnflags & DOOR_Y_AXIS)
 		ent->movedir[0] = 1.0;
 	else // Z_AXIS
 		ent->movedir[1] = 1.0;
-	
+
 	// check for reverse rotation
 	if (ent->spawnflags & DOOR_REVERSE)
 		VectorNegate (ent->movedir, ent->movedir);
@@ -2375,7 +2375,7 @@ void SP_func_subdoor_base (edict_t *ent)
 
 	//if (!ent->wait)
 	//	ent->wait = 3;
-	
+
 	// Only opens once
 	ent->wait = -1;
 
@@ -2405,7 +2405,7 @@ void SP_func_subdoor_base (edict_t *ent)
 		ent->die = door_killed;
 		ent->max_health = ent->health;
 	}
-	
+
 	if (ent->targetname && ent->message)
 	{
 		gi.soundindex ("misc/talk.wav");
@@ -2644,7 +2644,7 @@ void train_wait (edict_t *self)
 	{
 		train_next (self);
 	}
-	
+
 }
 
 void train_next (edict_t *self)
@@ -2671,7 +2671,7 @@ again:
 	// JOSEPH 16-OCT-98
 	self->moveinfo.accel = self->accel;
 	self->moveinfo.decel = self->decel;
-	
+
 	if (ent->accel)
 	{
 		self->accel = 1;
@@ -2687,7 +2687,7 @@ again:
 		self->accel = self->decel = self->moveinfo.speed;
 	}
 	// END JOSEPH
-	
+
 	self->target = ent->target;
 
 	// check for a teleport path_corner
@@ -2776,8 +2776,8 @@ void func_train_find (edict_t *self)
 	{
 		self->accel = self->decel = self->moveinfo.speed;
 	}
-	// END JOSEPH		
-	
+	// END JOSEPH
+
 	self->target = ent->target;
 
 	VectorSubtract (ent->s.origin, self->mins, self->s.origin);
@@ -2835,19 +2835,19 @@ void Think_train_sound_B (edict_t *ent)
 			ent->handle->avelocity[0] || ent->handle->avelocity[1] || ent->handle->avelocity[2])
 		{
 			vec3_t origin;
-			
-			VectorAdd (ent->handle->absmin, ent->handle->absmax, origin);				
+
+			VectorAdd (ent->handle->absmin, ent->handle->absmax, origin);
 			VectorScale (origin, 0.5, origin);
 
 			VectorCopy (origin, ent->s.origin);
-			
+
 			gi.positioned_sound(ent->s.origin, ent, CHAN_AUTO, ent->handle->moveinfo.sound_middle, 1, 1, 0);
-			
+
 			ent->nextthink = level.time + ent->handle->reactdelay;
 		}
 		else
 		{
-			ent->nextthink = level.time + 0.1;			
+			ent->nextthink = level.time + 0.1;
 		}
 	}
 }
@@ -2857,13 +2857,13 @@ void Think_train_sound2_B (edict_t *ent)
 	if ((ent->handle) && (ent->handle->handle))
 	{
 		vec3_t origin;
-	
-		VectorAdd (ent->handle->handle->absmin, ent->handle->handle->absmax, origin);				
+
+		VectorAdd (ent->handle->handle->absmin, ent->handle->handle->absmax, origin);
 		VectorScale (origin, 0.5, origin);
 
 		VectorCopy (origin, ent->handle->s.origin);
 	}
-	
+
 	ent->nextthink = level.time + 0.1;
 }
 
@@ -2873,12 +2873,12 @@ void Start_train_sound_B (edict_t *ent)
 	edict_t	*sound2 = NULL;
 
 	sound = G_Spawn();
-	
+
 	if (!sound)
 		return;
 
 	sound2 = G_Spawn();
-	
+
 	if (!sound2)
 		return;
 
@@ -2944,11 +2944,11 @@ void SP_func_train (edict_t *self)
 	}
 
 	if (st.noise)
-	{	
+	{
 		char string[256];
-		
+
 		sprintf(string, "%s.wav", st.noise);
-		
+
 		self->moveinfo.sound_middle = gi.soundindex(string);
 		if (!self->reactdelay)
 			self->reactdelay = 1.0;
@@ -2969,8 +2969,8 @@ noise	   looping sound to play when the train is in motion
 reactdelay length of the sound in seconds
 
   On the path corner:
-speed    departure speed from that corner 
-rotate   angle change for X Y Z to next corner 
+speed    departure speed from that corner
+rotate   angle change for X Y Z to next corner
 duration duration for angle change (overrides speed)
 */
 // END JOSEPH
@@ -2984,7 +2984,7 @@ void Move_Begin_rotating (edict_t *ent)
 {
 	float	frames;
 
-    // Stand still rotation 
+    // Stand still rotation
 	if (ent->durationflag)
     {
 		ent->nextthink = level.time + (ent->lastduration);
@@ -2992,12 +2992,12 @@ void Move_Begin_rotating (edict_t *ent)
 		return;
     }
 
-	if (((ent->moveinfo.speed * FRAMETIME) >= ent->moveinfo.remaining_distance))  
+	if (((ent->moveinfo.speed * FRAMETIME) >= ent->moveinfo.remaining_distance))
 	{
 		Move_Final(ent);
 		return;
 	}
-	
+
 	VectorScale (ent->moveinfo.dir, ent->moveinfo.speed, ent->velocity);
 	frames = floor((ent->moveinfo.remaining_distance / ent->moveinfo.speed) / FRAMETIME);
 	ent->moveinfo.remaining_distance -= frames * ent->moveinfo.speed * FRAMETIME;
@@ -3014,7 +3014,7 @@ void Move_Calc_rotating (edict_t *ent, vec3_t dest, void(*func)(edict_t*))
 // END:		Xatrix/Ridah/Navigator/09-apr-1998
 
     //gi.dprintf ("MIN%s MAX%s", vtos(ent->mins), vtos(ent->maxs));
-	
+
 	VectorClear (ent->velocity);
 	VectorSubtract (dest, ent->s.origin, ent->moveinfo.dir);
 	ent->moveinfo.remaining_distance = VectorNormalize (ent->moveinfo.dir);
@@ -3045,7 +3045,7 @@ void train_next_rotating (edict_t *self);
 
 void train_blocked_rotating (edict_t *self, edict_t *other)
 {
-	
+
 	//gi.dprintf ("train_blocked_rotating %s\n", vtos(self->s.angles));
 	if (!(other->svflags & SVF_MONSTER) && !(other->client) )
 	{
@@ -3090,11 +3090,11 @@ void train_wait_rotating (edict_t *self)
 	if (self->moveinfo.wait)
 	{
 		VectorClear(self->avelocity);
-		
+
 		// JOSEPH 1-OCT-98
 		// Force proper angle
 		VectorCopy(self->angletarget, self->s.angles);
-		
+
 		if (self->moveinfo.wait > 0)
 		{
 			self->nextthink = level.time + self->moveinfo.wait;
@@ -3124,7 +3124,7 @@ void train_wait_rotating (edict_t *self)
 	{
 		train_next_rotating (self);
 	}
-	
+
 }
 
 // JOSEPH 6-NOV-98
@@ -3144,7 +3144,7 @@ again:
 //		gi.dprintf ("train_next: no next target\n");
 		return;
 	}
-	
+
 	ent = G_PickTarget (self->target);
 
 	if (!ent)
@@ -3156,7 +3156,7 @@ again:
 	// JOSEPH 20-APR-99
 	self->moveinfo.accel = self->accel;
 	self->moveinfo.decel = self->decel;
-	
+
 	if (ent->accel)
 	{
 		self->accel = 1;
@@ -3172,10 +3172,10 @@ again:
 		self->accel = self->decel = self->moveinfo.speed;
 	}
 	// END JOSEPH
-	
+
 	// Clear stand still duration flag
 	self->durationflag = 0;
-	
+
 	// JOSEPH 6-JAN-99
 	/*if ((self->name) && (!strcmp(self->name, "Joe9000")))
 	{
@@ -3184,64 +3184,64 @@ again:
 	//gi.dprintf ("SPEED %f\n", self->speed);
 	//gi.dprintf ("DURATION %f\n", self->duration);
 	// END JOSEPH
-	
+
 	// Set speed
 	if (self->firstnode)
     {
 		// Set rotation from saved first node
 		VectorSubtract(ent->s.origin, self->nodeorigin, dir);
-		remain = VectorNormalize (dir);		
-		
+		remain = VectorNormalize (dir);
+
 		if (!self->duration)
 		{
 			// Set speed from saved first node
 			self->moveinfo.speed = self->moveinfo.accel = self->moveinfo.decel = self->speed;
 
-			frames = floor((remain / self->moveinfo.speed) / FRAMETIME);	
+			frames = floor((remain / self->moveinfo.speed) / FRAMETIME);
 			if (frames) frames++;
 
-			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / frames)*10;	
+			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / frames)*10;
 				else self->avelocity[0] = 0;
-			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / frames)*10;	
-				else self->avelocity[1] = 0;		
-			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / frames)*10;	
-				else self->avelocity[2] = 0;  
+			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / frames)*10;
+				else self->avelocity[1] = 0;
+			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / frames)*10;
+				else self->avelocity[2] = 0;
 		}
 		else if (remain)
 		{
-			// Set speed from duration saved from current node	
+			// Set speed from duration saved from current node
 			self->moveinfo.speed = self->moveinfo.accel = self->moveinfo.decel = (remain / (self->duration));
 
-			frames = floor((remain / self->moveinfo.speed) / FRAMETIME);	
+			frames = floor((remain / self->moveinfo.speed) / FRAMETIME);
 			if (frames) frames++;
 
-			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / frames)*10;	
+			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / frames)*10;
 				else self->avelocity[0] = 0;
-			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / frames)*10;	
-				else self->avelocity[1] = 0;		
-			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / frames)*10;	
-				else self->avelocity[2] = 0;  
+			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / frames)*10;
+				else self->avelocity[1] = 0;
+			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / frames)*10;
+				else self->avelocity[2] = 0;
 		}
 		else
 		{
 			// Set stand still duration flag
 			self->durationflag = 1;
-			
-			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / (self->duration/*+0.1*/));	
+
+			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / (self->duration/*+0.1*/));
 				else self->avelocity[0] = 0;
-			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / (self->duration/*+0.1*/));	
-				else self->avelocity[1] = 0;		
-			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / (self->duration/*+0.1*/));	
-				else self->avelocity[2] = 0;  
+			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / (self->duration/*+0.1*/));
+				else self->avelocity[1] = 0;
+			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / (self->duration/*+0.1*/));
+				else self->avelocity[2] = 0;
 		}
 
-		self->firstnode = 0;  
+		self->firstnode = 0;
     }
 	else
     {
 		// Force proper angle
 		VectorCopy(self->angletarget, self->s.angles);
-	    
+
 		//gi.dprintf ("CURRENT ANGLE %s\n", vtos(self->s.angles));
 		//gi.dprintf ("TARGET  ANGLE %s\n", vtos(self->angletarget));
 		//gi.dprintf ("SPEED %f\n", self->speed);
@@ -3250,36 +3250,36 @@ again:
 		// Set rotation from saved current node
 		VectorSubtract(ent->s.origin, self->nodeorigin, dir);
 		remain = VectorNormalize (dir);
-		
+
 		if (!self->duration)
-		{	
+		{
 			// Set speed from saved current node
-			self->moveinfo.speed = self->moveinfo.accel = self->moveinfo.decel = self->speed;		
-			
-			frames = floor((remain / self->moveinfo.speed) / FRAMETIME);	
+			self->moveinfo.speed = self->moveinfo.accel = self->moveinfo.decel = self->speed;
+
+			frames = floor((remain / self->moveinfo.speed) / FRAMETIME);
 			if (frames) frames++;
-			
-			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / frames)*10;	
+
+			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / frames)*10;
 				else self->avelocity[0] = 0;
-			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / frames)*10;	
-				else self->avelocity[1] = 0;		
-			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / frames)*10;	
-				else self->avelocity[2] = 0;    
+			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / frames)*10;
+				else self->avelocity[1] = 0;
+			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / frames)*10;
+				else self->avelocity[2] = 0;
 		}
 		else if (remain)
 		{
-			// Set speed from duration saved from current node	
-			self->moveinfo.speed = self->moveinfo.accel = self->moveinfo.decel = ((remain / self->duration));		
-			
-			frames = floor((remain / self->moveinfo.speed) / FRAMETIME);	
+			// Set speed from duration saved from current node
+			self->moveinfo.speed = self->moveinfo.accel = self->moveinfo.decel = ((remain / self->duration));
+
+			frames = floor((remain / self->moveinfo.speed) / FRAMETIME);
 			if (frames) frames++;
-			
-			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / frames)*10;	
+
+			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / frames)*10;
 				else self->avelocity[0] = 0;
-			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / frames)*10;	
-				else self->avelocity[1] = 0;		
-			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / frames)*10;	
-				else self->avelocity[2] = 0;    
+			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / frames)*10;
+				else self->avelocity[1] = 0;
+			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / frames)*10;
+				else self->avelocity[2] = 0;
 		}
 		else
 		{
@@ -3288,35 +3288,35 @@ again:
 
 			self->moveinfo.speed = self->moveinfo.accel = self->moveinfo.decel = 0;
 
-			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / (self->duration));	
+			if (self->rotate[0]) self->avelocity[0] = (self->rotate[0] / (self->duration));
 				else self->avelocity[0] = 0;
-			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / (self->duration));	
-				else self->avelocity[1] = 0;		
-			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / (self->duration));	
-				else self->avelocity[2] = 0;   
+			if (self->rotate[1]) self->avelocity[1] = (self->rotate[1] / (self->duration));
+				else self->avelocity[1] = 0;
+			if (self->rotate[2]) self->avelocity[2] = (self->rotate[2] / (self->duration));
+				else self->avelocity[2] = 0;
 		}
 	}
-	
-	// Save speed for next node or continue at current speed if node speed = 0 
+
+	// Save speed for next node or continue at current speed if node speed = 0
 	if (ent->speed) self->speed = ent->speed;
 
 	// Save duration for calc
 	self->lastduration = self->duration;
-	
+
 	// Save duration for next node
 	self->duration = ent->duration;
 
 	// Save node origin for next node
 	VectorCopy(ent->s.origin, self->nodeorigin);
-	
+
 	// Save target angle for next node
 	self->angletarget[0] = AngleAdd(self->s.angles[0], self->rotate[0]);
 	self->angletarget[1] = AngleAdd(self->s.angles[1], self->rotate[1]);
 	self->angletarget[2] = AngleAdd(self->s.angles[2], self->rotate[2]);
-		
+
 	// Save rotation info from next node
 	VectorCopy(ent->rotate, self->rotate);
-	
+
 	self->target = ent->target;
 
 	// check for a teleport path_corner
@@ -3350,7 +3350,7 @@ again:
 
 	// JOSEPH 2-APR-99
 	VectorSubtract (ent->s.origin, vec3_origin, dest);
-	// END JOSEPH	
+	// END JOSEPH
 	self->moveinfo.state = STATE_TOP;
 	VectorCopy (self->s.origin, self->moveinfo.start_origin);
 	VectorCopy (dest, self->moveinfo.end_origin);
@@ -3363,7 +3363,7 @@ void train_resume_rotating (edict_t *self)
 {
 	edict_t	*ent;
 	vec3_t	dest;
-    
+
 	ent = self->target_ent;
 
 	// JOSEPH 2-APR-99
@@ -3384,7 +3384,7 @@ void train_resume_rotating (edict_t *self)
 void func_train_find_rotating (edict_t *self)
 {
 	edict_t *ent;
-		
+
 	if (!self->target)
 	{
 		gi.dprintf ("train_find: no target\n");
@@ -3413,8 +3413,8 @@ void func_train_find_rotating (edict_t *self)
 	{
 		self->accel = self->decel = self->moveinfo.speed;
 	}
-	// END JOSEPH		
-	
+	// END JOSEPH
+
 	// Save info from first node
 	self->speed = ent->speed;
 	self->duration = ent->duration;
@@ -3424,9 +3424,9 @@ void func_train_find_rotating (edict_t *self)
 	// JOSEPH 21-APR-99
 	VectorCopy(ent->s.origin, self->s.origin);
 	// END JOSEPH
-	
+
 	// Set first node flag
-	self->firstnode = 1;	
+	self->firstnode = 1;
 
 	//VectorSubtract (ent->s.origin, self->mins, self->s.origin);
 	//gi.linkentity (self);
@@ -3474,12 +3474,12 @@ void Think_train_sound (edict_t *ent)
 		{
 			VectorCopy (ent->handle->s.origin, ent->s.origin);
 			gi.positioned_sound(ent->s.origin, ent, CHAN_AUTO, ent->handle->moveinfo.sound_middle, 1, 1, 0);
-			
+
 			ent->nextthink = level.time + ent->handle->reactdelay;
 		}
 		else
 		{
-			ent->nextthink = level.time + 0.1;			
+			ent->nextthink = level.time + 0.1;
 		}
 	}
 }
@@ -3490,7 +3490,7 @@ void Think_train_sound2 (edict_t *ent)
 	{
 		VectorCopy (ent->handle->handle->s.origin, ent->handle->s.origin);
 	}
-	
+
 	ent->nextthink = level.time + 0.1;
 }
 
@@ -3500,12 +3500,12 @@ void Start_train_sound (edict_t *ent)
 	edict_t	*sound2 = NULL;
 
 	sound = G_Spawn();
-	
+
 	if (!sound)
 		return;
 
 	sound2 = G_Spawn();
-	
+
 	if (!sound2)
 		return;
 
@@ -3531,7 +3531,7 @@ void touch_train_die (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t 
 	if (other->health <= 0)
 		return;
 
-	T_Damage (other, ent, ent, vec3_origin, other->s.origin, vec3_origin, 666, 1, 0, MOD_CRUSH);		
+	T_Damage (other, ent, ent, vec3_origin, other->s.origin, vec3_origin, 666, 1, 0, MOD_CRUSH);
 }
 // END JOSEPH
 
@@ -3540,10 +3540,10 @@ void SP_func_train_rotating (edict_t *self)
 {
 	// hack for now
 	//return;
-	
+
 	self->movetype = MOVETYPE_PUSH;
 	self->solid = SOLID_BSP;
-	
+
 	VectorClear (self->s.angles);
 	self->blocked = train_blocked_rotating;
 	if (self->spawnflags & TRAIN_BLOCK_STOPS)
@@ -3558,7 +3558,7 @@ void SP_func_train_rotating (edict_t *self)
 	self->moveinfo.speed = self->speed;
 	self->moveinfo.accel = self->moveinfo.decel = self->moveinfo.speed;
 	// END JOSEPH
-	
+
 	gi.setmodel (self, self->model);
 
 	//if (st.noise)
@@ -3572,15 +3572,15 @@ void SP_func_train_rotating (edict_t *self)
 
 	self->maxs[0] *= 2;
 	self->maxs[1] *= 2;
-	self->maxs[2] *= 2;	
-	
+	self->maxs[2] *= 2;
+
 	// JOSEPH 25-APR-99
 	if (self->spawnflags & 8)
 		self->s.renderfx2 |= RF2_SURF_ALPHA;
 	// END JOSEPH
-		
+
 	gi.linkentity (self);
-	
+
 	// set the abs box - expand for rotation
 	{
 		float		max, v;
@@ -3602,7 +3602,7 @@ void SP_func_train_rotating (edict_t *self)
 			self->absmax[i] = self->s.origin[i] + max;
 		}
 	}
-	
+
 	if (self->dmg == 666)
 	{
 		self->touch = touch_train_die;
@@ -3622,14 +3622,14 @@ void SP_func_train_rotating (edict_t *self)
 	}
 
 	if (st.noise)
-	{	
+	{
 		char string[256];
-		
+
 		//self->moveinfo.sound_middle = gi.soundindex("world/trainout.wav");
 		//self->reactdelay = 1.0;
-		
+
 		sprintf(string, "%s.wav", st.noise);
-		
+
 		self->moveinfo.sound_middle = gi.soundindex(string);
 		if (!self->reactdelay)
 			self->reactdelay = 1.0;
@@ -3646,7 +3646,7 @@ void trigger_elevator_use (edict_t *self, edict_t *other, edict_t *activator)
 {
 	edict_t *target;
 
-	
+
 	// RAFAEL
 /*
 	if (activator)
@@ -3654,17 +3654,17 @@ void trigger_elevator_use (edict_t *self, edict_t *other, edict_t *activator)
 	{
 		if (!(self->activate_flags & ACTIVATE_AND_OPEN))
 		{
-			//gi.dprintf ("activator: %s next to door\n", activator->classname);	
+			//gi.dprintf ("activator: %s next to door\n", activator->classname);
 			return;
 		}
 		else
 		{
 			self->activate_flags &= ~ACTIVATE_AND_OPEN;
-			//gi.dprintf ("activator: %s used the door\n", activator->classname);	
+			//gi.dprintf ("activator: %s used the door\n", activator->classname);
 		}
 	}
 */
-	
+
 	if (self->movetarget->nextthink)
 	{
 //		gi.dprintf("elevator busy\n");
@@ -3996,7 +3996,7 @@ void SP_func_door_secret (edict_t *ent)
 		gi.soundindex ("misc/talk.wav");
 		ent->touch = door_touch;
 	}
-	
+
 	ent->classname = "func_door";
 
 	gi.linkentity (ent);
@@ -4023,11 +4023,11 @@ void SP_func_killbox (edict_t *ent)
 "health"	if set, the light may be killed.
 */
 
-// RAFAEL 
+// RAFAEL
 // note to self
 // the lights will take damage from explosions
 // this could leave a player in total darkness very bad
- 
+
 #define START_OFF	1
 
 void rotating_light_alarm (edict_t *self)
@@ -4035,7 +4035,7 @@ void rotating_light_alarm (edict_t *self)
 	if (self->spawnflags & START_OFF)
 	{
 		self->think = NULL;
-		self->nextthink = 0;	
+		self->nextthink = 0;
 	}
 	else
 	{
@@ -4046,7 +4046,7 @@ void rotating_light_alarm (edict_t *self)
 
 void rotating_light_killed (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point, int mdx_part, int mdx_subobject)
 {
-	
+
 	gi.WriteByte (svc_temp_entity);
 	gi.WriteByte (TE_WELDING_SPARKS);
 	gi.WriteByte (30);
@@ -4058,9 +4058,9 @@ void rotating_light_killed (edict_t *self, edict_t *inflictor, edict_t *attacker
 	self->s.effects &= ~EF_SPINNINGLIGHTS;
 	self->use = NULL;
 
-	self->think = G_FreeEdict;	
+	self->think = G_FreeEdict;
 	self->nextthink = level.time + 0.1;
-	
+
 }
 
 static void rotating_light_use (edict_t *self, edict_t *other, edict_t *activator)
@@ -4082,20 +4082,20 @@ static void rotating_light_use (edict_t *self, edict_t *other, edict_t *activato
 		self->s.effects &= ~EF_SPINNINGLIGHTS;
 	}
 }
-	
+
 
 void SP_rotating_light (edict_t *self)
 {
 
 	self->movetype = MOVETYPE_STOP;
 	self->solid = SOLID_BBOX;
-	
+
 	self->s.modelindex = gi.modelindex ("models/objects/light/tris.md2");
-	
+
 	self->s.frame = 0;
-		
+
 	self->use = rotating_light_use;
-	
+
 	if (self->spawnflags & START_OFF)
 		self->s.effects &= ~EF_SPINNINGLIGHTS;
 	else
@@ -4122,18 +4122,18 @@ void SP_rotating_light (edict_t *self)
 		self->die = rotating_light_killed;
 		self->takedamage = DAMAGE_YES;
 	}
-	
+
 	if (self->spawnflags & 2)
 	{
-		self->moveinfo.sound_start = gi.soundindex ("misc/alarm.wav");	
+		self->moveinfo.sound_start = gi.soundindex ("misc/alarm.wav");
 	}
-	
+
 	gi.linkentity (self);
 
 }
 
 
-/*UAKED func_object_repair (1 .5 0) (-8 -8 -8) (8 8 8) 
+/*UAKED func_object_repair (1 .5 0) (-8 -8 -8) (8 8 8)
 object to be repaired.
 The default delay is 1 second
 "delay" the delay in seconds for spark to occur
@@ -4141,8 +4141,8 @@ The default delay is 1 second
 
 void object_repair_fx (edict_t *ent)
 {
- 
- 
+
+
 	ent->nextthink = level.time + ent->delay;
 
 	if (ent->health <= 100)
@@ -4157,7 +4157,7 @@ void object_repair_fx (edict_t *ent)
 		gi.WriteByte (0xe0 + (rand()&7));
 		gi.multicast (ent->s.origin, MULTICAST_PVS);
 	}
-	
+
 }
 
 
@@ -4170,7 +4170,7 @@ void object_repair_dead (edict_t *ent)
 
 void object_repair_sparks (edict_t *ent)
 {
- 
+
 	if (ent->health < 0)
 	{
 		ent->nextthink = level.time + 0.1;
@@ -4179,7 +4179,7 @@ void object_repair_sparks (edict_t *ent)
 	}
 
 	ent->nextthink = level.time + ent->delay;
-	
+
 	gi.WriteByte (svc_temp_entity);
 	gi.WriteByte (TE_WELDING_SPARKS);
 	gi.WriteByte (10);
@@ -4187,7 +4187,7 @@ void object_repair_sparks (edict_t *ent)
 	gi.WriteDir (vec3_origin);
 	gi.WriteByte (0xe0 + (rand()&7));
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
-	
+
 }
 
 void SP_object_repair (edict_t *ent)
@@ -4202,9 +4202,9 @@ void SP_object_repair (edict_t *ent)
 	ent->health = 100;
 	if (!ent->delay)
 		ent->delay = 1.0;
-	
+
 }
-// END JOSEPH 
+// END JOSEPH
 
 // JOSEPH 26-APR-99
 /*QUAKED func_lift (0 .5 .8) ? START_ON TOGGLE BLOCK_STOPS
@@ -4289,7 +4289,7 @@ void lift_wait (edict_t *self)
 	{
 		lift_next (self);
 	}
-	
+
 }
 
 void lift_next (edict_t *self)
@@ -4393,7 +4393,7 @@ void func_lift_find (edict_t *self)
 	{
 		int i;
 		edict_t	*e = NULL;
-			
+
 		for (i=1, e=g_edicts+i ; i < globals.num_edicts ; i++,e++)
 		{
 			if ((e->classname) && (!strcmp(e->classname, "func_button")) &&
@@ -4475,7 +4475,7 @@ void SP_func_lift (edict_t *self)
 	self->moveinfo.accel = self->moveinfo.decel = self->moveinfo.speed;
 
 	self->use = lift_use;
-	
+
 	gi.linkentity (self);
 
 	if (self->target)

@@ -39,6 +39,7 @@ field_t fields[] = {
 	{"volume", FOFS(volume), F_FLOAT},
 	{"attenuation", FOFS(attenuation), F_FLOAT},
 	{"map", FOFS(map), F_LSTRING},
+	{"endmap", FOFS(endmap), F_LSTRING},
 	{"origin", FOFS(s.origin), F_VECTOR},
 	{"angles", FOFS(s.angles), F_VECTOR},
 	{"angle", FOFS(s.angles), F_ANGLEHACK},

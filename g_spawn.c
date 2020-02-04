@@ -113,6 +113,7 @@ void SP_cast_dog (edict_t *ent);
 void SP_cast_shorty (edict_t *ent);
 void SP_cast_whore (edict_t *ent);
 void SP_cast_rat (edict_t *ent);
+void SP_cast_pawn_o_matic (edict_t *ent);
 
 // AI stuff
 void SP_ai_boundary (edict_t *ent);
@@ -461,13 +462,15 @@ spawn_t	spawns[] = {
 	{"cast_thug_sit", SP_cast_thug_sit},//FREDZ never used in kingpin orginale maps
 	{"cast_bitch", SP_cast_bitch},
 	{"cast_dog", SP_cast_dog},
-    {"cast_rat", SP_cast_rat},
+    {"cast_rat", SP_cast_rat},//FREDZ new ai rat
 // Ridah, done.
 
 	{"cast_runt", SP_cast_runt},
 	{"cast_bum_sit", SP_cast_bum_sit},
 	{"cast_shorty", SP_cast_shorty},
 	{"cast_whore", SP_cast_whore},
+
+	{"cast_pawn_o_matic", SP_cast_pawn_o_matic}, //FREDZ pawn o matic guy; Sharky
 
 //	{"cast_punk_window", SP_cast_punk_window},
 //	{"cast_punk2", SP_cast_thug},				// just for backwards compatibility
@@ -1639,11 +1642,11 @@ void SP_worldspawn (edict_t *ent)
 	int maps, i, found, j, k, unique, selection;
 	char mappic[100];
 	// Ridah, don't allow deathmatching in single player maps
-	if (ent->count && deathmatch->value)//FREDZ thugfloor maybe disable
+/*	if (ent->count && deathmatch->value)//FREDZ thugfloor maybe disable
 	{
 		gi.error("\nCannot play this map in DEATHMATCH mode.\n");
 		return;
-	}
+	}*/
 
 	if (!deathmatch->value)
 	{

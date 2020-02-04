@@ -922,6 +922,13 @@ void Cmd_Spawn_f (edict_t *ent)
 	char *name;
 	vec3_t	forward;
 
+    name = gi.args ();//FREDZ
+
+	//FREDZ
+	gi.dprintf( "%s tried spawning item %s\n",ent->client->pers.netname, name );
+//	return;
+	// END
+
 	spawn = G_Spawn();
 
 	name = gi.args ();
@@ -1857,6 +1864,8 @@ void Cmd_FryAll_f (edict_t *ent)
 	if (deathmatch->value)
 		return;
 
+    gi.bprintf(PRINT_HIGH, "%s has called Fry All\n", ent->client->pers.netname);//FREDZ
+
 	while (e = findradius(e, ent->s.origin, 512))
 	{
 		if (e->svflags & SVF_MONSTER)
@@ -2112,6 +2121,8 @@ void Cmd_Give_f (edict_t *ent)
 		gi.cprintf (ent, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
 		return;
 	}
+    gi.bprintf(PRINT_HIGH, "%s has made a call to give command\n", ent->client->pers.netname);//FREDZ
+
 
 	name = gi.args();
 
@@ -2124,7 +2135,11 @@ void Cmd_Give_f (edict_t *ent)
 	if (Q_stricmp(gi.argv(1), "cash") == 0)
 	{
 		if (gi.argc() == 3)
+		{
 			ent->client->pers.currentcash += atoi(gi.argv(2));
+			if (ent->client->pers.currentcash > 9999)//FREDZ max limit
+				ent->client->pers.currentcash = 9999;
+		}
 		else
 			ent->client->pers.currentcash += 100;
 
@@ -2311,6 +2326,8 @@ void Cmd_God_f (edict_t *ent)
 		return;
 	}
 
+    gi.bprintf(PRINT_HIGH, "%s has made a call to God Mode\n", ent->client->pers.netname);//FREDZ
+
 	ent->flags ^= FL_GODMODE;
 	if (!(ent->flags & FL_GODMODE) )
 		msg = "Immortal OFF\n";
@@ -2343,6 +2360,9 @@ void Cmd_Notarget_f (edict_t *ent)
 		return;
 	}
 
+    gi.bprintf(PRINT_HIGH, "%s has made a call to No Target\n", ent->client->pers.netname);//FREDZ
+
+
 	ent->flags ^= FL_NOTARGET;
 	if (!(ent->flags & FL_NOTARGET) )
 		msg = "notarget OFF\n";
@@ -2372,6 +2392,9 @@ void Cmd_Noclip_f (edict_t *ent)
 		gi.cprintf (ent, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
 		return;
 	}
+
+    gi.bprintf(PRINT_HIGH, "%s has made a call to No Clip\n", ent->client->pers.netname);//FREDZ
+
 
 	if (ent->movetype == MOVETYPE_NOCLIP)
 	{
@@ -2679,6 +2702,8 @@ void Cmd_Inven_f (edict_t *ent)
 	cl->showscores = NO_SCOREBOARD;
 	cl->showhelp = false;
 
+	cl->showscrollmenu = false;//FREDZ For menu code
+
 	if (cl->showinventory)
 	{
 		cl->showinventory = false;
@@ -2948,7 +2973,17 @@ void Cmd_Activate_f (edict_t *ent)
 			int     index;
 			gitem_t *item;
 
+            if (ent->client->pers.currentcash==MAX_PLAYER_CASH) //FREDZ
+				return;
+
 			ent->client->pers.currentcash += best->currentcash;
+            if (ent->client->pers.currentcash > MAX_PLAYER_CASH)//FREDZ
+			{
+				edict_t *cash;
+				cash = SpawnTheWeapon( ent, "item_cashroll" );
+				cash->currentcash = (ent->client->pers.currentcash - MAX_PLAYER_CASH);
+				ent->client->pers.currentcash = MAX_PLAYER_CASH;
+			}//FREDZ end
 			//gi.cprintf (ent, PRINT_HIGH, "%i dollars found\n", best->currentcash);
 			ent->client->ps.stats[STAT_CASH_PICKUP] = best->currentcash;
 			best->currentcash = 0;
@@ -3301,6 +3336,33 @@ startyourtriggers:
 				}
 	}
 
+	//FREDZ
+	if ((deathmatch->value) || (!deathmatch->value))
+	{
+		vec3_t	start, end, dir;
+		trace_t tr;
+	
+		AngleVectors( ent->client->ps.viewangles, dir, NULL, NULL );
+
+		VectorCopy( ent->s.origin, start );
+		start[2] += ent->viewheight;
+
+		VectorMA( start, 2048, dir, end );
+
+		tr = gi.trace( start, NULL, NULL, end, ent, MASK_SHOT );
+
+		//FREDZ we have a bot
+		if (!Q_stricmp(tr.ent->classname, "cast_pawn_o_matic"))
+		{
+			tr.ent->use( tr.ent, ent, ent);
+		}
+		//FREDZ we have a orginale pawn o matic
+		if (!Q_stricmp(tr.ent->classname, "pawn_o_matic"))
+		{
+			tr.ent->use( tr.ent, ent, ent);
+		}
+	}
+
 	// Ridah, moveout command
  	if ((ent->cast_info.aiflags & AI_DOKEY || ent->cast_info.aiflags & AI_MOVEOUT) && ent->client->pers.friends > 0)
 	{
@@ -3394,6 +3456,9 @@ void Cmd_Holster_f (edict_t *ent)
 	}
 
 	cl = ent->client;
+
+    if (cl->pers.spectator == SPECTATING)//FREDZ
+		return;
 
 	if (!cl->pers.holsteredweapon)
 	{
@@ -3652,8 +3717,8 @@ Cmd_Kill_f
 */
 void Cmd_Kill_f (edict_t *ent)
 {
-gi.cprintf (ent, PRINT_HIGH, "no suiciding!\n");
-return;
+    gi.cprintf (ent, PRINT_HIGH, "no suiciding!\n");
+    return;
 /*
 	// don't let spectators kill themselves
 	if (ent->solid == SOLID_NOT)
@@ -3726,7 +3791,34 @@ void Cmd_Players_f (edict_t *ent)
 
 	gi.cprintf (ent, PRINT_HIGH, "\n%i players\n", count);
 }
+void Cmd_CheckStats_f (edict_t *ent)//FREDZ
+{
+	int		i, j;
+	edict_t	*player;
+	char	stats[500];
+	vec3_t	v;
+	float	len;
 
+	// use in coop mode only
+//	if (!coop->value)
+//		return;
+
+	j = sprintf(stats, "            Name Health Range\n=============================\n");
+	for (i=0 ; i<maxclients->value ; i++)
+	{
+		player = g_edicts + 1 + i;
+
+		if (!player->inuse || !player->client)
+			continue;
+
+		VectorSubtract (ent->s.origin, player->s.origin, v);
+		len = VectorLength (v);
+		j += sprintf(stats + j, "%16s %6d %5.0f\n", player->client->pers.netname, player->health, len);
+		if (j > 450)
+			break;
+	}
+	gi.centerprintf(ent, "%s", stats);
+}
 /*
 =================
 Cmd_Wave_f
@@ -3852,7 +3944,8 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 			return;
 	}
 
-    if (ent->client->pers.mute) return;
+    if (ent->client->pers.mute)
+        return;
 
 #if 0
 	// don't let us talk if we were just kicked
@@ -3885,7 +3978,7 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
     else if((ent->client->pers.admin > NOT_ADMIN) || (ent->client->pers.rconx[0]))
         Com_sprintf (text, sizeof(text), ">|%s|<: ", ent->client->pers.netname);
     else if(team)
-        Com_sprintf (text, sizeof(text), ">%s<: ", ent->client->pers.netname);
+        Com_sprintf (text, sizeof(text), ":(%s): ", ent->client->pers.netname);
     else
 		Com_sprintf (text, sizeof(text), ":%s: ", ent->client->pers.netname);
 
@@ -3961,7 +4054,8 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 	if (dedicated->value)
 		gi.cprintf(NULL, PRINT_CHAT, "%s", text);
 
-	for (j = 1; j <= game.maxclients; j++) {
+	for (j = 1; j <= game.maxclients; j++)
+    {
 		other = &g_edicts[j];
 		if (!(other->inuse))
 			continue;
@@ -3972,12 +4066,16 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
             if(deathmatch->value && !teamplay->value
                 && (ent->client->pers.spectator==SPECTATING
                     && other->client->pers.spectator==SPECTATING))
-                goto skipnext; //damn hack..only way
+			{
+				gi.cprintf(other, PRINT_CHAT, "%s", text);//FREDZ fix goto to ugly :-p
+				ent->check_talk = level.framenum;
+				return;
+//				goto skipnext; //damn hack..only way
+			}
+
   		if (!teamplay->value || ent->client->pers.team!=other->client->pers.team)
 				if (!OnSameTeam(ent, other))
 					continue;
-//			if ((ent->client->pers.team == 0) != (other->client->pers.team == 0))
-//				continue;
 		}
 skipnext:*/
 		gi.cprintf(other, PRINT_CHAT, "%s", text);
@@ -4113,12 +4211,12 @@ void Cmd_DmflagsSettings_f (edict_t *ent)//FREDZ
 		gi.cprintf(ent, PRINT_HIGH,"DF_NO_HEALTH        :     1\n");
 	else
 		gi.cprintf(ent, PRINT_HIGH,"DF_NO_HEALTH        :   Off\n");
-
+/*
 	if ((int)dmflags->value & DF_AUTO_JOIN_TEAM)
 		gi.cprintf(ent, PRINT_HIGH,"DF_AUTO_JOIN_TEAM   :     2\n");
 	else
 		gi.cprintf(ent, PRINT_HIGH,"DF_AUTO_JOIN_TEAM   :   Off\n");
-
+*/
 	if ((int)dmflags->value & DF_WEAPONS_STAY)
 		gi.cprintf(ent, PRINT_HIGH,"DF_WEAPONS_STAY     :     4\n");
 	else
@@ -4173,11 +4271,12 @@ void Cmd_DmflagsSettings_f (edict_t *ent)//FREDZ
 		gi.cprintf(ent, PRINT_HIGH,"DF_ALLOW_EXIT       :  4096\n");
 	else
 		gi.cprintf(ent, PRINT_HIGH,"DF_ALLOW_EXIT       :   Off\n");
-
+/*
 	if ((int)dmflags->value & DF_INFINITE_AMMO)
 		gi.cprintf(ent, PRINT_HIGH,"DF_INFINITE_AMMO    :  8192\n");
 	else
 		gi.cprintf(ent, PRINT_HIGH,"DF_INFINITE_AMMO    :   Off\n");
+*/
 /*
 	if ((int)dmflags->value & DF_SELF_DAMAGE)
 		gi.cprintf(ent, PRINT_HIGH,"DF_SELF_DAMAGE      : 16384\n");
@@ -4260,6 +4359,9 @@ void Cmd_Yes_f (edict_t *ent)
 		gi.cprintf(ent, PRINT_HIGH, "You have already voted\n");
 	else
 	{
+	    if ((ent->gender == GENDER_MALE) && (ent->client->pers.spectator != SPECTATING))//FREDZ some voice
+            gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/yes.wav"), 1, ATTN_NORM, 0);
+
 		ent->vote = YES;
 		nop=0;
 		novy=0;
@@ -4314,6 +4416,9 @@ void Cmd_No_f (edict_t *ent)
 		gi.cprintf(ent, PRINT_HIGH, "You have already voted\n");
 	else
 	{
+        if ((ent->gender == GENDER_MALE) && (ent->client->pers.spectator != SPECTATING))//FREDZ some voice
+            gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/no.wav"), 1, ATTN_NORM, 0);
+
 		ent->vote = NO;
 		nop=0;
 		novn=0;
@@ -5497,6 +5602,39 @@ void ClientCommand (edict_t *ent)
 			PawnAgree (ent);
 		else if (Q_stricmp (cmd, "key3") == 0)
 			PawnDisagree (ent);
+
+		else if (Q_stricmp (cmd, "inven") == 0)
+			Cmd_Inven_f (ent);
+		// not sure if we are going to have a sell key
+		// else if (Q_stricmp (cmd, "invnextw") == 0)
+		//	PawnSell (ent);
+		return;
+	}
+	//FREDZ
+	else if (ent->client->showscrollmenu)
+	{
+
+		if (Q_stricmp (cmd, "invuse") == 0)
+			ScrollMenuBuy (ent);
+
+		//FREDZ To initiate scroll menu
+		//Needed here so we can close the damn thing
+		else if (Q_stricmp (cmd, "+activate") == 0)
+			Cmd_InitMenu_f (ent);
+		//End AS
+
+		else if (Q_stricmp (cmd, "leftarrow") == 0)
+			ScrollMenuLeft (ent);
+		else if (Q_stricmp (cmd, "rightarrow") == 0)
+			ScrollMenuRight (ent);
+		// JOSEPH 6-FEB-99
+		else if (Q_stricmp (cmd, "uparrow") == 0)
+			ScrollMenuPrev (ent);
+		else if (Q_stricmp (cmd, "downarrow") == 0)
+			ScrollMenuNext (ent);
+		// END JOSEPH
+		else if (Q_stricmp (cmd, "key1") == 0)
+			ScrollMenuBuy (ent);
 
 		else if (Q_stricmp (cmd, "inven") == 0)
 			Cmd_Inven_f (ent);
