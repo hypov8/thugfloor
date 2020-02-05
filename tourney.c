@@ -1,6 +1,7 @@
 #include "g_local.h"
+#include "g_cast_spawn.h"
 
-#define DIRECTSTART 1//FREDZ put on 0 for normal game
+#define DIRECTSTART 0//FREDZ put on 0 for normal game
 
 int	 vote_set[9];        // stores votes for next map
 
@@ -302,7 +303,7 @@ void Start_Match () // Starts the match
 	level.is_spawn = false;
 	for_each_player(self,i)
 	{
-		gi.centerprintf(self,"The wave has begun.");
+		gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
 		self->client->resp.is_spawn = false;
 	}
 
@@ -410,9 +411,24 @@ void WaveEnd () //hypov8 end of the match
 		WaveIdle();
 	}
 	else
-		WaveStart();
+    {
+//        WaveStart();
+        WaveBuy();
+    }
 }
 
+void WaveBuy()  // start buy zone
+{
+	level.player_num = 0;
+	level.modeset = WAVE_BUYZONE;
+	level.startframe = level.framenum;
+	gi.bprintf (PRINT_HIGH,"Buy zone wave %i will end in 60 seconds.\n", level.waveNum);
+    G_ClearUp (NULL, FOFS(classname));
+
+	gi.WriteByte( svc_stufftext );
+	gi.WriteString( va("play world/cypress%i.wav", 2+(rand()%4)) );
+	gi.multicast (vec3_origin, MULTICAST_ALL);
+}
 
 void WaveStart()  // start the match
 {
@@ -539,6 +555,38 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 		return;
 	}
 }
+void CheckBuyWave ()
+{
+    edict_t *self;
+    edict_t	*ent = NULL;
+	int      i;
+	int      count_players = 0;
+
+	cast_pawn_o_matic_spawn(ent);
+
+	if (level.framenum >= level.startframe + 595)//60 seconds
+	{
+//		Start_Match ();
+		WaveStart();
+		return;
+	}
+	//stop counter if nobody wants to play
+	for_each_player(self,i)
+	{
+		if (self->client->pers.spectator != SPECTATING)
+			count_players++;
+	}
+	if (!count_players)
+	{
+        gi.bprintf(PRINT_HIGH,"Players not playing, other map.\n");
+        GameEND ();
+		return;
+	}
+
+//	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 49))
+//		gi.bprintf(PRINT_HIGH,"Buy zone wave %i will end in %d seconds!\n", level.waveNum, (590 - (level.framenum - level.startframe)) / 10);
+}
+
 void CheckEndGame ()//FREDZ only starts if people have joined
 {
     edict_t *self;

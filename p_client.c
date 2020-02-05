@@ -18,83 +18,6 @@ void SP_misc_teleporter_dest (edict_t *ent);
 void think_new_first_raincloud_client (edict_t *self, edict_t *clent);
 void think_new_first_snowcloud_client (edict_t *self, edict_t *clent);
 
-//
-// Gross, ugly, disgustuing hack section
-//
-
-// this function is an ugly as hell hack to fix some map flaws
-//
-// the coop spawn spots on some maps are SNAFU.  There are coop spots
-// with the wrong targetname as well as spots with no name at all
-//
-// we use carnal knowledge of the maps to fix the coop spot targetnames to match
-// that of the nearest named single player spot
-
-static void SP_FixCoopSpots (edict_t *self)
-{
-	edict_t	*spot;
-	vec3_t	d;
-
-	spot = NULL;
-
-	while(1)
-	{
-		spot = G_Find(spot, FOFS(classname), "info_player_start");
-		if (!spot)
-			return;
-		if (!spot->targetname)
-			continue;
-		VectorSubtract(self->s.origin, spot->s.origin, d);
-		if (VectorLength(d) < 384)
-		{
-			if ((!self->targetname) || Q_stricmp(self->targetname, spot->targetname) != 0)
-			{
-//				gi.dprintf("FixCoopSpots changed %s at %s targetname from %s to %s\n", self->classname, vtos(self->s.origin), self->targetname, spot->targetname);
-				self->targetname = spot->targetname;
-			}
-			return;
-		}
-	}
-}
-
-// now if that one wasn't ugly enough for you then try this one on for size
-// some maps don't have any coop spots at all, so we need to create them
-// where they should have been
-
-static void SP_CreateCoopSpots (edict_t *self)
-{
-	edict_t	*spot;
-
-	if(Q_stricmp(level.mapname, "security") == 0)
-	{
-		spot = G_Spawn();
-		spot->classname = "info_player_coop";
-		spot->s.origin[0] = 188 - 64;
-		spot->s.origin[1] = -164;
-		spot->s.origin[2] = 80;
-		spot->targetname = "jail3";
-		spot->s.angles[1] = 90;
-
-		spot = G_Spawn();
-		spot->classname = "info_player_coop";
-		spot->s.origin[0] = 188 + 64;
-		spot->s.origin[1] = -164;
-		spot->s.origin[2] = 80;
-		spot->targetname = "jail3";
-		spot->s.angles[1] = 90;
-
-		spot = G_Spawn();
-		spot->classname = "info_player_coop";
-		spot->s.origin[0] = 188 + 128;
-		spot->s.origin[1] = -164;
-		spot->s.origin[2] = 80;
-		spot->targetname = "jail3";
-		spot->s.angles[1] = 90;
-
-		return;
-	}
-}
-
 
 /*QUAKED info_player_start (1 0 0) (-16 -16 -24) (16 16 48)
 The normal starting point for a level.
@@ -117,12 +40,6 @@ void SP_info_player_start(edict_t *self)
 
 	if (!coop->value)
 		return;
-	if(Q_stricmp(level.mapname, "security") == 0)
-	{
-		// invoke one of our gross, ugly, disgusting hacks
-		self->think = SP_CreateCoopSpots;
-		self->nextthink = level.time + FRAMETIME;
-	}
 }
 
 /*QUAKED info_player_deathmatch (1 0 1) (-16 -16 -24) (16 16 48)
@@ -153,25 +70,6 @@ void SP_info_player_coop(edict_t *self)
 		return;
 	}
 
-  if((Q_stricmp(level.mapname, "jail2") == 0)   ||
-	   (Q_stricmp(level.mapname, "jail4") == 0)   ||
-	   (Q_stricmp(level.mapname, "mine1") == 0)   ||
-	   (Q_stricmp(level.mapname, "mine2") == 0)   ||
-	   (Q_stricmp(level.mapname, "mine3") == 0)   ||
-	   (Q_stricmp(level.mapname, "mine4") == 0)   ||
-	   (Q_stricmp(level.mapname, "lab") == 0)     ||
-	   (Q_stricmp(level.mapname, "boss1") == 0)   ||
-	   (Q_stricmp(level.mapname, "fact3") == 0)   ||
-	   (Q_stricmp(level.mapname, "biggun") == 0)  ||
-	   (Q_stricmp(level.mapname, "space") == 0)   ||
-	   (Q_stricmp(level.mapname, "command") == 0) ||
-	   (Q_stricmp(level.mapname, "power2") == 0) ||
-	   (Q_stricmp(level.mapname, "strike") == 0))
-	{
-		// invoke one of our gross, ugly, disgusting hacks
-		self->think = SP_FixCoopSpots;
-		self->nextthink = level.time + FRAMETIME;
-	}
 */
 }
 
@@ -1197,8 +1095,16 @@ void InitClientPersistant (gclient_t *client)
 
 			AutoLoadWeapon( client, item, ammo );
 
+			//FREDZ
+			//Dosh = Respawn Dosh x (Wave Number / (Max Wave Number - 1))
+			//Normal 1750
+			//Hard 1550
+			//Suicidal 1700
+			//HOE 1550
+			//See https://wiki.killingfloor2.com/index.php?title=Mechanics_(Killing_Floor_2)#Gameplay_-_Dosh
+			//Dosh On Respawn
             if (level.waveNum == 0)//FREDZ
-                client->pers.currentcash += 300;//Give some cash
+                client->pers.currentcash += 175;//Give some cash
 
 	}
 	else	// start holstered in single player
@@ -1559,7 +1465,7 @@ edict_t *SelectDeathmatchSpawnPoint (edict_t *ent)
 }
 
 
-edict_t *SelectCoopSpawnPoint (edict_t *ent)
+edict_t *SelectPlayerSpawnPoint (edict_t *ent)
 {
 	int		index;
 	edict_t	*spot = NULL;
@@ -1607,10 +1513,10 @@ void SelectSpawnPoint (edict_t *ent, vec3_t origin, vec3_t angles)
 {
 	edict_t	*spot = NULL;
 
-	if (deathmatch->value)
-		spot = SelectDeathmatchSpawnPoint (ent);
-	else if (coop->value)
-		spot = SelectCoopSpawnPoint (ent);
+//	if (deathmatch->value)
+//		spot = SelectDeathmatchSpawnPoint (ent);
+//	else if (coop->value)
+		spot = SelectPlayerSpawnPoint (ent);//FREDZ thugfloor only info_player_start
 
 	// find a single player start spot
 	if (!spot)
@@ -1634,7 +1540,12 @@ void SelectSpawnPoint (edict_t *ent, vec3_t origin, vec3_t angles)
 				spot = G_Find (spot, FOFS(classname), "info_player_start");
 			}
 			if (!spot)
+            {
 				gi.error ("Couldn't find spawn point %s\n", game.spawnpoint);
+/*                gi.bprintf(PRINT_HIGH, "No info_player_start in this map.\n");
+                gi.bprintf(PRINT_HIGH, "Map not suitable for this mod please remove it.\n");
+                GameEND ();//FREDZ*/
+            }
 		}
 	}
 
@@ -1915,7 +1826,8 @@ void PutClientInServer (edict_t *ent)
 //	if (((deathmatch->value) && (level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT)))
 //		|| (level.modeset == FREEFORALL) || (ent->client->pers.spectator == SPECTATING))
     if ((level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING)
-        || level.modeset == WAVE_IDLE
+        || (level.modeset == WAVE_IDLE)
+        || (ent->client->pers.player_dead == TRUE)
 		|| (ent->client->pers.spectator == PLAYER_READY) //hypov8 dont enter a current wave
         )
 	{

@@ -49,6 +49,8 @@ int GetGameModeMessage(char *entry, int yofs)
 		p = "Wait until server is ready.";
 	else if (level.modeset == WAVE_IDLE)
 		p = "in setup mode. please join.";
+    else if (level.modeset == WAVE_BUYZONE)
+		p = "in buy mode. please join.";
 	else if (level.modeset == WAVE_START)
 		p = "and a game is about to start.";
 	else
@@ -841,7 +843,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 
 //		if (cl_ent == ent)//FREDZ not yellow
 //			tag = "990";
-        if (cl_ent->client->pers.player_dead = TRUE && level.modeset == WAVE_ACTIVE)
+        if (cl_ent->client->pers.player_dead == TRUE && level.modeset == WAVE_ACTIVE)
             tag = "000";//FREDZ dead people are black
         else  if (cl_ent->client->pers.spectator == PLAYER_READY && level.modeset == WAVE_ACTIVE)
             tag = "111";//FREDZ just joined, grey to black
@@ -1700,6 +1702,9 @@ void G_SetStats (edict_t *ent)
 
 	else if (level.modeset == WAVE_START)//FREDZ
 		ent->client->ps.stats[STAT_TIMER] =	((150 - (level.framenum - level.startframe)) / 10);
+
+    else if (level.modeset == WAVE_BUYZONE)//FREDZ
+		ent->client->ps.stats[STAT_TIMER] =	((600 - (level.framenum - level.startframe)) / 10);
 
 	else if (level.intermissiontime) // MH: applies to non-voting intermission too
 		ent->client->ps.stats[STAT_TIMER] =	((270 + 9 - (level.framenum - level.startframe)) / 10); // MH: changed voting time to 27s (music duration)

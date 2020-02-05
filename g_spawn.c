@@ -1641,12 +1641,13 @@ void SP_worldspawn (edict_t *ent)
 
 	int maps, i, found, j, k, unique, selection;
 	char mappic[100];
+
 	// Ridah, don't allow deathmatching in single player maps
-/*	if (ent->count && deathmatch->value)//FREDZ thugfloor maybe disable
+	if (ent->count && deathmatch->value)//FREDZ thugfloor maybe disable
 	{
 		gi.error("\nCannot play this map in DEATHMATCH mode.\n");
 		return;
-	}*/
+	}
 
 	if (!deathmatch->value)
 	{

@@ -126,6 +126,10 @@
 		<Unit filename="g_cast.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="g_cast_spawn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="g_cast_spawn.h" />
 		<Unit filename="g_chase.c">
 			<Option compilerVar="CC" />
 		</Unit>

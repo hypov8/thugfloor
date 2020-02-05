@@ -599,3 +599,4 @@ void SP_cast_pawn_o_matic( edict_t *self )
 
 	SP_cast_runt(self);
 }
+

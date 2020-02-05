@@ -3341,7 +3341,7 @@ startyourtriggers:
 	{
 		vec3_t	start, end, dir;
 		trace_t tr;
-	
+
 		AngleVectors( ent->client->ps.viewangles, dir, NULL, NULL );
 
 		VectorCopy( ent->s.origin, start );
@@ -4162,6 +4162,9 @@ void Cmd_PrintSettings_f (edict_t *ent)
 			break;
         case WAVE_START :
 			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave Start\n");
+			break;
+        case WAVE_BUYZONE :
+			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave Buy Zone\n");
 			break;
         case WAVE_IDLE :
 			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave Idle\n");
@@ -5729,8 +5732,8 @@ void ClientCommand (edict_t *ent)
 		NAV_RebuildRoutes( level.node_data );*/
 // END:		Xatrix/Ridah/Navigator/23-mar-1998
 
-	else if (Q_stricmp (cmd, "spawn") == 0)//FREDZ temp
-		Cmd_Spawn_f (ent);
+//	else if (Q_stricmp (cmd, "spawn") == 0)//FREDZ
+//		Cmd_Spawn_f (ent);
 
 	// Ridah, new 3 key command system
 	else if (strstr (cmd, "key") == cmd)

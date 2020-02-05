@@ -67,7 +67,7 @@
 #define WAVE_ACTIVE		2
 #define ENDGAME			3
 #define	ENDGAMEVOTE		4
-//#define MATCHSETUP		5
+#define WAVE_BUYZONE	5
 #define WAVE_START		6
 #define WAVE_IDLE		7
 #define WAVE_END		8
@@ -119,7 +119,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.05"
+#define	GAMEVERSION	"Thug Floor v0.06"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -1179,6 +1179,11 @@ qboolean FacingIdeal(edict_t *self);
 void SpawnBloodPool (edict_t *self);
 
 //
+// g_spawn.c
+//
+void ED_CallSpawn (edict_t *ent);//FREDZ thugfloor
+
+//
 // g_weapon.c
 //
 void ThrowDebris (edict_t *self, char *modelname, float speed, vec3_t origin);
@@ -1218,7 +1223,13 @@ void fire_fish (edict_t *self, vec3_t start, vec3_t forward, int damage);//FREDZ
 // END JOSEPH
 
 //
-// g_client.c
+// g_svcmds.c
+//
+void	ServerCommand (void);
+qboolean SV_FilterPacket (char *from);
+
+//
+// p_client.c
 //
 void respawn (edict_t *ent);
 void BeginIntermission (edict_t *targ, char *changenext);
@@ -1228,34 +1239,18 @@ void InitClientPersistant (gclient_t *client);
 void InitClientRespClear (gclient_t *client);
 void InitBodyQue (void);
 void ClientBeginServerFrame (edict_t *ent);
-void SV_AddBlend (float r, float g, float b, float a, float *v_blend);
-
-void DropCash(edict_t *self); // MH: drop cash
-
-// RAFAEL
-void BeginCutScene (edict_t *ent);
-void EndCutScene (edict_t *ent);
-// JOSEPH 16-DEC-98
-void AdjustCutSceneCamera(edict_t *ent);
-void NewCutSceneCamera (edict_t *ent);
-// END JOSEPH
-
-//
-// g_player.c
-//
 void player_pain (edict_t *self, edict_t *other, float kick, int damage, int mdx_part, int mdx_subobject);
 void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point, int mdx_part, int mdx_subobject);
 void ClientBeginDeathmatch (edict_t *ent);
-//
-// g_svcmds.c
-//
-void	ServerCommand (void);
-qboolean SV_FilterPacket (char *from);
+edict_t *SelectDeathmatchSpawnPoint (edict_t *ent);//FREDZ
+void DropCash(edict_t *self); // MH: drop cash
+
 
 //
 // p_view.c
 //
 void ClientEndServerFrame (edict_t *ent);
+void SV_AddBlend (float r, float g, float b, float a, float *v_blend);
 
 //
 // p_hud.c
@@ -1269,6 +1264,14 @@ void MoveClientToCutScene (edict_t *camera);
 // JOSEPH 22-FEB-99
 void MoveClientToCutSceneCamera (edict_t *camera, int fov);
 // END JOSEPH
+// RAFAEL
+void BeginCutScene (edict_t *ent);
+void EndCutScene (edict_t *ent);
+// JOSEPH 16-DEC-98
+void AdjustCutSceneCamera(edict_t *ent);
+void NewCutSceneCamera (edict_t *ent);
+// END JOSEPH
+
 //
 // g_pweapon.c
 //
@@ -1349,11 +1352,13 @@ void SP_cast_pawn_o_matic (edict_t *self);
 void SetupMapVote ();
 void CheckStartPub();
 void CheckStartWave ();
+void CheckBuyWave ();//FREDZ
 void CheckAllPlayersSpawned ();
 void CheckVote();
 void CheckEndVoteTime ();
 void CheckEndGame();//FREDZ
 void ResetServer();
+void WaveBuy();//FREDZ
 void WaveStart();//hypov8
 void WaveIdle();//hypov8
 void WaveEnd();//hypov8
@@ -1361,9 +1366,6 @@ void GameEND();//FREDZ
 int	CheckNameBan (char *name);
 int	CheckPlayerBan (char *userinfo);
 edict_t *GetAdmin(); // MH: get the current admin
-
-
-void TestScoreboardMessage (edict_t *ent);
 
 
 //

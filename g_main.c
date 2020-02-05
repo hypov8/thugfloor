@@ -550,6 +550,7 @@ void CheckDMRules (void)
 	gclient_t	*cl;
 	int		count=0;
 	edict_t	*doot;
+	int maxwaves = 11;//FREDZ
 
 	if (level.intermissiontime)
 		return;
@@ -571,7 +572,7 @@ void CheckDMRules (void)
 			if (count == 0)
 				ResetServer();
 			else
-				if (level.waveNum < 11) //11 waves?
+				if (level.waveNum < maxwaves)
 				{
 					WaveEnd(); //hypov8 note: timelimit is wavetime.
 				}
@@ -596,7 +597,7 @@ void CheckDMRules (void)
         {
             gi.bprintf (PRINT_HIGH, "Wave ended.\n");
 
-            if (level.waveNum < 11) //11 waves?
+            if (level.waveNum < maxwaves)
             {
                 WaveEnd(); //hypov8 note: timelimit is wavetime.
             }
@@ -783,7 +784,7 @@ Advances the world by 0.1 seconds
 extern int bbox_cnt;
 extern edict_t	*mdx_bbox[];
 
-void ED_CallSpawn (edict_t *ent);//FREDZ thugfloor
+//void ED_CallSpawn (edict_t *ent);//FREDZ thugfloor
 
 void AI_ProcessCombat (void);
 
@@ -1158,14 +1159,14 @@ void G_RunFrame (void)
 	if (level.modeset == PREGAME)
 		CheckStartPub ();
 
-//	if (level.modeset == MATCHSETUP)//Only used to setup team games.
-//		CheckIdleMatchSetup ();//Check if server need to be reseted when no players
-
 	if (level.modeset == WAVE_IDLE)
 		WaveIdle();
 
 	if (level.modeset == WAVE_START)
 		CheckStartWave ();
+
+    if (level.modeset == WAVE_BUYZONE)
+		CheckBuyWave ();
 
 //	if ((level.modeset == STARTINGMATCH) || (level.modeset == STARTINGPUB))
     if (level.modeset == WAVE_SPAWN_PLYR)
