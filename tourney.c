@@ -562,7 +562,12 @@ void CheckBuyWave ()
 	int      i;
 	int      count_players = 0;
 
-	cast_pawn_o_matic_spawn(ent);
+ //       if (!ent)
+			ent = g_edicts;
+//		else
+//			ent = G_Spawn ();
+
+	cast_pawn_o_matic_spawn(ent);//FREDZ need fix spawn to many
 
 	if (level.framenum >= level.startframe + 595)//60 seconds
 	{
