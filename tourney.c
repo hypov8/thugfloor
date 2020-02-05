@@ -293,10 +293,13 @@ void SpawnPlayers ()  // Same idea but 1 player per team
 }
 */
 
-void Start_Match () // Starts the match
+void WaveStart () // Starts the match
 {
 	edict_t		*self;
 	int			i;
+
+	//free 3 pawnOmatic guys
+	cast_pawn_o_matic_free();
 
 	level.startframe = level.framenum;
     level.modeset = WAVE_SPAWN_PLYR;
@@ -305,6 +308,15 @@ void Start_Match () // Starts the match
 	{
 		gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
 		self->client->resp.is_spawn = false;
+
+		//hypov8 end buy menu. is this ok?
+		if (self->client->pers.spectator != SPECTATING)
+		{
+			self->client->showscores = NO_SCOREBOARD;
+			self->client->showhelp = false;
+			self->client->showinventory = false;
+			self->client->showscrollmenu = false;
+		}
 	}
 
 	gi.WriteByte( svc_stufftext );
@@ -412,7 +424,6 @@ void WaveEnd () //hypov8 end of the match
 	}
 	else
     {
-//        WaveStart();
         WaveBuy();
     }
 }
@@ -428,9 +439,13 @@ void WaveBuy()  // start buy zone
 	gi.WriteByte( svc_stufftext );
 	gi.WriteString( va("play world/cypress%i.wav", 2+(rand()%4)) );
 	gi.multicast (vec3_origin, MULTICAST_ALL);
+
+	//call our pawnOmatic
+	cast_pawn_o_matic_spawn();
+
 }
 
-void WaveStart()  // start the match
+void WaveStart_Countdown()  // start the match
 {
 	level.player_num = 0;
 	level.modeset = WAVE_START;
@@ -468,7 +483,7 @@ void WaveIdle()
 	if (count_players)
 	{
 		gi.bprintf(PRINT_HIGH,"The server is now ready to start a wave.\n");
-		WaveStart();
+		WaveStart_Countdown();
 	}
 }
 
@@ -506,7 +521,7 @@ void CheckStartWave ()  // 15 countdown before matches
 
 	if (level.framenum >= level.startframe + 145)
 	{
-		Start_Match ();
+		WaveStart ();
 		return;
 	}
 	//stop counter if nobody wants to play
@@ -536,7 +551,7 @@ void CheckStartWave ()  // 15 countdown before matches
 void CheckStartPub () // 30 second countdown before server starts (MH: reduced from 35s)
 {
 
-    #if !DIRECTSTART
+    #if DIRECTSTART
 	if (level.framenum >= 300)
     #endif
 	{
@@ -562,17 +577,9 @@ void CheckBuyWave ()
 	int      i;
 	int      count_players = 0;
 
- //       if (!ent)
-			ent = g_edicts;
-//		else
-//			ent = G_Spawn ();
-
-	cast_pawn_o_matic_spawn(ent);//FREDZ need fix spawn to many
-
 	if (level.framenum >= level.startframe + 595)//60 seconds
 	{
-//		Start_Match ();
-		WaveStart();
+		WaveStart_Countdown();
 		return;
 	}
 	//stop counter if nobody wants to play

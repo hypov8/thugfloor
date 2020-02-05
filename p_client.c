@@ -4088,7 +4088,7 @@ void ClientBeginServerFrame (edict_t *ent)
 */
 
 	client = ent->client;
-
+#ifndef HYPODEBUG //allow debug builds to not kick you
 	// MH: check if they're lagged-out
 	if (client->pers.spectator != SPECTATING && curtime-client->pers.lastpacket >= 5000)
 	{
@@ -4110,7 +4110,7 @@ void ClientBeginServerFrame (edict_t *ent)
             Cmd_Spec_f(ent);
         }
     }
-
+#endif
 	// MH: count play time
 	if (client->pers.spectator != SPECTATING && (/*level.modeset==MATCH ||*/ level.modeset==WAVE_ACTIVE))
 		ent->client->resp.time++;
