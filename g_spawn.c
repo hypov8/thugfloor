@@ -109,6 +109,9 @@ void SP_cast_runt (edict_t *self);
 void SP_cast_thug_sit(edict_t *self);
 
 void SP_cast_bitch (edict_t *ent);
+void SP_cast_bitch_melee (edict_t *self);
+void SP_cast_bitch_pistol (edict_t *self);
+
 void SP_cast_dog (edict_t *ent);
 void SP_cast_shorty (edict_t *ent);
 void SP_cast_whore (edict_t *ent);
@@ -460,7 +463,11 @@ spawn_t	spawns[] = {
 	{"cast_punk", SP_cast_punk},
 	{"cast_thug", SP_cast_thug},
 	{"cast_thug_sit", SP_cast_thug_sit},//FREDZ never used in kingpin orginale maps
+
 	{"cast_bitch", SP_cast_bitch},
+	{"cast_bitch_melee", SP_cast_bitch_melee},
+	{"cast_bitch_pistol", SP_cast_bitch_pistol},
+
 	{"cast_dog", SP_cast_dog},
     {"cast_rat", SP_cast_rat},//FREDZ new ai rat
 // Ridah, done.
@@ -536,7 +543,7 @@ spawn_t	spawns[] = {
 
 	{"ai_sy_blefty", SP_sy_blefty},
 
-	{"misc_barry_bitch", SP_misc_barry_fidelc_maya},
+//	{"misc_barry_bitch", SP_misc_barry_fidelc_maya},//FREDZ?
 
 
 	{"misc_corky_fidel_mdx_pcx", SP_misc_corky_fidel_mdx_pcx},

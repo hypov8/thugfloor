@@ -1096,6 +1096,8 @@ void InitClientPersistant (gclient_t *client)
 			AutoLoadWeapon( client, item, ammo );
 
 			//FREDZ
+			//HMG=750$
+			//KF2maxweapon=2000$
 			//Dosh = Respawn Dosh x (Wave Number / (Max Wave Number - 1))
 			//Normal 1750
 			//Hard 1550
@@ -1103,8 +1105,33 @@ void InitClientPersistant (gclient_t *client)
 			//HOE 1550
 			//See https://wiki.killingfloor2.com/index.php?title=Mechanics_(Killing_Floor_2)#Gameplay_-_Dosh
 			//Dosh On Respawn
-            if (level.waveNum == 0)//FREDZ
-                client->pers.currentcash += 175;//Give some cash
+ //           if (level.waveNum == 0)//FREDZ
+  //              client->pers.currentcash += 150;//Give some cash
+
+ //           if (level.waveNum)
+            {
+                int spawn_cash=0;
+                int novice=1900/2.5;//Not in KF example
+                int easy=1750/2.5;//2.5 is to comprise difference
+                int medium=1550/2.5;
+                int hard=1700/2.5;
+                int real=1550/2.5;
+
+                if (skill->value == 0)
+                    spawn_cash = novice;
+                else if (skill->value == 1)
+                    spawn_cash = easy;
+                else if (skill->value == 2)
+                    spawn_cash = medium;
+                else if (skill->value == 3)
+                    spawn_cash = hard;
+                else
+                    spawn_cash = real;
+
+ //               client->pers.currentcash += (spawn_cash * (level.waveNum+1/11));//Give some cash, probably need to be float?
+                 client->pers.currentcash += (spawn_cash * (level.waveNum+1) * 0.1);//Give some cash
+
+            }
 
 	}
 	else	// start holstered in single player

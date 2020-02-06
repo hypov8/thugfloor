@@ -94,6 +94,9 @@ int proccess_line(char*	buffer)
 	if (strstr(buffer, FIXED_GAMETYPE_STRING))
 		return FIXED_GAMETYPE_KEYWORD;
 
+    if (strstr(buffer, FIXED_SKILLTYPE_STRING))
+		return FIXED_SKILLTYPE_KEYWORD;
+
 	if (strstr(buffer, ENABLE_PASSWORD_STRING))
 		return ENABLE_PASSWORD_KEYWORD;
 
@@ -177,6 +180,7 @@ int proccess_ini_file()
 	num_netnames = 0;
 	num_ips = 0;
 	fixed_gametype = false;
+	fixed_skilltype = false;
 	enable_password = false;
 	keep_admin_status = false;
 	default_random_map = false;
@@ -287,6 +291,9 @@ int proccess_ini_file()
 			break;
 		case FIXED_GAMETYPE_KEYWORD:
 			fixed_gametype = true;
+			break;
+        case FIXED_SKILLTYPE_KEYWORD:
+			fixed_skilltype = true;
 			break;
 		case ENABLE_PASSWORD_KEYWORD:
 			enable_password = true;

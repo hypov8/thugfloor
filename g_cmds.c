@@ -4147,8 +4147,9 @@ void Cmd_DropCash_f (edict_t *self)
 
 void Cmd_PrintSettings_f (edict_t *ent)
 {
+    char	*sk;//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"\nCurrent Game Settings.\n");
-	gi.cprintf(ent, PRINT_HIGH,"======================\n\n");
+	gi.cprintf(ent, PRINT_HIGH,"===============================\n\n");
 	switch (level.modeset)
 	{
         case PREGAME :
@@ -4173,8 +4174,20 @@ void Cmd_PrintSettings_f (edict_t *ent)
 			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave End\n");
 			break;
 	}
+    if (skill->value == 0)//FREDZ
+		sk = "novice";
+	else if (skill->value == 1)
+		sk = "easy";
+	else if (skill->value == 2)
+		sk = "medium";
+	else if (skill->value == 3)
+		sk = "hard";
+	else
+		sk = "real";
 //	if (level.modeset==MATCHSETUP)
 //		gi.cprintf(ent, PRINT_HIGH,"Matchstart score   : %d : %d\n",team_startcash[0],team_startcash[1]); // MH: aligned with rest of settings
+	gi.cprintf(ent, PRINT_HIGH,"Map                : %s\n", level.mapname);//FREDZ
+	gi.cprintf(ent, PRINT_HIGH,"Skill mode         : %s\n", sk);//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"Anti-Spawn Camp    : %d\n", (int)anti_spawncamp->value); //FREDZ
 /*	gi.cprintf(ent, PRINT_HIGH,"Time limit         : %d\n", (int)timelimit->value);
 	gi.cprintf(ent, PRINT_HIGH,"Frag limit         : %d\n", (int)fraglimit->value);
@@ -4203,6 +4216,7 @@ void Cmd_PrintSettings_f (edict_t *ent)
 		else
 			gi.cprintf(ent, PRINT_HIGH,"Current admin      : none\n\n"); // MH: aligned with rest of settings
 	}
+	gi.cprintf(ent, PRINT_HIGH,"===============================\n\n");
 }
 void Cmd_DmflagsSettings_f (edict_t *ent)//FREDZ
 {
@@ -4314,6 +4328,7 @@ void Cmd_CurseList_f (edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH,"WILLY\n");
 	gi.cprintf(ent, PRINT_HIGH,"MOKER\n");
 	gi.cprintf(ent, PRINT_HIGH,"HEILMAN\n");
+	gi.cprintf(ent, PRINT_HIGH,"=============================\n\n");
 }
 
 
@@ -4324,26 +4339,32 @@ void Cmd_CommandList_f (edict_t *ent)
 		return;
 	}
 	gi.cprintf(ent, PRINT_HIGH,"\nCurrent Console Commands.\n");
-	gi.cprintf(ent, PRINT_HIGH,"=========================\n");
-	if (antilag->value) gi.cprintf(ent, PRINT_HIGH,"antilag, "); // MH: added
-	if (admincode[0]) gi.cprintf(ent, PRINT_HIGH,"admin, ");
-	if (!disable_admin_voting) gi.cprintf(ent, PRINT_HIGH,"elect, ");
+	gi.cprintf(ent, PRINT_HIGH,"===============================\n");
+	if (antilag->value)
+        gi.cprintf(ent, PRINT_HIGH,"antilag, "); // MH: added
+	if (admincode[0])
+        gi.cprintf(ent, PRINT_HIGH,"admin, ");
+	if (!disable_admin_voting)
+        gi.cprintf(ent, PRINT_HIGH,"elect, ");
 	gi.cprintf(ent, PRINT_HIGH,"resign, commands, settings, toggle_shadows\n");
-/*	if (teamplay->value) {
-		gi.cprintf(ent, PRINT_HIGH,"matchsetup, matchscore, matchstart, matchend\n");
-		gi.cprintf(ent, PRINT_HIGH,"publicsetup, resetserver, changemap, maplist\n");
-	} else*/
-		gi.cprintf(ent, PRINT_HIGH,"resetserver, changemap, maplist, mute\n");
+    gi.cprintf(ent, PRINT_HIGH,"resetserver, changemap, maplist, mute\n");
 //	gi.cprintf(ent, PRINT_HIGH,"settimelimit, setfraglimit, setcashlimit, setidletime\n");
-	gi.cprintf(ent, PRINT_HIGH,"team1name, team2name, toggle_asc, curselist, toggle_spec\n");
+	gi.cprintf(ent, PRINT_HIGH,"toggle_asc, curselist, toggle_spec\n");
 	if (enable_password) gi.cprintf(ent, PRINT_HIGH,"setpassword removepassword\n");
 	if (!fixed_gametype) {
 		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode\n");
-		gi.cprintf(ent, PRINT_HIGH,"   The teamplay settings are:\n");
-		gi.cprintf(ent, PRINT_HIGH,"       0 : Free for all DM\n");
-		gi.cprintf(ent, PRINT_HIGH,"       1 : Bagman\n");
-		gi.cprintf(ent, PRINT_HIGH,"       4 : Team DM\n");
 	}
+    if (!fixed_skilltype)//FREDZ
+	{
+		gi.cprintf(ent, PRINT_HIGH,"setskill\n");
+		gi.cprintf(ent, PRINT_HIGH,"   The skill settings are:\n");
+		gi.cprintf(ent, PRINT_HIGH,"       0 : Novice\n");
+		gi.cprintf(ent, PRINT_HIGH,"       1 : Easy\n");
+		gi.cprintf(ent, PRINT_HIGH,"       2 : Medium\n");
+		gi.cprintf(ent, PRINT_HIGH,"       3 : Hard\n");
+		gi.cprintf(ent, PRINT_HIGH,"       4 : Real\n");//FREDZ end
+	}
+	gi.cprintf(ent, PRINT_HIGH,"===============================\n\n");
 }
 
 //===================================================================================
@@ -4843,8 +4864,6 @@ void Cmd_SetRealMode_f (edict_t *ent, char *value)
 		gi.cprintf(ent,PRINT_HIGH,"dm_realmode settings are as follows:\n 0: Deathmatch\n 1: Realmode\n 2: Realmode with all weapons\n");
 }
 
-
-
 void Cmd_SetPassword_f (edict_t *ent, char *value)
 {
 	if (ent->client->pers.admin > NOT_ADMIN ) {
@@ -4854,6 +4873,41 @@ void Cmd_SetPassword_f (edict_t *ent, char *value)
 			gi.cprintf(ent,PRINT_HIGH,"The password option is disabled\n");
 	} else
 		gi.cprintf(ent,PRINT_HIGH,"You do not have admin\n");
+}
+
+void Cmd_SetSkill_f (edict_t *ent, char *value)//FREDZ
+{
+	char	*sk;
+	int		i;
+
+	i = atoi (value);
+	if ((i == 0) || (i == 1) || (i== 2) || (i== 3) || (i== 4))
+	{
+		if (ent->client->pers.admin > NOT_ADMIN )
+		{
+			if (fixed_skilltype)
+				gi.cprintf(ent,PRINT_HIGH,"This server's game type may not be changed\n");
+			else
+			{
+				if (i == 0)//FREDZ
+					sk = "novice";
+				else if (i == 1)
+					sk = "easy";
+				else if (i == 2)
+					sk = "medium";
+				else if (i == 3)
+					sk = "hard";
+				else
+					sk = "real";
+				gi.bprintf(PRINT_HIGH,"Skill has been changed to %s.\n",sk);
+				gi.cvar_set("skill",value);
+			}
+		}
+		else
+			gi.cprintf(ent,PRINT_HIGH,"You do not have admin\n");
+	}
+	else
+		gi.cprintf(ent,PRINT_HIGH,"Skill settings are as follows:\n 0: Novice\n 1: Easy\n 2: Medium\n 3: Hard\n 4: Real\n");
 }
 /*
 void Cmd_SetTeamplay_f (edict_t *ent, char *value)
@@ -5810,7 +5864,8 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp (cmd, "setdm_realmode") == 0)
 		Cmd_SetRealMode_f (ent, gi.argv (1));
 
-
+	else if (Q_stricmp (cmd, "setskill") == 0) //FREDZ
+		Cmd_SetSkill_f (ent, gi.argv (1));
 //	else if (Q_stricmp (cmd, "setteamplay") == 0)
 //		Cmd_SetTeamplay_f (ent, gi.argv (1));
 

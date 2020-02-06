@@ -119,7 +119,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.06"
+#define	GAMEVERSION	"Thug Floor v0.07"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -2129,6 +2129,7 @@ extern int num_netnames;
 extern int num_ips;
 
 extern int fixed_gametype;
+extern int fixed_skilltype;//FREDZ
 extern int enable_password;
 extern char rconx_file[32];
 //extern char server_url[64];

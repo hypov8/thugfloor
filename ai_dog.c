@@ -959,11 +959,14 @@ void SP_cast_dog (edict_t *self)
 	self->movetype = MOVETYPE_STEP;
 	self->solid = SOLID_BBOX;
 
-	skin = self->s.skinnum = (self->skin-1) * 3;
+//	skin = self->s.skinnum = (self->skin-1) * 3;//FREDZ give skin problems
 
-    if (!self->skin)
+    if (!self->skin)//FREDZ
 	{	// use default skins
-		self->skin = 1; //FREDZ
+        if (rand()%100 > 50)
+            self->skin = 1;
+        else
+            self->skin = 2;
 	}
 
 

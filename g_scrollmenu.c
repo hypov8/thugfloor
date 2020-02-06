@@ -30,7 +30,6 @@ struct MENU_ITEM_NAMES
 	//Weapons
 	{ {"Pistol", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 150, 250, 750, 200, 350, 500} },
 	//Mod's
-//	{ {"Pistol Silencer"}, {10} },
 	{ {"Pistol Silencer", "Pistol RoF Mod", "Pistol Magnum Mod", "Pistol Reload Mod","HMG Cooling Mod"}, {10, 25, 50, 25, 50} },
 	//Ammo
 	{ {"Bullets", "Shells", "308cal", "Grenades", "Rockets", "Gas"}, {5, 25, 20, 100, 100, 25} },

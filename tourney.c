@@ -1,7 +1,7 @@
 #include "g_local.h"
 #include "g_cast_spawn.h"
 
-#define DIRECTSTART 0//FREDZ put on 0 for normal game
+#define DIRECTSTART 1//FREDZ put on 0 for normal game
 
 int	 vote_set[9];        // stores votes for next map
 
@@ -29,6 +29,7 @@ int num_netnames;
 int num_ips;
 
 int fixed_gametype;
+int fixed_skilltype;//FREDZ
 int enable_password;
 char rconx_file[32];
 //char server_url[64];
@@ -298,8 +299,12 @@ void WaveStart () // Starts the match
 	edict_t		*self;
 	int			i;
 
-	//free 3 pawnOmatic guys
+	//free pawnOmatic guy
 	cast_pawn_o_matic_free();
+
+	dog_spawn(8);
+	bitch_spawn(2,0);
+	bitch_spawn(2,1);
 
 	level.startframe = level.framenum;
     level.modeset = WAVE_SPAWN_PLYR;
@@ -309,7 +314,7 @@ void WaveStart () // Starts the match
 		gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
 		self->client->resp.is_spawn = false;
 
-		//hypov8 end buy menu. is this ok?
+		//hypov8 end buy menu.
 		if (self->client->pers.spectator != SPECTATING)
 		{
 			self->client->showscores = NO_SCOREBOARD;
@@ -325,34 +330,10 @@ void WaveStart () // Starts the match
 
 }
 
-/*
-void Start_Pub () // Starts a pub
-{
-	edict_t		*self;
-	int			i;
-
-	level.startframe = level.framenum;
-	level.modeset = WAVE_SPAWN_PLYR;
-	level.is_spawn = false;
-	for_each_player(self,i)
-	{
-		gi.centerprintf(self,"Let the killing Begin!");
-		self->client->resp.is_spawn = false;
-	}
-
-	gi.WriteByte( svc_stufftext );
-	gi.WriteString("play world/pawnbuzz_out.wav");
-	gi.multicast (vec3_origin, MULTICAST_ALL);
-}*/
 void SetupMapVote () // at the end of a level - starts the vote for the next map
 {
 	edict_t *self;
 	int i;
-/*	int		found;
-	int		i,j,k;
-	int		unique;
-	int		selection;
-*/
 
 	level.modeset = ENDGAMEVOTE;
 	level.startframe = level.framenum;
@@ -499,19 +480,6 @@ void CheckAllPlayersSpawned () // when starting a match this function is called 
 		level.modeset = WAVE_ACTIVE;
 
 }
-/*
-void CheckIdleMatchSetup () // restart the server if its empty in matchsetup mode
-{
-	int		count=0;
-	int		i;
-	edict_t	*doot;
-
-	for_each_player (doot,i)
-		count++;
-	if (count == 0)
-		ResetServer ();
-}
-*/
 
 void CheckStartWave ()  // 15 countdown before matches
 {
@@ -551,7 +519,7 @@ void CheckStartWave ()  // 15 countdown before matches
 void CheckStartPub () // 30 second countdown before server starts (MH: reduced from 35s)
 {
 
-    #if DIRECTSTART
+    #if !DIRECTSTART
 	if (level.framenum >= 300)
     #endif
 	{

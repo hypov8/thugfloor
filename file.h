@@ -17,6 +17,7 @@
 #define		DISABLE_ADMIN_STRING	"disable_admin_voting"
 #define		DEFAULT_REAL_STRING		"default_dm_realmode"
 #define		FIXED_GAMETYPE_STRING	"fixed_gametype"
+#define		FIXED_SKILLTYPE_STRING	"fixed_skilltype"//FREDZ
 #define		ENABLE_PASSWORD_STRING	"enable_password"
 #define		RCONX_FILE_STRING		"rconx_file"
 //#define		URL_STRING	        	"server_url"
@@ -70,6 +71,7 @@
 //#define		URL_KEYWORD			        31
 #define     DISABLE_ASC_KEYWORD          32
 //#define     ENABLE_NOFLAMEHACK_CHECK_KEYWORD  33
+#define		FIXED_SKILLTYPE_KEYWORD		33
 
 
 #define     WAIT_FOR_PLAYERS_KEYWORD			46 // MH: wait for players
