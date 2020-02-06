@@ -207,6 +207,11 @@ void SP_cast_bitch_melee( edict_t *self )
 
 	}
 
+	self->classname = "cast_bitch";
+
+    if (!self->health)
+		self->health = 100;
+
     self->spawnflags = 64;
 
 	SP_cast_bitch(self);
@@ -257,9 +262,16 @@ void SP_cast_bitch_pistol( edict_t *self )
 
     self->spawnflags = 0;
 
+    self->classname = "cast_bitch";
+
+    if (!self->health)
+		self->health = 100;
+
 	SP_cast_bitch(self);
 
-//	while (self = findradius(self, other->s.origin, 512))
+	if (self->client)//FREDZ not tested and maybe other self need to be switch
+    {
+ //	while (self = findradius(self, other->s.origin, 512))
     while (other = findradius(other, self->s.origin, 512))//FREDZ need fix should not attack own folks
     {
         if (other->svflags & SVF_MONSTER)
@@ -267,6 +279,8 @@ void SP_cast_bitch_pistol( edict_t *self )
             AI_MakeEnemy(other, self, 0 );  // hostile
         }
     }
+    }
+
 }
 void bitch_spawn (int ammount, int weapon)
 {
@@ -302,9 +316,11 @@ void bitch_spawn (int ammount, int weapon)
 		spawn->s.origin[2] += 1;
 
 		if (weapon==0)
-            spawn->classname = "cast_bitch_melee";
+            SP_cast_bitch_melee (spawn);
+ //           spawn->classname = "cast_bitch_melee";
         else if (weapon==1)
-            spawn->classname = "cast_bitch_pistol";
+            SP_cast_bitch_pistol (spawn);
+ //           spawn->classname = "cast_bitch_pistol";
         else
             spawn->classname = "cast_bitch";
 
@@ -328,6 +344,7 @@ void bitch_spawn (int ammount, int weapon)
 			return;
 	}
 }
+/*//FREDZ still need better fix
 void runt_spawn (int ammount, int weapon)
 {
 	edict_t *spawn,*spawnspot;
@@ -438,3 +455,4 @@ void thug_spawn (int ammount, int weapon)
 			return;
 	}
 }
+*/
