@@ -1869,8 +1869,9 @@ void PutClientInServer (edict_t *ent)
 		ent->movetype = MOVETYPE_WALK;
 		ent->solid = SOLID_BBOX;
 
-		ent->svflags = SVF_DEADMONSTER;//FREDZ thugfloor should make transparant player from kitmod
-		//ent->svflags &= ~(SVF_DEADMONSTER|SVF_NOCLIENT);
+//		ent->svflags = SVF_DEADMONSTER;//FREDZ thugfloor should make transparant player from kitmod
+//        ent->svflags |= SVF_DEADMONSTER;
+		ent->svflags &= ~(SVF_DEADMONSTER|SVF_NOCLIENT);
 
 		//give 3 seconds of imortality on each spawn (anti-camp)
 	    if(anti_spawncamp->value)

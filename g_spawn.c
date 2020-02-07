@@ -109,9 +109,6 @@ void SP_cast_runt (edict_t *self);
 void SP_cast_thug_sit(edict_t *self);
 
 void SP_cast_bitch (edict_t *ent);
-void SP_cast_bitch_melee (edict_t *self);
-void SP_cast_bitch_pistol (edict_t *self);
-
 void SP_cast_dog (edict_t *ent);
 void SP_cast_shorty (edict_t *ent);
 void SP_cast_whore (edict_t *ent);
@@ -136,7 +133,7 @@ void SP_misc_smoke (edict_t *ent);
 // done.
 
 // testing models
-void SP_misc_fidelA (edict_t *ent);
+//void SP_misc_fidelA (edict_t *ent);
 //void SP_misc_fidelC (edict_t *ent);
 void SP_elps (edict_t *self);
 void SP_misc_car (edict_t *ent);
@@ -465,9 +462,6 @@ spawn_t	spawns[] = {
 	{"cast_thug_sit", SP_cast_thug_sit},//FREDZ never used in kingpin orginale maps
 
 	{"cast_bitch", SP_cast_bitch},
-	{"cast_bitch_melee", SP_cast_bitch_melee},
-	{"cast_bitch_pistol", SP_cast_bitch_pistol},
-
 	{"cast_dog", SP_cast_dog},
     {"cast_rat", SP_cast_rat},//FREDZ new ai rat
 // Ridah, done.
@@ -500,8 +494,8 @@ spawn_t	spawns[] = {
 	{"ai_ty_fuseblown", SP_ty_fuseblown},
 	{"ai_moker_notinoffice", SP_moker_notinoffice},
 // Ridah, for testing purposes only!!
-	{"misc_grunt", SP_cast_thug},
-	{"misc_fidelA", SP_misc_fidelA},
+//	{"misc_grunt", SP_cast_thug},
+//	{"misc_fidelA", SP_misc_fidelA},
 	{"misc_car", SP_misc_car},
 // Ridah done.
 

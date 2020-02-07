@@ -28,105 +28,105 @@
 char *ep_names[] =
 {
 	"--THIS SLOT MUST BE VACANT--",
-	"Al",
-	"Beth",
-	"Magicj",
-	"Lisa",
-	"Louie",
+	"Al",//FREDZ not used, old name for bernie??? in ep_sidrow.c
+	"Beth",//sr1
+	"Magicj",//sr1
+	"Lisa",//sr1
+	"Louie",//sr1, bar_pv
 	"Frank",
-	"Buttmunch",
-	"Arnold",
-	"Brewster",
-	"Punky",
-	"Igmo",
-	"Johnny",
-	"Betty",
-	"Leroy",
-	"Jed",
-	"Buster",
-	"Bubba",
-	"Momo",
+	"Buttmunch",//sr1
+	"Arnold",//sr1
+	"Brewster",//sr1
+	"Punky",//sr1
+	"Igmo",//sr1
+	"Johnny",//sr1
+	"Betty",//sr1
+	"Leroy",//sr1
+	"Jed",//FREDZ not used only tested in code see ep_skidrow.c
+	"Buster",//FREDZ used in map bar_pv but also used for tested in code
+	"Bubba",//sr1, rc1 and rc2
+	"Momo",//sr2, pv_h, rc4, steel1 and sy_h
 	"Muttski",
 	"Spike",
-	"ToughGuy1",
-	"ToughGuy2",
-	"IntroGuy",
-	"Bernie",
-	"Lamont",
-	"Mona",
-	"Lenny",
+	"ToughGuy1",//sr1
+	"ToughGuy2",//sr1
+	"IntroGuy",//sr1
+	"Bernie",//sr1
+	"Lamont",//sr2
+	"Mona",//sr2
+	"Lenny",//bar_sr
 	"Chick",
-	"Sluggo",
-	"Rocko",
-	"Rover",
+	"Sluggo",//bar_sr
+	"Rocko",//bar_sr
+	"Rover",//sr2
 	"Joseph",
 	"Rummy", // sr1 bum
-	"Nick",  // sr2 bum
-	"Jesus", // sr boss 
-	"Yolanda",
-	"Carlton",
+	"Nick",  // sr2 bum //FREDZ is not sr2 but sr3 helping guy
+	"Jesus", // sr boss //sr4
+	"Yolanda",//pv_h
+	"Carlton",//pv_h
 	"Tina",
-	"Hardey",
-	"Laurel",
+	"Hardey",//pv_h
+	"Laurel",//pv_h
 	"Harold",
 	"Dick",
-	"Burt",
-	"Fingers",
+	"Burt",//bar_pv and bar_rc
+	"Fingers",//bar_pv
 	"Dan",
-	"Clarence",
-	"Adolf",
-	"Candy",
-	"Sharky",
-	"Kingpin",
-	"Blunt",
-	"NikkiBlanco",
-	"Moe",
-	"Larry",
-	"Curly",
-	"Ed",
-	"Popeye",
-	"Dogg",
-	"Selma",
+	"Clarence",//bar_pv, idiot and bar_rc
+	"Adolf",//bar_rc
+	"Candy",//bar_pv, idiot and bar_rc
+	"Sharky",//FREDZ not used, this was name for pawn o matic guy
+	"Kingpin",//FREDZ used in crystalpalace used in map rcboss2 as endboss
+	"Blunt",//FREDZ used in map rcboss2 as endboss in cutscene that you can't kill
+	"NikkiBlanco",//FREDZ used in map pv_boss and rcboss1
+	"Moe",//sy_h
+	"Larry",//sy_h
+	"Curly",//sy_h
+	"Ed",//sr2
+	"Popeye",//sy_h
+	"Dogg",//bar_sy
+	"Selma",//bar_sy
 	"Jane",
-	"Barney",
-	"BigWillie",
-	"Sal",
-	"Lefty",
-	"Bwillie",
-	"Mung",
-	"Tyrone",
-	"Luke",
-	"Hann",
-	"Kroker",
-	"kid_1",
-	"kid_2",
-	"kid_3",
-	"kid_4",
-	"kid_5",
-	"kid_6",
-	"kid_7",
-	"kid_8",
-	"Oscar",
-	"David",
-	"Bambi",
-	"Brittany",
-	"Mathew",
-	"Pete",
-	"Moker",
-	"Heilman",
-	"Butch",
-	"Patrick",
-	"Groucho",
-	"Harpo",
-	"Chico",
-	"Blefty",
-	"Scalper",
-	"Dubs",
-	"Rochelle",
-	"Lola",
-	"Dude",
-	"Walter",
-	"Donny",
+	"Barney",//FREDZ not used but voice table only no wav files
+	"BigWillie",//bar_sy
+	"Sal",//bar_sy
+	"Lefty",//bar_sy
+	"Bwillie",//bar_sy
+	"Mung",//pv_h
+	"Tyrone",//ty4
+	"Luke",//ty1
+	"Hann",//ty1
+	"Kroker",//steel1
+	"kid_1",//steel2
+	"kid_2",//steel2
+	"kid_3",//steel2
+	"kid_4",//steel3
+	"kid_5",//steel3
+	"kid_6",//FREDZ only in ep_steeltown.c
+	"kid_7",//FREDZ only in ep_steeltown.c
+	"kid_8",//FREDZ only in ep_steeltown.c
+	"Oscar",//teel2
+	"David",//steel3
+	"Bambi",//bar_st
+	"Brittany",//steel1
+	"Mathew",//steel1
+	"Pete",//steel1
+	"Moker",//steel4
+	"Heilman",//sy2
+	"Butch",//rc1
+	"Patrick",//rc1
+	"Groucho",//rc1
+	"Harpo",//rc1
+	"Chico",//rc1
+	"Blefty",//FREDZ only in ep_shipyards.c and g_spawn.c
+	"Scalper",//bar_rc
+	"Dubs",//pv_h
+	"Rochelle",//bar_st
+	"Lola",//rc3
+	"Dude",//FREDZ rc3 and sy_h as script?
+	"Walter",//bar_rc
+	"Donny",//rc4
 	NULL
 };
 
@@ -273,7 +273,7 @@ qboolean EP_CastSight ( edict_t *self, edict_t *other, cast_memory_t *cast_memor
 		return EP_Skidrow_CastSight ( self, other, cast_memory );
 	case EP_POISONVILLE :
 		return EP_Poisonville_CastSight ( self, other, cast_memory );
-	
+
 	case EP_STEELTOWN:
 		return EP_Steeltown_CastSight ( self, other, cast_memory );
 		break;
@@ -333,7 +333,7 @@ qboolean EP_EventSpeech (edict_t *self, edict_t *other, int saywhat)
 		return EP_Poisonville_EventSpeech (self, other, saywhat);
 		break;
 	case EP_TRAINYARD:
-		return EP_Trainyard_EventSpeech (self, other, saywhat);	
+		return EP_Trainyard_EventSpeech (self, other, saywhat);
 		break;
 	case EP_SHIPYARDS:
 		return EP_SY_EventSpeech (self, other, saywhat);
@@ -438,7 +438,7 @@ void EP_SpawnFlags (edict_t *self)
 	case EP_STEELTOWN:
 		EP_SteeltownFlags (self);
 		break;
-	case EP_RADIOCITY: 
+	case EP_RADIOCITY:
 		EP_RCFlags (self);
 		break;
 	}
@@ -457,7 +457,7 @@ int EP_HiredGuys (edict_t *self, edict_t *other)
 	case EP_TRAINYARD:
 		return (EP_Trainyard_HiredGuysFlags (self, other));
 	case EP_RADIOCITY:
-		return (EP_RC_HiredGuysFlags (self, other));	
+		return (EP_RC_HiredGuysFlags (self, other));
 	case EP_SHIPYARDS:
 		return (EP_SY_HiredGuysFlags (self, other));
 	default:
@@ -480,7 +480,7 @@ void EP_CheckMomo (edict_t *ent, cast_memory_t	*mem)
 		break;
 	case EP_SHIPYARDS:
 		EP_SY_CheckMomo (ent, mem);
-		break;	
+		break;
 	case EP_STEELTOWN:
 		EP_Steeltown_CheckMomo (ent, mem);
 		break;
@@ -614,7 +614,7 @@ void EP_SpecialEventDeath (edict_t *self)
 		EP_SY_SpecialEventDeath (self);
 		break;
 	}
-	
+
 }
 
 qboolean EP_Steeltown_UnlockDoorFlag (edict_t *ent)
@@ -631,20 +631,20 @@ void Think_Help (edict_t *ent)
 		G_FreeEdict(ent);
 		return;
 	}
-	
+
 	if (!ent->misstime )
 	{
 		level.helpchange = 0;
 		G_FreeEdict(ent);
 		return;
 	}
-	
+
 	if (ent->misstime <= 15 && level.helpchange)
 	{
 		level.helpchange = ent->misstime*(255/15);
 	}
 
-	ent->misstime--;	
+	ent->misstime--;
 
 	ent->nextthink = level.time + 0.1;
 }
@@ -661,7 +661,7 @@ void Show_Help (void)
 	}
 
 	help = G_Spawn();
-	
+
 	if (!help)
 		return;
 
@@ -682,7 +682,7 @@ void EP_Flash_Newflag (edict_t *self, int ep_flag)
 {
 
 	qboolean rval = false;
-	
+
 	switch (level.episode)
 	{
 	case EP_SKIDROW:

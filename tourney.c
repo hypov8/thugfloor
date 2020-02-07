@@ -302,9 +302,9 @@ void WaveStart () // Starts the match
 	//free pawnOmatic guy
 	cast_pawn_o_matic_free();
 
-	dog_spawn(8);
-	bitch_spawn(2,0);
-	bitch_spawn(2,1);
+//	dog_spawn(8);
+//	bitch_spawn(2,0);
+//	bitch_spawn(2,1);
 
 	level.startframe = level.framenum;
     level.modeset = WAVE_SPAWN_PLYR;
