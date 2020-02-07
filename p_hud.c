@@ -844,9 +844,9 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 //		if (cl_ent == ent)//FREDZ not yellow
 //			tag = "990";
         if (cl_ent->client->pers.player_dead == TRUE && level.modeset == WAVE_ACTIVE)
-            tag = "000";//FREDZ dead people are black
-        else  if (cl_ent->client->pers.spectator == PLAYER_READY && level.modeset == WAVE_ACTIVE)
-            tag = "111";//FREDZ just joined, grey to black
+            tag = "900";//FREDZ dead people are black //hypov8 test red
+        else  if (cl_ent->client->pers.spectator == PLAYER_READY && (level.modeset == WAVE_ACTIVE||level.modeset == WAVE_START))
+            tag = "333";//FREDZ just joined, grey to black
 		else if (cl_ent->client->pers.rconx[0])
 			tag = "096";
 		else if (cl_ent->client->pers.admin > NOT_ADMIN)
@@ -1292,7 +1292,7 @@ void G_SetStats (edict_t *ent)
 
 		// MH: keep own score
 		ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
-		ent->client->ps.stats[STAT_DEPOSITED] = ent->client->resp.deposited;
+		ent->client->ps.stats[STAT_DEPOSITED] = level.waveEnemyCount; // ent->client->resp.deposited;
 
 		return;
 	}
@@ -1721,7 +1721,7 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_TIMER] = 0;
 
     if (level.waveNum >= 0)// && level.modeset == WAVE_ACTIVE)//FREDZ
-        ent->client->ps.stats[STAT_WAVEROUND] = 10 - level.waveNum + 1;
+        ent->client->ps.stats[STAT_WAVEROUND] = (int)(maxwaves->value - level.waveNum);
     else
         ent->client->ps.stats[STAT_WAVEROUND] = 0;
 
@@ -1764,7 +1764,7 @@ void G_SetStats (edict_t *ent)
 	// frags
 	//
 	ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
-	ent->client->ps.stats[STAT_DEPOSITED] = ent->client->resp.deposited;
+	ent->client->ps.stats[STAT_DEPOSITED] = level.waveEnemyCount;// ent->client->resp.deposited;
 
 	// END
 

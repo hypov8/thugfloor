@@ -1567,6 +1567,14 @@ char *thugfloor_statusbar =
 "	xr	-55 "
 "	num 2 23"
 "endif "
+"if 22 " 
+"	yt  280	"
+"	xr	-95 "
+"string \"Enemy Left\" "
+"	yt	295 "
+"	xr	-55 "
+"	num 2 22" //hypov8 hud STAT_DEPOSITED
+"endif "
 ;
 
 // MH: removed unnecessary stuff

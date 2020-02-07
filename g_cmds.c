@@ -501,8 +501,7 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 
 	self->check_idle = level.framenum; // MH: reset idle timer
 
-
-	if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_SPAWN_PLYR)//hypov8
+	if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START )
 	{
 		if (self->client->pers.spectator == SPECTATING)
 			gi.cprintf(self,PRINT_HIGH,"You will join the next wave\n");
@@ -522,7 +521,6 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 		}
 		self->switch_teams_frame = level.framenum;
 		//FREDZ end
-		self->client->pers.spectator = PLAYING;
 
 		self->client->pers.spectator = PLAYER_READY; //hypov8dont enter a current wave
 
@@ -530,8 +528,8 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 		self->health = 0;
 		meansOfDeath = MOD_RESTART;
 		self->solid = SOLID_NOT;
-//		player_die (self, self, self, 1, vec3_origin, 0, 0);
 		ClientBeginDeathmatch( self );
+		self->client->pers.currentcash = 150 + (int)(250.0f * (float)((level.waveNum + 1) / maxwaves->value));
 		gi.bprintf( PRINT_HIGH, "%s joined game\n", self->client->pers.netname);
 		return;
 	}
@@ -2540,15 +2538,9 @@ void Cmd_Use_f (edict_t *ent)
 	}*/
 
 
-	if (ent->client->pers.spectator == SPECTATING)
+	if (ent->client->pers.spectator == SPECTATING || ent->client->pers.spectator == PLAYER_READY)
     {
-		if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_SPAWN_PLYR)//hypov8
-		{
-			ent->client->pers.spectator = PLAYER_READY;
-			gi.cprintf(ent, PRINT_HIGH, "You will join the next wave\n");
-		}
-		else
-            Cmd_Join_f( ent, "" );
+		Cmd_Join_f( ent, "" );
 		return;
 	}
 
@@ -2756,7 +2748,6 @@ void Cmd_InvUse_f (edict_t *ent)
 
 			ent->client->pers.team = playerlist[index].team;
 			ent->client->resp.time = playerlist[index].time; // MH: set playing time counter instead of enterframe
-			ent->client->pers.spectator = PLAYING;
 
             ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
 

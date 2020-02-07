@@ -1,14 +1,15 @@
 #include "g_local.h"
-
-edict_t *SelectDeathmatchSpawnPoint (edict_t *ent);
-void ED_CallSpawn (edict_t *ent);
+#include "g_cast_spawn.h"
 
 //FREDZ todo Some character no name maybe check "localteam" in maps for skins setup.
 
-edict_t *spawn_cast[100];//64 max like MAX_CHARACTERS
+edict_t *spawn_cast[MAX_CHARACTERS];//64 max like MAX_CHARACTERS
 
 #define BUYGUY_COUNT 3 //3 pawnOmatic guys?
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
+
+static int cast_count = 0;
+
 
 void cast_pawn_o_matic_free()
 {
@@ -72,116 +73,120 @@ void cast_pawn_o_matic_spawn ()
 			return;
 	}
 }
-void dog_spawn (int ammount)
+
+void dog_spawn(int ammount)
 {
-	edict_t *spawn,*spawnspot;
+	edict_t *spawn, *spawnspot;
 	int count = 0, i;
 
-//	spawn = G_Spawn();
+	//	spawn = G_Spawn();
 	spawnspot = NULL;
 
- //   spawnspot = SelectDeathmatchSpawnPoint(spawn); //Will use spawn furtherest DF_SPAWN_FARTHEST if set
+	//   spawnspot = SelectDeathmatchSpawnPoint(spawn); //Will use spawn furtherest DF_SPAWN_FARTHEST if set
 
-	//random?
+	   //random?
 	while ((spawnspot = G_Find(spawnspot, FOFS(classname), "info_player_deathmatch")) != NULL)
 
- //find first 3 dm spawns in entity list. pawnGuy will be at same 3 location every time, unless custom kpded2 itemlist
-	for (i=0 ; i<globals.num_edicts ; i++)
-	{
-		spawnspot = g_edicts + i;
-		if (!spawnspot->inuse)
-			continue;
-		if (!spawnspot->classname)
-			continue;
-		if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))
-			continue;
-
-		//check for telfrag??
-		//ai code will move them
-
-		spawn = G_Spawn();
-
-		VectorCopy (spawnspot->s.angles, spawn->s.angles);
-		VectorCopy( spawnspot->s.origin, spawn->s.origin );
-		spawn->s.origin[2] += 1;
-
-		spawn->classname = "cast_dog";
-
-		gi.linkentity (spawn);
-
-		if (level.num_characters == MAX_CHARACTERS)
+		//find first 3 dm spawns in entity list. pawnGuy will be at same 3 location every time, unless custom kpded2 itemlist
+		for (i = 0; i < globals.num_edicts; i++)
 		{
-			gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
-			G_FreeEdict(spawn);
-			return ;
+			spawnspot = g_edicts + i;
+			if (!spawnspot->inuse)
+				continue;
+			if (!spawnspot->classname)
+				continue;
+			if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))
+				continue;
+
+			//check for telfrag??
+			//ai code will move them
+
+			spawn = G_Spawn();
+
+			VectorCopy(spawnspot->s.angles, spawn->s.angles);
+			VectorCopy(spawnspot->s.origin, spawn->s.origin);
+			spawn->s.origin[2] += 1;
+
+			spawn->classname = "cast_dog";
+
+			gi.linkentity(spawn);
+
+			if (level.num_characters == MAX_CHARACTERS)
+			{
+				gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
+				G_FreeEdict(spawn);
+				return;
+			}
+
+			ED_CallSpawn(spawn);
+
+			//copy entity our list so we can free later
+			spawn_cast[count] = spawn;
+
+			count++;
+			//no more required
+			if (count == ammount)
+				return;
 		}
-
-		ED_CallSpawn(spawn);
-
-		//copy entity our list so we can free later
-		spawn_cast[count] = spawn;
-
-		count++;
-		//no more required
-		if (count == ammount)
-			return;
-	}
 }
-void rat_spawn (int ammount)
+
+void rat_spawn(int ammount)
 {
-	edict_t *spawn,*spawnspot;
+	edict_t *spawn, *spawnspot;
 	int count = 0, i;
 
-//	spawn = G_Spawn();
+	//	spawn = G_Spawn();
 	spawnspot = NULL;
 
- //   spawnspot = SelectDeathmatchSpawnPoint(spawn); //Will use spawn furtherest DF_SPAWN_FARTHEST if set
+	//   spawnspot = SelectDeathmatchSpawnPoint(spawn); //Will use spawn furtherest DF_SPAWN_FARTHEST if set
 
-	//random?
+	   //random?
 	while ((spawnspot = G_Find(spawnspot, FOFS(classname), "info_player_deathmatch")) != NULL)
 
- //find first 3 dm spawns in entity list. pawnGuy will be at same 3 location every time, unless custom kpded2 itemlist
-	for (i=0 ; i<globals.num_edicts ; i++)
-	{
-		spawnspot = g_edicts + i;
-		if (!spawnspot->inuse)
-			continue;
-		if (!spawnspot->classname)
-			continue;
-		if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))
-			continue;
-
-		//check for telfrag??
-		//ai code will move them
-
-		spawn = G_Spawn();
-
-		VectorCopy (spawnspot->s.angles, spawn->s.angles);
-		VectorCopy( spawnspot->s.origin, spawn->s.origin );
-		spawn->s.origin[2] += 1;
-
-		spawn->classname = "cast_dog";
-
-		gi.linkentity (spawn);
-
-		if (level.num_characters == MAX_CHARACTERS)
+		//find first 3 dm spawns in entity list. pawnGuy will be at same 3 location every time, unless custom kpded2 itemlist
+		for (i = 0; i < globals.num_edicts; i++)
 		{
-			gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
-			G_FreeEdict(spawn);
-			return ;
+			spawnspot = g_edicts + i;
+			if (!spawnspot->inuse)
+				continue;
+			if (!spawnspot->classname)
+				continue;
+			if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))
+				continue;
+
+			//check for telfrag??
+			//ai code will move them
+
+			spawn = G_Spawn();
+
+			VectorCopy(spawnspot->s.angles, spawn->s.angles);
+			VectorCopy(spawnspot->s.origin, spawn->s.origin);
+			spawn->s.origin[2] += 1;
+
+			spawn->classname = "cast_dog";
+
+			gi.linkentity(spawn);
+
+			if (level.num_characters == MAX_CHARACTERS)
+			{
+				gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
+				G_FreeEdict(spawn);
+				return;
+			}
+
+			ED_CallSpawn(spawn);
+
+			//copy entity our list so we can free later
+			spawn_cast[count] = spawn;
+
+			count++;
+			//no more required
+			if (count == ammount)
+				return;
 		}
-
-		ED_CallSpawn(spawn);
-
-		//copy entity our list so we can free later
-		spawn_cast[count] = spawn;
-
-		count++;
-		//no more required
-		if (count == ammount)
-			return;
-	}
 }
+
+#if 0
 extern void SP_cast_bitch (edict_t *self);
 extern void SP_cast_whore (edict_t *self);
 void SP_cast_bitch_melee (edict_t *self)
@@ -273,6 +278,7 @@ void SP_cast_bitch_pistol (edict_t *self)
 
 	SP_cast_bitch(self);
 
+
 	/*
 	if (other->client)//FREDZ not tested and maybe other self need to be switch
     {
@@ -286,6 +292,9 @@ void SP_cast_bitch_pistol (edict_t *self)
     }*/
 
 }
+#endif
+
+
 void SP_cast_bitch_shotgun (edict_t *self)
 {
     //Doesn't use count
@@ -355,67 +364,74 @@ void SP_cast_bitch_flamethrower (edict_t *self)
 
 	SP_cast_whore(self);
 }
-void bitch_spawn (int ammount, int weapon)
+
+
+
+#if 0
+void bitch_spawn(int ammount, int weapon)
 {
-	edict_t *spawn,*spawnspot;
+	edict_t *spawn, *spawnspot;
 	int count = 0, i;
 
-//	spawn = G_Spawn();
+	//	spawn = G_Spawn();
 	spawnspot = NULL;
 
- //   spawnspot = SelectDeathmatchSpawnPoint(spawn); //Will use spawn furtherest DF_SPAWN_FARTHEST if set
+	//   spawnspot = SelectDeathmatchSpawnPoint(spawn); //Will use spawn furtherest DF_SPAWN_FARTHEST if set
 
-	//random?
+	   //random?
 	while ((spawnspot = G_Find(spawnspot, FOFS(classname), "info_player_deathmatch")) != NULL)
 
- //find first 3 dm spawns in entity list. pawnGuy will be at same 3 location every time, unless custom kpded2 itemlist
-	for (i=0 ; i<globals.num_edicts ; i++)
-	{
-		spawnspot = g_edicts + i;
-		if (!spawnspot->inuse)
-			continue;
-		if (!spawnspot->classname)
-			continue;
-		if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))
-			continue;
-
-		//check for telfrag??
-		//ai code will move them
-
-		spawn = G_Spawn();
-
-		VectorCopy (spawnspot->s.angles, spawn->s.angles);
-		VectorCopy( spawnspot->s.origin, spawn->s.origin );
-		spawn->s.origin[2] += 1;
-
-		if (weapon==0)
-            SP_cast_bitch_melee (spawn);
-        else if (weapon==1)
-            SP_cast_bitch_pistol (spawn);
-        else
-            spawn->classname = "cast_bitch";
-
-		gi.linkentity (spawn);
-
-		if (level.num_characters == MAX_CHARACTERS)
+		//find first 3 dm spawns in entity list. pawnGuy will be at same 3 location every time, unless custom kpded2 itemlist
+		for (i = 0; i < globals.num_edicts; i++)
 		{
-			gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
-			G_FreeEdict(spawn);
-			return ;
+			spawnspot = g_edicts + i;
+			if (!spawnspot->inuse)
+				continue;
+			if (!spawnspot->classname)
+				continue;
+			if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))
+				continue;
+
+			//check for telfrag??
+			//ai code will move them
+
+			spawn = G_Spawn();
+
+			VectorCopy(spawnspot->s.angles, spawn->s.angles);
+			VectorCopy(spawnspot->s.origin, spawn->s.origin);
+			spawn->s.origin[2] += 1;
+
+			if (weapon == 0)
+				SP_cast_bitch_melee(spawn);
+			else if (weapon == 1)
+				SP_cast_bitch_pistol(spawn);
+			else
+				spawn->classname = "cast_bitch";
+
+			gi.linkentity(spawn);
+
+			if (level.num_characters == MAX_CHARACTERS)
+			{
+				gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
+				G_FreeEdict(spawn);
+				return;
+			}
+
+			ED_CallSpawn(spawn);
+
+			//copy entity our list so we can free later
+			spawn_cast[count] = spawn;
+
+			count++;
+			//no more required
+			if (count == ammount)
+				return;
 		}
-
-		ED_CallSpawn(spawn);
-
-		//copy entity our list so we can free later
-		spawn_cast[count] = spawn;
-
-		count++;
-		//no more required
-		if (count == ammount)
-			return;
-	}
 }
-extern void SP_cast_runt (edict_t *self);
+#endif
+
+#if 0
+extern void SP_cast_runt(edict_t *self);
 extern void SP_cast_shorty (edict_t *self);
 void SP_cast_runt_melee (edict_t *self)
 {
@@ -624,6 +640,8 @@ void SP_cast_runt_pistol (edict_t *self)
 	SP_cast_runt(self);
 }
 //FREDZ still need todo more other characters
+#endif
+#if 0
 void runt_spawn (int ammount, int weapon)
 {
 	edict_t *spawn,*spawnspot;
@@ -679,6 +697,7 @@ void runt_spawn (int ammount, int weapon)
 			return;
 	}
 }
+#endif
 /*
 void thug_spawn (int ammount, int weapon)
 {
@@ -735,4 +754,221 @@ void thug_spawn (int ammount, int weapon)
 			return;
 	}
 }*/
+
+
+void cast_TF_dog(edict_t *self)
+{
+	self->classname = "cast_dog";
+}
+
+void cast_TF_bitch_malee(edict_t *self)
+{
+	static cast_skins_s bitchMelee_Skins[6] = {
+		"Betty", "008 006 003",	//sr1
+		"Beth", "009 007 004",	//sr1
+		"Lisa", "012 015 012"	//sr1 Got normally 120 health
+	};
+
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), bitchMelee_Skins[rand() % 3].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), bitchMelee_Skins[rand() % 3].skin);
+	self->spawnflags = 64;
+	self->classname = "cast_bitch";
+}
+
+void cast_TF_bitch_pistol(edict_t *self)
+{
+	static cast_skins_s bitchPistol_Skins[7] = {
+		"Mona",			"014 012 003",	//sr2
+		"yolanda",		"041 050 003",	//pv_h got normally 200 health
+		"candy",		"015 017 013",	//bar_pv same name as in bar_rc
+		"brittany",		"046 040 010",	//steel1
+		"bambi",		"044 042 003",	//bar_st
+		"lola",			"045 049 015", 	//rc3
+		"candy",		"019 019 015"	//bar_rc same name as in bar_pv
+	};
+
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), bitchPistol_Skins[rand() % 7].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), bitchPistol_Skins[rand() % 7].skin);
+	self->classname = "cast_bitch";
+
+}
+
+void cast_TF_runt_melee(edict_t *self)
+{
+	static cast_skins_s skins[13] = {
+	"bubba",  "017 016 008",	//sr1
+	"louie", "011 011 005",		//sr1
+	"buttmunch", "001 001 001",	//sr1
+	"magicj", "020 011 005",	//sr1
+	"kroker", "023 020 020",	//steel1 Got normally 150 health
+	"kid_1", "134 132 132",		//steel2
+	"kid_2", "132 132 132",		//steel2
+	"kid_3", "133 132 132",		//steel2
+	"popeye", "040 019 048",	//sy_h Got normaly health 300 and diffrent head?
+	"harpo", "142 140 140",		 //rc1 Got normally 200 health
+	"bubba", "042 042 010",		 //rc1
+	"groucho", "140 141 046",	 //rc1 Got normally 150 health
+	"chico", "141 141 046"		 //rc1 Got normally 150 health //same skin as grouncho
+	};
+
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 14].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 14].skin);
+	self->classname = "cast_runt";
+	self->spawnflags = 64;
+}
+
+void cast_TF_runt_pistol(edict_t *self)
+{
+	edict_t	*other = NULL;
+
+	static cast_skins_s skins[15] = {
+	"bernie", "011 012 004",	//sr1 Got normally 150 health
+	"punky", "005 003 001",		//sr1 Got normally 50 health//sewer_rats
+	 "momo", "020 011 003",		//sr2
+	"jesus", "021 017 010",		//sr4 Got normally 400 health some kind of boss
+	 "momo", "013 045 006",		//steel1
+	"mathew", "048 042 015",		//steel1
+	"luke", "049 046 046",		//ty1
+	"clarence", "047 013 003",	//bar_pv
+	"buster", "046 010 009",	//bar_pv Got normally 120 health
+	"louie", "043 041 009",		//bar_pv
+	"clarence", "045 024 005",	//bar_rc
+	"sluggo", "019 010 011",	//bar_sr
+	"lenny", "018 011 007",		//bar_sr
+	"dogg", "016 014 003",		//bar_sy
+	"momo", "049 041 009"		//rc4
+	};
+
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 14].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 14].skin);
+	self->spawnflags = 0;
+	self->classname = "cast_runt";
+}
+//FREDZ still need todo more other characters
+
+
+
+//check if all enemy have died
+int cast_TF_checkEnemyState()
+{
+	int i, count = 0; //hypov8 todo: clean this up
+
+	for (i = 0; i < cast_count; i++)
+	{
+		if (spawn_cast[i] && spawn_cast[i]->inuse)
+		{
+			if (level.modeset != WAVE_ACTIVE)
+				G_FreeEdict(spawn_cast[i]);
+			else if (spawn_cast[i]->health > 0)
+				count++;
+		}
+	}
+
+	level.waveEnemyCount = count;
+
+	if (level.modeset != WAVE_ACTIVE)
+		cast_count = 0; //reset spawned cast count
+
+	return count;
+}
+
+
+void cast_TF_setEnemyPlayer(edict_t *spawn)
+{
+	int j, best = 1;
+	float v, dist = 99999;
+	edict_t *player;
+
+	//attack closest player. todo rand?? depends on player count?
+	for_each_player(player, j)
+	{
+		if (player->health <= 0 || player->solid == SOLID_NOT) // MH: exclude spectators
+			continue;
+		v = VectorDistance(spawn->s.origin, player->s.origin);
+		if (v < dist) {
+			dist = v;
+			best = j;
+		}
+	}
+
+	AI_MakeEnemy(spawn, &g_edicts[best], 0);  // hostile to closest enemy
+	//hypov8 todo: what if enemy is dead??
+}
+
+
+void cast_TF_spawn(int ammount, int type)
+{
+	edict_t *spawn, *spawnspot;
+	int i;
+
+	for (i = 0; i < ammount; i++)
+	{
+		if (cast_count >= MAX_CHARACTERS)
+			return;
+
+		spawn = G_Spawn();
+		spawnspot = cast_SelectRandomDeathmatchSpawnPoint(spawn);
+		VectorCopy(spawnspot->s.angles, spawn->s.angles);
+		VectorCopy(spawnspot->s.origin, spawn->s.origin);
+		spawn->s.origin[2] += 1;
+
+		switch (type)
+		{
+		default:
+		case 1:
+			cast_TF_dog(spawn);break;
+		case 2:
+			cast_TF_bitch_malee(spawn);break;
+		case 3:
+			cast_TF_bitch_pistol(spawn);break;
+		case 4:
+			cast_TF_runt_pistol(spawn);break;
+
+		}
+
+		gi.linkentity(spawn);
+
+		if (level.num_characters == MAX_CHARACTERS)
+		{
+			gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
+			G_FreeEdict(spawn);
+			return;
+		}
+
+		ED_CallSpawn(spawn);
+		if (!spawn->health)
+			spawn->health = 100;
+
+		//set player to attack
+		cast_TF_setEnemyPlayer(spawn);
+
+		//copy entity our list so we can free later
+		spawn_cast[cast_count] = spawn;
+		cast_count++;
+	}
+}
+
+/*
+==========
+cast_TF_spawn_allEnemy
+this is where we generate the eneny spawn counts
+hypov8 note; this may entity overflow clients
+==========
+*/
+void cast_TF_spawn_allEnemy(void)
+{
+	int playerCount = 0;
+	int numDog = level.waveNum + 8;		//max 11+8=19
+	int numBitch = level.waveNum + 2;	//max 11+2=13
+	//int numThug = level.waveNum + 2;	//max 11+2=13
+	//int numRat = level.waveNum + 2;	//max 11+2=13
+	//hypov8 todo: player count?
+
+	//hypov8 todo: rand
+	cast_TF_spawn(numDog, 1); //1 = dog
+	cast_TF_spawn(numBitch, 2); //2 = bitch melee
+	cast_TF_spawn(numBitch, 3); //3 = bitch pistol
+	cast_TF_spawn(numBitch, 4); //4 = runt pistol 
+
+}
 

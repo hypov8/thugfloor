@@ -1584,6 +1584,102 @@ void SelectSpawnPoint (edict_t *ent, vec3_t origin, vec3_t angles)
 //======================================================================
 
 
+//thugfloor
+float cast_PlayersRangeFromSpot(edict_t *spot)
+{
+	edict_t	*player;
+	float	bestplayerdistance;
+	vec3_t	v;
+	int		n;
+	float	playerdistance;
+
+
+	bestplayerdistance = 9999;
+
+	//check all ents
+	for (n = 1; n <= globals.num_edicts; n++)
+	{
+		player = &g_edicts[n];
+
+		if (!player->inuse)
+			continue;
+
+		if (player->health <= 0 || player->solid == SOLID_NOT) // MH: exclude spectators
+			continue;
+
+		VectorSubtract(spot->s.origin, player->s.origin, v);
+		playerdistance = VectorLength(v);
+
+		if (playerdistance <= 32) // MH: at least partially occupied
+			return 0;
+
+		if (playerdistance < bestplayerdistance)
+			bestplayerdistance = playerdistance;
+	}
+
+	return bestplayerdistance;
+}
+
+//duplicate of dm spawn. but also tests for ai presence
+edict_t *cast_SelectRandomDeathmatchSpawnPoint(edict_t *ent)
+{
+	edict_t	*spot, *spot1, *spot2;
+	int		count = 0, count0 = 0;
+	int		selection;
+	float	range, range1, range2;
+
+	spot = NULL;
+	range1 = range2 = 99999;
+	spot1 = spot2 = NULL;
+
+	while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL)
+	{
+		count++;
+		//if (ent->client->pers.spectator != SPECTATING)
+		{
+			range = cast_PlayersRangeFromSpot(spot);
+			if (range < range1)
+			{
+				range2 = range1;
+				spot2 = spot1;
+				range1 = range;
+				spot1 = spot;
+			}
+			else if (range < range2)
+			{
+				range2 = range;
+				spot2 = spot;
+			}
+			// count occupied spots
+			if (!range)
+				count0++;
+		}
+	}
+
+	if (!count)
+		return NULL;
+
+	if (count <= 2)
+		spot1 = spot2 = NULL;
+	if (count0 == count) // all spots occupied
+		count0 = 0;
+	else if (count0 > 2)
+		count -= count0 - 2;
+	count -= (spot1 != NULL) + (spot2 != NULL);
+
+	selection = rand() % count;
+
+	spot = NULL;
+	do
+	{
+		spot = G_Find(spot, FOFS(classname), "info_player_deathmatch");
+		if (spot == spot1 || spot == spot2 || (count0 > 2 && !cast_PlayersRangeFromSpot(spot)))
+			selection++;
+	} while (selection--);
+
+	return spot;
+
+}
 void InitBodyQue (void)
 {
 	int		i;
@@ -1853,11 +1949,15 @@ void PutClientInServer (edict_t *ent)
 //	if (((deathmatch->value) && (level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT)))
 //		|| (level.modeset == FREEFORALL) || (ent->client->pers.spectator == SPECTATING))
     if ((level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING)
-        || (level.modeset == WAVE_IDLE)
-        || (ent->client->pers.player_dead == TRUE)
-		|| (ent->client->pers.spectator == PLAYER_READY) //hypov8 dont enter a current wave
+        || (level.modeset == WAVE_ACTIVE) //hypov8 dont enter a current wave
+        || (level.modeset == WAVE_START)
         )
 	{
+		if (ent->client->pers.spectator == PLAYING) //player died mid wave
+		{
+			ent->client->pers.player_dead = TRUE;//FREDZ
+			ent->client->pers.spectator = PLAYER_READY;
+		}
 		ent->movetype = MOVETYPE_NOCLIP;
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
@@ -1866,8 +1966,10 @@ void PutClientInServer (edict_t *ent)
 	}
 	else
 	{
+		ent->client->pers.spectator = PLAYING;
 		ent->movetype = MOVETYPE_WALK;
 		ent->solid = SOLID_BBOX;
+		ent->client->pers.player_dead = FALSE;//FREDZ
 
 //		ent->svflags = SVF_DEADMONSTER;//FREDZ thugfloor should make transparant player from kitmod
 //        ent->svflags |= SVF_DEADMONSTER;
@@ -2298,17 +2400,15 @@ void ClientBeginDeathmatch (edict_t *ent)
 	else*/
 	{
 		if ((ent->client->pers.spectator == SPECTATING) || (ent->client->showscores == SCORE_REJOIN) || (level.modeset == ENDGAMEVOTE)
-         || (level.modeset == WAVE_START)
-		 || (level.modeset == WAVE_IDLE)
-		 || (level.modeset == WAVE_END)) //hypov8 dont enter a current wave
+         || (level.modeset == WAVE_START) //dont enter at 15 sec countdown?
+		 || (level.modeset == WAVE_ACTIVE)) //hypov8 dont enter a current wave
 		{
 			ent->movetype = MOVETYPE_NOCLIP;
 			ent->solid = SOLID_NOT;
 			ent->svflags |= SVF_NOCLIENT;
 			ent->client->pers.weapon = NULL;
-//			ent->client->pers.spectator = SPECTATING;
 		}
-		else if (level.modeset != WAVE_SPAWN_PLYR)
+		else
 		{
 			gi.bprintf (PRINT_HIGH, "%s entered the game\n", ent->client->pers.netname);
 //			sl_WriteStdLogPlayerEntered( &gi, level, ent );	// Standard Logging
@@ -3218,8 +3318,6 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 /*	if (teamplay->value || ent->client->showscores == SCORE_REJOIN)
 		ent->client->pers.spectator = SPECTATING;
 	else*/
-
-    ent->client->pers.spectator = PLAYING;//FREDZ order matters
 
     ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
 
@@ -4170,9 +4268,6 @@ void ClientBeginServerFrame (edict_t *ent)
 				ent->flags &= ~FL_GODMODE;
 				ent->health = 0;
 				meansOfDeath = MOD_RESTART;
-
-				ent->client->pers.player_dead = TRUE;
-
 				ClientBeginDeathmatch( ent );
 				return;
 			}

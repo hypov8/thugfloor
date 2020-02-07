@@ -114,6 +114,7 @@ cvar_t	*burn_b;
 
 cvar_t	*timescale;
 
+cvar_t	*maxwaves;//hypov8
 //cvar_t	*teamplay;
 //cvar_t	*g_cashspawndelay;
 
@@ -547,10 +548,9 @@ CheckDMRules
 void CheckDMRules (void)
 {
 	int			i;
-	gclient_t	*cl;
 	int		count=0;
 	edict_t	*doot;
-	int maxwaves = 11;//FREDZ
+	//int maxwaves = 11;//FREDZ
 
 	if (level.intermissiontime)
 		return;
@@ -572,9 +572,9 @@ void CheckDMRules (void)
 			if (count == 0)
 				ResetServer();
 			else
-				if (level.waveNum < maxwaves)
+				if (level.waveNum < (int)maxwaves->value)
 				{
-					WaveEnd(); //hypov8 note: timelimit is wavetime.
+					WaveEnd(); //hypov8 note: timelimit is time to finish a wave.
 				}
 				else
 				{
@@ -586,6 +586,7 @@ void CheckDMRules (void)
 	}
 	#endif
 
+	#if 0
     for (i=0 ; i<maxclients->value ; i++)
     {
         cl = game.clients + i;
@@ -593,13 +594,13 @@ void CheckDMRules (void)
 		if (!g_edicts[i+1].inuse)
             continue;
 
-        if (cl->resp.score >= 10)//FREDZ depence on
+        if (cl->resp.score >= 10)//FREDZ depence on //hypov8 this is not correct. value needs to be reset every round
         {
             gi.bprintf (PRINT_HIGH, "Wave ended.\n");
 
-            if (level.waveNum < maxwaves)
+            if (level.waveNum < (int)maxwaves->value)
             {
-                WaveEnd(); //hypov8 note: timelimit is wavetime.
+                WaveEnd();
             }
             else
             {
@@ -609,6 +610,7 @@ void CheckDMRules (void)
             return;
         }
     }
+	#endif
 
 /*
 	if (fraglimit->value && (int)teamplay->value!=1) // MH: ignore fraglimit in bagman
@@ -1159,6 +1161,9 @@ void G_RunFrame (void)
 	if (level.modeset == PREGAME)
 		CheckStartPub ();
 
+    if (level.modeset == WAVE_SPAWN_PLYR)
+		CheckAllPlayersSpawned ();
+
 	if (level.modeset == WAVE_IDLE)
 		WaveIdle();
 
@@ -1168,19 +1173,12 @@ void G_RunFrame (void)
     if (level.modeset == WAVE_BUYZONE)
 		CheckBuyWave ();
 
-//	if ((level.modeset == STARTINGMATCH) || (level.modeset == STARTINGPUB))
-    if (level.modeset == WAVE_SPAWN_PLYR)
-		CheckAllPlayersSpawned ();
-
-//	if (level.modeset == MATCH)
-//		CheckEndMatch ();
-
 	if (level.modeset == WAVE_ACTIVE)
     {
+		CheckEndWave ();
         CheckEndGame ();
         CheckDMRules ();//FREDZ maybe remove
     }
-
 
 	if (level.modeset == ENDGAMEVOTE)
 		CheckEndVoteTime ();

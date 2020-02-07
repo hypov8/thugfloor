@@ -224,23 +224,18 @@ void SpawnPlayer () // Here I spawn players - 1 per server frame in hopes of red
 		if (!self->inuse)
 			continue;
 		if (!self->client->resp.is_spawn && self->client->pers.spectator != SPECTATING) // MH: don't spawn spectators
-//        if (!self->client->resp.is_spawn)//FREDZ give problems to join
-		{
-            if (self->client->pers.spectator != PLAYING) //hypov8
             {
                 self->flags &= ~FL_GODMODE;
                 self->health = 0;
                 meansOfDeath = MOD_RESTART;
                 team1 = true;
                 self->client->pers.spectator = PLAYING;
-    //			player_die (self, self, self, 1, vec3_origin, 0, 0);
                 ClientBeginDeathmatch( self );
                 self->client->resp.is_spawn = true;
                 self->client->pers.player_dead = FALSE;//FREDZ
                 break;
             }
 		}
-	}
 	if (!team1)
     {
         level.is_spawn = true;
@@ -299,28 +294,26 @@ void WaveStart () // Starts the match
 	edict_t		*self;
 	int			i;
 
-	//free pawnOmatic guy
-	cast_pawn_o_matic_free();
-
-//	dog_spawn(8);
-//	bitch_spawn(2,0);
-//	bitch_spawn(2,1);
+	cast_TF_spawn_allEnemy();
 
 	level.startframe = level.framenum;
-    level.modeset = WAVE_SPAWN_PLYR;
-	level.is_spawn = false;
+	level.modeset = WAVE_ACTIVE;
+
 	for_each_player(self,i)
 	{
 		gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
-		self->client->resp.is_spawn = false;
 
 		//hypov8 end buy menu.
-		if (self->client->pers.spectator != SPECTATING)
+		if (self->client->pers.spectator == PLAYING)
 		{
 			self->client->showscores = NO_SCOREBOARD;
 			self->client->showhelp = false;
 			self->client->showinventory = false;
 			self->client->showscrollmenu = false;
+
+			//give cash to ppl entering a new game
+			if (level.waveNum == 0)
+				self->client->pers.currentcash = 150;
 		}
 	}
 
@@ -377,6 +370,8 @@ void MatchEnd () // end of the match
 */
 void GameEND ()//FREDZ
 {
+	level.modeset = WAVE_IDLE; //dose not matter what it is!!
+	cast_TF_checkEnemyState(); //set me free!!
     if (!allow_map_voting)
         EndDMLevel ();
     else
@@ -390,11 +385,26 @@ void WaveEnd () //hypov8 end of the match
 
     level.waveNum++;
 	level.modeset = WAVE_END;
+	cast_TF_checkEnemyState(); //set me free!!
 
 	for_each_player(self,i)
 	{
 		if (self->client->pers.spectator != SPECTATING)
 			count_players++;
+		//give cash to ppl that survived the wave
+		if (self->client->pers.spectator == PLAYING)
+			self->client->pers.currentcash += 150 + (int)(250.0f * (float)((level.waveNum+1) / maxwaves->value));
+		
+		//spawn players into buying time
+		if (self->client->pers.spectator == PLAYER_READY)
+		{
+            self->flags &= ~FL_GODMODE;
+            self->health = 0;
+            meansOfDeath = MOD_RESTART;
+            ClientBeginDeathmatch( self );
+			self->client->pers.currentcash = 150 + (int)(250.0f * (float)((level.waveNum+1) / maxwaves->value)); //dead!!
+		}
+		//HideWeapon(self);//holster
 	}
 
 	if (!count_players)
@@ -428,6 +438,8 @@ void WaveBuy()  // start buy zone
 
 void WaveStart_Countdown()  // start the match
 {
+	//free 3 pawnOmatic guys
+	cast_pawn_o_matic_free();
 	level.player_num = 0;
 	level.modeset = WAVE_START;
 	level.startframe = level.framenum;
@@ -477,7 +489,7 @@ void CheckAllPlayersSpawned () // when starting a match this function is called 
 		SpawnPlayer ();
 
 	if ((level.is_spawn) && (level.modeset == WAVE_SPAWN_PLYR))
-		level.modeset = WAVE_ACTIVE;
+		level.modeset = WAVE_IDLE;
 
 }
 
@@ -533,7 +545,10 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 		if (!count)
 			gi.bprintf(PRINT_HIGH, "Players need to join to start a wave.\n");
 
-		WaveIdle();
+		if (maxwaves->value > 11.0f)
+			gi.cvar_forceset("maxwaves", "11");
+
+		level.modeset = WAVE_SPAWN_PLYR; //spawn players straight away
 
 		return;
 	}
@@ -563,8 +578,24 @@ void CheckBuyWave ()
 		return;
 	}
 
-//	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 49))
-//		gi.bprintf(PRINT_HIGH,"Buy zone wave %i will end in %d seconds!\n", level.waveNum, (590 - (level.framenum - level.startframe)) / 10);
+}
+
+void CheckEndWave() //add timelimit
+{
+	//check for level cleared
+	if (!cast_TF_checkEnemyState())
+	{
+		gi.bprintf(PRINT_HIGH, "Wave ended.\n");
+
+		if (level.waveNum < (int)maxwaves->value)
+			WaveEnd();
+		else
+		{
+			gi.bprintf(PRINT_HIGH, "Player won.\n");
+			GameEND();
+		}
+	}
+
 }
 
 void CheckEndGame ()//FREDZ only starts if people have joined
@@ -573,14 +604,10 @@ void CheckEndGame ()//FREDZ only starts if people have joined
     int		i;
     int     count_players = 0;
     int     count_players_inserver = 0;
-    int     count_players_dead = 0;
 
     for_each_player (self,i)
     {
-        if (self->client->pers.player_dead = FALSE)
-            count_players_dead++;
-
-        if (self->client->pers.spectator != SPECTATING)
+        if (self->client->pers.spectator == PLAYING)
 			count_players++;
 
         count_players_inserver++;
@@ -591,17 +618,10 @@ void CheckEndGame ()//FREDZ only starts if people have joined
 
 	if (!count_players)
 	{
-		gi.bprintf(PRINT_HIGH, "No players anymore playing.\n");
+		gi.bprintf(PRINT_HIGH, "No players currently playing.\n");
 		GameEND ();
 		return;
 	}
-
-    if (count_players_dead == count_players)
-    {
-        gi.bprintf(PRINT_HIGH, "All players dead, new map.\n");
-        GameEND ();
-    }
-
 }
 //void getTeamTags();
 /*

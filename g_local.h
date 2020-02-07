@@ -571,6 +571,7 @@ typedef struct
 
     int		waveReady;
 	int     waveNum;
+	int		waveEnemyCount;
 } level_locals_t;
 
 
@@ -915,6 +916,7 @@ extern	cvar_t	*burn_b;
 
 extern	cvar_t	*timescale;
 
+extern	cvar_t	*maxwaves;//hypov8
 //extern	cvar_t	*teamplay;//FREDZ not using
 //extern	cvar_t	*g_cashspawndelay;
 
@@ -1357,6 +1359,7 @@ void CheckAllPlayersSpawned ();
 void CheckVote();
 void CheckEndVoteTime ();
 void CheckEndGame();//FREDZ
+void CheckEndWave();
 void ResetServer();
 void WaveBuy();//FREDZ
 void WaveStart();//hypov8
@@ -1486,7 +1489,7 @@ typedef struct
 	int			lastpacket;	// MH: time last packet was received
 	int			noantilag;	// MH: is antilag disabled
 
-	int         player_dead;      //FREDZ is the player in the game or dead
+	int         player_dead;      //FREDZ is the player in the game or dead //used in scoreboard
 	// MH: textbuf removed (not needed now with kpded2)
 
 } client_persistant_t;
