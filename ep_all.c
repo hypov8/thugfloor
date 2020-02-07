@@ -45,17 +45,17 @@ char *ep_names[] =
 	"Jed",//FREDZ not used only tested in code see ep_skidrow.c
 	"Buster",//FREDZ used in map bar_pv but also used for tested in code
 	"Bubba",//sr1, rc1 and rc2
-	"Momo",//sr2, pv_h, rc4, steel1 and sy_h
+	"Momo",//sr2, pv_h, rc4, steel1 and sy_h`//bouncer for bar
 	"Muttski",
 	"Spike",
 	"ToughGuy1",//sr1
 	"ToughGuy2",//sr1
 	"IntroGuy",//sr1
 	"Bernie",//sr1
-	"Lamont",//sr2
+	"Lamont",//sr2 //FREDZ got weird spawnflags
 	"Mona",//sr2
 	"Lenny",//bar_sr
-	"Chick",
+	"Chick",//FREDZ must be in bar_sr, cast_bitch with skin: 013 016 012
 	"Sluggo",//bar_sr
 	"Rocko",//bar_sr
 	"Rover",//sr2
@@ -127,7 +127,13 @@ char *ep_names[] =
 	"Dude",//FREDZ rc3 and sy_h as script?
 	"Walter",//bar_rc
 	"Donny",//rc4
+	//FREDZ missing names:
+
 	NULL
+	//FREDZ: follow maps got no Character Names:
+	//bike, kpcut1, kpcut3, kpcut4, kpcut7,
+	//pawn_pv, pawn_rc, pawn_sr, pawn_sr2, pawn_sy,
+	//pv_1, pv_b, rc5, sewer, sy1, ty2 and ty3
 };
 
 //............................................................................

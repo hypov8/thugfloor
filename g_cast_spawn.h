@@ -4,8 +4,22 @@ typedef struct
 {
 	char *name;
 	char *skin;
+} cast_bitchskins_s;
 
-} cast_skins_s;
+typedef struct
+{
+	char *name;
+	char *skin;
+	char *count;
+} cast_runtskins_s;
+
+typedef struct
+{
+	char *name;
+	char *skin;
+	//has count options but not used
+	char *head;
+} cast_thugskins_s;
 
 //local
 void cast_pawn_o_matic_spawn ();
