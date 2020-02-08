@@ -529,7 +529,7 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 		meansOfDeath = MOD_RESTART;
 		self->solid = SOLID_NOT;
 		ClientBeginDeathmatch( self );
-		self->client->pers.currentcash = 150 + (int)(250.0f * (float)((level.waveNum + 1) / maxwaves->value));
+		self->client->pers.currentcash = waveGiveCash(2); // 150 + (int)(250.0f * (float)((level.waveNum + 1) / maxwaves->value));
 		gi.bprintf( PRINT_HIGH, "%s joined game\n", self->client->pers.netname);
 		return;
 	}

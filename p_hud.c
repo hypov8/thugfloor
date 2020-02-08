@@ -1720,8 +1720,15 @@ void G_SetStats (edict_t *ent)
 	if (ent->client->ps.stats[STAT_TIMER] < 0 )
 		ent->client->ps.stats[STAT_TIMER] = 0;
 
-    if (level.waveNum >= 0)// && level.modeset == WAVE_ACTIVE)//FREDZ
-        ent->client->ps.stats[STAT_WAVEROUND] = (int)(maxwaves->value - level.waveNum);
+	if (level.modeset == WAVE_ACTIVE)//FREDZ
+	{
+		if ((int)maxwaves->value == 2 )			//long
+			ent->client->ps.stats[STAT_WAVEROUND] = 11 - level.waveNum;
+		else if  ((int)maxwaves->value ==  1)	//med
+			ent->client->ps.stats[STAT_WAVEROUND] = 8 - level.waveNum;
+		else									//short
+			ent->client->ps.stats[STAT_WAVEROUND] = 5 - level.waveNum;
+	}
     else
         ent->client->ps.stats[STAT_WAVEROUND] = 0;
 

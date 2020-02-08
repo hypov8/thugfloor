@@ -572,7 +572,7 @@ void CheckDMRules (void)
 			if (count == 0)
 				ResetServer();
 			else
-				if (level.waveNum < (int)maxwaves->value)
+				if (!CheckEndWave_GameType())
 				{
 					WaveEnd(); //hypov8 note: timelimit is time to finish a wave.
 				}

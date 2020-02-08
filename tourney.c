@@ -368,6 +368,57 @@ void MatchEnd () // end of the match
 
 }
 */
+
+/*
+================
+waveGiveCash
+
+setup giving cash to player
+dependent on the type of respawn
+0= inital game spawn
+1= survived round
+2= died or just joined game
+See https://wiki.killingfloor2.com/index.php?title=Mechanics_(Killing_Floor_2)#Gameplay_-_Dosh
+================
+*/
+int waveGiveCash(int type)
+{
+	int numWaves; //hypov8 note: more cash on shorter waves. make this = 11 if not desired
+	float spawn_cash;
+	float novice	= 1900.0f / 2.5f;//Not in KF example
+	float easy		= 1750.0f / 2.5f;//2.5 is to comprise difference
+	float medium	= 1550.0f / 2.5f;
+	float hard		= 1700.0f / 2.5f;
+	float real		= 1550.0f / 2.5f;
+
+	//get wave count
+	if ((int)maxwaves->value == 2)		//long
+		numWaves = 11;
+	else if ((int)maxwaves->value == 1)	//med		
+		numWaves = 8;
+	else 								//short
+		numWaves = 5;
+	  
+	//use skill value
+	if (skill->value == 0)			spawn_cash = novice;
+	else if (skill->value == 1)		spawn_cash = easy;
+	else if (skill->value == 2)		spawn_cash = medium;
+	else if (skill->value == 3)		spawn_cash = hard;
+	else							spawn_cash = real;
+
+
+	switch (type)
+	{
+	case 1:		//survived the round
+		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));
+	case 2:		//dead, respawn with no existing cash.
+		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));
+	}
+
+	//first round. give standard cash
+	return 50;	
+}
+
 void GameEND ()//FREDZ
 {
 	level.modeset = WAVE_IDLE; //dose not matter what it is!!
@@ -393,7 +444,7 @@ void WaveEnd () //hypov8 end of the match
 			count_players++;
 		//give cash to ppl that survived the wave
 		if (self->client->pers.spectator == PLAYING)
-			self->client->pers.currentcash += 150 + (int)(250.0f * (float)((level.waveNum+1) / maxwaves->value));
+			self->client->pers.currentcash += waveGiveCash(1); // 150 + (int)(250.0f * (float)((level.waveNum + 1) / maxwaves->value));
 		
 		//spawn players into buying time
 		if (self->client->pers.spectator == PLAYER_READY)
@@ -402,7 +453,7 @@ void WaveEnd () //hypov8 end of the match
             self->health = 0;
             meansOfDeath = MOD_RESTART;
             ClientBeginDeathmatch( self );
-			self->client->pers.currentcash = 150 + (int)(250.0f * (float)((level.waveNum+1) / maxwaves->value)); //dead!!
+			self->client->pers.currentcash = waveGiveCash(2); // 150 + (int)(250.0f * (float)((level.waveNum + 1) / maxwaves->value)); //dead!!
 		}
 		//HideWeapon(self);//holster
 	}
@@ -545,8 +596,8 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 		if (!count)
 			gi.bprintf(PRINT_HIGH, "Players need to join to start a wave.\n");
 
-		if (maxwaves->value > 11.0f)
-			gi.cvar_forceset("maxwaves", "11");
+		//if (maxwaves->value > 11.0f)
+		//	gi.cvar_forceset("maxwaves", "11");
 
 		level.modeset = WAVE_SPAWN_PLYR; //spawn players straight away
 
@@ -580,14 +631,34 @@ void CheckBuyWave ()
 
 }
 
+int CheckEndWave_GameType()
+{
+	if ((int)maxwaves->value == 2) {		//long
+		if (level.waveNum == 11)
+			return  1;
+	}
+	else if ((int)maxwaves->value == 1) {	//med		
+		if (level.waveNum == 8)
+			return 1;
+	}
+	else {									//short
+		if (level.waveNum == 5)
+			return 1;
+	}
+
+	return 0;
+}
+
 void CheckEndWave() //add timelimit
 {
+	int isEndGame = 0;
+
 	//check for level cleared
 	if (!cast_TF_checkEnemyState())
 	{
 		gi.bprintf(PRINT_HIGH, "Wave ended.\n");
 
-		if (level.waveNum < (int)maxwaves->value)
+		if (!CheckEndWave_GameType())
 			WaveEnd();
 		else
 		{

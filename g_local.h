@@ -1361,6 +1361,8 @@ void CheckVote();
 void CheckEndVoteTime ();
 void CheckEndGame();//FREDZ
 void CheckEndWave();
+int  CheckEndWave_GameType();
+int  waveGiveCash(int type);
 void ResetServer();
 void WaveBuy();//FREDZ
 void WaveStart();//hypov8

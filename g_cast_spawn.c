@@ -10,6 +10,8 @@ edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
 void cast_TF_spawn(int ammount, int type);
 static int currWave_castCount = 0;
+static int currWave_plysCount = 0;
+static int currWave_length = 0;
 
 
 void cast_pawn_o_matic_free()
@@ -758,41 +760,27 @@ void thug_spawn (int ammount, int weapon)
 	}
 }*/
 
+//hypov8 most of the above can be deleted
+
+
+///////////////////////
+// setup cast skins
 void cast_TF_boss_kingpin(edict_t *self)
 {
-	int      i;
-	int      count_players = 0;
-
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "kingpin");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "120 120 120");
 	self->spawnflags = 0;//pistol
 	self->classname = "cast_runt";
+	self->health = 1500 * currWave_plysCount;
 
-	for_each_player(self,i)
-	{
-		if (self->client->pers.spectator != SPECTATING)
-			count_players++;
-	}
-
-	self->health = 1500*count_players;
 }
 void cast_TF_boss_blunt(edict_t *self)
 {
-    int      i;
-	int      count_players = 0;
-
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "blunt");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "080 059 059");
 	self->spawnflags = 18;//hmg
 	self->classname = "cast_whore";
-
-    for_each_player(self,i)
-	{
-		if (self->client->pers.spectator != SPECTATING)
-			count_players++;
-	}
-
-	self->health = 1500*count_players;//150000 normally
+	self->health = 1500 * currWave_plysCount;//150000 normally
 }
 void cast_TF_dog(edict_t *self)
 {
@@ -933,12 +921,12 @@ void cast_TF_runt_hmg(edict_t *self)
 void cast_TF_thug_melee(edict_t *self)
 {
 	static cast_thugskins_s skins[5] = {
-		"leroy", "010 010 003", 	    //sr1
-		"johnny", "011 007 004",      //sr1 Got normally 80 health
-		"brewster", "002 001 001" 	   //sr1
-//		"IntroGuy", "041 026 010", 	   //sr1 player
-        "kid_4", "133 132 132", 	   //steel3
-        "kid_5", "134 132 132",	    //steel3
+		"leroy",	"010 010 003",	"0",    //sr1
+		"johnny",	"011 007 004",	"0",	//sr1 Got normally 80 health
+		"brewster", "002 001 001",	"0",	//sr1
+//		"IntroGuy", "041 026 010",	"0",	//sr1 player
+        "kid_4",	"133 132 132",	"0",	//steel3
+        "kid_5",	"134 132 132",	"0",	//steel3
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].name);
@@ -950,15 +938,15 @@ void cast_TF_thug_melee(edict_t *self)
 void cast_TF_thug_pistol(edict_t *self)
 {
 	static cast_thugskins_s skins[9] = {
-		"fingers",	"025 009 009",	//bar_pv Got normally 150 health
-		"burt",	    "063 041 010",	//bar_pv
-		"adolf",	"047 042 009",	//bar_rc
-        "burt",	    "023 017 005",	//bar_rc
-        "scalper",	"103 044 009",	//bar_rc
-        "rocko",	"016 009 006",	//bar_sr
-        "igmo",	    "003 002 001",	//sr1 Got normally 200 health
-        "lamont",	"024 017 010",	//sr2 Got normally 300 health
-        "hann",	    "029 006 010",	//ty1
+		"fingers",	"025 009 009",	"0",	//bar_pv Got normally 150 health
+		"burt",	    "063 041 010",	"0",	//bar_pv
+		"adolf",	"047 042 009",	"0",	//bar_rc
+        "burt",	    "023 017 005",	"0",	//bar_rc
+        "scalper",	"103 044 009",	"0",	//bar_rc
+        "rocko",	"016 009 006",	"0",	//bar_sr
+        "igmo",	    "003 002 001",	"0",	//sr1 Got normally 200 health
+        "lamont",	"024 017 010",	"0",	//sr2 Got normally 300 health
+        "hann",	    "029 006 010",	"0",	//ty1
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 9].name);
@@ -970,15 +958,15 @@ void cast_TF_thug_pistol(edict_t *self)
 void cast_TF_thug_shotgun(edict_t *self)
 {
 	static cast_thugskins_s skins[7] = {
-        "bigwillie", "109 046 047", "0", 	//bar_sy Got normally 350 health
-        "Laurel",    "504 032 031", "1",  //pv_h Got normally 200 health
-        "Hardey",    "114 032 031", "0",  //pv_h Got normally 200 health
-//    "ToughGuy1", "019 028 010", "0",  //sr1 intro guy
-//    "ToughGuy2", "020 029 010", "0",  //sr1 intro guy
-        "arnold",    "012 007 004", "0",  //sr1 Got normally 200 health
-        "momo",    "107 044 010", "0",    //sy_h
-        "larry",   "048 047 041", "0",    //sy_h Got normally 200 health
-        "curcly",  "100 047 041", "0"    //sy_h Got normally 200 health
+		"bigwillie",	"109 046 047", "0",	//bar_sy Got normally 350 health
+		"Laurel",		"504 032 031", "1",	//pv_h Got normally 200 health
+		"Hardey",		"114 032 031", "0",	//pv_h Got normally 200 health
+	//	"ToughGuy1",	"019 028 010", "0",	//sr1 intro guy
+	//	"ToughGuy2",	"020 029 010", "0",	//sr1 intro guy
+		"arnold",		"012 007 004", "0",	//sr1 Got normally 200 health
+		"momo",			"107 044 010", "0",	//sy_h
+		"larry",		"048 047 041", "0",	//sy_h Got normally 200 health
+		"curcly",		"100 047 041", "0"	//sy_h Got normally 200 health
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 7].name);
@@ -1020,8 +1008,11 @@ void cast_TF_thug_flamethrower(edict_t *self)
 	self->spawnflags = 16;
 	self->classname = "cast_punk";
 }
+// end setup cast skins
+///////////////////////
 
-//check if all enemy have died
+
+//check if enemy has died or kill them for endWave/endGame
 int cast_TF_checkEnemyState()
 {
 	int i, count = 0;
@@ -1056,7 +1047,7 @@ int cast_TF_checkEnemyState()
 	return count;
 }
 
-
+// find the closest player to pick on
 void cast_TF_setEnemyPlayer(edict_t *spawn)
 {
 	int j, best = 1;
@@ -1079,56 +1070,126 @@ void cast_TF_setEnemyPlayer(edict_t *spawn)
 	//hypov8 todo: what if enemy is dead??
 }
 
+//////////////////
+// rand spawn types
 void cast_TF_spawnWave1(edict_t *spawn)
 {
-
-switch (rand() % 4)
+	switch (rand() % 6)
 	{
-	case 0:
-		cast_TF_dog(spawn);break;
-	case 1:
-		cast_TF_dog(spawn);break;
-	case 2:
-		cast_TF_bitch_melee(spawn);break;
-	case 3:
-		cast_TF_thug_melee(spawn);break;
+	case 0:	cast_TF_dog(spawn);break;	
+	case 1:	cast_TF_dog(spawn);break;
+	case 2:	cast_TF_rat(spawn);break;
+	case 3:	cast_TF_rat(spawn);break;
+	case 4:	cast_TF_bitch_melee(spawn);break;
+	case 5:	cast_TF_thug_melee(spawn);break;
 	}
 }
-
 void cast_TF_spawnWave2(edict_t *spawn)
 {
 	switch (rand() % 5)
 	{
-	case 0:
-		cast_TF_dog(spawn);break;
-	case 1:
-		cast_TF_dog(spawn);break;
-	case 2:
-		cast_TF_bitch_melee(spawn);break;
-	case 3:
-		cast_TF_bitch_pistol(spawn);break;
-	case 4:
-		cast_TF_runt_pistol(spawn);break;
+	case 0:		cast_TF_dog(spawn);break;
+	case 1:		cast_TF_dog(spawn);break;
+	case 2:		cast_TF_bitch_melee(spawn);break;
+	case 3:		cast_TF_bitch_pistol(spawn);break;
+	case 4:		cast_TF_runt_pistol(spawn);break;
 	}
 }
+void cast_TF_spawnWave3(edict_t *spawn)
+{
+	//todo.. fredz!!!!!!
+}
+void cast_TF_spawnWave4(edict_t *spawn)
+{
+	//todo
+}
+void cast_TF_spawnWave5(edict_t *spawn)
+{
+	//todo
+}
+void cast_TF_spawnWave6(edict_t *spawn)
+{
+	//todo
+}
+void cast_TF_spawnWave7(edict_t *spawn)
+{
+	//todo
+}
+void cast_TF_spawnWave8(edict_t *spawn)
+{
+	//todo
+}
+void cast_TF_spawnWave9(edict_t *spawn)
+{
+	//todo
+}
+void cast_TF_spawnWave10(edict_t *spawn)
+{
+	//todo
+}
+void cast_TF_spawnWaveBoss(edict_t *spawn)
+{
+	switch (rand() % 2)
+	{
+	case 0:		cast_TF_boss_kingpin(spawn);break;
+	case 1:		cast_TF_boss_blunt(spawn);break;
+	}
+}
+//end rand spawn types
+//////////////////////
 
+
+//generate types based on game length
 void cast_TF_spawnTypes(edict_t *spawn)
 {
-	switch (level.waveNum)
+	//todo:  short. med
+
+
+	if (currWave_length == 11)	// long wave
 	{
-	case 0: //wave 1
-		cast_TF_spawnWave1(spawn);	break;
-	case 1: //wave 2
-		cast_TF_spawnWave2(spawn);	break;
-	case 2: //wave 3
-		;
-	case 3: //wave 4
-		;
-	case 4: //wave 5
-		;
+		switch (level.waveNum)
+		{
+		case 0: cast_TF_spawnWave1(spawn);	break; //wave 1
+		case 1:	cast_TF_spawnWave2(spawn);	break; //wave 2
+		case 2: cast_TF_spawnWave3(spawn);	break; //wave 3
+		case 3: cast_TF_spawnWave4(spawn);	break; //wave 4
+		case 4: cast_TF_spawnWave5(spawn);	break; //wave 5
+		case 5: cast_TF_spawnWave6(spawn);	break; //wave 6
+		case 6: cast_TF_spawnWave7(spawn);	break; //wave 7
+		case 7: cast_TF_spawnWave8(spawn);	break; //wave 8
+		case 8: cast_TF_spawnWave9(spawn);	break; //wave 9
+		case 9: cast_TF_spawnWave10(spawn);	break; //wave 10
+		case 10: cast_TF_spawnWaveBoss(spawn); break; //wave 11
+		}
+	}
+	else if (currWave_length == 8)//med wave
+	{
+		switch (level.waveNum)
+		{
+		case 0: cast_TF_spawnWave1(spawn);	break; //wave 1
+		case 1:	cast_TF_spawnWave2(spawn);	break; //wave 2
+		case 2: cast_TF_spawnWave3(spawn);	break; //wave 3
+		case 3: cast_TF_spawnWave5(spawn);	break; //wave 4
+		case 4: cast_TF_spawnWave6(spawn);	break; //wave 5
+		case 5: cast_TF_spawnWave8(spawn);	break; //wave 6
+		case 6: cast_TF_spawnWave9(spawn);	break; //wave 7
+		case 7: cast_TF_spawnWaveBoss(spawn); break; //wave 8
+		}
+	}
+	else 	//short wave
+	{
+		switch (level.waveNum)
+		{
+		case 0: cast_TF_spawnWave1(spawn);	break; //wave 1
+		case 1: cast_TF_spawnWave3(spawn);	break; //wave 2
+		case 2: cast_TF_spawnWave5(spawn);	break; //wave 3
+		case 3: cast_TF_spawnWave8(spawn);	break; //wave 4
+		case 4: cast_TF_spawnWaveBoss(spawn); break; //wave 5
+		}
 	}
 }
 
+//spawn in a cast model
 void cast_TF_spawn(int ammount, int type)
 {
 	edict_t *spawn, *spawnspot;
@@ -1164,49 +1225,69 @@ void cast_TF_spawn(int ammount, int type)
 		//set what player to attack
 		cast_TF_setEnemyPlayer(spawn);
 
-		//copy entity our list so we can free later
-		//spawn_cast[currWave_castCount] = spawn;
+		//add enemy to counter
 		currWave_castCount++;
 	}
 }
-//int wave_shortGame[5] = {25, 32, 35, 42, 1}
-//int wave_medGame[8] = {25, 28, 32, 25, 40, 42,1}
+
+//wave total enemy counts
+static int wave_shortGame[5] = { 25, 32, 35, 42, 1 };
+static int wave_medGame[8] = { 25, 28, 32, 25, 35, 40, 42, 1 };
 static int wave_longGame[11] = { 25, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1 };
 
-//max 8 players
-//static int wave_easy[9] = {0, 10, 14, 32, 32, 32, 32, 32, 32};
-//static int wave_med[9] = {0, 12, 18, 32, 32, 32, 32, 32, 32};
-static int wave_hard[9] = {0, 12, 18, 32, 32, 32, 32, 32, 32 };
+//wave skill. number of enemy allowed in level at 1 time. max 8 players
+static int wave_skill[5][9] = {
+	{ 0, 10, 14, 32, 32, 32, 32, 32, 32}, //easy
+	{ 0, 11, 18, 32, 32, 32, 32, 32, 32}, //med
+	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 }, //hard
+	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 }, //harder
+	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 } //harderest
+};
 
 /*
 ==========
 cast_TF_setupEnemyCounters
+
 this is where we generate the eneny spawn counts
-hypov8 note; this may entity overflow clients
 ==========
 */
 void cast_TF_setupEnemyCounters(void)
 {
 	edict_t *self;
 	int playerCount = 0;
-	int i;
+	int i, sk;
 
-	int numDog = level.waveNum + 8;		//max 11+8=19
-	int numBitch = level.waveNum + 2;	//max 11+2=13
-	//int numThug = level.waveNum + 2;	//max 11+2=13
-	//int numRat = level.waveNum + 2;	//max 11+2=13
-	//hypov8 todo: player count?
 
+	if (skill->value == 0)			sk = 0;
+	else if (skill->value == 1)		sk = 1;
+	else if (skill->value == 2)		sk = 2;
+	else if (skill->value == 3)		sk = 3;
+	else							sk = 4;
+
+	//count players that will enter the wave
 	for_each_player(self, i)
 	{
 		if (self->client->pers.spectator != SPECTATING)
 			playerCount++;
 	}
+	currWave_plysCount = playerCount;
+	level.waveEnemyCount_sym = wave_skill[sk][playerCount]; //skill based enemy limits
 
-	//multiply enamy counts by players
-	level.waveEnemyCount = wave_longGame[level.waveNum] * playerCount;
-	//how many are allowed to load per level
-	level.waveEnemyCount_sym = wave_hard[playerCount];
-
+	//get wave count
+	if ((int)maxwaves->value == 2)			
+	{
+		currWave_length = 11;//long wave
+		level.waveEnemyCount = wave_longGame[level.waveNum] * playerCount;
+	}
+	else if ((int)maxwaves->value == 1) 	 	
+	{
+		currWave_length = 8;//med wave	
+		level.waveEnemyCount = wave_medGame[level.waveNum] * playerCount;
+	}
+	else  									
+	{
+		currWave_length = 5;//short wave
+		level.waveEnemyCount = wave_longGame[level.waveNum] * playerCount;
+	}
 }
 

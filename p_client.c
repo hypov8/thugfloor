@@ -1128,8 +1128,10 @@ void InitClientPersistant (gclient_t *client)
                 else
                     spawn_cash = real;
 
- //               client->pers.currentcash += (spawn_cash * (level.waveNum+1/11));//Give some cash, probably need to be float?
-                 client->pers.currentcash += (spawn_cash * (level.waveNum+1) * 0.1);//Give some cash
+				//hypov8 note: this does not work when a player survived a round. moved to tourney
+ //				client->pers.currentcash += (spawn_cash * (level.waveNum+1/11));//Give some cash, probably need to be float?
+//				client->pers.currentcash += (spawn_cash * (level.waveNum+1) * 0.1);//Give some cash
+
 
             }
 
