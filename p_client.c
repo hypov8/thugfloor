@@ -3544,7 +3544,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	else if (ent->client->showscrollmenu)
 	{
 		//client->ps.pmove.pm_type = PM_FREEZE;
-		client->ps.pmove.pm_type = PM_DEAD;
+		client->ps.pmove.pm_type = PM_DEAD;	
 		return;
 	}
 
@@ -4350,6 +4350,8 @@ void ClientBeginServerFrame (edict_t *ent)
 void DropCash(edict_t *self)
 {
 	edict_t *cash;
+
+	//hypov8 do we want to drop cash of dead players?
 
 	if (self->client->pers.currentcash)
 	{

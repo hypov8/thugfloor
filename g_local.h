@@ -571,8 +571,7 @@ typedef struct
 
     int		waveReady;
 	int     waveNum;
-	int		waveEnemyCount;
-	int		waveEnemyCount_sym; //max count symultaniously spawned
+	int		waveEnemyCount;		//totaly enemys to kill in wave
 } level_locals_t;
 
 

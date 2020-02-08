@@ -466,8 +466,8 @@ qboolean AI_CheckTalk( edict_t *self )
 				best_dist = this_dist;
 			}
 
-//			if (count > 6)	// only check 5 visible friends at once
-//				break;
+			if (count > 6)	// only check 5 visible friends at once
+				break; //hypov8 enabled. there was a bug in ->cast_info.enemy_memory.. fixed?
 
 			cast = cast->next;
 		}
@@ -1082,7 +1082,7 @@ qboolean AI_CheckTakeCover( edict_t *self )
 			float	best_dist=2048, this_dist;
 			route_t	route;
 
-			for (i=0; i<level.num_characters; i++)
+			for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 			{
 				other = level.characters[i];
 
@@ -1703,6 +1703,13 @@ void AI_AfterLife(edict_t *self)
 
 		// If no player can see the body
 //		while (other = G_Find(other, FOFS(classname), "player"))
+
+#if 1 
+//hypov8 add: this was never freed!!
+		self->think = G_FreeEdict;
+		self->nextthink = level.time + FRAMETIME;
+		return;
+#else
 		for (i=0; i<(int)maxclients->value; i++)
 		{
 			other = &g_edicts[1 + i];	// clients start at g_edicts[1]
@@ -1716,7 +1723,7 @@ void AI_AfterLife(edict_t *self)
 				return;
 			}
 		}
-
+#endif
 		// Determine drag direction
 		dir = -10;
 		dir2 = 0;
@@ -1789,6 +1796,7 @@ void AI_AfterLife(edict_t *self)
 		self->nextthink = -1;
 		self->solid = 0;
 		self->svflags |= SVF_NOCLIENT;
+
 		return;
 	}
 

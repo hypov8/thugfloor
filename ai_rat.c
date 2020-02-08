@@ -545,12 +545,19 @@ void rat_die_gib (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 		Ratkilledmessage (self, inflictor, attacker);
 	}
 
-	if (DeathByGib(self, inflictor, attacker, damage))
+	//if (DeathByGib(self, inflictor, attacker, damage))
+	if (!cl_parental_lock->value) //hypov8 gib rats
 	{	// gib
 		self->deadflag = DEAD_DEAD;
 		GibEntity( self, inflictor, damage );
 		self->s.model_parts[PART_GUN].invisible_objects = (1<<0 | 1<<1);
 		return;
+	}
+	else
+	{
+		//hypov8 todo: no death animations setup yet? iten wont free
+		self->think = G_FreeEdict;
+		self->nextthink = level.time + 10;
 	}
 
 	if (self->deadflag == DEAD_DEAD)

@@ -244,7 +244,7 @@ void ai_event_hostile_touch (edict_t *self, edict_t *other, cplane_t *plane, csu
 		return;
 
 	// for all characters that belong to this entity, make them hostile towards us
-	for (i=0; i<level.num_characters; i++)
+	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
 		if (!level.characters[i])
 			continue;
@@ -326,7 +326,7 @@ void ai_event_follow_touch (edict_t *self, edict_t *other, cplane_t *plane, csur
 		return;
 
 	// for all characters that belong to this entity, make them follow us
-	for (i=0; i<level.num_characters; i++)
+	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
 		if (!level.characters[i])
 			continue;
@@ -700,7 +700,7 @@ void ai_button_think (edict_t *self)
 // disabled this, doesn't work too well, need a better approach
 // eg. they'll activate lifts when they shouldn't
 return;//FREDZ		Unreachable code
-
+#if 0
 	// check characters to see if any are within range
 
 	while (		(self->count < level.num_characters)
@@ -750,4 +750,5 @@ fail:
 		self->count = 0;
 
 	self->nextthink = level.time + 0.1;
+#endif
 }

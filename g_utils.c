@@ -483,7 +483,7 @@ void G_FreeEdict (edict_t *ed)
 	if (ed->character_index)
 	{
 		level.characters[ed->character_index] = NULL;
-		//level.num_characters--; //hypov8 todo: fix this?
+		level.num_characters--; //hypov8 todo: fix this?
 	}
 
 

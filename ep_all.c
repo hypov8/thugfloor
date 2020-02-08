@@ -169,7 +169,7 @@ edict_t	*EP_GetCharacter ( int nameIndex )
 {
 	int i;
 
-	for (i=0; i<level.num_characters; i++)
+	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
 		if (!level.characters[i])
 			continue;
@@ -194,7 +194,7 @@ edict_t	*EP_GetCharacterByName ( char *name )
 {
 	int i;
 
-	for (i=0; i<level.num_characters; i++)
+	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
 		if (!level.characters[i])
 			continue;

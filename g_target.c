@@ -801,7 +801,7 @@ if (!deathmatch->value)
 	// Ridah, 7-5-99, prevent friendly's following into pawn-o-matic
 	if (strstr( self->map, "pawn" ) != self->map)
 	{
-		for (i=0; i<level.num_characters; i++)
+		for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 		{
 			if (!level.characters[i])
 				continue;

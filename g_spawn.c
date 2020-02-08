@@ -754,13 +754,20 @@ void ED_CallSpawn (edict_t *ent)
 
     //FREDZ item_adrenaline missing by item_armor_?
     //FREDZ thugfloor Remove all ammo and armor from the game.
-    if ((!strncmp(ent->classname, "ammo_", 5)) || (!strncmp(ent->classname, "item_armor_", 6)) || (!strncmp(ent->classname, "pistol_mod_", 3)))
-        return;
+	if (!strncmp(ent->classname, "ammo_", 5)
+		|| !strncmp(ent->classname, "item_armor_", 11)
+		|| !strncmp(ent->classname, "pistol_mod_", 11)
+		//     || (!strncmp(ent->classname, "item_health_", 12)) //FREDZ maybe add in later version
+		)
+	{
+		G_FreeEdict(ent); //hypov8 free some entities
+		return;
+	}
 
-  //      || (!strncmp(ent->classname, "item_health_", 12)) //FREDZ maybe add in later version
 
 
-  	if (!strcmp( ent->classname, "hmg_mod_cooling" ))//FREDZ temp fix?
+
+  	if (!strcmp( ent->classname, "hmg_mod_cooling")  || !strcmp( ent->classname, "hmg_mod_colling" ))//FREDZ temp fix?
         ent->classname = "item_adrenaline";
 
 	if (!Q_stricmp( ent->classname, "weapon_barmachinegun" ))

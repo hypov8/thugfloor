@@ -192,7 +192,7 @@ void AI_AvoidDangerousEntity( edict_t *ent )
 	ent->s.origin[2] += 4;
 	old_time = level.time;
 
-	for (i=1; i<level.num_characters; i++)
+	for (i=1; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
 		if (!level.characters[i] || level.characters[i]->health <= 0)
 			continue;
@@ -515,7 +515,7 @@ void AI_ProcessCombat (void)
 	int i;
 	edict_t *ent;
 
-	for (i=0; i<level.num_characters; i++)
+	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
 		ent = level.characters[i];
 

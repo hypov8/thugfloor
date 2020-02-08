@@ -2592,7 +2592,7 @@ void Cmd_Use_f (edict_t *ent)
 
 	if (ent->client->pers.holsteredweapon)
 	{
-		if (level.bar_lvl)
+		if (level.bar_lvl) //hypov8 note: use this to stop weps on buy time?
 			return;
 
 		if (ent->client->pers.holsteredweapon == it)
@@ -3379,7 +3379,7 @@ startyourtriggers:
 			ent->moveout_ent = tr.ent;
 
 			// look for a friend to say this to
-			for (i=0; i<level.num_characters; i++)
+			for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 			{
 				if (!level.characters[i])
 					continue;

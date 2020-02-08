@@ -31,7 +31,7 @@ qboolean AddCharacterToGame(edict_t *self)
 		gi.dprintf("\nMAX_CHARACTERS exceeded, new character rejected.\n\n");
 		return false;
 	}
-
+#if 0
 	// client is always first
 	if ((level.characters[0] != &g_edicts[1]) || self->client)
 	{
@@ -43,8 +43,11 @@ qboolean AddCharacterToGame(edict_t *self)
 	}
 
 	// look for them already in the list
-	for (i=0; i<level.num_characters; i++)
+	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
+		if (!level.characters[i])//hypov8 todo: test ok?
+			continue;
+
 		if (level.characters[i] == self)
 		{
 			self->character_index = i;
@@ -60,6 +63,40 @@ qboolean AddCharacterToGame(edict_t *self)
 	level.characters[self->character_index] = self; //hypov8 fix this
 
 	return true;
+
+#else
+
+	// look for them already in the list
+	for (i = 0; i < MAX_CHARACTERS /*level.num_characters*/; i++)
+	{
+		if (!level.characters[i])//hypov8 todo: test ok?
+			continue;
+
+		if (level.characters[i] == self)
+		{
+			self->character_index = i;
+			return true;
+		}
+	}
+
+	// hypov8 add: empty spot?
+	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
+	{
+		if (!level.characters[i]) //found free spot
+		{
+			// add them to the list
+			self->character_index = i;
+			level.characters[self->character_index] = self;
+			level.num_characters++;
+			return true;
+		}
+	}
+
+	//hypov8 maybe this is when we shoud try to free them?
+	gi.dprintf("\nMAX_CHARACTERS NO FREE SPOT, new character rejected.\n\n");
+	return false;
+
+#endif
 }
 
 /*
@@ -125,7 +162,7 @@ void AI_UnloadCastMemory (edict_t *self)
 	self->cast_info.enemy_memory = NULL;
 
 	// initialize the global memory list, and delete all other memories of us
-	for ( i=0; i<level.num_characters; i++ )
+	for ( i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++ )
 	{
 		if (!level.characters[i])
 			continue;
@@ -1117,7 +1154,7 @@ void AI_UpdateCharacterMemories( int max_iterations )
 
 	if (dest && !(dest->flags & FL_NOTARGET))
 	{
-		for (i=1; i<level.num_characters; i++)
+		for (i=1; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 		{
 			src = level.characters[i];
 
@@ -1137,7 +1174,7 @@ void AI_UpdateCharacterMemories( int max_iterations )
 		}
 	}
 
-	if (src_index >= level.num_characters)
+	if (src_index >= MAX_CHARACTERS /*level.num_characters*/)
 		src_index = 0;
 
 	for ( ; src_index < level.num_characters; src_index++)
@@ -1153,7 +1190,7 @@ void AI_UpdateCharacterMemories( int max_iterations )
 		if (src->client)
 			continue;
 
-		for ( ; dest_index < level.num_characters; dest_index++ )
+		for ( ; dest_index < MAX_CHARACTERS /*level.num_characters*/; dest_index++ ) //hypov8 todo: should this loop through all?
 		{
 			if (!level.characters[dest_index])
 				continue;
@@ -1354,8 +1391,13 @@ qboolean AI_FindTarget (edict_t *self)
 
 	i = 0;
 
-	for (i = 0; i < level.num_characters; i++)
+	for (i = 0; i < MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
+		if (!level.characters[i])//hypov8 todo: test ok?
+			continue;
+		if (!level.characters[i]->client) //hypov8 only attack human?
+			continue;
+
 		cast_memory = level.global_cast_memory[self->character_index][i];
 
 		if (!cast_memory || cast_memory->memory_type != MEMORY_TYPE_ENEMY || g_edicts[cast_memory->cast_ent].health <= 0)

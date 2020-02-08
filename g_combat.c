@@ -610,7 +610,7 @@ void M_ReactToDamage (edict_t *targ, edict_t *attacker, float damage)
 		{	// make them an enemy
 
 			// Ridah, 17-may-99, make sure other hiredguys's don't attack their leader
-			for (i=1; i<level.num_characters; i++)
+			for (i=1; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 			{
 				if (level.characters[i] && (level.characters[i]->cast_group == 1) && (level.global_cast_memory[i][targ->character_index]) && (level.characters[i]->leader == attacker))
 				{

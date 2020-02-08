@@ -1188,6 +1188,7 @@ void cast_start_go (edict_t *self)
 	}
 
 //	if (!self->goal_ent)
+#if 0 //hypov8 adding to entity count!!!
 	{	// make them return to this position in the future
 		edict_t	*ent;
 
@@ -1201,7 +1202,7 @@ void cast_start_go (edict_t *self)
 
 		self->start_ent = ent;
 	}
-
+#endif
 	// Health triggered events
 	if (self->health_target)
 	{

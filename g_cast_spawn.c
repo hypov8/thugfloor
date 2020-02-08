@@ -9,9 +9,10 @@
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
 void cast_TF_spawn(int ammount, int type);
-static int currWave_castCount = 0;
-static int currWave_plysCount = 0;
-static int currWave_length = 0;
+static int currWave_castCount = 0; //enemy currently on map
+static int currWave_plysCount = 0; //players 
+static int currWave_length = 0; //long, med, short
+static int currWave_castMax = 0; //max enemy allowed on map
 
 
 void cast_pawn_o_matic_free()
@@ -19,15 +20,27 @@ void cast_pawn_o_matic_free()
 	int i;
 	for (i = 0; i < BUYGUY_COUNT; i++)
 	{
-		if (pawnGuy[i] && pawnGuy[i]->inuse && !Q_stricmp(pawnGuy[i]->classname,"cast_pawn_o_matic")) //just incase
+		if (pawnGuy[i] && pawnGuy[i]->inuse && !Q_stricmp(pawnGuy[i]->classname, "cast_pawn_o_matic")) //just incase
+		{
+			AI_UnloadCastMemory(pawnGuy[i]);
 			G_FreeEdict(pawnGuy[i]);
+		}
 	}
 }
 
 void cast_pawn_o_matic_spawn ()
 {
-	edict_t *spawn,*spawnspot;
+	edict_t *spawn,*spawnspot, *player;
 	int count = 0, i;
+
+
+	for_each_player(player, i)
+	{
+		if (player->client->pers.spectator != SPECTATING)
+		{
+			AddCharacterToGame(player); //add player to bot target list
+		}
+	}
 
     //spawnspot = SelectDeathmatchSpawnPoint(spawn); //hypov8 wil use spawn furtherest DF_SPAWN_FARTHEST if set
 
@@ -803,7 +816,6 @@ void cast_TF_bitch_melee(edict_t *self)
 	self->spawnflags = 64;
 	self->classname = "cast_bitch";
 }
-
 void cast_TF_bitch_pistol(edict_t *self)
 {
 	static cast_bitchskins_s skins[7] = {
@@ -852,7 +864,6 @@ void cast_TF_runt_melee(edict_t *self)
 	self->classname = "cast_runt";
 	self->spawnflags = 64;
 }
-
 void cast_TF_runt_pistol(edict_t *self)
 {
 	static cast_runtskins_s skins[15] = {
@@ -934,7 +945,6 @@ void cast_TF_thug_melee(edict_t *self)
 	self->spawnflags = 64;
 	self->classname = "cast_thug";
 }
-
 void cast_TF_thug_pistol(edict_t *self)
 {
 	static cast_thugskins_s skins[9] = {
@@ -954,7 +964,6 @@ void cast_TF_thug_pistol(edict_t *self)
 	self->spawnflags = 0;
 	self->classname = "cast_thug";
 }
-//FREDZ still need todo more other characters
 void cast_TF_thug_shotgun(edict_t *self)
 {
 	static cast_thugskins_s skins[7] = {
@@ -1008,9 +1017,9 @@ void cast_TF_thug_flamethrower(edict_t *self)
 	self->spawnflags = 16;
 	self->classname = "cast_punk";
 }
+// FREDZ still need todo more other characters
 // end setup cast skins
 ///////////////////////
-
 
 //check if enemy has died or kill them for endWave/endGame
 int cast_TF_checkEnemyState()
@@ -1019,32 +1028,56 @@ int cast_TF_checkEnemyState()
 
 	for (i = 0; i < MAX_CHARACTERS; i++)
 	{
-		if (level.characters[i] && level.characters[i]->inuse && !level.characters[i]->client)
-		{
-			if (level.modeset != WAVE_ACTIVE|| level.characters[i]->health <= 0) //timelimit reached?
+		if (level.characters[i])
+		{ 
+			if (level.modeset != WAVE_ACTIVE) //free characters
 			{
-				// free cast array //hypov8 todo: this is wrong
-				if (level.characters[i]->character_index)
+				if (!level.characters[i]->client)
 				{
 					AI_UnloadCastMemory(level.characters[i]);
 					G_FreeEdict(level.characters[i]);
-					currWave_castCount--;
-					level.waveEnemyCount--;
+				}
+				level.characters[i] = NULL;
+			}
+			else //active wave
+			{
+				if (level.characters[i]->inuse && !level.characters[i]->client)
+				{
+					if (level.characters[i]->health <= 0 
+						|| level.characters[i]->deadflag == DEAD_DEAD
+						|| level.characters[i]->s.origin[2] < -4096 //fallen in void!!!	
+						) //timelimit reached?
+					{
+						// free cast array //hypov8 todo: this is wrong
+						//if (level.characters[i]->character_index)
+						//AI_UnloadCastMemory(level.characters[i]);
+						//G_FreeEdict(level.characters[i]);
+						level.characters[i]->character_index = 0;
+						level.characters[i] = NULL;
+						level.num_characters--;
+						currWave_castCount--;
+						level.waveEnemyCount--;
+					}
+					else if (level.characters[i]->health > 0)
+						count++;
 				}
 			}
-			else if (level.characters[i]->health > 0)
-				count++;
 		}
 	}
 
 	//free slot. add enemy
-	if (level.modeset == WAVE_ACTIVE && count < level.waveEnemyCount && count <  level.waveEnemyCount_sym)
-		cast_TF_spawn(0,0);
-
-	if (level.modeset != WAVE_ACTIVE)
+	if (level.modeset == WAVE_ACTIVE)
+	{
+		if (count < level.waveEnemyCount && count < currWave_castMax)
+			cast_TF_spawn(0, 0);
+	}
+	else
+	{
+		//level.num_characters = 0;
 		currWave_castCount = 0; //reset spawned cast count
+	}
 
-	return count;
+	return currWave_castCount;
 }
 
 // find the closest player to pick on
@@ -1059,14 +1092,16 @@ void cast_TF_setEnemyPlayer(edict_t *spawn)
 	{
 		if (player->health <= 0 || player->solid == SOLID_NOT) // MH: exclude spectators
 			continue;
-		v = VectorDistance(spawn->s.origin, player->s.origin);
+
+		AI_MakeEnemy(spawn, player, 0);  // hostile to closest enemy
+		/*v = VectorDistance(spawn->s.origin, player->s.origin);
 		if (v < dist) {
 			dist = v;
 			best = j;
-		}
+		}*/
 	}
 
-	AI_MakeEnemy(spawn, &g_edicts[best], 0);  // hostile to closest enemy
+	//AI_MakeEnemy(spawn, &g_edicts[best], 0);  // hostile to closest enemy
 	//hypov8 todo: what if enemy is dead??
 }
 
@@ -1142,9 +1177,6 @@ void cast_TF_spawnWaveBoss(edict_t *spawn)
 //generate types based on game length
 void cast_TF_spawnTypes(edict_t *spawn)
 {
-	//todo:  short. med
-
-
 	if (currWave_length == 11)	// long wave
 	{
 		switch (level.waveNum)
@@ -1206,6 +1238,8 @@ void cast_TF_spawn(int ammount, int type)
 		VectorCopy(spawnspot->s.origin, spawn->s.origin);
 		spawn->s.origin[2] += 1;
 
+		spawn->classname = "cast_dog"; //temp untill all waves are done
+
 		//spawn rand type depands on wave num
 		cast_TF_spawnTypes(spawn);
 
@@ -1224,6 +1258,8 @@ void cast_TF_spawn(int ammount, int type)
 
 		//set what player to attack
 		cast_TF_setEnemyPlayer(spawn);
+
+		spawn->cast_group = 22; //hypov8 does this work?
 
 		//add enemy to counter
 		currWave_castCount++;
@@ -1268,10 +1304,13 @@ void cast_TF_setupEnemyCounters(void)
 	for_each_player(self, i)
 	{
 		if (self->client->pers.spectator != SPECTATING)
+		{
 			playerCount++;
+			AddCharacterToGame(self); //add player to level.characters
+		}
 	}
 	currWave_plysCount = playerCount;
-	level.waveEnemyCount_sym = wave_skill[sk][playerCount]; //skill based enemy limits
+	currWave_castMax = wave_skill[sk][playerCount]; //skill based enemy limits
 
 	//get wave count
 	if ((int)maxwaves->value == 2)			

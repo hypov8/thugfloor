@@ -1358,7 +1358,7 @@ void ReadLevel (char *filename)
 		edict_t	*e;
 
 		// kill any followers
-		for (i=0; i<level.num_characters; i++)
+		for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 		{
 			e = level.characters[i];
 
@@ -1380,7 +1380,7 @@ void ReadLevel (char *filename)
 		edict_t	*e;
 
 		// kill any followers
-		for (i=0; i<level.num_characters; i++)
+		for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 		{
 			e = level.characters[i];
 

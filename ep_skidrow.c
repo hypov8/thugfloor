@@ -1342,7 +1342,7 @@ void EP_Skidrow_Script( edict_t *ent, char *scriptname )
 			{
 				int i;
 
-				for (i=0; i<level.num_characters; i++)
+				for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 				{
 					if (!level.characters[i])
 						continue;
