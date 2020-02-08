@@ -52,7 +52,7 @@ char *ep_names[] =
 	"ToughGuy2",//sr1
 	"IntroGuy",//sr1
 	"Bernie",//sr1
-	"Lamont",//sr2 //FREDZ got weird spawnflags
+	"Lamont",//sr2 //FREDZ got weird cast_group 60
 	"Mona",//sr2
 	"Lenny",//bar_sr
 	"Chick",//FREDZ must be in bar_sr, cast_bitch with skin: 013 016 012

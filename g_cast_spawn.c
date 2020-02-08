@@ -3,7 +3,7 @@
 
 //FREDZ todo Some character no name maybe check "localteam" in maps for skins setup.
 
-//edict_t *spawn_cast[MAX_CHARACTERS];//64 max like MAX_CHARACTERS //same like edict_t *characters[MAX_CHARACTERS];?
+//edict_t *spawn_cast[MAX_CHARACTERS];//64 max like MAX_CHARACTERS
 
 #define BUYGUY_COUNT 3 //3 pawnOmatic guys?
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
@@ -933,17 +933,16 @@ void cast_TF_runt_hmg(edict_t *self)
 void cast_TF_thug_melee(edict_t *self)
 {
 	static cast_thugskins_s skins[5] = {
-		"leroy", "010 010 003",   "0",	    //sr1
-		"johnny", "011 007 004",  "0",	    //sr1 Got normally 80 health
-		"brewster", "002 001 001" "0",	    //sr1
-//		"IntroGuy", "041 026 010", "0",	    //sr1 player
-        "kid_4", "133 132 132",  "0",	    //steel3
-        "kid_5", "134 132 132",  "0"	    //steel3
+		"leroy", "010 010 003", 	    //sr1
+		"johnny", "011 007 004",      //sr1 Got normally 80 health
+		"brewster", "002 001 001" 	   //sr1
+//		"IntroGuy", "041 026 010", 	   //sr1 player
+        "kid_4", "133 132 132", 	   //steel3
+        "kid_5", "134 132 132",	    //steel3
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].name);
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].skin);
-	//self->head = (int)skins[rand() % 5].head;
 	self->spawnflags = 64;
 	self->classname = "cast_thug";
 }
@@ -951,20 +950,19 @@ void cast_TF_thug_melee(edict_t *self)
 void cast_TF_thug_pistol(edict_t *self)
 {
 	static cast_thugskins_s skins[9] = {
-		"fingers",	"025 009 009", "0",	//bar_pv Got normally 150 health
-		"burt",	    "063 041 010", "0",	//bar_pv
-		"adolf",	"047 042 009", "0",	//bar_rc
-        "burt",	    "023 017 005", "0",	//bar_rc
-        "scalper",	"103 044 009", "0",	//bar_rc
-        "rocko",	"016 009 006", "0",	//bar_sr
-        "igmo",	    "003 002 001", "0",	//sr1 Got normally 200 health
-        "lamont",	"024 017 010", "0",	//sr2 Got normally 300 health
-        "hann",	    "029 006 010", "0"	//ty1
+		"fingers",	"025 009 009",	//bar_pv Got normally 150 health
+		"burt",	    "063 041 010",	//bar_pv
+		"adolf",	"047 042 009",	//bar_rc
+        "burt",	    "023 017 005",	//bar_rc
+        "scalper",	"103 044 009",	//bar_rc
+        "rocko",	"016 009 006",	//bar_sr
+        "igmo",	    "003 002 001",	//sr1 Got normally 200 health
+        "lamont",	"024 017 010",	//sr2 Got normally 300 health
+        "hann",	    "029 006 010",	//ty1
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 9].name);
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 9].skin);
-	self->head = (int)skins[rand() % 9].head;
 	self->spawnflags = 0;
 	self->classname = "cast_thug";
 }
@@ -1188,7 +1186,7 @@ hypov8 note; this may entity overflow clients
 ==========
 */
 void cast_TF_setupEnemyCounters(void)
-{	
+{
 	edict_t *self;
 	int playerCount = 0;
 	int i;
@@ -1198,7 +1196,7 @@ void cast_TF_setupEnemyCounters(void)
 	//int numThug = level.waveNum + 2;	//max 11+2=13
 	//int numRat = level.waveNum + 2;	//max 11+2=13
 	//hypov8 todo: player count?
-	   	 
+
 	for_each_player(self, i)
 	{
 		if (self->client->pers.spectator != SPECTATING)
