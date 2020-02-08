@@ -27,7 +27,7 @@ void cast_pawn_o_matic_free();
 void dog_spawn (int ammount);
 void bitch_spawn (int ammount);
 int cast_TF_checkEnemyState(void);
-void cast_TF_spawn_allEnemy(void);
+void cast_TF_setupEnemyCounters(void);
 
 
 //external kingpin functions

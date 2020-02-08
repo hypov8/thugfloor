@@ -2275,7 +2275,7 @@ void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_
 							ent->cast_info.aiflags |= AI_NO_TALK;
 //						if (deathmatch->value)
 						{	// play the sound on different channels so it's less likely to get over-written
-							if (ent->last_talk_time == level.time && ent->last_voice->soundindex)
+							if (ent->last_talk_time == level.time && ent->last_voice && ent->last_voice->soundindex) //hypov8 null on cast
 							{
 								gi.sound( ent, CHAN_SPECIAL | CHAN_RELIABLE, ent->last_voice->soundindex-1, 1.0, 2, 0 );
 //								gi.sound( ent, CHAN_BODY | CHAN_RELIABLE, ent->last_voice->soundindex-1, 1.0, 2, 0 );

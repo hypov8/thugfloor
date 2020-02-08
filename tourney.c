@@ -294,10 +294,10 @@ void WaveStart () // Starts the match
 	edict_t		*self;
 	int			i;
 
-	cast_TF_spawn_allEnemy();
-
+	cast_TF_setupEnemyCounters();
 	level.startframe = level.framenum;
 	level.modeset = WAVE_ACTIVE;
+	cast_TF_checkEnemyState(); //will spawn 1 enemy
 
 	for_each_player(self,i)
 	{

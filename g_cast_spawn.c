@@ -3,12 +3,13 @@
 
 //FREDZ todo Some character no name maybe check "localteam" in maps for skins setup.
 
-edict_t *spawn_cast[MAX_CHARACTERS];//64 max like MAX_CHARACTERS //same like edict_t *characters[MAX_CHARACTERS];?
+//edict_t *spawn_cast[MAX_CHARACTERS];//64 max like MAX_CHARACTERS //same like edict_t *characters[MAX_CHARACTERS];?
 
 #define BUYGUY_COUNT 3 //3 pawnOmatic guys?
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
-static int cast_count = 0;
+void cast_TF_spawn(int ammount, int type);
+static int currWave_castCount = 0;
 
 
 void cast_pawn_o_matic_free()
@@ -74,6 +75,7 @@ void cast_pawn_o_matic_spawn ()
 	}
 }
 
+#if 0
 void dog_spawn(int ammount)
 {
 	edict_t *spawn, *spawnspot;
@@ -185,10 +187,11 @@ void rat_spawn(int ammount)
 				return;
 		}
 }
+#endif
 
-#if 0
 extern void SP_cast_bitch (edict_t *self);
 extern void SP_cast_whore (edict_t *self);
+#if 0
 void SP_cast_bitch_melee (edict_t *self)
 {
     //Doesn't use count
@@ -940,7 +943,7 @@ void cast_TF_thug_melee(edict_t *self)
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].name);
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].skin);
-	self->head = (int)skins[rand() % 5].head;
+	//self->head = (int)skins[rand() % 5].head;
 	self->spawnflags = 64;
 	self->classname = "cast_thug";
 }
@@ -1023,23 +1026,34 @@ void cast_TF_thug_flamethrower(edict_t *self)
 //check if all enemy have died
 int cast_TF_checkEnemyState()
 {
-	int i, count = 0; //hypov8 todo: clean this up
+	int i, count = 0;
 
-	for (i = 0; i < cast_count; i++)
+	for (i = 0; i < MAX_CHARACTERS; i++)
 	{
-		if (spawn_cast[i] && spawn_cast[i]->inuse)
+		if (level.characters[i] && level.characters[i]->inuse && !level.characters[i]->client)
 		{
-			if (level.modeset != WAVE_ACTIVE)
-				G_FreeEdict(spawn_cast[i]);
-			else if (spawn_cast[i]->health > 0)
+			if (level.modeset != WAVE_ACTIVE|| level.characters[i]->health <= 0) //timelimit reached?
+			{
+				// free cast array //hypov8 todo: this is wrong
+				if (level.characters[i]->character_index)
+				{
+					AI_UnloadCastMemory(level.characters[i]);
+					G_FreeEdict(level.characters[i]);
+					currWave_castCount--;
+					level.waveEnemyCount--;
+				}
+			}
+			else if (level.characters[i]->health > 0)
 				count++;
 		}
 	}
 
-	level.waveEnemyCount = count;
+	//free slot. add enemy
+	if (level.modeset == WAVE_ACTIVE && count < level.waveEnemyCount && count <  level.waveEnemyCount_sym)
+		cast_TF_spawn(0,0);
 
 	if (level.modeset != WAVE_ACTIVE)
-		cast_count = 0; //reset spawned cast count
+		currWave_castCount = 0; //reset spawned cast count
 
 	return count;
 }
@@ -1067,15 +1081,64 @@ void cast_TF_setEnemyPlayer(edict_t *spawn)
 	//hypov8 todo: what if enemy is dead??
 }
 
+void cast_TF_spawnWave1(edict_t *spawn)
+{
+
+switch (rand() % 4)
+	{
+	case 0:
+		cast_TF_dog(spawn);break;
+	case 1:
+		cast_TF_dog(spawn);break;
+	case 2:
+		cast_TF_bitch_melee(spawn);break;
+	case 3:
+		cast_TF_thug_melee(spawn);break;
+	}
+}
+
+void cast_TF_spawnWave2(edict_t *spawn)
+{
+	switch (rand() % 5)
+	{
+	case 0:
+		cast_TF_dog(spawn);break;
+	case 1:
+		cast_TF_dog(spawn);break;
+	case 2:
+		cast_TF_bitch_melee(spawn);break;
+	case 3:
+		cast_TF_bitch_pistol(spawn);break;
+	case 4:
+		cast_TF_runt_pistol(spawn);break;
+	}
+}
+
+void cast_TF_spawnTypes(edict_t *spawn)
+{
+	switch (level.waveNum)
+	{
+	case 0: //wave 1
+		cast_TF_spawnWave1(spawn);	break;
+	case 1: //wave 2
+		cast_TF_spawnWave2(spawn);	break;
+	case 2: //wave 3
+		;
+	case 3: //wave 4
+		;
+	case 4: //wave 5
+		;
+	}
+}
 
 void cast_TF_spawn(int ammount, int type)
 {
 	edict_t *spawn, *spawnspot;
-	int i;
+	//int i;
 
-	for (i = 0; i < ammount; i++)
+	//for (i = 0; i < ammount; i++)
 	{
-		if (cast_count >= MAX_CHARACTERS)
+		if (currWave_castCount >= MAX_CHARACTERS)
 			return;
 
 		spawn = G_Spawn();
@@ -1084,19 +1147,8 @@ void cast_TF_spawn(int ammount, int type)
 		VectorCopy(spawnspot->s.origin, spawn->s.origin);
 		spawn->s.origin[2] += 1;
 
-		switch (type)
-		{
-		default:
-		case 1:
-			cast_TF_dog(spawn);break;
-		case 2:
-			cast_TF_bitch_melee(spawn);break;
-		case 3:
-			cast_TF_bitch_pistol(spawn);break;
-		case 4:
-			cast_TF_runt_pistol(spawn);break;
-
-		}
+		//spawn rand type depands on wave num
+		cast_TF_spawnTypes(spawn);
 
 		gi.linkentity(spawn);
 
@@ -1111,36 +1163,52 @@ void cast_TF_spawn(int ammount, int type)
 		if (!spawn->health)
 			spawn->health = 100;
 
-		//set player to attack
+		//set what player to attack
 		cast_TF_setEnemyPlayer(spawn);
 
 		//copy entity our list so we can free later
-		spawn_cast[cast_count] = spawn;
-		cast_count++;
+		//spawn_cast[currWave_castCount] = spawn;
+		currWave_castCount++;
 	}
 }
+//int wave_shortGame[5] = {25, 32, 35, 42, 1}
+//int wave_medGame[8] = {25, 28, 32, 25, 40, 42,1}
+static int wave_longGame[11] = { 25, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1 };
+
+//max 8 players
+//static int wave_easy[9] = {0, 10, 14, 32, 32, 32, 32, 32, 32};
+//static int wave_med[9] = {0, 12, 18, 32, 32, 32, 32, 32, 32};
+static int wave_hard[9] = {0, 12, 18, 32, 32, 32, 32, 32, 32 };
 
 /*
 ==========
-cast_TF_spawn_allEnemy
+cast_TF_setupEnemyCounters
 this is where we generate the eneny spawn counts
 hypov8 note; this may entity overflow clients
 ==========
 */
-void cast_TF_spawn_allEnemy(void)
-{
+void cast_TF_setupEnemyCounters(void)
+{	
+	edict_t *self;
 	int playerCount = 0;
+	int i;
+
 	int numDog = level.waveNum + 8;		//max 11+8=19
 	int numBitch = level.waveNum + 2;	//max 11+2=13
 	//int numThug = level.waveNum + 2;	//max 11+2=13
 	//int numRat = level.waveNum + 2;	//max 11+2=13
 	//hypov8 todo: player count?
+	   	 
+	for_each_player(self, i)
+	{
+		if (self->client->pers.spectator != SPECTATING)
+			playerCount++;
+	}
 
-	//hypov8 todo: rand
-	cast_TF_spawn(numDog, 1); //1 = dog
-	cast_TF_spawn(numBitch, 2); //2 = bitch melee
-	cast_TF_spawn(numBitch, 3); //3 = bitch pistol
-	cast_TF_spawn(numBitch, 4); //4 = runt pistol
+	//multiply enamy counts by players
+	level.waveEnemyCount = wave_longGame[level.waveNum] * playerCount;
+	//how many are allowed to load per level
+	level.waveEnemyCount_sym = wave_hard[playerCount];
 
 }
 

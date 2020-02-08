@@ -57,7 +57,7 @@ qboolean AddCharacterToGame(edict_t *self)
 
 	// add them to the list
 	self->character_index = level.num_characters++;
-	level.characters[self->character_index] = self;
+	level.characters[self->character_index] = self; //hypov8 fix this
 
 	return true;
 }

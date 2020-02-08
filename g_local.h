@@ -572,6 +572,7 @@ typedef struct
     int		waveReady;
 	int     waveNum;
 	int		waveEnemyCount;
+	int		waveEnemyCount_sym; //max count symultaniously spawned
 } level_locals_t;
 
 

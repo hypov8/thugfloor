@@ -481,7 +481,10 @@ void G_FreeEdict (edict_t *ed)
 {
 	// Ridah, fixes Rockets crashing SR1
 	if (ed->character_index)
+	{
 		level.characters[ed->character_index] = NULL;
+		//level.num_characters--; //hypov8 todo: fix this?
+	}
 
 
 	gi.unlinkentity (ed);		// unlink from world
