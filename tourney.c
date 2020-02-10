@@ -570,6 +570,8 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 
     #if !DIRECTSTART
 	if (level.framenum >= 300)
+#else
+	if (level.framenum >= 60) //hypov8 allow 6 secs to let other players join
     #endif
 	{
 		edict_t		*self;

@@ -796,6 +796,7 @@ voice_table_t grunting[] =
 	{NULL, "",	"",	"actors/male/fighting/grunt3.wav", 0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",	"",	"actors/male/fighting/grunt4.wav", 0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",	"",	"actors/male/fighting/grunt5.wav", 0, {0,0,0,0,0}, 0, 0 , TT_NONE},
+	{NULL, "",	"",	"actors/male/fighting/grunt5.wav", 0, {0,0,0,0,0}, 0, 0 , TT_NONE}, //hypov8 missing
 };
 
 

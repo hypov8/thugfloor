@@ -3,7 +3,7 @@
 #include "g_func.h"
 
 #ifdef _WIN32
-cvar_t	*nav_dynamic;
+//cvar_t	*nav_dynamic; //hypov8 moved to main
 cvar_t	*nav_debug;
 cvar_t	*nav_optimize;
 
@@ -895,6 +895,8 @@ void button_wait (edict_t *self)
 void button_fire (edict_t *self)
 {
 	if (self->moveinfo.state == STATE_UP || self->moveinfo.state == STATE_TOP)
+		return;
+	if (level.modeset != WAVE_ACTIVE || !self->nav_TF_isFirstPayer) //hypov8 nav
 		return;
 
 // BEGIN:	Xatrix/Ridah/Navigator/07-apr-1998

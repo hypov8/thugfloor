@@ -115,6 +115,7 @@ cvar_t	*burn_b;
 cvar_t	*timescale;
 
 cvar_t	*maxwaves;//hypov8
+cvar_t	*nav_dynamic;//hypov8
 //cvar_t	*teamplay;
 //cvar_t	*g_cashspawndelay;
 

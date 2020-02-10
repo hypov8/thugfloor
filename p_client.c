@@ -3395,12 +3395,12 @@ trace_t	__attribute__((callee_pop_aggregate_return(0))) PM_trace (vec3_t start, 
 trace_t	PM_trace (vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end)
 #endif
 {
-	if (pm_passent->health > 0)
+	if (pm_passent->health > 0 && level.modeset == WAVE_ACTIVE) //hypov8 nav. allow players to walk through each other and ai
 	{
 		if (nav_dynamic->value)	// if dynamic on, get blocked by MONSTERCLIP brushes as the AI will be
-			return gi.trace (start, mins, maxs, end, pm_passent, MASK_PLAYERSOLID | CONTENTS_MONSTERCLIP);
+			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_MONSTERCLIP| CONTENTS_PLAYERCLIP) /*MASK_PLAYERSOLID | CONTENTS_MONSTER*/);
 		else
-			return gi.trace (start, mins, maxs, end, pm_passent, MASK_PLAYERSOLID);
+			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_PLAYERCLIP) ); //MASK_PLAYERSOLID
 	}
 	else
 		return gi.trace (start, mins, maxs, end, pm_passent, MASK_DEADSOLID);
@@ -4019,22 +4019,25 @@ car_resume:
 	// monster sighting AI
 	ent->light_level = ucmd->lightlevel;
 
+
 	// fire weapon from final position if needed
 	if (client->latched_buttons & BUTTON_ATTACK)
 	{
 		if (!client->weapon_thunk)
 		{
 			client->weapon_thunk = true;
-			Think_Weapon (ent);
+			Think_Weapon(ent);
 		}
 	}
 
 	Think_FlashLight (ent);
 
 	// BEGIN:	Xatrix/Ridah/Navigator/18-mar-1998
-	if (!deathmatch->value && nav_dynamic->value && !(ent->flags & (FL_HOVERCAR_GROUND | FL_HOVERCAR | FL_BIKE | FL_CAR)))
+	if (/*!deathmatch->value &&*/ nav_dynamic->value && !(ent->flags & (FL_HOVERCAR_GROUND | FL_HOVERCAR | FL_BIKE | FL_CAR))
+		&& level.modeset == WAVE_ACTIVE && ent->nav_TF_isFirstPayer == 1) //hypov8 nav
 	{
 		static float alpha;
+
 
 		// check for nodes
 		NAV_EvaluateMove( ent );
@@ -4250,7 +4253,7 @@ void ClientBeginServerFrame (edict_t *ent)
 	}
 
 // BEGIN: Xatrix/Ridah/Navigator/16-apr-1998
-	if (!deathmatch->value && !ent->nav_build_data && nav_dynamic->value)
+	if (/*!deathmatch->value &&*/ !ent->nav_build_data && nav_dynamic->value) //hypov8 nav init
 	{
 		// create the nav_build_data structure, so we can begin dropping nodes
 		ent->nav_build_data = gi.TagMalloc(sizeof(nav_build_data_t), TAG_LEVEL);

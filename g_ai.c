@@ -466,8 +466,8 @@ qboolean AI_CheckTalk( edict_t *self )
 				best_dist = this_dist;
 			}
 
-			if (count > 6)	// only check 5 visible friends at once
-				break; //hypov8 enabled. there was a bug in ->cast_info.enemy_memory.. fixed?
+			//if (count > 6)	// only check 5 visible friends at once
+			//	break; //hypov8 enabled. there was a bug in ->cast_info.enemy_memory.. fixed?
 
 			cast = cast->next;
 		}
@@ -1040,7 +1040,7 @@ qboolean AI_CheckTakeCover( edict_t *self )
 			goto done;
 		}
 	}
-
+#if 1 //hypov8 nav: enemy with malee stand still until your close
 	if (	(self->cast_info.aiflags & AI_MELEE)
 		&&	(	(self->enemy->client)
 			 &&	(self->enemy->client->pers.weapon)
@@ -1054,7 +1054,9 @@ qboolean AI_CheckTakeCover( edict_t *self )
 		}
 
 	}
-	else if (infront( self->enemy, self ))
+	else 
+#endif
+		if (infront( self->enemy, self ))
 	{
 		if (directly_infront( self->enemy, self ))
 		{
@@ -1685,8 +1687,9 @@ void AI_AfterLife(edict_t *self)
 		self->solid = 0;
 		return;		
 	}
+
 	
-	if (self->deadticks > (60*1))
+	if (self->deadticks > 20) //hypov8 free corps sooner(60*1)
 	{
 		edict_t	*other=NULL;
 		trace_t tr;
@@ -1828,7 +1831,7 @@ AI_EndDeath
 void AI_EndDeath(edict_t *self)
 {
 	// Ridah 16-may-99, stop dead bodies from sinking through floor
-	if (!self->groundentity)
+	if (!deathmatch->value && !self->groundentity) //hypov8 added if dm. note: posible enemy not freed with this enabled
 	{
 		return;
 	}

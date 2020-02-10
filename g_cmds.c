@@ -2102,6 +2102,7 @@ Cmd_Give_f
 Give items to a client
 ==================
 */
+extern int auto_rounds[];//hypov8
 void Cmd_Give_f (edict_t *ent)
 {
 	char		*name;
@@ -2176,6 +2177,7 @@ void Cmd_Give_f (edict_t *ent)
 
 	if (give_all || Q_stricmp(name, "weapons") == 0)
 	{
+		int j;
 		for (i=0 ; i<game.num_items ; i++)
 		{
 			it = itemlist + i;
@@ -2190,6 +2192,10 @@ void Cmd_Give_f (edict_t *ent)
 			{
 				ent->client->pers.silencer_shots = 20;
 			}
+			//hypov8 instantly fill ammo in gun
+			for (j = 0; j < MAX_WEAPONS; j++)
+				ent->client->pers.weapon_clip[j] = auto_rounds[j]; //todo QweryClipIndex
+
 		}
 		if (!give_all)
 			return;
@@ -5789,7 +5795,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_PutAway_f (ent);
 	//FREDZ only usefull in sp
 	// BEGIN:	Xatrix/Ridah/Navigator/23-mar-1998
-/*	else if (Q_stricmp (cmd, "nav_debug_dest") == 0)
+#if HYPODEBUG //allow debug localy
+	else if (Q_stricmp (cmd, "nav_debug_dest") == 0)
 		Cmd_NavDebugDest_f (ent);
 	else if (Q_stricmp (cmd, "nav_debug_showpath") == 0)
 		Cmd_NavDebugShowPath_f (ent);
@@ -5800,9 +5807,9 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp (cmd, "nav_clear") == 0)
 		Cmd_NavClear_f ( ent );
 	else if (Q_stricmp (cmd, "nav_rebuild") == 0)
-		NAV_RebuildRoutes( level.node_data );*/
+		NAV_RebuildRoutes( level.node_data );
 // END:		Xatrix/Ridah/Navigator/23-mar-1998
-
+#endif
 //	else if (Q_stricmp (cmd, "spawn") == 0)//FREDZ
 //		Cmd_Spawn_f (ent);
 

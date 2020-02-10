@@ -382,6 +382,13 @@ void GibEntity( edict_t *self, edict_t *inflictor, float damage )
 		ThrowClientHead (self, damage);
 
 	self->takedamage = DAMAGE_NO;
+
+	//hypov8 free. am i missing something. when will they be freed?
+	if (deathmatch->value && !Q_strncasecmp(self->classname, "cast_", 5))
+	{
+		self->think = G_FreeEdict;
+		self->nextthink = level.time + FRAMETIME*10;
+	}
 }
 /*
 =============

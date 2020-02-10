@@ -362,7 +362,7 @@ void AI_ShareEnemies ( edict_t *self, edict_t *other )
 	cast_memory_t	*self_memory, *other_memory;
 
 	// Ridah, 18-may-99, cast_group 1 guys shouldn't help other group 1's if they haven't been hired yet
-	if ((other->cast_group == 1) && !other->leader)
+	if ((other->cast_group == 1) && !other->leader) //hypov8 leader??
 		return;
 	if ((self->cast_group == 1) && !self->leader)
 		return;
@@ -1143,14 +1143,17 @@ void AI_UpdateCharacterMemories( int max_iterations )
 	edict_t		*src, *dest;
 	int			i;
 
-	if (deathmatch->value)
+	/*if (deathmatch->value)
+		return;*/
+	if (level.modeset != WAVE_ACTIVE) //hypov8 bot memory
 		return;
+
 
 	if (level.cut_scene_time)
 		return;
 
 	// first check client sightings
-	dest = level.characters[0];
+	dest = level.characters[0]; //hypov8 todo: not just client 1?
 
 	if (dest && !(dest->flags & FL_NOTARGET))
 	{
@@ -1177,7 +1180,7 @@ void AI_UpdateCharacterMemories( int max_iterations )
 	if (src_index >= MAX_CHARACTERS /*level.num_characters*/)
 		src_index = 0;
 
-	for ( ; src_index < level.num_characters; src_index++)
+	for ( ; src_index < MAX_CHARACTERS /*level.num_characters*/; src_index++)
 	{
 		if (!level.characters[src_index])
 			continue;

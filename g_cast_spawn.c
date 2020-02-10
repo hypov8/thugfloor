@@ -38,11 +38,6 @@ void cast_pawn_o_matic_spawn ()
 		}
 	}
 
-    //spawnspot = SelectDeathmatchSpawnPoint(spawn); //hypov8 wil use spawn furtherest DF_SPAWN_FARTHEST if set
-
-	//random?
-	//while ((spawnspot = G_Find(spawnspot, FOFS(classname), "info_player_deathmatch")) != NULL)
-
 	//find first 3 dm spawns in entity list. pawnGuy will be at same 3 location every time, unless custom kpded2 itemlist
 	for (i=0 ; i<globals.num_edicts ; i++)
 	{
@@ -54,17 +49,13 @@ void cast_pawn_o_matic_spawn ()
 		if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))
 			continue;
 
-		//check for telfrag??
-		//ai code will move them
-
 		spawn = G_Spawn();
-
 		VectorCopy (spawnspot->s.angles, spawn->s.angles);
 		VectorCopy( spawnspot->s.origin, spawn->s.origin );
 		spawn->s.origin[2] += 1;
-
 		spawn->classname = "cast_pawn_o_matic";
-
+		spawn->cast_group = 1;
+		spawn->moral = 1;
 		gi.linkentity (spawn);
 
 		if (level.num_characters == MAX_CHARACTERS)
@@ -333,10 +324,11 @@ void cast_TF_Skidrow_courtyard(edict_t *self)//sr1 Police/Security
 {
     //
 	static localteam_skins_s skins[4] = {
-		"johnny",	"011 007 004",	"cast_thug", "64", "80", "0",
-        "louie",    "011 011 005",	"cast_runt", "0", "100", "3",//Not really police, more person they try to secure
-        "bernie",   "011 012 004",  "cast_runt", "0", "100", "1",
-        "arnold",	"012 007 004",	"cast_punk", "0", "200", "0",
+		//name,		//skin,			classname		flags	HP		count	head
+		"johnny",	"011 007 004",	"cast_thug",	"64",	"80",	"0",	"",
+        "louie",    "011 011 005",	"cast_runt",	"0",	"100",	"3",	"",//Not really police, more person they try to secure
+        "bernie",   "011 012 004",  "cast_runt",	"0",	"100",	"1",	"",
+        "arnold",	"012 007 004",	"cast_punk",	"0",	"200",	"0",	"",
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 4].name);
@@ -350,9 +342,10 @@ void cast_TF_Skidrow_sewer_rats(edict_t *self)//sr1 Sewer Rats ugly skins
 {
     //
 	static localteam_skins_s skins[3] = {
-		"buttmunch", "001 001 001",	"cast_runt", "64", "100",
-        "punky",     "005 003 001",	"cast_runt", "0", "50",
-        "igmo",      "003 002 001", "cast_thug", "0", "200",
+		//name,		//skin,			classname		flags	HP		count	head
+		"buttmunch", "001 001 001",	"cast_runt",	"64",	"100",	"",		"",
+        "punky",     "005 003 001",	"cast_runt",	"0",	"50",	"",		"",
+        "igmo",      "003 002 001", "cast_thug",	"0",	"200",	"",		"",
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].name);
@@ -365,8 +358,9 @@ void cast_TF_Skidrow_treehouse(edict_t *self)//sewer treehouse, ugly skins, no n
 {
     //
 	static localteam_skins_s skins[2] = {
-		"004 003 001",	"cast_runt",
-        "004 001 007",	"cast_punk",
+		//name,		//skin,			classname		flags	HP		count	head
+		"fredz",	"004 003 001",	"cast_runt",	"",		"",		"",		"", //todo: no name??
+        "fredz",	"004 001 007",	"cast_punk",	"",		"",		"",		"",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 2].skin);
@@ -377,9 +371,10 @@ void cast_TF_Skidrow_motards(edict_t *self)//sr2 motards, ugly skins all pistol,
 {
     //
 	static localteam_skins_s skins[3] = {
-		"003 003 001",	"cast_runt",
-        "002 001 001",	"cast_bitch",
-        "005 001 001",  "cast_thug",
+		//name,		//skin,			classname		flags	HP		count	head
+		"fredz",	"003 003 001",	"cast_runt",	"",		"",		"", "",
+        "fredz",	"002 001 001",	"cast_bitch",	"",		"",		"", "",
+        "fredz",	"005 001 001",  "cast_thug",	"",		"",		"", "",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
@@ -390,11 +385,12 @@ void cast_TF_Skidrow_motards(edict_t *self)//sr2 motards, ugly skins all pistol,
 void cast_TF_Skidrow_courtyard2(edict_t *self)//sr3 courtyard2 and 1, no names
 {
 	static localteam_skins_s skins[5] = {
-		"514 003 002",	"cast_punk", "1",//courtyard2
-        "010 006 002",	"cast_runt", "0",//courtyard1
-        "514 004 002",  "cast_punk", "1",//courtyard1
-        "513 004 002",  "cast_punk", "1",//courtyard1
-        "006 005 002",	"cast_runt", "0",//courtyard2
+		//name,		//skin,			classname		flags	HP		count	head
+		"fredz",	"514 003 002",	"cast_punk",	"1",	"",		"",		"",//courtyard2
+        "fredz",	"010 006 002",	"cast_runt",	"0",	"",		"",		"",//courtyard1
+        "fredz",	"514 004 002",  "cast_punk",	"1",	"",		"",		"",//courtyard1
+        "fredz",	"513 004 002",  "cast_punk",	"1",	"",		"",		"",//courtyard1
+        "fredz",	"006 005 002",	"cast_runt",	"0",	"",		"",		"",//courtyard2
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].skin);
@@ -405,9 +401,10 @@ void cast_TF_Skidrow_courtyard2(edict_t *self)//sr3 courtyard2 and 1, no names
 void cast_TF_Skidrow_street(edict_t *self)//sr3 street1, no names
 {
 	static localteam_skins_s skins[3] = {
-		"006 006 002",	"cast_runt", "0",
-        "008 008 002",	"cast_runt", "0",
-        "010 004 002",  "cast_runt", "64",
+		//name,		//skin,			classname		flags	HP		count	head
+		"fredz",	"006 006 002",	"cast_runt", "0", "", "", "",
+        "fredz",	"008 008 002",	"cast_runt", "0", "", "", "",
+        "fredz",	"010 004 002",  "cast_runt", "64", "", "", "",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
@@ -417,8 +414,9 @@ void cast_TF_Skidrow_street(edict_t *self)//sr3 street1, no names
 void cast_TF_Skidrow_hallway(edict_t *self)//sr3 hallway1,  no names
 {
 	static localteam_skins_s skins[2] = {
-		"006 006 002",	"cast_runt",
-        "514 003 002",	"cast_punk",
+		//name,		//skin,			classname		flags	HP		count	head
+		"fredz",	"006 006 002",	"cast_runt", "", "", "", "",
+        "fredz",	"514 003 002",	"cast_punk", "", "", "", "",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 2].skin);
@@ -428,11 +426,12 @@ void cast_TF_Skidrow_hallway(edict_t *self)//sr3 hallway1,  no names
 void cast_TF_Skidrow_postbattery(edict_t *self)//sr3 postbattery1 and 2,mostly shotty,  no names
 {
 	static localteam_skins_s skins[5] = {
-		"004 001 001",	"cast_punk", "120", "0",//postbattery1
-        "008 008 002",	"cast_runt", "120", "0",//postbattery2
-        "514 003 002",	"cast_punk", "120", "1",//postbattery2
-        "009 007 002",	"cast_runt", "100", "0",//postbattery2
-        "004 001 001",	"cast_punk", "80", "0",//postbattery1
+		//name,		//skin,			classname		flags	HP		count	head
+		"fredz",	"004 001 001",	"cast_punk", "120", "0", "", "",//postbattery1
+        "fredz",	"008 008 002",	"cast_runt", "120", "0", "", "",//postbattery2
+        "fredz",	"514 003 002",	"cast_punk", "120", "1", "", "",//postbattery2
+        "fredz",	"009 007 002",	"cast_runt", "100", "0", "", "",//postbattery2
+        "fredz",	"004 001 001",	"cast_punk", "80", "0", "", "",//postbattery1
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].skin);
@@ -444,19 +443,20 @@ void cast_TF_Skidrow_postbattery(edict_t *self)//sr3 postbattery1 and 2,mostly s
 void cast_TF_Skidrow_names(edict_t *self)
 {
 	static localteam_skins_s skins[13] = {
-		"Betty", "008 006 003",	"cast_bitch", "64", "100", "0", //sr1
-		"Beth", "009 007 004",	"cast_bitch", "64", "100", "0", //sr1
-		"Lisa", "012 015 012",	"cast_bitch", "64", "120", "0", //sr1
-        "Mona",	"014 012 003",	"cast_bitch", "0", "100",  "0",  //sr2
-        "bubba", "017 016 008", "cast_runt", "64", "100",  "9",  //sr1
-        "magicj", "020 011 005", "cast_runt", "64", "100",  "0",   	//sr1
-        "momo", "020 011 003", "cast_runt", "0", "100",   "0",	//sr2 //bouncer
-    	"sluggo", "019 010 011", "cast_runt", "0", "100", "0",//bar_sr
-        "lenny", "018 011 007", "cast_runt", "0", "100",  "0",	//bar_sr
-        "momo", "072 014 009", "cast_shorty", "8192", "150", "0", 	//sr1
-        "leroy","010 010 003","cast_thug", "64", "100", "0",    //sr1
-		"brewster", "002 001 001","cast_thug", "64", "100", "0",	//sr1
-        "rocko",	"016 009 006","cast_thug", "0", "100", "0",	//bar_sr
+		//name,		//skin,			classname		flags	HP		count	head
+		"Betty",	"008 006 003",	"cast_bitch",	"64",	"100",	"0",	"", //sr1
+		"Beth",		"009 007 004",	"cast_bitch",	"64",	"100",	"0",	"", //sr1
+		"Lisa",		"012 015 012",	"cast_bitch",	"64",	"120",	"0",	"", //sr1
+        "Mona",		"014 012 003",	"cast_bitch",	"0",	"100",  "0",	"",  //sr2
+        "bubba",	"017 016 008",	"cast_runt",	"64",	"100",	"9",	"",  //sr1
+        "magicj",	"020 011 005",	"cast_runt",	"64",	"100",	"0",	"",   	//sr1
+        "momo",		"020 011 003",	"cast_runt",	"0",	"100",	"0",	"",	//sr2 //bouncer
+    	"sluggo",	"019 010 011",	"cast_runt",	"0",	"100",	"0",	"",//bar_sr
+        "lenny",	"018 011 007",	"cast_runt",	"0",	"100",  "0",	"",	//bar_sr
+        "momo",		"072 014 009",	"cast_shorty",	"8192", "150",	"0",	"", 	//sr1
+        "leroy",	"010 010 003",	"cast_thug",	"64",	"100",	"0",	"",    //sr1
+		"brewster", "002 001 001",	"cast_thug",	"64",	"100",	"0",	"",	//sr1
+        "rocko",	"016 009 006",	"cast_thug",	"0",	"100",	"0",	"",	//bar_sr
 	};
 
     self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].name);
@@ -498,9 +498,10 @@ void cast_TF_Skidrow_boss(edict_t *spawn)
 void cast_TF_Poisonville_boob(edict_t *self)//pv_1 boob, all pistol, no names
 {
 	static localteam_skins_s skins[3] = {
-		"030 031 032",	"cast_shorty",
-        "503 033 032",	"cast_punk",
-        "033 032 032",	"cast_shorty",
+		//name,		//skin,			classname		flags	HP		count	head
+		"fredz",	"030 031 032",	"cast_shorty",	 "", "", "", "",
+		"fredz",	"503 033 032",	"cast_punk",	"", "", "", "",
+		"fredz",	"033 032 032",	"cast_shorty",	"", "", "", "",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
@@ -510,10 +511,11 @@ void cast_TF_Poisonville_boob(edict_t *self)//pv_1 boob, all pistol, no names
 void cast_TF_Poisonville_tanks(edict_t *self)//pv_b tanks, all tommygun, no names
 {
 	static localteam_skins_s skins[4] = {
-		"506 036 032",	"cast_punk", "160", "1",
-        "504 031 031",	"cast_punk", "140", "1",
- 		"030 032 033",	"cast_whore", "120", "0",
-        "035 030 031",	"cast_shorty", "140", "0",
+		//name,		//skin,			classname		flags	HP		count	head
+		"fredz",	"506 036 032",	"cast_punk", "160", "1", "", "",
+		"fredz",	"504 031 031",	"cast_punk", "140", "1", "", "",
+		"fredz",	"030 032 033",	"cast_whore", "120", "0", "", "",
+		"fredz",	"035 030 031",	"cast_shorty", "140", "0", "", "",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
@@ -525,13 +527,14 @@ void cast_TF_Poisonville_tanks(edict_t *self)//pv_b tanks, all tommygun, no name
 void cast_TF_Poisonville_names(edict_t *self)
 {
 	static localteam_skins_s skins[13] = {
-        "yolanda",	"041 050 003",	"cast_bitch", "0", "200",  "0", 	//pv_h
-        "mung",     "013 010 006",	"cast_runt", "64", "100",  "9",	    //pv_h
-        "fingers",	"025 009 009",	"cast_thug", "0", "150",  "0",	    //bar_pv
-		"burt",	    "063 041 010",	"cast_thug", "0", "100",  "0",	    //bar_pv
-        "Laurel",	"504 032 031",	"cast_punk", "8192", "200",  "0",	//pv_h got head 1
-		"Hardey",	"114 032 031",	"cast_punk", "8192", "200",  "0",	//pv_h
-        "dubs",     "108 009 006",  "cast_punk", "64", "220",  "0",	    //pv_h
+		//name,		//skin,			classname		flags	HP		count	head
+        "yolanda",	"041 050 003",	"cast_bitch", "0", "200",  "0", "", 	//pv_h
+        "mung",     "013 010 006",	"cast_runt", "64", "100",  "9", "",	    //pv_h
+        "fingers",	"025 009 009",	"cast_thug", "0", "150",  "0", "",	    //bar_pv
+		"burt",	    "063 041 010",	"cast_thug", "0", "100",  "0", "",	    //bar_pv
+        "Laurel",	"504 032 031",	"cast_punk", "8192", "200",  "0", "",	//pv_h got head 1
+		"Hardey",	"114 032 031",	"cast_punk", "8192", "200",  "0", "",	//pv_h
+        "dubs",     "108 009 006",  "cast_punk", "64", "220",  "0", "",	    //pv_h
 	};
 
     self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].name);
@@ -624,26 +627,17 @@ int cast_TF_checkEnemyState()
 void cast_TF_setEnemyPlayer(edict_t *spawn)
 {
 	int j, best = 1;
-//	float v;
 	float dist = 99999;
 	edict_t *player;
 
-	//attack closest player. todo rand?? depends on player count?
+	//attack closest player.
 	for_each_player(player, j)
 	{
 		if (player->health <= 0 || player->solid == SOLID_NOT) // MH: exclude spectators
 			continue;
 
-		AI_MakeEnemy(spawn, player, 0);  // hostile to closest enemy
-		/*v = VectorDistance(spawn->s.origin, player->s.origin);
-		if (v < dist) {
-			dist = v;
-			best = j;
-		}*/
+		AI_MakeEnemy(spawn, player, 0);
 	}
-
-	//AI_MakeEnemy(spawn, &g_edicts[best], 0);  // hostile to closest enemy
-	//hypov8 todo: what if enemy is dead??
 }
 
 //////////////////
@@ -802,9 +796,7 @@ void cast_TF_spawnTypes(edict_t *spawn)
 void cast_TF_spawn(int ammount, int type)
 {
 	edict_t *spawn, *spawnspot;
-	//int i;
 
-	//for (i = 0; i < ammount; i++)
 	{
 		if (currWave_castCount >= MAX_CHARACTERS)
 			return;
@@ -830,13 +822,17 @@ void cast_TF_spawn(int ammount, int type)
 		}
 
 		ED_CallSpawn(spawn);
+
+		if(!Q_strcasecmp(spawn->classname, "cast_dog"))
+			spawn->cast_group = 23; //hypov8 does this work?
+		else
+			spawn->cast_group = 22; //hypov8 does this work?
+
 		if (!spawn->health)
 			spawn->health = 100;
 
 		//set what player to attack
 		cast_TF_setEnemyPlayer(spawn);
-
-		spawn->cast_group = 22; //hypov8 does this work?
 
 		//add enemy to counter
 		currWave_castCount++;
@@ -846,7 +842,7 @@ void cast_TF_spawn(int ammount, int type)
 //wave total enemy counts
 static int wave_shortGame[5] = { 25, 32, 35, 42, 1 };
 static int wave_medGame[8] = { 25, 28, 32, 25, 35, 40, 42, 1 };
-static int wave_longGame[11] = { 25, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1 };
+static int wave_longGame[11] = { 2, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1 };
 
 //wave skill. number of enemy allowed in level at 1 time. max 8 players
 static int wave_skill[5][9] = {
@@ -869,6 +865,7 @@ void cast_TF_setupEnemyCounters(void)
 	edict_t *self;
 	int playerCount = 0;
 	int i, sk;
+	int firstPlayer = 0;
 
 
 	if (skill->value == 0)			sk = 0;//novice
@@ -884,6 +881,12 @@ void cast_TF_setupEnemyCounters(void)
 		{
 			playerCount++;
 			AddCharacterToGame(self); //add player to level.characters
+			if (!firstPlayer)
+			{
+				firstPlayer = 1;
+				self->nav_TF_isFirstPayer = 1; //hypov8 nav
+			}
+			self->cast_group = 1;
 		}
 	}
 	currWave_plysCount = playerCount;

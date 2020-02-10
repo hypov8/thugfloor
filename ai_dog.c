@@ -648,7 +648,7 @@ void dog_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, 
 //	self->s.modelindex2 = 0;
 
 	// regular death
-	self->takedamage = DAMAGE_YES;
+	self->takedamage = DAMAGE_YES; //hypov8 todo: cant hit rats if other coprs ontop is bigger
 
     if (!self->deadflag)//FREDZ
 	{

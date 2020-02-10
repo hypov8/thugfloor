@@ -917,6 +917,7 @@ extern	cvar_t	*burn_b;
 extern	cvar_t	*timescale;
 
 extern	cvar_t	*maxwaves;//hypov8
+extern	cvar_t	*nav_dynamic;//hypov8
 //extern	cvar_t	*teamplay;//FREDZ not using
 //extern	cvar_t	*g_cashspawndelay;
 
@@ -1852,6 +1853,7 @@ struct edict_s
 	active_node_data_t	*active_node_data;	// points to the active node data of the current unit
 // END:		Xatrix/Ridah/Navigator/17-mar-1998
 
+
 // JOSEPH 19-MAR-99
 	vec3_t  rotate;
     vec3_t  nodeorigin;
@@ -2051,6 +2053,9 @@ struct edict_s
 
 	int			launch_delay; // MH: missile launch delay
 	edict_t      *homing_target;   //FREDZ rocket lock
+
+	//hypov8 only route on first player
+	int nav_TF_isFirstPayer; //nav first player
 };
 
 // RAFAEL
