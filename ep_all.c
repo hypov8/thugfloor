@@ -59,7 +59,7 @@ char *ep_names[] =
 	"Sluggo",//bar_sr
 	"Rocko",//bar_sr
 	"Rover",//sr2
-	"Joseph",
+	"Joseph",//got sound\actors\male\joseph\ also named Nick?
 	"Rummy", // sr1 bum
 	"Nick",  // sr2 bum //FREDZ is not sr2 but sr3 helping guy
 	"Jesus", // sr boss //sr4
@@ -106,7 +106,7 @@ char *ep_names[] =
 	"kid_6",//FREDZ only in ep_steeltown.c
 	"kid_7",//FREDZ only in ep_steeltown.c
 	"kid_8",//FREDZ only in ep_steeltown.c
-	"Oscar",//teel2
+	"Oscar",//steel2
 	"David",//steel3
 	"Bambi",//bar_st
 	"Brittany",//steel1
@@ -127,8 +127,6 @@ char *ep_names[] =
 	"Dude",//FREDZ rc3 and sy_h as script?
 	"Walter",//bar_rc
 	"Donny",//rc4
-	//FREDZ missing names:
-
 	NULL
 	//FREDZ: follow maps got no Character Names:
 	//bike, kpcut1, kpcut3, kpcut4, kpcut7,

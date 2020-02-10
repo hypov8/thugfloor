@@ -21,11 +21,23 @@ typedef struct
 	char *head;
 } cast_thugskins_s;
 
+typedef struct
+{
+	char *name;
+	char *skin;
+	char *classname;
+	char *spawnflags;
+    char *health;
+//    char *moral;
+//    char *acc;
+//    char *cal;
+    char *count;
+    char *head;
+} localteam_skins_s;
+
 //local
 void cast_pawn_o_matic_spawn ();
 void cast_pawn_o_matic_free();
-void dog_spawn (int ammount);
-void bitch_spawn (int ammount);
 int cast_TF_checkEnemyState(void);
 void cast_TF_setupEnemyCounters(void);
 

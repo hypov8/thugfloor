@@ -35,8 +35,8 @@ void AI_Ent_droptofloor ( edict_t *self )
 //======================================================================================
 
 /*QUAKED ai_boundary (.5 .5 0) ?
-Character will abort pursuing player when touching this brush. Will 
-take cover until the player is out of view, then return to guarding position (if 
+Character will abort pursuing player when touching this brush. Will
+take cover until the player is out of view, then return to guarding position (if
 character has been assigned one).
 
 	"moral"	range from 1 (Coward) to 7 (Psycotic). Only characters with an equal or lower moral level will be effected by this brush.
@@ -78,7 +78,7 @@ void ai_boundary_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface
 	else if (other->moral > self->moral)
 		return;
 
-	// abort taking cover	
+	// abort taking cover
 	other->cast_info.aiflags &= ~AI_TAKE_COVER;
 	other->combat_goalent = NULL;
 
@@ -97,7 +97,7 @@ void ai_boundary_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface
 			if (!AI_ForceTakeCover( other, other->enemy, true ))
 			{
 				if (mem = level.global_cast_memory[other->character_index][other->enemy->character_index])
-				{	
+				{
 					// pretend that we haven't seen them in a while
 					mem->timestamp = level.time - 5;
 					mem->flags |= MEMORY_TAUNT;
@@ -422,7 +422,7 @@ void ai_territory_touch (edict_t *self, edict_t *other, cplane_t *plane, csurfac
 		return;
 
 	// are we going into, or out of the territory?
-	
+
 	VectorSubtract( other->s.origin, self->pos1, vec );
 	vec[2] = 0;
 	VectorNormalize( vec );
@@ -515,7 +515,7 @@ void SP_ai_safespot (edict_t *self)
 
 
 /*QUAKED ai_reset (.5 .5 0) ?
-This is a brush that will reset a cast location to his 
+This is a brush that will reset a cast location to his
 startup location
 
   FIXME: Is this implemented yet?
@@ -585,7 +585,7 @@ void SP_ai_trigger_character (edict_t *ent)
 
 	ent->solid = SOLID_TRIGGER;
 	ent->touch = ai_trigger_character_touch;
-	
+
 	if (!ent->cast_group)
 		ent->cast_group = 2;
 
@@ -692,10 +692,10 @@ void ai_button_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t
 	self->owner->use( self->owner, other, other );
 }
 
-void ai_button_think (edict_t *self)
+void ai_button_think (edict_t *self)//FREDZ never used
 {
-	edict_t	*trav;
-	route_t	r;
+//	edict_t	*trav;
+//	route_t	r;
 
 // disabled this, doesn't work too well, need a better approach
 // eg. they'll activate lifts when they shouldn't

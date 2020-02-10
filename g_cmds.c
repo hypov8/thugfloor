@@ -2592,7 +2592,7 @@ void Cmd_Use_f (edict_t *ent)
 
 	if (ent->client->pers.holsteredweapon)
 	{
-		if (level.bar_lvl) //hypov8 note: use this to stop weps on buy time?
+		if (level.bar_lvl) //hypov8 note: use this to stop weps on buy time?//FREDZ should only be on bar_level, but some people want to drop weapons and give it away, instead of giving money.
 			return;
 
 		if (ent->client->pers.holsteredweapon == it)
@@ -4079,7 +4079,7 @@ skipnext:*/
 //===================================================================================
 
 
-void Cmd_DropCash_f (edict_t *self)
+void Cmd_DropCash_f (edict_t *self)//FREDZ need fix should normaly drop only 10 expect if you do drop cash all
 {
 	edict_t		*cash;
 
@@ -4139,6 +4139,7 @@ void Cmd_DropCash_f (edict_t *self)
 void Cmd_PrintSettings_f (edict_t *ent)
 {
     char	*sk;//FREDZ
+    int numWaves;
 	gi.cprintf(ent, PRINT_HIGH,"\nCurrent Game Settings.\n");
 	gi.cprintf(ent, PRINT_HIGH,"===============================\n\n");
 	switch (level.modeset)
@@ -4175,8 +4176,15 @@ void Cmd_PrintSettings_f (edict_t *ent)
 		sk = "hard";
 	else
 		sk = "real";
-//	if (level.modeset==MATCHSETUP)
-//		gi.cprintf(ent, PRINT_HIGH,"Matchstart score   : %d : %d\n",team_startcash[0],team_startcash[1]); // MH: aligned with rest of settings
+
+    //get wave count
+	if ((int)maxwaves->value == 2)		//long
+		numWaves = 11;
+	else if ((int)maxwaves->value == 1)	//med
+		numWaves = 8;
+	else 								//short
+		numWaves = 5;
+
 	gi.cprintf(ent, PRINT_HIGH,"Map                : %s\n", level.mapname);//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"Skill mode         : %s\n", sk);//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"Anti-Spawn Camp    : %d\n", (int)anti_spawncamp->value); //FREDZ
@@ -4185,6 +4193,7 @@ void Cmd_PrintSettings_f (edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH,"Cash limit         : %d\n", (int)cashlimit->value);*/
 	gi.cprintf(ent, PRINT_HIGH,"dmflags            : %d\n", (int)dmflags->value);
 	gi.cprintf(ent, PRINT_HIGH,"dm_realmode        : %d\n", (int)dm_realmode->value);
+    gi.cprintf(ent, PRINT_HIGH,"Maximum Waves      : %d\n", (int)numWaves);
 	gi.cprintf(ent, PRINT_HIGH,"Server password    : %s\n", password->string);
 //	gi.cprintf(ent, PRINT_HIGH,"Teamplay mode      : %d\n",(int)teamplay->value);
 	if (admincode[0] || !disable_admin_voting) {
@@ -4343,7 +4352,7 @@ void Cmd_CommandList_f (edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH,"toggle_asc, curselist, toggle_spec\n");
 	if (enable_password) gi.cprintf(ent, PRINT_HIGH,"setpassword removepassword\n");
 	if (!fixed_gametype) {
-		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode\n");
+		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, setmax_waves\n");
 	}
     if (!fixed_skilltype)//FREDZ
 	{
@@ -4853,6 +4862,23 @@ void Cmd_SetRealMode_f (edict_t *ent, char *value)
 	}
 	else
 		gi.cprintf(ent,PRINT_HIGH,"dm_realmode settings are as follows:\n 0: Deathmatch\n 1: Realmode\n 2: Realmode with all weapons\n");
+}
+void Cmd_SetMaxWaves_f (edict_t *ent, char *value)
+{
+	int		i;
+
+	i = atoi (value);
+	if ((i == 0) || (i == 1) || (i== 2))
+	{
+		if (ent->client->pers.admin > NOT_ADMIN )
+		{
+			CHECKFIXED("maxwaves");
+		}
+		else
+			gi.cprintf(ent,PRINT_HIGH,"You do not have admin\n");
+	}
+	else
+		gi.cprintf(ent,PRINT_HIGH,"maxwaves settings are as follows:\n 0: 5  waves\n 1: 8  waves\n 2: 11 waves\n");
 }
 
 void Cmd_SetPassword_f (edict_t *ent, char *value)
@@ -5630,7 +5656,7 @@ void ClientCommand (edict_t *ent)
 	if (level.cut_scene_time)
 		return;
 
-	else if (level.pawn_time)
+	else if (level.pawn_time)//FREDZ is basicly replaced with ent->client->showscrollmenu
 	{
 
 		if (Q_stricmp (cmd, "invuse") == 0)
@@ -5671,7 +5697,7 @@ void ClientCommand (edict_t *ent)
 			Cmd_InitMenu_f (ent);
 		//End AS
 
-		else if (Q_stricmp (cmd, "leftarrow") == 0)
+		else if (Q_stricmp (cmd, "leftarrow") == 0)//FREDZ maybe add more key options for this?
 			ScrollMenuLeft (ent);
 		else if (Q_stricmp (cmd, "rightarrow") == 0)
 			ScrollMenuRight (ent);
@@ -5855,6 +5881,8 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp (cmd, "setdm_realmode") == 0)
 		Cmd_SetRealMode_f (ent, gi.argv (1));
 
+	else if (Q_stricmp (cmd, "setmax_waves") == 0)//FREDZ
+		Cmd_SetMaxWaves_f (ent, gi.argv (1));
 	else if (Q_stricmp (cmd, "setskill") == 0) //FREDZ
 		Cmd_SetSkill_f (ent, gi.argv (1));
 //	else if (Q_stricmp (cmd, "setteamplay") == 0)

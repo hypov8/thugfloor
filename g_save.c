@@ -436,7 +436,7 @@ void InitGame (void)
 
 	timescale		= gi.cvar("timescale", "1.0", 0);
 
-	maxwaves		= gi.cvar("maxwaves","2", CVAR_LATCH|CVAR_SERVERINFO); //hypov8 todo: add to comp.ini?
+	maxwaves		= gi.cvar("maxwaves","2", CVAR_LATCH|CVAR_SERVERINFO); //hypov8
 
     // speed hack fix
 	gi.cvar_set("sv_enforcetime","1");

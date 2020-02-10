@@ -159,7 +159,7 @@ int proccess_ini_file()
 	default_dmflags[0]=0;
 	default_password[0]=0;
 	default_dm_realmode[0]=0;
-
+    default_maxwaves[0]=0;
 
 	admincode[0]=0;
 
@@ -288,6 +288,10 @@ int proccess_ini_file()
 		case DEFAULT_REAL_KEYWORD:
 			sscanf(buffer, "%s %s", dummy, map);	// Quick ugly hack :)
 			strncpy(default_dm_realmode, map, 16);
+			break;
+        case DEFAULT_MAXWAVES_KEYWORD:
+			sscanf(buffer, "%s %s", dummy, map);
+			strncpy(default_maxwaves, map, 16);
 			break;
 		case FIXED_GAMETYPE_KEYWORD:
 			fixed_gametype = true;

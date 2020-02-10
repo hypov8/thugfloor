@@ -119,7 +119,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.09"
+#define	GAMEVERSION	"Thug Floor v0.11"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -2120,6 +2120,7 @@ extern char default_password[16];
 /*extern char default_timelimit[16];
 extern char default_fraglimit[16];*/
 extern char default_dm_realmode[16];
+extern char default_maxwaves[16];
 extern char custom_map_filename[32];  // stores where various files can be found
 extern char ban_name_filename[32];
 extern char ban_ip_filename[32];
