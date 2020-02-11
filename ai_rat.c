@@ -271,6 +271,8 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 		{
 			attacker->client->resp.score++;
 
+			attacker->client->pers.currentcash += 1;
+
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;
 			if (attacker->client->resp.killstreak > attacker->client->resp.maxkillstreak)//fix

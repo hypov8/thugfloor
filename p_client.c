@@ -735,6 +735,18 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 			else
 				gi.bprintf (PRINT_MEDIUM,"%s %s %s%s\n", self->client->pers.netname, message, attacker->classname, message2);
 
+            if(enable_killerhealth)
+            {
+                if (self->client->pers.netname)//It player?
+                {
+                    if (attacker->name)//FREDZ todo need fix for dog and rat
+                        gi.cprintf (self, PRINT_HIGH,"%s(%s) had %i health!\n", attacker->name, attacker->classname, attacker->health);
+                    else
+                        gi.cprintf (self, PRINT_HIGH,"%s had %i health!\n", attacker->classname, attacker->health);
+                }
+
+            }
+
 			//FREDZ killstreak
 			// Because we killed ourselves we want to end our kill streak so
 			// we have to check if we had a better streak than before.
@@ -1919,7 +1931,8 @@ void PutClientInServer (edict_t *ent)
 			ent->client->pers.player_dead = TRUE;//FREDZ
 			ent->client->pers.spectator = PLAYER_READY;
 		}
-		ent->movetype = MOVETYPE_NOCLIP;
+//		ent->movetype = MOVETYPE_NOCLIP;
+        ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
 		ent->client->pers.weapon = NULL;
@@ -3560,6 +3573,9 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	if (ent->movetype == MOVETYPE_NOCLIP)
 		client->ps.pmove.pm_type = PM_SPECTATOR;
+
+    else if (ent->movetype == MOVETYPE_SPECTATOR)//FREDZ example some kind spec without noclip, just anoying sounds and movement abit weird.
+		client->ps.pmove.pm_type = PM_NORMAL_WITH_JETPACK;
 
 	// Ridah, Hovercars
 	else if (ent->flags & FL_HOVERCAR)

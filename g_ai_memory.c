@@ -362,7 +362,7 @@ void AI_ShareEnemies ( edict_t *self, edict_t *other )
 	cast_memory_t	*self_memory, *other_memory;
 
 	// Ridah, 18-may-99, cast_group 1 guys shouldn't help other group 1's if they haven't been hired yet
-	if ((other->cast_group == 1) && !other->leader) //hypov8 leader??
+	if ((other->cast_group == 1) && !other->leader) //hypov8 leader??//FREDZ leader is mostly guy who you rent ai(player) follow player
 		return;
 	if ((self->cast_group == 1) && !self->leader)
 		return;

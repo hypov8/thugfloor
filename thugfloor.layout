@@ -2,44 +2,9 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Release" />
-	<File name="g_save.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="g_ai_ents.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="16911" topLine="412" />
-		</Cursor>
-	</File>
-	<File name="g_scrollmenu.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="12896" topLine="537" />
-		</Cursor>
-	</File>
-	<File name="ep_skidrow.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3772" topLine="100" />
-		</Cursor>
-	</File>
-	<File name="g_spawn.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3521" topLine="94" />
-		</Cursor>
-	</File>
-	<File name="ai_rat.c" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="13769" topLine="734" />
-		</Cursor>
-	</File>
-	<File name="g_target.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="21700" topLine="868" />
-		</Cursor>
-	</File>
-	<File name="versioncheck.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1426" topLine="30" />
-		</Cursor>
-	</File>
-	<File name="file.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7701" topLine="272" />
+			<Cursor1 position="17392" topLine="689" />
 		</Cursor>
 	</File>
 	<File name="g_teamplay.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -47,19 +12,14 @@
 			<Cursor1 position="208" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="versioncheck.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="g_ai_fight.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="26" topLine="0" />
+			<Cursor1 position="1168" topLine="26" />
 		</Cursor>
 	</File>
-	<File name="ai_runt.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ai_thug.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="42206" topLine="1751" />
-		</Cursor>
-	</File>
-	<File name="file.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3008" topLine="51" />
+			<Cursor1 position="24056" topLine="1001" />
 		</Cursor>
 	</File>
 	<File name="g_teamplay.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -67,14 +27,14 @@
 			<Cursor1 position="108" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="voice.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="g_ai_memory.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="5613" topLine="148" />
+			<Cursor1 position="8765" topLine="342" />
 		</Cursor>
 	</File>
-	<File name="g_ai.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ai_bitch.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="17207" topLine="672" />
+			<Cursor1 position="21950" topLine="959" />
 		</Cursor>
 	</File>
 	<File name="g_trigger.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -82,9 +42,14 @@
 			<Cursor1 position="24641" topLine="1080" />
 		</Cursor>
 	</File>
-	<File name="g_ai.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="g_cast.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="885" topLine="141" />
+			<Cursor1 position="30354" topLine="1227" />
+		</Cursor>
+	</File>
+	<File name="g_cast_spawn.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="17627" topLine="435" />
 		</Cursor>
 	</File>
 	<File name="g_utils.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -92,24 +57,14 @@
 			<Cursor1 position="1147" topLine="53" />
 		</Cursor>
 	</File>
-	<File name="ai_shorty.c" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="g_cast_spawn.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="49064" topLine="1829" />
-		</Cursor>
-	</File>
-	<File name="g_ai_ents.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="17392" topLine="689" />
+			<Cursor1 position="537" topLine="7" />
 		</Cursor>
 	</File>
 	<File name="g_weapon.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="6138" topLine="237" />
-		</Cursor>
-	</File>
-	<File name="g_ai_fight.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1168" topLine="26" />
+			<Cursor1 position="4650" topLine="165" />
 		</Cursor>
 	</File>
 	<File name="game.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -117,64 +72,29 @@
 			<Cursor1 position="212" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="g_ai_memory.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ai_runt.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="14495" topLine="545" />
-		</Cursor>
-	</File>
-	<File name="ai_thug.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="47812" topLine="1848" />
-		</Cursor>
-	</File>
-	<File name="g_cast.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="15751" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="g_cast_spawn.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="23421" topLine="640" />
-		</Cursor>
-	</File>
-	<File name="g_cast_spawn.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="456" topLine="1" />
-		</Cursor>
-	</File>
-	<File name="p_client.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="28353" topLine="1087" />
-		</Cursor>
-	</File>
-	<File name="p_hud.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="274" topLine="0" />
+			<Cursor1 position="25322" topLine="1040" />
 		</Cursor>
 	</File>
 	<File name="g_cmds.c" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="120120" topLine="4855" />
+			<Cursor1 position="38978" topLine="1558" />
 		</Cursor>
 	</File>
-	<File name="p_view.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ai_thug_sit.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8767" topLine="341" />
+			<Cursor1 position="23996" topLine="992" />
 		</Cursor>
 	</File>
 	<File name="g_combat.c" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="17559" topLine="644" />
+			<Cursor1 position="12007" topLine="478" />
 		</Cursor>
 	</File>
-	<File name="p_weapon.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ai_dog.c" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="86093" topLine="3118" />
-		</Cursor>
-	</File>
-	<File name="ai_whore.c" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1146" topLine="18" />
+			<Cursor1 position="9085" topLine="360" />
 		</Cursor>
 	</File>
 	<File name="g_func.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -182,19 +102,14 @@
 			<Cursor1 position="19244" topLine="714" />
 		</Cursor>
 	</File>
-	<File name="q_shared.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ai_bum_sit.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="270" topLine="0" />
+			<Cursor1 position="5031" topLine="204" />
 		</Cursor>
 	</File>
-	<File name="ai_bitch.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="p_client.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="42138" topLine="1712" />
-		</Cursor>
-	</File>
-	<File name="q_shared.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="34244" topLine="1143" />
+			<Cursor1 position="25096" topLine="954" />
 		</Cursor>
 	</File>
 	<File name="g_items.c" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -202,9 +117,9 @@
 			<Cursor1 position="28722" topLine="1062" />
 		</Cursor>
 	</File>
-	<File name="tourney.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="p_hud.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9055" topLine="343" />
+			<Cursor1 position="274" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="g_joe_misc.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -212,24 +127,29 @@
 			<Cursor1 position="173362" topLine="6142" />
 		</Cursor>
 	</File>
-	<File name="ep_all.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="p_view.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="359" topLine="0" />
+			<Cursor1 position="8767" topLine="341" />
+		</Cursor>
+	</File>
+	<File name="ai_punk.c" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="34226" topLine="1287" />
 		</Cursor>
 	</File>
 	<File name="g_local.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="59507" topLine="2104" />
+			<Cursor1 position="50492" topLine="1790" />
 		</Cursor>
 	</File>
-	<File name="ai_bum_sit.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ep_all.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="16139" topLine="629" />
+			<Cursor1 position="3021" topLine="98" />
 		</Cursor>
 	</File>
-	<File name="ep_all.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="p_weapon.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="10639" topLine="340" />
+			<Cursor1 position="86093" topLine="3118" />
 		</Cursor>
 	</File>
 	<File name="g_main.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -237,14 +157,29 @@
 			<Cursor1 position="25437" topLine="1142" />
 		</Cursor>
 	</File>
+	<File name="ep_all.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="10639" topLine="340" />
+		</Cursor>
+	</File>
+	<File name="q_shared.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="270" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="g_misc.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="61393" topLine="2640" />
 		</Cursor>
 	</File>
-	<File name="ai_dog.c" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="q_shared.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3287" topLine="91" />
+			<Cursor1 position="14933" topLine="514" />
+		</Cursor>
+	</File>
+	<File name="tourney.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1138" topLine="902" />
 		</Cursor>
 	</File>
 	<File name="g_pawn.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -252,14 +187,89 @@
 			<Cursor1 position="51366" topLine="1519" />
 		</Cursor>
 	</File>
+	<File name="g_phys.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="32480" topLine="1342" />
+		</Cursor>
+	</File>
 	<File name="ep_posionville.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="2492" topLine="61" />
 		</Cursor>
 	</File>
-	<File name="ai_punk.c" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="g_save.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="49299" topLine="1844" />
+			<Cursor1 position="16911" topLine="412" />
+		</Cursor>
+	</File>
+	<File name="versioncheck.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1426" topLine="30" />
+		</Cursor>
+	</File>
+	<File name="g_scrollmenu.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="12896" topLine="537" />
+		</Cursor>
+	</File>
+	<File name="versioncheck.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="26" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="g_spawn.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3521" topLine="94" />
+		</Cursor>
+	</File>
+	<File name="ep_skidrow.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3772" topLine="100" />
+		</Cursor>
+	</File>
+	<File name="voice.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="5613" topLine="148" />
+		</Cursor>
+	</File>
+	<File name="ai_rat.c" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6587" topLine="254" />
+		</Cursor>
+	</File>
+	<File name="g_target.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="21700" topLine="868" />
+		</Cursor>
+	</File>
+	<File name="file.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7701" topLine="272" />
+		</Cursor>
+	</File>
+	<File name="ai_shorty.c" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="34898" topLine="1294" />
+		</Cursor>
+	</File>
+	<File name="file.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3008" topLine="51" />
+		</Cursor>
+	</File>
+	<File name="g_ai.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="17207" topLine="672" />
+		</Cursor>
+	</File>
+	<File name="ai_whore.c" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1146" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="g_ai.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="885" topLine="141" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

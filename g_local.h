@@ -119,7 +119,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.11"
+#define	GAMEVERSION	"Thug Floor v0.12"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -326,7 +326,8 @@ MOVETYPE_TOSS,			// gravity
 MOVETYPE_FLYMISSILE,	// extra size to monsters
 MOVETYPE_BOUNCE,		// added this (the comma at the end of line)
 MOVETYPE_WALLBOUNCE,
-MOVETYPE_TOSS_SLIDE		// Ridah, testing
+MOVETYPE_TOSS_SLIDE,	// Ridah, testing
+MOVETYPE_SPECTATOR     //FREDZ test SPECTATOR
 } movetype_t;
 
 

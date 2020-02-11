@@ -967,6 +967,8 @@ void Bitchkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//
 		{
 			attacker->client->resp.score++;
 
+			attacker->client->pers.currentcash += 5;//FREDZ need to be altered still more
+
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;
 			if (attacker->client->resp.killstreak > attacker->client->resp.maxkillstreak)//fix

@@ -10,7 +10,7 @@ typedef struct
 {
 	char *name;
 	char *skin;
-	char *count;
+	int count;
 } cast_runtskins_s;
 
 typedef struct
@@ -26,14 +26,14 @@ typedef struct
 	char *name;
 	char *skin;
 	char *classname;
-	char *spawnflags;
-    char *health;
-//    char *moral;
-//    char *acc;
-//    char *cal;
-    char *count;
+	int spawnflags;
+    int health;
+//    int moral;
+//    int acc;
+//    int cal;
+    int count;
     char *head;
-} localteam_skins_s;
+} localteam_skins_s;//Need to be same as edict_s in g_local.h
 
 //local
 void cast_pawn_o_matic_spawn ();

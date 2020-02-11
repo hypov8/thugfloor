@@ -119,7 +119,7 @@ void cast_TF_bitch_melee(edict_t *self)
 }
 void cast_TF_bitch_pistol(edict_t *self)
 {
-	static cast_bitchskins_s skins[7] = {
+	static cast_bitchskins_s skins[8] = {
 		"Mona",			"014 012 003",	//sr2
 		"yolanda",		"041 050 003",	//pv_h got normally 200 health
 		"candy",		"015 017 013",	//bar_pv same name as in bar_rc
@@ -127,10 +127,11 @@ void cast_TF_bitch_pistol(edict_t *self)
 		"bambi",		"044 042 003",	//bar_st
 		"lola",			"045 049 015", 	//rc3
 		"candy",		"019 019 015",	//bar_rc same name as in bar_pv
+		"selma",		"600 043 003", 	//bar_sy
 	};
 
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 7].name);
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 7].skin);
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 8].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 8].skin);
 	self->spawnflags = 0;
 	self->classname = "cast_bitch";
 }
@@ -144,19 +145,19 @@ void cast_TF_bitch_shotgun(edict_t *self)
 void cast_TF_runt_melee(edict_t *self)
 {
 	static cast_runtskins_s skins[13] = {
-	"bubba",  "017 016 008", "9",	    //sr1
-//	"louie", "011 011 005",	"3",	    //sr1
-//	"buttmunch", "001 001 001", "0",	//sr1
-	"magicj", "020 011 005", "0",   	//sr1
-	"kroker", "023 020 020", "1",	    //steel1 Got normally 150 health
-	"kid_1", "134 132 132",	"0",	    //steel2
-	"kid_2", "132 132 132",	"0",	    //steel2
-	"kid_3", "133 132 132",	"0",	    //steel2
-	"popeye", "040 019 048", "0",	    //sy_h Got normaly health 300 and diffrent head?
-	"harpo", "142 140 140",	"0",	     //rc1 Got normally 200 health
-	"bubba", "042 042 010",	"9",	    //rc1
-	"groucho", "140 141 046", "0",	     //rc1 Got normally 150 health
-	"chico", "141 141 046", "0",		     //rc1 Got normally 150 health //same skin as grouncho
+	"bubba",  "017 016 008", 9,	    //sr1
+//	"louie", "011 011 005",	3,	    //sr1
+//	"buttmunch", "001 001 001", 0,	//sr1
+	"magicj", "020 011 005", 0,   	//sr1
+	"kroker", "023 020 020", 1,	    //steel1 Got normally 150 health
+	"kid_1", "134 132 132",	0,	    //steel2
+	"kid_2", "132 132 132",	0,	    //steel2
+	"kid_3", "133 132 132",	0,	    //steel2
+	"popeye", "040 019 048", 0,	    //sy_h Got normaly health 300 and diffrent head?
+	"harpo", "142 140 140",	0,	     //rc1 Got normally 200 health
+	"bubba", "042 042 010",	9,	    //rc1
+	"groucho", "140 141 046", 0,	     //rc1 Got normally 150 health
+	"chico", "141 141 046", 0,		     //rc1 Got normally 150 health //same skin as grouncho
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].name);
@@ -167,39 +168,41 @@ void cast_TF_runt_melee(edict_t *self)
 }
 void cast_TF_runt_pistol(edict_t *self)
 {
-	static cast_runtskins_s skins[15] = {
+	static cast_runtskins_s skins[13] = {
 //	"bernie", "011 012 004", "1",	//sr1 Got normally 150 health
 //	"punky", "005 003 001",	"0",	//sr1 Got normally 50 health//sewer_rats
 
-    "momo", "020 011 003", "0",		//sr2 //bouncer
-    "momo", "013 045 006", "0",		//steel1 //bouncer
-    "momo", "049 041 009", "0",		//rc4 //bouncer
+    "momo", "020 011 003", 0,		//sr2 //bouncer
+    "momo", "013 045 006", 0,		//steel1 //bouncer
+    "momo", "049 041 009", 0,		//rc4 //bouncer
 
-//	"jesus", "021 017 010", "0",	//sr4 Got normally 400 health some kind of boss
-	"mathew", "048 042 015", "0",	//steel1
-	"luke", "049 046 046", "0",		//ty1
-	"clarence", "047 013 003", "9",	//bar_pv
-	"buster", "046 010 009", "9",	//bar_pv Got normally 120 health
-	"louie", "043 041 009", "0",	//bar_pv
-	"clarence", "045 024 005", "1",	//bar_rc
-	"sluggo", "019 010 011", "0",	//bar_sr
-	"lenny", "018 011 007",	"0",	//bar_sr
-	"dogg", "016 014 003",	"0", 	//bar_sy
+    "moe", "047 065 041", 0,		//sy_h
+
+//	"jesus", "021 017 010", 0,	//sr4 Got normally 400 health some kind of boss
+	"mathew", "048 042 015", 0,	//steel1
+	"luke", "049 046 046", 0,		//ty1
+	"clarence", "047 013 003", 9,	//bar_pv
+	"buster", "046 010 009", 9,	//bar_pv Got normally 120 health
+	"louie", "043 041 009", 0,	//bar_pv
+	"clarence", "045 024 005", 1,	//bar_rc
+	"sluggo", "019 010 011", 0,	//bar_sr
+	"lenny", "018 011 007",	0,	//bar_sr
+	"dogg", "016 014 003",	0, 	//bar_sy
 	};
 
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 15].name);
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 15].skin);
-	self->count = (int)skins[rand() % 15].count;
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].skin);
+	self->count = (int)skins[rand() % 13].count;
 	self->spawnflags = 0;
 	self->classname = "cast_runt";
 }
 void cast_TF_runt_shotgun(edict_t *self)
 {
 	static cast_runtskins_s skins[4] = {
-	"momo", "072 014 009", "0", 	//sr1 Got normally 150 health
-    "butch", "131 130 010", "0",	//rc1
-    "dude", "130 131 010", "9",     //rc3 Got normally 200 health
-    "heilman", "121 121 121", "0",	//rc1 Got normally 250 health
+	"momo", "072 014 009", 0, 	//sr1 Got normally 150 health
+    "butch", "131 130 010", 0,	//rc1
+    "dude", "130 131 010", 9,     //rc3 Got normally 200 health
+    "momo", "072 014 009", 0, //pv_h
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 4].name);
@@ -211,15 +214,16 @@ void cast_TF_runt_shotgun(edict_t *self)
 void cast_TF_runt_tommygun(edict_t *self)
 {
 	//name, skin, count
-	static cast_runtskins_s skins[3] = {
-        "sal", "064 047 047", "0",	    //bar_sy Got normally 250 health
-        "mung", "013 010 006", "9",	    //pv_h
-        "bubba", "130 131 010", "9"    //rc2
+	static cast_runtskins_s skins[4] = {
+        "sal", "064 047 047", 0,	    //bar_sy Got normally 250 health
+        "mung", "013 010 006", 9,	    //pv_h
+        "bubba", "130 131 010", 9,    //rc2
+        "heilman", "121 121 121", 0,	//sy2 Got normally 250 health
 	};
 
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].name);
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
-	self->count = (int)skins[rand() % 3].count;
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 4].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 4].skin);
+	self->count = (int)skins[rand() % 4].count;
 	self->spawnflags = 64;
 	self->classname = "cast_shorty";
 }
@@ -233,12 +237,12 @@ void cast_TF_runt_hmg(edict_t *self)
 void cast_TF_thug_melee(edict_t *self)
 {
 	static cast_thugskins_s skins[5] = {
-		"leroy",	"010 010 003",	"0",    //sr1
-//		"johnny",	"011 007 004",	"0",	//sr1 Got normally 80 health
-		"brewster", "002 001 001",	"0",	//sr1
-//		"IntroGuy", "041 026 010",	"0",	//sr1 player
-        "kid_4",	"133 132 132",	"0",	//steel3
-        "kid_5",	"134 132 132",	"0",	//steel3
+		"leroy",	"010 010 003",	0,    //sr1
+//		"johnny",	"011 007 004",	0,	//sr1 Got normally 80 health
+		"brewster", "002 001 001",	0,	//sr1
+//		"IntroGuy", "041 026 010",	0,	//sr1 player
+        "kid_4",	"133 132 132",	0,	//steel3
+        "kid_5",	"134 132 132",	0,	//steel3
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].name);
@@ -276,7 +280,7 @@ void cast_TF_thug_shotgun(edict_t *self)
 	//	"arnold",		"012 007 004", "0",	//sr1 Got normally 200 health
 		"momo",			"107 044 010", "0",	//sy_h
 		"larry",		"048 047 041", "0",	//sy_h Got normally 200 health
-		"curcly",		"100 047 041", "0",	//sy_h Got normally 200 health
+		"curly",		"100 047 041", "0",	//sy_h Got normally 200 health
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 7].name);
@@ -325,10 +329,10 @@ void cast_TF_Skidrow_courtyard(edict_t *self)//sr1 Police/Security
     //
 	static localteam_skins_s skins[4] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"johnny",	"011 007 004",	"cast_thug",	"64",	"80",	"0",	"",
-        "louie",    "011 011 005",	"cast_runt",	"0",	"100",	"3",	"",//Not really police, more person they try to secure
-        "bernie",   "011 012 004",  "cast_runt",	"0",	"100",	"1",	"",
-        "arnold",	"012 007 004",	"cast_punk",	"0",	"200",	"0",	"",
+		"johnny",	"011 007 004",	"cast_thug",	64, 	80,	    0,       "0",
+        "louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	 "0",//Not really police, more person they try to secure
+        "bernie",   "011 012 004",  "cast_runt",	0,	    100,	1,	     "0",
+        "arnold",	"012 007 004",	"cast_punk",	0,	    200,	0,	     "0",
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 4].name);
@@ -343,9 +347,9 @@ void cast_TF_Skidrow_sewer_rats(edict_t *self)//sr1 Sewer Rats ugly skins
     //
 	static localteam_skins_s skins[3] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"buttmunch", "001 001 001",	"cast_runt",	"64",	"100",	"",		"",
-        "punky",     "005 003 001",	"cast_runt",	"0",	"50",	"",		"",
-        "igmo",      "003 002 001", "cast_thug",	"0",	"200",	"",		"",
+		"buttmunch", "001 001 001",	"cast_runt",	64,	    100,	0,	    "0",
+        "punky",     "005 003 001",	"cast_runt",	0,	    50,	    0,	    "0",
+        "igmo",      "003 002 001", "cast_thug",	0,	    200,	0,	    "0",
 	};
 
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].name);
@@ -359,8 +363,8 @@ void cast_TF_Skidrow_treehouse(edict_t *self)//sewer treehouse, ugly skins, no n
     //
 	static localteam_skins_s skins[2] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"fredz",	"004 003 001",	"cast_runt",	"",		"",		"",		"", //todo: no name??
-        "fredz",	"004 001 007",	"cast_punk",	"",		"",		"",		"",
+		"",         "004 003 001",	"cast_runt",	0,	    100,	0,	    "0", //todo: indeed no name, also not really needed? expect for friendly characters:/
+        "",         "004 001 007",	"cast_punk",	0,	    100,	0,	    "0",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 2].skin);
@@ -372,9 +376,9 @@ void cast_TF_Skidrow_motards(edict_t *self)//sr2 motards, ugly skins all pistol,
     //
 	static localteam_skins_s skins[3] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"fredz",	"003 003 001",	"cast_runt",	"",		"",		"", "",
-        "fredz",	"002 001 001",	"cast_bitch",	"",		"",		"", "",
-        "fredz",	"005 001 001",  "cast_thug",	"",		"",		"", "",
+		"",          "003 003 001",	"cast_runt",	0,	    100,	0,	    "0",
+        "",         "002 001 001",	"cast_bitch",	0,	    100,	0,	    "0",
+        "",	        "005 001 001",  "cast_thug",	0,	    100,	0,	    "0",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
@@ -386,11 +390,11 @@ void cast_TF_Skidrow_courtyard2(edict_t *self)//sr3 courtyard2 and 1, no names
 {
 	static localteam_skins_s skins[5] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"fredz",	"514 003 002",	"cast_punk",	"1",	"",		"",		"",//courtyard2
-        "fredz",	"010 006 002",	"cast_runt",	"0",	"",		"",		"",//courtyard1
-        "fredz",	"514 004 002",  "cast_punk",	"1",	"",		"",		"",//courtyard1
-        "fredz",	"513 004 002",  "cast_punk",	"1",	"",		"",		"",//courtyard1
-        "fredz",	"006 005 002",	"cast_runt",	"0",	"",		"",		"",//courtyard2
+		"",	        "514 003 002",	"cast_punk",	0,	    100,	0,	    "1",//courtyard2
+        "",	        "010 006 002",	"cast_runt",	0,	    100,	0,	    "0",//courtyard1
+        "",	        "514 004 002",  "cast_punk",	0,	    100,	0,	    "1",//courtyard1
+        "",	        "513 004 002",  "cast_punk",	0,	    100,	0,	    "1",//courtyard1
+        "",	        "006 005 002",	"cast_runt",	0,	    100,	0,	    "0",//courtyard2
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].skin);
@@ -402,9 +406,9 @@ void cast_TF_Skidrow_street(edict_t *self)//sr3 street1, no names
 {
 	static localteam_skins_s skins[3] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"fredz",	"006 006 002",	"cast_runt", "0", "", "", "",
-        "fredz",	"008 008 002",	"cast_runt", "0", "", "", "",
-        "fredz",	"010 004 002",  "cast_runt", "64", "", "", "",
+		"",	        "006 006 002",	"cast_runt",	0,	    100,	0,	    "0",
+        "",	        "008 008 002",	"cast_runt",	0,	    100,	0,	    "0",
+        "",	        "010 004 002",  "cast_runt",	64,	    100,	0,	    "0",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
@@ -415,8 +419,8 @@ void cast_TF_Skidrow_hallway(edict_t *self)//sr3 hallway1,  no names
 {
 	static localteam_skins_s skins[2] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"fredz",	"006 006 002",	"cast_runt", "", "", "", "",
-        "fredz",	"514 003 002",	"cast_punk", "", "", "", "",
+		"",     	"006 006 002",	"cast_runt",	0,	    100,	0,	    "0",
+        "",	        "514 003 002",	"cast_punk",	0,	    100,	0,	    "0",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 2].skin);
@@ -427,11 +431,11 @@ void cast_TF_Skidrow_postbattery(edict_t *self)//sr3 postbattery1 and 2,mostly s
 {
 	static localteam_skins_s skins[5] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"fredz",	"004 001 001",	"cast_punk", "120", "0", "", "",//postbattery1
-        "fredz",	"008 008 002",	"cast_runt", "120", "0", "", "",//postbattery2
-        "fredz",	"514 003 002",	"cast_punk", "120", "1", "", "",//postbattery2
-        "fredz",	"009 007 002",	"cast_runt", "100", "0", "", "",//postbattery2
-        "fredz",	"004 001 001",	"cast_punk", "80", "0", "", "",//postbattery1
+		"",	        "004 001 001",	"cast_punk",    0,      120,  0,    "0",    //postbattery1
+        "",	        "008 008 002",	"cast_runt",    0,      120,  0,    "0",    //postbattery2
+        "",     	"514 003 002",	"cast_punk",    0,      120,  0,    "1",    //postbattery2
+        "",	        "009 007 002",	"cast_runt",    0,      100,  0,    "0",    //postbattery2
+        "",	        "004 001 001",	"cast_punk",    0,      80,   0,    "0",    //postbattery1
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].skin);
@@ -444,19 +448,19 @@ void cast_TF_Skidrow_names(edict_t *self)
 {
 	static localteam_skins_s skins[13] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"Betty",	"008 006 003",	"cast_bitch",	"64",	"100",	"0",	"", //sr1
-		"Beth",		"009 007 004",	"cast_bitch",	"64",	"100",	"0",	"", //sr1
-		"Lisa",		"012 015 012",	"cast_bitch",	"64",	"120",	"0",	"", //sr1
-        "Mona",		"014 012 003",	"cast_bitch",	"0",	"100",  "0",	"",  //sr2
-        "bubba",	"017 016 008",	"cast_runt",	"64",	"100",	"9",	"",  //sr1
-        "magicj",	"020 011 005",	"cast_runt",	"64",	"100",	"0",	"",   	//sr1
-        "momo",		"020 011 003",	"cast_runt",	"0",	"100",	"0",	"",	//sr2 //bouncer
-    	"sluggo",	"019 010 011",	"cast_runt",	"0",	"100",	"0",	"",//bar_sr
-        "lenny",	"018 011 007",	"cast_runt",	"0",	"100",  "0",	"",	//bar_sr
-        "momo",		"072 014 009",	"cast_shorty",	"8192", "150",	"0",	"", 	//sr1
-        "leroy",	"010 010 003",	"cast_thug",	"64",	"100",	"0",	"",    //sr1
-		"brewster", "002 001 001",	"cast_thug",	"64",	"100",	"0",	"",	//sr1
-        "rocko",	"016 009 006",	"cast_thug",	"0",	"100",	"0",	"",	//bar_sr
+		"Betty",	"008 006 003",	"cast_bitch",	64,	    100,	0,  	"0",    //sr1
+		"Beth",		"009 007 004",	"cast_bitch",	64,	    100,	0,  	"0",    //sr1
+		"Lisa",		"012 015 012",	"cast_bitch",	64,	    120,	0,  	"0",    //sr1
+        "Mona",		"014 012 003",	"cast_bitch",	0,	    100,	0,  	"0",    //sr2
+        "bubba",	"017 016 008",	"cast_runt",	64,	    100,	9,  	"0",    //sr1
+        "magicj",	"020 011 005",	"cast_runt",	64,	    100,	0,  	"0",   	//sr1
+        "momo",		"020 011 003",	"cast_runt",	0,	    100,	0,  	"0",	//sr2 //bouncer
+    	"sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	"0",    //bar_sr
+        "lenny",	"018 011 007",	"cast_runt",	0,	    100,	0,  	"0",	//bar_sr
+        "momo",		"072 014 009",	"cast_shorty",	8192,   150,	0,  	"0", 	//sr1
+        "leroy",	"010 010 003",	"cast_thug",	64,	    100,	0,  	"0",    //sr1
+		"brewster", "002 001 001",	"cast_thug",	64,	    100,	0,  	"0",	//sr1
+        "rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	"0",	//bar_sr
 	};
 
     self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].name);
@@ -499,9 +503,9 @@ void cast_TF_Poisonville_boob(edict_t *self)//pv_1 boob, all pistol, no names
 {
 	static localteam_skins_s skins[3] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"fredz",	"030 031 032",	"cast_shorty",	 "", "", "", "",
-		"fredz",	"503 033 032",	"cast_punk",	"", "", "", "",
-		"fredz",	"033 032 032",	"cast_shorty",	"", "", "", "",
+		"",	        "030 031 032",	"cast_shorty",	0,	    100,	0,	    "0",
+		"",	        "503 033 032",	"cast_punk",	0,	    100,	0,	    "0",
+		"",	        "033 032 032",	"cast_shorty",	0,	    100,	0,	    "0",
 	};
 
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
@@ -512,37 +516,41 @@ void cast_TF_Poisonville_tanks(edict_t *self)//pv_b tanks, all tommygun, no name
 {
 	static localteam_skins_s skins[4] = {
 		//name,		//skin,			classname		flags	HP		count	head
-		"fredz",	"506 036 032",	"cast_punk", "160", "1", "", "",
-		"fredz",	"504 031 031",	"cast_punk", "140", "1", "", "",
-		"fredz",	"030 032 033",	"cast_whore", "120", "0", "", "",
-		"fredz",	"035 030 031",	"cast_shorty", "140", "0", "", "",
+		"",	        "506 036 032",	"cast_punk",    64,     160,    0,      "1",
+		"",     	"504 031 031",	"cast_punk",    64,     140,    0,      "1",
+		"",	        "030 032 033",	"cast_whore",   64,     120,    0,      "0",
+		"",	        "035 030 031",	"cast_shorty",  64,     140,    0,      "0",
 	};
 
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].skin);
-	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 3].classname);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 4].skin);
+	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 4].classname);
     self->spawnflags = 64;
-    self->health = (int)skins[rand() % 5].health;
-//    self->head = (int)skins[rand() % 5].head;//FREDZ probably gives problems
+    self->health = (int)skins[rand() % 4].health;
+//    self->head = (int)skins[rand() % 4].head;//FREDZ probably gives problems
 }
 void cast_TF_Poisonville_names(edict_t *self)
 {
-	static localteam_skins_s skins[13] = {
+	static localteam_skins_s skins[11] = {
 		//name,		//skin,			classname		flags	HP		count	head
-        "yolanda",	"041 050 003",	"cast_bitch", "0", "200",  "0", "", 	//pv_h
-        "mung",     "013 010 006",	"cast_runt", "64", "100",  "9", "",	    //pv_h
-        "fingers",	"025 009 009",	"cast_thug", "0", "150",  "0", "",	    //bar_pv
-		"burt",	    "063 041 010",	"cast_thug", "0", "100",  "0", "",	    //bar_pv
-        "Laurel",	"504 032 031",	"cast_punk", "8192", "200",  "0", "",	//pv_h got head 1
-		"Hardey",	"114 032 031",	"cast_punk", "8192", "200",  "0", "",	//pv_h
-        "dubs",     "108 009 006",  "cast_punk", "64", "220",  "0", "",	    //pv_h
+        "yolanda",	"041 050 003",	"cast_bitch",   0,      200,    0,      "0", 	//pv_h
+        "Mung",     "013 010 006",	"cast_runt",    64,     100,    9,      "0",	//pv_h
+        "Fingers",	"025 009 009",	"cast_thug",    0,      150,    0,      "0",	//bar_pv
+		"Burt",	    "063 041 010",	"cast_thug",    0,      100,    0,      "0",	//bar_pv
+        "Clarence", "047 013 003",  "cast_runt",    0,      100,    9,      "0",	//bar_pv
+        "Candy",	"015 017 013",  "cast_bitch",   0,      100,    0,      "0",	//bar_pv
+        "Louie",    "043 041 009",  "cast_runt",    0,      100,    0,      "0",	//bar_pv
+        "Laurel",	"504 032 031",	"cast_punk",    8192,   200,    0,      "1",	//pv_h
+		"Hardey",	"114 032 031",	"cast_punk",    8192,   200,    0,      "0",	//pv_h
+        "Dubs",     "108 009 006",  "cast_punk",    64,     220,    0,      "0",	//pv_h
+        "Momo",     "072 014 009",  "cast_shorty",  0,      100,    0,      "0",	//pv_h
 	};
 
-    self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].name);
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].skin);
-	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 13].classname);
-    self->spawnflags = (int)skins[rand() % 3].spawnflags;
-    self->health = (int)skins[rand() % 13].health;
-    self->count = (int)skins[rand() % 13].count;
+    self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 11].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 11].skin);
+	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 11].classname);
+    self->spawnflags = (int)skins[rand() % 11].spawnflags;
+    self->health = (int)skins[rand() % 11].health;
+    self->count = (int)skins[rand() % 11].count;
 }
 void cast_TF_Poisonville_boss(edict_t *self)
 {
@@ -554,8 +562,95 @@ void cast_TF_Poisonville_boss(edict_t *self)
 //	self->scale = 1.06;
 	self->health = 450 * currWave_plysCount;
 }
+void cast_TF_Shipyard_deckmonkeys(edict_t *self)//sy1 deck_monkeys and 2, shotty and tommyguns, no names
+{
+	static localteam_skins_s skins[6] = {
+		//name,		//skin,			classname		flags	HP		count	head
+		"",	        "061 062 060",	"cast_shorty",  0,      300,    0,      "0",    //deck_monkeys2
+		"",     	"060 060 060",	"cast_shorty",  0,      250,    0,      "0",    //deck_monkeys
+		"",	        "060 060 060",	"cast_whore",   64,     100,    0,      "0",    //deck_monkeys2
+		"",	        "508 060 060",	"cast_punk",    0,      300,    0,      "1",    //deck_monkeys2
+        "",	        "515 062 060",	"cast_punk",    64,     250,    0,      "1",    //deck_monkeys
+		"",	        "515 060 060",	"cast_punk",    64,     250,    0,      "1",    //deck_monkeys
+	};
+
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 6].skin);
+	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 6].classname);
+    self->spawnflags = (int)skins[rand() % 6].spawnflags;
+    self->health = (int)skins[rand() % 6].health;
+//    self->head = (int)skins[rand() % 6].head;//FREDZ probably gives problems
+}
+void cast_TF_Shipyard_goons(edict_t *self)//sy2 goons, shotty and tommyguns, no names
+{
+	static localteam_skins_s skins[8] = {
+		//name,		//skin,			classname		flags	HP		count	head
+		"",	        "515 063 060",	"cast_punk",    0,      250,    0,      "1",
+		"",     	"060 060 060",	"cast_whore",   0,      250,    0,      "0",
+		"",	        "515 063 060",	"cast_punk",    0,       20,    0,      "1",//Health not a typer error or xatrix did that :p
+		"",	        "515 063 060",	"cast_punk",    0,      250,    0,      "1",
+        "",	        "063 064 060",	"cast_shorty",  64,     225,    0,      "0",
+		"",	        "101 065 060",	"cast_punk",    64,     225,    0,      "0",
+        "",	        "113 065 060",	"cast_punk",    64,     300,    0,      "0",
+        "",	        "064 066 060",	"cast_shorty",  64,     300,    0,      "0",
+	};
+
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 8].skin);
+	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 8].classname);
+    self->spawnflags = (int)skins[rand() % 8].spawnflags;
+    self->health = (int)skins[rand() % 8].health;
+//    self->head = (int)skins[rand() % 8].head;//FREDZ probably gives problems
+}
+void cast_TF_Shipyard_swabs(edict_t *self)//sy2 swabs, mostly shotty and low health, no names
+{
+	static localteam_skins_s skins[5] = {
+		//name,		//skin,			classname		flags	HP		count	head
+		"",	        "045 064 060",	"cast_punk",    64,      75,    0,      "0",
+		"",     	"060 060 060",	"cast_shorty",   0,      75,    0,      "0",
+		"",	        "060 060 060",	"cast_whore",    0,      75,    0,      "0",
+		"",	        "066 064 060",	"cast_punk",     0,      75,    0,      "0",
+        "",	        "515 063 060",	"cast_punk",     0,      75,    0,      "1",
+	};
+
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].skin);
+	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 5].classname);
+    self->spawnflags = (int)skins[rand() % 5].spawnflags;
+    self->health = (int)skins[rand() % 5].health;
+//    self->head = (int)skins[rand() % 5].head;//FREDZ probably gives problems
+}
+void cast_TF_Shipyard_names(edict_t *self)
+{
+	static localteam_skins_s skins[10] = {
+		//name,		//skin,			classname		flags	HP		count	head
+        "Dogg",     "016 014 003",  "cast_runt",    0,      100,    0,      "0",    //bar_sy
+        "Selma",	"600 043 003",  "cast_bitch",   0,      100,    0,      "2", 	//bar_sy
+        "BigWillie","109 046 047",  "cast_punk",    0,      350,    0,      "0",    //bar_sy
+        "Sal",      "064 047 047",  "cast_shorty",  64,     250,    0,      "0",    //bar_sy
+        "Lefty",    "064 046 047",  "cast_punk",    64,     250,    0,      "0",    //bar_sy
+        "Moe",      "047 065 041",  "cast_runt",    0,       50,    0,      "0",    //sy_h
+        "Popeye",   "040 019 048",  "cast_runt",    64,     300,    0,      "1",    //sy_h
+        "Momo",		"107 044 010",  "cast_punk",    0,      100,    0,      "0",    //sy_h
+		"Larry",	"048 047 041",  "cast_punk",    0,      200,    0,      "0",    //sy_h
+		"Curly",	"100 047 041",  "cast_punk",    0,      200,    0,      "0",    //sy_h
+	};
+
+    self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 10].name);
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 10].skin);
+	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[rand() % 10].classname);
+    self->spawnflags = (int)skins[rand() % 10].spawnflags;
+    self->health = (int)skins[rand() % 10].health;
+    self->count = (int)skins[rand() % 10].count;
+}
+void cast_TF_Shipyard_boss(edict_t *self)
+{
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Heilman");
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "121 121 121");
+	self->spawnflags = 64;
+	self->classname = "cast_shorty";
+	self->moral = 5;
+    self->acc = 4;
+	self->health = 650 * currWave_plysCount;
+}
 //FREDZ todo
-//Shipyards
 //Steeltown
 //Trainyard
 //Radio City
@@ -711,11 +806,35 @@ void cast_TF_spawnWave4(edict_t *spawn)
 }
 void cast_TF_spawnWave5(edict_t *spawn)
 {
-	//todo
+	switch (rand() % 9)
+	{
+	case 0:	cast_TF_dog(spawn);break;
+    case 1:	cast_TF_dog(spawn);break;
+	case 2:	cast_TF_rat(spawn);break;
+    case 3:	cast_TF_rat(spawn);break;
+	case 4:	cast_TF_Shipyard_deckmonkeys(spawn);break;
+	case 5:	cast_TF_Shipyard_names(spawn);break;
+	case 6:	cast_TF_Shipyard_names(spawn);break;
+    case 7:	cast_TF_Shipyard_names(spawn);break;
+	case 8:	cast_TF_Shipyard_names(spawn);break;
+	}
 }
 void cast_TF_spawnWave6(edict_t *spawn)
 {
-	//todo
+	switch (rand() % 11)
+	{
+	case 0:	cast_TF_dog(spawn);break;
+    case 1:	cast_TF_dog(spawn);break;
+	case 2:	cast_TF_rat(spawn);break;
+    case 3:	cast_TF_rat(spawn);break;
+	case 4:	cast_TF_Shipyard_goons(spawn);break;
+    case 5:	cast_TF_Shipyard_swabs(spawn);break;
+	case 6:	cast_TF_Shipyard_names(spawn);break;
+	case 7:	cast_TF_Shipyard_names(spawn);break;
+    case 8:	cast_TF_Shipyard_names(spawn);break;
+	case 9:	cast_TF_Shipyard_names(spawn);break;
+    case 10: cast_TF_Shipyard_boss(spawn);break;//FREDZ probably should only spawn ones
+	}
 }
 void cast_TF_spawnWave7(edict_t *spawn)
 {
@@ -771,7 +890,7 @@ void cast_TF_spawnTypes(edict_t *spawn)
 		{
 		case 0: cast_TF_spawnWave1(spawn);	break; //wave 1
 		case 1:	cast_TF_spawnWave2(spawn);	break; //wave 2
-		case 2: cast_TF_spawnWave3(spawn);	break; //wave 3
+		case 2: cast_TF_spawnWave4(spawn);	break; //wave 3
 		case 3: cast_TF_spawnWave5(spawn);	break; //wave 4
 		case 4: cast_TF_spawnWave6(spawn);	break; //wave 5
 		case 5: cast_TF_spawnWave8(spawn);	break; //wave 6
@@ -783,9 +902,9 @@ void cast_TF_spawnTypes(edict_t *spawn)
 	{
 		switch (level.waveNum)
 		{
-		case 0: cast_TF_spawnWave1(spawn);	break; //wave 1
-		case 1: cast_TF_spawnWave3(spawn);	break; //wave 2
-		case 2: cast_TF_spawnWave5(spawn);	break; //wave 3
+		case 0: cast_TF_spawnWave2(spawn);	break; //wave 1
+		case 1: cast_TF_spawnWave4(spawn);	break; //wave 2
+		case 2: cast_TF_spawnWave6(spawn);	break; //wave 3
 		case 3: cast_TF_spawnWave8(spawn);	break; //wave 4
 		case 4: cast_TF_spawnWaveBoss(spawn); break; //wave 5
 		}
@@ -840,9 +959,15 @@ void cast_TF_spawn(int ammount, int type)
 }
 
 //wave total enemy counts
-static int wave_shortGame[5] = { 25, 32, 35, 42, 1 };
-static int wave_medGame[8] = { 25, 28, 32, 25, 35, 40, 42, 1 };
-static int wave_longGame[11] = { 2, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1 };
+//originale: 25, 32, 35, 42, 1
+//Devide by 5 orwise maybe to hard.
+static int wave_shortGame[5] = { 5, 6, 7, 8, 1 };
+//originale: 25, 28, 32, 35, 35, 40, 42, 1
+//Devide by 5 orwise maybe to hard.
+static int wave_medGame[8] = { 5, 6, 7, 7, 7, 8, 8, 1 };
+//originale: 25, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1
+//Devide by 5 orwise maybe to hard.
+static int wave_longGame[11] = { 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 1 };
 
 //wave skill. number of enemy allowed in level at 1 time. max 8 players
 static int wave_skill[5][9] = {
