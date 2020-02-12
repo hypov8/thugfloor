@@ -4,27 +4,6 @@ typedef struct
 {
 	char *name;
 	char *skin;
-} cast_bitchskins_s;
-
-typedef struct
-{
-	char *name;
-	char *skin;
-	int count;
-} cast_runtskins_s;
-
-typedef struct
-{
-	char *name;
-	char *skin;
-	//has count options but not used
-	char *head;
-} cast_thugskins_s;
-
-typedef struct
-{
-	char *name;
-	char *skin;
 	char *classname;
 	int spawnflags;
     int health;
@@ -32,7 +11,7 @@ typedef struct
 //    int acc;
 //    int cal;
     int count;
-    char *head;
+    char head;
 } localteam_skins_s;//Need to be same as edict_s in g_local.h
 
 //local
