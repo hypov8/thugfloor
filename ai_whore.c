@@ -1290,6 +1290,33 @@ void Whorekilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//
 		{
 			attacker->client->resp.score++;
 
+            if (self->spawnflags & WHORE_SHOTGUN)//FREDZ give cash
+                attacker->client->pers.currentcash += 5;
+            else if (self->spawnflags & WHORE_TOMMYGUN)
+                attacker->client->pers.currentcash += 5;
+            else if (self->spawnflags &	WHORE_HMG)
+                attacker->client->pers.currentcash += 10;
+            else if (self->spawnflags & WHORE_BAZOOKA)
+                attacker->client->pers.currentcash += 8;
+            else if (self->spawnflags & WHORE_FLAMEGUN)
+                attacker->client->pers.currentcash += 6;
+            else if (self->spawnflags & WHORE_GRENADE)
+                attacker->client->pers.currentcash += 7;
+            else    //Flashlight?
+                attacker->client->pers.currentcash += 4;
+
+			//FREDZ killstreak
+/*			attacker->client->resp.killstreak++;
+			if (attacker->client->resp.killstreak > attacker->client->resp.maxkillstreak)//fix
+				attacker->client->resp.maxkillstreak = attacker->client->resp.killstreak;
+
+
+			if ((int)teamplay->value == 4)//FREDZ
+			{
+				team_cash[attacker->client->pers.team]++;
+				UPDATESCORE
+			}*/
+
 			if (self->name)
 				gi.bprintf (PRINT_MEDIUM,"%s(Whore) %s %s%s\n", self->name, message, attacker->client->pers.netname, message2);
 			else
@@ -1576,7 +1603,7 @@ void whore_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage
 	self->deadflag = DEAD_DEAD;
 
 	// JOSEPH 7-MAY-99
-	if (!(self->cast_info.aiflags & AI_MELEE))
+/*	if (!(self->cast_info.aiflags & AI_MELEE))//FREDZ thugfloor don't drop weapons
 	{
 		if (self->spawnflags & WHORE_SHOTGUN)
 			SpawnTheWeapon (self, "weapon_shotgun_e");
@@ -1590,7 +1617,7 @@ void whore_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage
 			SpawnTheWeapon (self, "weapon_grenadelauncher_e");
 		else
 			SpawnTheWeapon (self, "weapon_tommygun_e");
-	}
+	}*/
 	// END JOSEPH
 
 	// EP_SpecialEventDeath (self);

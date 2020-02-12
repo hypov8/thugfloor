@@ -79,23 +79,7 @@ void cast_pawn_o_matic_spawn ()
 
 ///////////////////////
 // setup cast skins
-void cast_TF_boss_kingpin(edict_t *self)
-{
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "kingpin");
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "120 120 120");
-	self->spawnflags = 0;//pistol
-	self->classname = "cast_runt";
-	self->health = 1500 * currWave_plysCount;
 
-}
-void cast_TF_boss_blunt(edict_t *self)
-{
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "blunt");
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "080 059 059");
-	self->spawnflags = 18;//hmg
-	self->classname = "cast_whore";
-	self->health = 1500 * currWave_plysCount;//150000 normally
-}
 void cast_TF_dog(edict_t *self)
 {
 	self->classname = "cast_dog";
@@ -470,7 +454,7 @@ void cast_TF_Skidrow_names(edict_t *self)
     self->health = (int)skins[rand() % 13].health;
     self->count = (int)skins[rand() % 13].count;
 }
-void cast_TF_Skidrow_boss1(edict_t *self)
+void cast_TF_Skidrow_boss_lamont(edict_t *self)
 {
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "lamont");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "024 017 010");
@@ -480,7 +464,7 @@ void cast_TF_Skidrow_boss1(edict_t *self)
 //	self->scale = 1.05;
 	self->health = 300 * currWave_plysCount;
 }
-void cast_TF_Skidrow_boss2(edict_t *self)//sr4
+void cast_TF_Skidrow_boss_jesus(edict_t *self)//sr4
 {
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "jesus");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "21 017 010");
@@ -495,8 +479,8 @@ void cast_TF_Skidrow_boss(edict_t *spawn)
 {
 	switch (rand() % 2)
 	{
-	case 0:		cast_TF_Skidrow_boss1(spawn);break;
-	case 1:		cast_TF_Skidrow_boss2(spawn);break;
+	case 0:		cast_TF_Skidrow_boss_lamont(spawn);break;
+	case 1:		cast_TF_Skidrow_boss_jesus(spawn);break;
 	}
 }
 void cast_TF_Poisonville_boob(edict_t *self)//pv_1 boob, all pistol, no names
@@ -654,8 +638,34 @@ void cast_TF_Shipyard_boss(edict_t *self)
 //Steeltown
 //Trainyard
 //Radio City
-//Crystal Palace??
+void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
+{
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "kingpin");
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "120 120 120");
+	self->spawnflags = 0;//pistol
+    self->acc = 5;
+    self->cal = 5;
+//	self->scale = 1.15;
+	self->classname = "cast_runt";
+	self->health = 1500 * currWave_plysCount;
 
+}
+void cast_TF_Crystal_Palace_boss_blunt(edict_t *self)
+{
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "blunt");
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "080 059 059");
+	self->spawnflags = 18;//hmg
+	self->classname = "cast_whore";
+	self->health = 1500 * currWave_plysCount;//150000 normally
+}
+void cast_TF_Crystal_Palace_boss(edict_t *spawn)
+{
+	switch (rand() % 2)
+	{
+	case 0:		cast_TF_Crystal_Palace_boss_kingpin(spawn);break;
+	case 1:		cast_TF_Crystal_Palace_boss_blunt(spawn);break;
+	}
+}
 // end setup cast skins
 ///////////////////////
 
@@ -739,17 +749,18 @@ void cast_TF_setEnemyPlayer(edict_t *spawn)
 // rand spawn types
 void cast_TF_spawnWave1(edict_t *spawn)
 {
-	switch (rand() % 9)
+	switch (rand() % 6)
 	{
 	case 0:	cast_TF_dog(spawn);break;
-	case 1:	cast_TF_rat(spawn);break;
+    case 1:	cast_TF_rat(spawn);break;
     case 2:	cast_TF_rat(spawn);break;
-	case 3:	cast_TF_Skidrow_treehouse(spawn);break;
-	case 4:	cast_TF_Skidrow_sewer_rats(spawn);break;
-	case 5:	cast_TF_Skidrow_names(spawn);break;
-    case 6:	cast_TF_Skidrow_names(spawn);break;
-    case 7:	cast_TF_Skidrow_names(spawn);break;
-    case 8:	cast_TF_Skidrow_names(spawn);break;
+    case 3:	cast_TF_rat(spawn);break;
+	case 4:	cast_TF_Skidrow_treehouse(spawn);break;
+	case 5:	cast_TF_Skidrow_sewer_rats(spawn);break;
+//	case 5:	cast_TF_Skidrow_names(spawn);break;//FREDZ abit hard first round, maybe need fix
+//  case 6:	cast_TF_Skidrow_names(spawn);break;
+//  case 7:	cast_TF_Skidrow_names(spawn);break;
+//  case 8:	cast_TF_Skidrow_names(spawn);break;
 	}
 }
 void cast_TF_spawnWave2(edict_t *spawn)
@@ -766,11 +777,11 @@ void cast_TF_spawnWave2(edict_t *spawn)
     case 7:	cast_TF_Skidrow_street(spawn);break;
     case 8:	cast_TF_Skidrow_hallway(spawn);break;
     case 9:	cast_TF_Skidrow_postbattery(spawn);break;
-	case 10:	cast_TF_Skidrow_names(spawn);break;
-    case 11:	cast_TF_Skidrow_names(spawn);break;
-    case 12:	cast_TF_Skidrow_names(spawn);break;
-    case 13:	cast_TF_Skidrow_names(spawn);break;
-    case 14:    cast_TF_Skidrow_boss(spawn);break;//FREDZ probably should only spawn ones
+	case 10: cast_TF_Skidrow_names(spawn);break;
+    case 11: cast_TF_Skidrow_names(spawn);break;
+    case 12: cast_TF_Skidrow_names(spawn);break;
+    case 13: cast_TF_Skidrow_names(spawn);break;
+    case 14: cast_TF_Skidrow_boss(spawn);break;//FREDZ probably should only spawn ones
 	}
 }
 void cast_TF_spawnWave3(edict_t *spawn)
@@ -854,11 +865,7 @@ void cast_TF_spawnWave10(edict_t *spawn)
 }
 void cast_TF_spawnWaveBoss(edict_t *spawn)
 {
-	switch (rand() % 2)
-	{
-	case 0:		cast_TF_boss_kingpin(spawn);break;
-	case 1:		cast_TF_boss_blunt(spawn);break;
-	}
+	cast_TF_Crystal_Palace_boss(spawn);
 }
 //end rand spawn types
 //////////////////////
@@ -958,24 +965,48 @@ void cast_TF_spawn(int ammount, int type)
 	}
 }
 
+//FREDZ tweak probably devide this to 2 and to up divide by 2? makes sence with the 2.5 before with money?
 //wave total enemy counts
-//originale: 25, 32, 35, 42, 1
-//Devide by 5 orwise maybe to hard.
-static int wave_shortGame[5] = { 5, 6, 7, 8, 1 };
-//originale: 25, 28, 32, 35, 35, 40, 42, 1
-//Devide by 5 orwise maybe to hard.
-static int wave_medGame[8] = { 5, 6, 7, 7, 7, 8, 8, 1 };
-//originale: 25, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1
-//Devide by 5 orwise maybe to hard.
-static int wave_longGame[11] = { 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 1 };
+//originale:
+//static int wave_shortGame[5] = { 25, 32, 35, 42, 1 };
+//Devide by 5:
+//static int wave_shortGame[5] = { 5, 6, 7, 8, 1 };
+//Devide by 2:
+static int wave_shortGame[5] = { 13, 16, 17, 21, 1 };
+
+//originale:
+//static int wave_medGame[8] = { 25, 28, 32, 35, 35, 40, 42, 1 };
+//Devide by 5:
+//static int wave_medGame[8] = { 5, 6, 7, 7, 7, 8, 8, 1 };
+//Devide by 2:
+static int wave_medGame[8] = { 13, 14, 16, 17, 17, 20, 21, 1 };
+
+//originale:
+//static int wave_longGame[11] = { 25, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1 };
+//Devide by 5:
+//static int wave_longGame[11] = { 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 1 };
+//Devide by 2:
+static int wave_longGame[11] = { 2, 14, 16, 17, 17, 17, 17, 20, 21, 21, 1 };//testing 13, 14, 16, 17, 17, 17, 17, 20, 21, 21, 1
 
 //wave skill. number of enemy allowed in level at 1 time. max 8 players
+//originale:
+/*
 static int wave_skill[5][9] = {
-	{ 0, 10, 14, 32, 32, 32, 32, 32, 32}, //easy
-	{ 0, 11, 18, 32, 32, 32, 32, 32, 32}, //med
-	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 }, //hard
-	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 }, //harder
-	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 } //harderest
+	{ 0, 10, 14, 32, 32, 32, 32, 32, 32},   //novice
+	{ 0, 11, 18, 32, 32, 32, 32, 32, 32},   //easy
+	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 },  //medium
+	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 },  //hard
+	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 }   //real
+};*/
+//Devide by 2:
+static int wave_skill[5][9] = {
+//num players
+//0, 1, 2, 3, 4, 5, 6. 7, 8
+	{ 0, 5, 7, 16, 16, 16, 16, 16, 16},     //novice
+	{ 0, 5, 9, 16, 16, 16, 16, 16, 16},     //easy
+	{ 0, 6, 9, 16, 16, 16, 16, 16, 16 },    //medium
+	{ 0, 6, 9, 16, 16, 16, 16, 16, 16 },    //hard
+	{ 0, 6, 9, 16, 16, 16, 16, 16, 16 }     //real
 };
 
 /*
@@ -988,7 +1019,7 @@ this is where we generate the eneny spawn counts
 void cast_TF_setupEnemyCounters(void)
 {
 	edict_t *self;
-	int playerCount = 0;
+	int playerCount = 0;//Maxplayers
 	int i, sk;
 	int firstPlayer = 0;
 

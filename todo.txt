@@ -1,16 +1,11 @@
--cashdrop should be default 10 (got example code in kpzmod)
--bug, enemies drop weapon and it respawn :/
--maxplayers that can play is 6 or 8? (6 is default in kf) after that it only joins spec
--players still can kill each other void T_Damage and void T_DamageMDX  (got example code in kpzmod)
+
+-players still can kill each other void T_Damage and void T_DamageMDX  (fixed but not tested)
+
 -but sounds and maybe talking need to be fixed (not tested, see coop mod)
--don't drop cash of spec in first round
 
+-spawning of enemies need to be tweaked 
 
-
-
-
-
-
+-hud and scoreboard can be done better
 
 
 pawn o guy should have godmodus but there was some fix in coop mod that he doesn't shoot back

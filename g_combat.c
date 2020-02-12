@@ -762,10 +762,11 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	// if enabled you can't hurt teammates (but you can hurt yourself)
 	// knockback still occurs
 //	if (!(dflags & DAMAGE_NO_PROTECTION) && (targ != attacker) && ((deathmatch->value && (teamplay->value || ((int)(dmflags->value) & (DF_MODELTEAMS/*| DF_SKINTEAMS*/))) /*|| coop->value*/)))
-	if (!(dflags & DAMAGE_NO_PROTECTION) && (targ != attacker) && ((deathmatch->value)))//FREDZ need fix
+//	if (!(dflags & DAMAGE_NO_PROTECTION) && (targ != attacker) && ((deathmatch->value)))//FREDZ need fix
+    if (!(dflags & DAMAGE_NO_PROTECTION) && (targ != attacker) && ((deathmatch->value || ((int)(dmflags->value) & (DF_MODELTEAMS/*| DF_SKINTEAMS*/)))))
 	{
 	  //  cprintf (targ, PRINT_HIGH, "1 brace\n");
-  /*      if ((OnSameTeam (targ, attacker)) && (!targ->client->pers.friendly_vulnerable))
+        if ((OnSameTeam (targ, attacker)) && (!targ->client->pers.friendly_vulnerable))
 		{
            // cprintf (targ, PRINT_HIGH, "2 brace\n");
 			if ((int)(dmflags->value) & DF_NO_FRIENDLY_FIRE)
@@ -777,8 +778,8 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 						targ->health+=2;
 					if (enable_killerhealth)
 					{
-//						cprintf (attacker, PRINT_HIGH,"%s had %i health!\n", targ->client->pers.netname, targ->health);
-						gi.centerprintf (attacker, "(%s)%s has %i health!\n",team_names[targ->client->pers.team], targ->client->pers.netname, targ->health);
+						gi.cprintf (attacker, PRINT_HIGH,"%s had %i health!\n", targ->client->pers.netname, targ->health);
+//						gi.centerprintf (attacker, "(%s)%s has %i health!\n",team_names[targ->client->pers.team], targ->client->pers.netname, targ->health);
 					}
 				}
 				else
@@ -790,9 +791,8 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
               //  cprintf (targ, PRINT_HIGH, "4 brace\n");
 				mod |= MOD_FRIENDLY_FIRE;
             }
-		}*/
-        //else
-        if (attacker->client && !targ->deadflag)
+		}
+        else if (attacker->client && !targ->deadflag)
         {
 			hit=1;
           //  cprintf (targ, PRINT_HIGH, "5 brace\n");
@@ -1777,9 +1777,9 @@ void T_DamageMDX (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t d
 	// if enabled you can't hurt teammates (but you can hurt yourself)
 	// knockback still occurs
 //	if (!(dflags & DAMAGE_NO_PROTECTION) && (targ != attacker) && ((deathmatch->value && (teamplay->value || ((int)(dmflags->value) & (DF_MODELTEAMS/*| DF_SKINTEAMS*/))) /*|| coop->value*/)))
-	if (!(dflags & DAMAGE_NO_PROTECTION) && (targ != attacker) && ((deathmatch->value)))//FREDZ need fix
+	if (!(dflags & DAMAGE_NO_PROTECTION) && (targ != attacker) && ((deathmatch->value || ((int)(dmflags->value) & (DF_MODELTEAMS/*| DF_SKINTEAMS*/)))))//FREDZ
 	{
-/*		if ((OnSameTeam (targ, attacker)) && (!targ->client->pers.friendly_vulnerable))
+		if ((OnSameTeam (targ, attacker)) && (!targ->client->pers.friendly_vulnerable))
 		{
 			if ((int)(dmflags->value) & DF_NO_FRIENDLY_FIRE)
 			{
@@ -1788,8 +1788,7 @@ void T_DamageMDX (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t d
 			else
 				mod |= MOD_FRIENDLY_FIRE;
 		}
-		else */
-        if (attacker->client && !targ->deadflag)
+		else if (attacker->client && !targ->deadflag)
 			hit=1;
 	} else if (attacker->client && !targ->deadflag && targ!=attacker)
 		hit=1;

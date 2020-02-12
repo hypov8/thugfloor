@@ -451,6 +451,8 @@ void WaveBuy()  // start buy zone
 	gi.bprintf (PRINT_HIGH,"Buy zone wave %i will end in 60 seconds.\n", level.waveNum);
     G_ClearUp (NULL, FOFS(classname));
 
+    level.buyzone = true;//FREDZ
+
 	gi.WriteByte( svc_stufftext );
 	gi.WriteString( va("play world/cypress%i.wav", 2+(rand()%4)) );
 	gi.multicast (vec3_origin, MULTICAST_ALL);
@@ -462,8 +464,8 @@ void WaveBuy()  // start buy zone
 
 void WaveStart_Countdown()  // start the match
 {
-	edict_t *player;
-	int     i;
+//	edict_t *player;
+//	int     i;
 
 	//free 3 pawnOmatic guys
 	cast_pawn_o_matic_free();
@@ -473,6 +475,8 @@ void WaveStart_Countdown()  // start the match
 	gi.bprintf (PRINT_HIGH,"Wave %i will start in 15 seconds.\n", level.waveNum + 1);
     G_ClearUp (NULL, FOFS(classname));
 
+    level.buyzone = false;
+    /*
 	for_each_player(player, i)
 	{
 		if (player->client->pers.spectator == PLAYING && player->client->pers.holsteredweapon)
@@ -481,7 +485,7 @@ void WaveStart_Countdown()  // start the match
 			ChangeWeapon(player);
 			player->client->pers.holsteredweapon = 0;
 		}
-	}
+	}*/
 
 	gi.WriteByte( svc_stufftext );
 	gi.WriteString( va("play world/cypress%i.wav", 2+(rand()%4)) );

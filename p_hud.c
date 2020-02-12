@@ -1357,38 +1357,38 @@ void G_SetStats (edict_t *ent)
 	// JOSEPH 28-APR-99
 	if (!level.bar_lvl)
 	{
-	if (!ent->client->ammo_index /* || !ent->client->pers.inventory[ent->client->ammo_index] */)
-	{
-		ent->client->ps.stats[STAT_AMMO_ICON] = 0;
-		ent->client->ps.stats[STAT_AMMO] = 0;
-	}
-	else
-	{
-		item = &itemlist[ent->client->ammo_index];
-		ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex (item->icon);
-		ent->client->ps.stats[STAT_AMMO] = ent->client->pers.inventory[ent->client->ammo_index];
-	}
+        if (!ent->client->ammo_index /* || !ent->client->pers.inventory[ent->client->ammo_index] */)
+        {
+            ent->client->ps.stats[STAT_AMMO_ICON] = 0;
+            ent->client->ps.stats[STAT_AMMO] = 0;
+        }
+        else
+        {
+            item = &itemlist[ent->client->ammo_index];
+            ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex (item->icon);
+            ent->client->ps.stats[STAT_AMMO] = ent->client->pers.inventory[ent->client->ammo_index];
+        }
 
-	// RAFAEL 01-11-99
-	// JOSEPH 9-MAR-99
-	if (ent->client->ammo_index)
-	{
-		item = &itemlist[ent->client->ammo_index];
-	}
-	else
-	{
-		item = NULL;
-	}
+        // RAFAEL 01-11-99
+        // JOSEPH 9-MAR-99
+        if (ent->client->ammo_index)
+        {
+            item = &itemlist[ent->client->ammo_index];
+        }
+        else
+        {
+            item = NULL;
+        }
 
-	if ((item) && (item->pickup_name) && (/*(!strcmp(item->pickup_name, "Rockets")) ||*/ ((!strcmp(item->pickup_name, "Gas")))))
-	{
-		ent->client->ps.stats[STAT_CLIP] = -1;
-	}
-	else
-	{
-		// ent->client->ps.stats[STAT_CLIP_ICON] = gi.imageindex (clipname);
-		ent->client->ps.stats[STAT_CLIP] = ent->client->pers.weapon_clip[ent->client->clip_index];
-	}
+        if ((item) && (item->pickup_name) && (/*(!strcmp(item->pickup_name, "Rockets")) ||*/ ((!strcmp(item->pickup_name, "Gas")))))
+        {
+            ent->client->ps.stats[STAT_CLIP] = -1;
+        }
+        else
+        {
+            // ent->client->ps.stats[STAT_CLIP_ICON] = gi.imageindex (clipname);
+            ent->client->ps.stats[STAT_CLIP] = ent->client->pers.weapon_clip[ent->client->clip_index];
+        }
 	}
 	else
 	{

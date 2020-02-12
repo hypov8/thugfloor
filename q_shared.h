@@ -1181,6 +1181,7 @@ typedef enum
 
 // Ridah, 27-may-99, not used
 //#define	DF_QUADFIRE_DROP	65536
+//#define	DF_NO_FLAMETHROWER	65536//FREDZ maybe add
 /*
 ==========================================================
 

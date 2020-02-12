@@ -967,7 +967,11 @@ void Bitchkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//
 		{
 			attacker->client->resp.score++;
 
-			attacker->client->pers.currentcash += 5;//FREDZ need to be altered still more
+			if (!(self->cast_info.aiflags & AI_MELEE))//FREDZ give cash
+                attacker->client->pers.currentcash += 3;
+            else
+                attacker->client->pers.currentcash += 4;
+
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;
@@ -1263,8 +1267,8 @@ void bitch_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage
 
 	self->deadflag = DEAD_DEAD;
 
-	if (!(self->cast_info.aiflags & AI_MELEE))
-		SpawnTheWeapon (self, "weapon_pistol_e");
+//	if (!(self->cast_info.aiflags & AI_MELEE))//FREDZ thugfloor don't drop weapons
+//		SpawnTheWeapon (self, "weapon_pistol_e");
 
 	// EP_SpecialEventDeath (self);
 

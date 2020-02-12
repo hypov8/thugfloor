@@ -186,10 +186,6 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 	vec3_t		tempvec;
 	int			conweap = 0;
 
-	//hypov8 skip shooting. ok?,FREDZ: just weapon disapear?
-	if (level.modeset != WAVE_ACTIVE)
-		return;
-
 	if (self->client)
 		self->client->resp.accshot++;
 	hit=0;
@@ -2465,10 +2461,6 @@ static qboolean fire_concussion (edict_t *self, vec3_t start, vec3_t aimdir, flo
 //	vec3_t		tempvec;
 	int			conweap = 0;
 	qboolean	is_mdx = false;
-
-	//hypov8 skip shooting. ok?
-	if (level.modeset != WAVE_ACTIVE)
-		return false;
 
 	tr = gi.trace (self->s.origin, NULL, NULL, start, self, MASK_SHOT );
 	if (!(tr.fraction < 1.0))

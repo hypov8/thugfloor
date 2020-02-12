@@ -1921,32 +1921,39 @@ char *ClientTeam (edict_t *ent)
 	// if ((int)(dmflags->value) & DF_SKINTEAMS)
 	return ++p;
 }
-/*
+
 qboolean OnSameTeam (edict_t *ent1, edict_t *ent2)
 {
-	char	ent1Team [512];
-	char	ent2Team [512];
+//	char	ent1Team [512];
+//	char	ent2Team [512];
 
-	if (teamplay->value)
+/*	if (teamplay->value)
 	{
 		if (ent1 && ent2 && ent1->client && ent2->client && ent1->client->pers.team && (ent1->client->pers.team == ent2->client->pers.team))
 			return true;
 		else
 			return false;
+	}*/
+
+
+	if (!((int)(dmflags->value) & (DF_MODELTEAMS /*| DF_SKINTEAMS*/)))
+		return false;
+    else//FREDZ remove friendly fire, maybe use DF_NO_FRIENDLY_FIRE
+	{
+		if (ent1 && ent2 && ent1->client && ent2->client)
+			return true;
 	}
 
-	if (!((int)(dmflags->value) & (DF_MODELTEAMS | DF_SKINTEAMS)))
-		return false;
 
-	strcpy (ent1Team, ClientTeam (ent1));
-	strcpy (ent2Team, ClientTeam (ent2));
+//	strcpy (ent1Team, ClientTeam (ent1));
+//	strcpy (ent2Team, ClientTeam (ent2));
 
-	if (strcmp(ent1Team, ent2Team) == 0)
-		return true;
+//	if (strcmp(ent1Team, ent2Team) == 0)
+//		return true;
 	return false;
 
 }
-*/
+
 
 void SelectNextItem (edict_t *ent, int itflags)
 {
@@ -4083,9 +4090,123 @@ skipnext:*/
 //===================================================================================
 // Papa 10.6.99 - added the ability to drop your current cash - still buggy
 //===================================================================================
+void Cmd_DropCash_f (edict_t *ent)
+{
+    edict_t		*cash;
+	char		*s;
 
+	if (ent->solid == SOLID_NOT)
+		return;
 
-void Cmd_DropCash_f (edict_t *self)//FREDZ need fix should normaly drop only 10 expect if you do drop cash all
+/*	if (ent->client->last_wave > (level.time - 3) && (ent->client->last_wave <= level.time))
+		return;
+	ent->client->last_wave = level.time;*/
+
+	s = gi.args();
+
+		if (gi.argc() == 3)//FREDZ
+		{
+			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) && (ent->client->pers.bagcash == 0))//FREDZ
+				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_nodollar.wav"), 1, ATTN_NORM, 0);
+
+			if (ent->client->pers.currentcash)
+			{
+				cash = SpawnTheWeapon( ent, "item_cashroll" );
+				cash->currentcash += atoi(gi.argv(2));
+
+				if ((ent->gender == GENDER_MALE)
+					&& (ent->client->pers.currentcash >= cash->currentcash) && (cash->currentcash >= 2) && (cash->currentcash != 50))//FREDZ
+				{
+					if (cash->currentcash < 150)
+						gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
+					else
+						gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
+				}
+				if ((ent->gender == GENDER_MALE) && (cash->currentcash == 1))
+					gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_heresdollar.wav"), 1, ATTN_NORM, 0);
+
+				if ((ent->gender == GENDER_MALE) && (cash->currentcash == 50) && (ent->client->pers.currentcash >= 50))
+					gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/yes50.wav"), 1, ATTN_NORM, 0);
+
+				if (ent->client->pers.currentcash < cash->currentcash)
+				{
+					if (ent->gender == GENDER_MALE)
+					{
+//						gi.cprintf (ent, PRINT_HIGH, "%i dollars\n", ent->client->pers.currentcash - cash->currentcash);
+
+						if ((ent->client->pers.currentcash - cash->currentcash) > -50)
+							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/nomoney1.wav"), 1, ATTN_NORM, 0);
+						else
+							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/nomoney2.wav"), 1, ATTN_NORM, 0);
+					}
+					cash->currentcash = ent->client->pers.currentcash;
+					ent->client->pers.currentcash = 0;
+					return;
+				}
+				ent->client->pers.currentcash -= cash->currentcash;
+			}
+			return;
+		}
+		else//FREDZ old code with a bit updates
+		{
+			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) && (ent->client->pers.bagcash == 0))//FREDZ
+				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_nodollar.wav"), 1, ATTN_NORM, 0);
+
+			if (ent->client->pers.currentcash)
+			{
+				if (ent->gender == GENDER_MALE)//FREDZ
+				{
+					if ((ent->client->pers.currentcash >= 2) && (ent->client->pers.currentcash != 50))
+					{
+						if (ent->client->pers.currentcash < 150)
+							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
+						else
+							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
+					}
+
+					if (ent->client->pers.currentcash == 1)
+						gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_heresdollar.wav"), 1, ATTN_NORM, 0);
+
+					if (ent->client->pers.currentcash == 50)
+						gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/yes50.wav"), 1, ATTN_NORM, 0);
+				}
+
+				if (ent->client->pers.currentcash >= 10)//FREDZ new check if we can drop 10
+                {
+                    cash = SpawnTheWeapon( ent, "item_cashroll" );
+                    cash->currentcash = 10;
+                    ent->client->pers.currentcash -= 10;
+                }
+                else
+                {
+                    cash = SpawnTheWeapon( ent, "item_cashroll" );
+                    cash->currentcash = ent->client->pers.currentcash;
+                    ent->client->pers.currentcash = 0;
+                }
+
+			}
+
+/*//FREDZ bagman cash
+			//FREDZ to drop full cash
+			if (ent->client->pers.fakeThief) //FREDZ fix
+				return;
+			if (ent->client->pers.bagcash)
+			{
+
+				if (ent->client->pers.bagcash > 100)
+					cash = SpawnTheWeapon( ent, "item_cashbaglarge" );
+				else
+					cash = SpawnTheWeapon( ent, "item_cashbagsmall" );
+
+				cash->currentcash = -ent->client->pers.bagcash;
+				ent->client->pers.bagcash = 0;
+			}*/
+			return;//FREDZ
+		}
+}
+#if 0
+//Old
+void Cmd_DropCash_f (edict_t *self)
 {
 	edict_t		*cash;
 
@@ -4108,7 +4229,7 @@ void Cmd_DropCash_f (edict_t *self)//FREDZ need fix should normaly drop only 10 
 			VectorScale( cash->velocity, 100, cash->velocity );
 			cash->velocity[2] = 300;*/
 		}
-#if 0
+
 		if (self->client->pers.bagcash)
 		{
 			if (self->client->pers.bagcash > 100)
@@ -4129,9 +4250,10 @@ void Cmd_DropCash_f (edict_t *self)//FREDZ need fix should normaly drop only 10 
 			VectorScale( cash->velocity, 100, cash->velocity );
 			cash->velocity[2] = 300;*/
 		}
-#endif
+
 	}
 }
+#endif
 
 //===================================================================================
 // Papa 10.6.99

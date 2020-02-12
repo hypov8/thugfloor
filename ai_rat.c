@@ -271,7 +271,7 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 		{
 			attacker->client->resp.score++;
 
-			attacker->client->pers.currentcash += 1;
+			attacker->client->pers.currentcash += 1;//FREDZ give cash
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;
@@ -537,6 +537,50 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 	else
 		gi.bprintf (PRINT_MEDIUM,"Rat died.\n");
 }//FREDZ end
+void Rat_GibEntity( edict_t *self, edict_t *inflictor, float damage )//FREDZ less gibs
+{
+	vec3_t	dir;
+
+	// turn off flames
+	if (self->onfiretime)
+		self->onfiretime = 0;
+
+	if (inflictor->client || VectorCompare( inflictor->velocity, vec3_origin) )
+		VectorSubtract( self->s.origin, inflictor->s.origin, dir );
+	else
+		VectorCopy( inflictor->velocity, dir );
+
+	VectorNormalize( dir );
+
+	//FREDZ copied from rat_die and altered
+	gi.WriteByte (svc_temp_entity);
+	gi.WriteByte (TE_GIBS);
+	gi.WritePosition (self->s.origin);
+	gi.WriteDir (dir);
+	gi.WriteByte ( 1 );	// number of gibs
+	gi.WriteByte ( 0 );	// scale of direction to add to velocity
+	gi.WriteByte ( 0 );	// random offset scale
+	gi.WriteByte ( 10 );	// random velocity scale
+	gi.multicast (self->s.origin, MULTICAST_PVS);
+
+	gi.WriteByte (svc_temp_entity);
+	gi.WriteByte (TE_SPLASH);
+	gi.WriteByte (50);
+	gi.WritePosition (self->s.origin);
+	gi.WriteDir (self->movedir);
+	gi.WriteByte (6);
+	gi.multicast (self->s.origin, MULTICAST_PVS);
+
+
+	self->takedamage = DAMAGE_NO;
+
+	//hypov8 free. am i missing something. when will they be freed?
+	if (deathmatch->value && !Q_strncasecmp(self->classname, "cast_", 5))
+	{
+		self->think = G_FreeEdict;
+		self->nextthink = level.time + FRAMETIME*10;
+	}
+}
 void rat_die_gib (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point, int mdx_part, int mdx_subobject)
 {
 	// regular death
@@ -551,7 +595,7 @@ void rat_die_gib (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 	if (!cl_parental_lock->value) //hypov8 gib rats
 	{	// gib
 		self->deadflag = DEAD_DEAD;
-		GibEntity( self, inflictor, damage );
+		Rat_GibEntity( self, inflictor, damage );
 		self->s.model_parts[PART_GUN].invisible_objects = (1<<0 | 1<<1);
 		return;
 	}

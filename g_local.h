@@ -119,7 +119,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.12"
+#define	GAMEVERSION	"Thug Floor v0.13"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -573,6 +573,8 @@ typedef struct
     int		waveReady;
 	int     waveNum;
 	int		waveEnemyCount;		//totaly enemys to kill in wave
+
+	qboolean	buyzone; //FREDZ disable weapons in buyzone
 } level_locals_t;
 
 
@@ -1060,7 +1062,7 @@ qboolean SurfaceSpriteEffectRipple(	byte surf_sfx, byte width, byte height,
 //
 // g_combat.c
 //
-//qboolean OnSameTeam (edict_t *ent1, edict_t *ent2);//FREDZ maybe use again
+qboolean OnSameTeam (edict_t *ent1, edict_t *ent2);
 qboolean CanDamage (edict_t *targ, edict_t *inflictor);
 void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir, vec3_t point, vec3_t normal, int damage, int knockback, int dflags, int mod);
 void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_t *ignore, float radius, int mod);

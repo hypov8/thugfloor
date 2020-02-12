@@ -708,6 +708,13 @@ void Think_Weapon (edict_t *ent)
 		ChangeWeapon (ent);
 	}
 
+    if (level.buyzone)//FREDZ
+    {
+        ChangeWeapon (ent);//makes weapon disapear need fix.
+        return;
+    }
+
+
 	// JOSEPH 10-FEB-99
 	if (level.bar_lvl)
 		return;

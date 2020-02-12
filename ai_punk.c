@@ -1304,7 +1304,23 @@ void Punkkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//F
 		{
 			attacker->client->resp.score++;
 
-			attacker->client->pers.currentcash += 5;//FREDZ need to be altered still more
+            if (self->spawnflags & PUNK_SHOTGUN)//FREDZ give cash
+                attacker->client->pers.currentcash += 5;
+            else if (self->spawnflags & PUNK_TOMMYGUN)
+                attacker->client->pers.currentcash += 5;
+            else if (self->spawnflags &	PUNK_HMG)
+                attacker->client->pers.currentcash += 10;
+            else if (self->spawnflags & PUNK_BAZOOKA)
+                attacker->client->pers.currentcash += 8;
+            else if (self->spawnflags & PUNK_FLAMEGUN)
+                attacker->client->pers.currentcash += 6;
+            else if (self->spawnflags & PUNK_GRENADE)
+                attacker->client->pers.currentcash += 7;
+            else    //Flashlight?
+                attacker->client->pers.currentcash += 4;
+
+
+
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;
@@ -1604,7 +1620,7 @@ void punk_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage,
 	self->deadflag = DEAD_DEAD;
 
 	// JOSEPH 7-MAY-99
-	if (!(self->cast_info.aiflags & AI_MELEE))
+/*	if (!(self->cast_info.aiflags & AI_MELEE))//FREDZ thugfloor don't drop weapons
 	{
 		if (self->spawnflags & PUNK_SHOTGUN)
 			SpawnTheWeapon (self, "weapon_shotgun_e");
@@ -1618,7 +1634,7 @@ void punk_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage,
 			SpawnTheWeapon (self, "weapon_grenadelauncher_e");
 		else
 			SpawnTheWeapon (self, "weapon_tommygun_e");
-	}
+	}*/
 	// END JOSEPH
 
 	// EP_SpecialEventDeath (self);

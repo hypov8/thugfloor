@@ -260,97 +260,97 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 		}
 		if (attacker == self)
 		{
-      switch (mod)
-			{
-			case MOD_HELD_GRENADE:
-				message = "tried to put the pin back in";
-				break;
-			case MOD_HG_SPLASH:
-			case MOD_G_SPLASH:
-				if (IsNeutral(self))
-					message = "tripped on its own grenade";
-				else if (IsFemale(self))
-					message = "tripped on her own grenade";
-				else
-					message = "tripped on his own grenade";
-				break;
-			case MOD_R_SPLASH:
-			case MOD_EXPLOSIVE:
-			case MOD_BARREL:
-				if (IsNeutral(self))
-					message = "blew itself up";
-				else if (IsFemale(self))
-					message = "blew herself up";
-				else
-					message = "blew himself up";
-				break;
-			//FREDZ q2 stuff not used
-/*			case MOD_BFG_BLAST:
-				message = "should have used a smaller gun";
-				break;*/
-			// RAFAEL 03-MAY-98
-			case MOD_TRAP:
-			 	message = "sucked into his own trap";
-				break;
-			case MOD_FLAMETHROWER:
-				if (IsNeutral(self))
-					message = "roasted itself";
-				else if (IsFemale(self))
-					message = "roasted herself";
-				else
-					message = "roasted himself";
-				break;
-			case MOD_TRIGGER_HURT://FREDZ extra check
-				message = "was in the wrong place";
-				if(self->client->pers.fakeThief>0)
-/*				{
-					self->client->resp.acchit-=self->client->pers.fakeThief;
-					if(self->client->pers.team==1)
-						team_cash[2]+=self->client->pers.fakeThief;
-					else if(self->client->pers.team==2)
-						team_cash[1]+=self->client->pers.fakeThief;
-				}*/
-				break;
-			case MOD_HURT_ELECTRIC://FREDZ
-				if (IsNeutral(self))
-					message = "electricuted itself";
-				else if (IsFemale(self))
-					message = "electricuted herself";
-				else
-					message = "electricuted himself";
-/*				if(self->client->pers.fakeThief>0)
-				{
-					self->client->resp.acchit-=self->client->pers.fakeThief;
-					if(self->client->pers.team==1)
-						team_cash[2]+=self->client->pers.fakeThief;
-					else if(self->client->pers.team==2)
-						team_cash[1]+=self->client->pers.fakeThief;
-				}*/
-				break;
-			case MOD_HURT_FLAMES://FREDZ fix bagman maps now
-				if (IsNeutral(self))
-					message = "roasted itself";
-				else if (IsFemale(self))
-					message = "roasted herself";
-				else
-					message = "roasted himself";
-/*				if(self->client->pers.fakeThief>0)
-				{
-					self->client->resp.acchit-=self->client->pers.fakeThief;
-					if(self->client->pers.team==1)
-						team_cash[2]+=self->client->pers.fakeThief;
-					else if(self->client->pers.team==2)
-						team_cash[1]+=self->client->pers.fakeThief;
-				}*/
-				break;
-			default:
-				if (IsNeutral(self))
-					message = "killed itself";
-				else if (IsFemale(self))
-					message = "killed herself";
-				else
-					message = "killed himself";
-				break;
+          switch (mod)
+            {
+                case MOD_HELD_GRENADE:
+                    message = "tried to put the pin back in";
+                    break;
+                case MOD_HG_SPLASH:
+                case MOD_G_SPLASH:
+                    if (IsNeutral(self))
+                        message = "tripped on its own grenade";
+                    else if (IsFemale(self))
+                        message = "tripped on her own grenade";
+                    else
+                        message = "tripped on his own grenade";
+                    break;
+                case MOD_R_SPLASH:
+                case MOD_EXPLOSIVE:
+                case MOD_BARREL:
+                    if (IsNeutral(self))
+                        message = "blew itself up";
+                    else if (IsFemale(self))
+                        message = "blew herself up";
+                    else
+                        message = "blew himself up";
+                    break;
+                //FREDZ q2 stuff not used
+    /*			case MOD_BFG_BLAST:
+                    message = "should have used a smaller gun";
+                    break;*/
+                // RAFAEL 03-MAY-98
+                case MOD_TRAP:
+                    message = "sucked into his own trap";
+                    break;
+                case MOD_FLAMETHROWER:
+                    if (IsNeutral(self))
+                        message = "roasted itself";
+                    else if (IsFemale(self))
+                        message = "roasted herself";
+                    else
+                        message = "roasted himself";
+                    break;
+                case MOD_TRIGGER_HURT://FREDZ extra check
+                    message = "was in the wrong place";
+                    if(self->client->pers.fakeThief>0)
+    /*				{
+                        self->client->resp.acchit-=self->client->pers.fakeThief;
+                        if(self->client->pers.team==1)
+                            team_cash[2]+=self->client->pers.fakeThief;
+                        else if(self->client->pers.team==2)
+                            team_cash[1]+=self->client->pers.fakeThief;
+                    }*/
+                    break;
+                case MOD_HURT_ELECTRIC://FREDZ
+                    if (IsNeutral(self))
+                        message = "electricuted itself";
+                    else if (IsFemale(self))
+                        message = "electricuted herself";
+                    else
+                        message = "electricuted himself";
+    /*				if(self->client->pers.fakeThief>0)
+                    {
+                        self->client->resp.acchit-=self->client->pers.fakeThief;
+                        if(self->client->pers.team==1)
+                            team_cash[2]+=self->client->pers.fakeThief;
+                        else if(self->client->pers.team==2)
+                            team_cash[1]+=self->client->pers.fakeThief;
+                    }*/
+                    break;
+                case MOD_HURT_FLAMES://FREDZ
+                    if (IsNeutral(self))
+                        message = "roasted itself";
+                    else if (IsFemale(self))
+                        message = "roasted herself";
+                    else
+                        message = "roasted himself";
+    /*				if(self->client->pers.fakeThief>0)
+                    {
+                        self->client->resp.acchit-=self->client->pers.fakeThief;
+                        if(self->client->pers.team==1)
+                            team_cash[2]+=self->client->pers.fakeThief;
+                        else if(self->client->pers.team==2)
+                            team_cash[1]+=self->client->pers.fakeThief;
+                    }*/
+                    break;
+                default:
+                    if (IsNeutral(self))
+                        message = "killed itself";
+                    else if (IsFemale(self))
+                        message = "killed herself";
+                    else
+                        message = "killed himself";
+                    break;
 			}
 		}
 		if (message)
@@ -359,6 +359,18 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 			if ((deathmatch->value) && (mod != MOD_RESTART))
 			{
 				self->client->resp.score--;
+
+                if(enable_killerhealth)
+                {
+                    if ((self->client->pers.netname) && ((mod == MOD_DOGBITE) || (mod == MOD_RATBITE) || (mod == MOD_FISHBITE)))//It player?
+                    {
+                        if (attacker->name)//FREDZ
+                            gi.cprintf (self, PRINT_HIGH,"%s(%s) had %i health!\n", attacker->name, attacker->classname, attacker->health);
+                        else
+                            gi.cprintf (self, PRINT_HIGH,"%s had %i health!\n", attacker->classname, attacker->health);
+                    }
+
+                }
 
 				//FREDZ killstreak
 				// Because we killed ourselves we want to end our kill streak so
@@ -739,7 +751,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
             {
                 if (self->client->pers.netname)//It player?
                 {
-                    if (attacker->name)//FREDZ todo need fix for dog and rat
+                    if (attacker->name)//FREDZ
                         gi.cprintf (self, PRINT_HIGH,"%s(%s) had %i health!\n", attacker->name, attacker->classname, attacker->health);
                     else
                         gi.cprintf (self, PRINT_HIGH,"%s had %i health!\n", attacker->classname, attacker->health);
@@ -3322,7 +3334,7 @@ void ClientDisconnect (edict_t *ent)
 	if (ent->inuse)
 	{
 		// MH: drop cash before leaving
-		if (ent->solid != SOLID_NOT)
+		if ((ent->solid != SOLID_NOT) && (level.waveNum != 1))//FREDZ some people joint accidently first round.
 			DropCash(ent);
 
 		// MH; cancel their vote

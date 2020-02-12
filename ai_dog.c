@@ -377,7 +377,7 @@ void Dogkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 		{
 			attacker->client->resp.score++;
 
-			attacker->client->pers.currentcash += 3;
+			attacker->client->pers.currentcash += 3;//FREDZ give cash
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;
