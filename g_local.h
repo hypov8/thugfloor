@@ -573,7 +573,8 @@ typedef struct
     int		waveReady;
 	int     waveNum;
 	int		waveEnemyCount;		//totaly enemys to kill in wave
-
+	int		dmSpawnPointCount; //get dm spawns. guid to level size
+	int		spSpawnPointCount; //get sp spawns. atleast 1 required.
 	qboolean	buyzone; //FREDZ disable weapons in buyzone
 } level_locals_t;
 
@@ -1354,6 +1355,43 @@ void SP_cast_pawn_o_matic (edict_t *self);
 //
 // Papa 10.6.99
 
+//hypov8 used to give cash out to cast types. 
+//use later for other events types
+typedef enum
+{
+	BOT_BITCH_ME,	/*bitch melee*/
+	BOT_BITCH,		/*bitch*/
+	BOT_BUM,		/*bum sit*/
+	BOT_DOG,		/*dog*/
+	BOT_PUNK_SG,	/*punk SG*/
+	BOT_PUNK_TG,	/*punk TG*/
+	BOT_PUNK_HMG,	/*punk HMG*/
+	BOT_PUNK_RL,	/*punk RL*/
+	BOT_PUNK_FL,	/*punk FL*/
+	BOT_PUNK_GL,	/*punk GL*/
+	BOT_PUNK_ME,	/*punk melee*/
+	BOT_RAT,		/*rat*/
+	BOT_RUNT_ME,	/*runt melee*/
+	BOT_RUNT,		/*runt*/
+	BOT_SHORTY_SG,	/*shorty SG*/
+	BOT_SHORTY_TG,	/*shorty TG*/
+	BOT_SHORTY_HMG,	/*shorty HMG*/
+	BOT_SHORTY_RL,	/*shorty RL*/
+	BOT_SHORTY_FL,	/*shorty FL*/
+	BOT_SHORTY_GL,	/*shorty GL*/
+	BOT_SHORTY_ME,	/*shorty melee*/
+	BOT_THUG_ME,	/*thug melee*/
+	BOT_THUG,		/*thug*/
+	BOT_THUG_SIT,	/*thug sit*/
+	BOT_WHORE_SG,	/*whore SG*/
+	BOT_WHORE_TG,	/*whore TG*/
+	BOT_WHORE_HMG,	/*whore HMG*/
+	BOT_WHORE_RL,	/*whore RL*/
+	BOT_WHORE_FL,	/*whore FL*/
+	BOT_WHORE_GL,	/*whore GL*/
+	BOT_WHORE_ME,	/*whore melee*/
+} ;
+
 
 void SetupMapVote ();
 void CheckStartPub();
@@ -1366,6 +1404,7 @@ void CheckEndGame();//FREDZ
 void CheckEndWave();
 int  CheckEndWave_GameType();
 int  waveGiveCash(int type);
+int  giveCashOnKill(int type);
 void ResetServer();
 void WaveBuy();//FREDZ
 void WaveStart();//hypov8

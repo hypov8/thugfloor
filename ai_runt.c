@@ -1057,10 +1057,10 @@ void Runtkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//F
 		{
 			attacker->client->resp.score++;
 
- 			if (!(self->cast_info.aiflags & AI_MELEE))//FREDZ give cash
-                attacker->client->pers.currentcash += 3;
+ 			if ((self->cast_info.aiflags & AI_MELEE))//FREDZ give cash
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_RUNT_ME);
             else
-                attacker->client->pers.currentcash += 4;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_RUNT);
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

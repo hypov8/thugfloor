@@ -342,6 +342,47 @@ void MatchEnd () // end of the match
 }
 */
 
+//give cash to killer. moved here for easy update
+int giveCashOnKill(int type)
+{
+	int cashOut = 0;
+	switch (type) 
+	{ 
+	case BOT_BITCH_ME:		cashOut = 3; break;		/*bitch melee*/
+	case BOT_BITCH:			cashOut = 4; break;		/*bitch*/
+	case BOT_BUM:			cashOut = 1; break;		/*bum sit*/
+	case BOT_DOG:			cashOut = 3; break;		/*dog*/
+	case BOT_PUNK_SG:		cashOut = 5; break;		/*punk SG*/
+	case BOT_PUNK_TG:		cashOut = 5; break;		/*punk TG*/
+	case BOT_PUNK_HMG:		cashOut = 10; break;	/*punk HMG*/
+	case BOT_PUNK_RL:		cashOut = 8; break;		/*punk RL*/
+	case BOT_PUNK_FL:		cashOut = 6; break;		/*punk FL*/
+	case BOT_PUNK_GL:		cashOut = 7; break;		/*punk GL*/
+	case BOT_PUNK_ME:		cashOut = 4; break;		/*punk melee*/
+	case BOT_RAT:			cashOut = 1; break;		/*rat*/
+	case BOT_RUNT_ME:		cashOut = 3; break;		/*runt melee*/
+	case BOT_RUNT:			cashOut = 4; break;		/*runt*/
+	case BOT_SHORTY_SG:		cashOut = 5; break;		/*shorty SG*/
+	case BOT_SHORTY_TG:		cashOut = 5; break;		/*shorty TG*/
+	case BOT_SHORTY_HMG:	cashOut = 10; break;	/*shorty HMG*/
+	case BOT_SHORTY_RL:		cashOut = 8; break;		/*shorty RL*/
+	case BOT_SHORTY_FL:		cashOut = 6; break;		/*shorty FL*/
+	case BOT_SHORTY_GL:		cashOut = 7; break;		/*shorty GL*/
+	case BOT_SHORTY_ME:		cashOut = 4; break;		/*shorty melee*/
+	case BOT_THUG_ME:		cashOut = 3; break;		/*thug melee*/
+	case BOT_THUG:			cashOut = 4; break;		/*thug*/
+	case BOT_THUG_SIT:		cashOut = 2; break;		/*thug sit*/
+	case BOT_WHORE_SG:		cashOut = 5; break;		/*whore SG*/
+	case BOT_WHORE_TG:		cashOut = 5; break;		/*whore TG*/
+	case BOT_WHORE_HMG:		cashOut = 10; break;	/*whore HMG*/
+	case BOT_WHORE_RL:		cashOut = 8; break;		/*whore RL*/
+	case BOT_WHORE_FL:		cashOut = 6; break;		/*whore FL*/
+	case BOT_WHORE_GL:		cashOut = 7; break;		/*whore GL*/
+	case BOT_WHORE_ME:		cashOut = 4; break;		/*whore melee*/
+	} 
+	return cashOut;
+}
+
 /*
 ================
 waveGiveCash
@@ -592,6 +633,18 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 		//	gi.cvar_forceset("maxwaves", "11");
 
 		level.modeset = WAVE_SPAWN_PLYR; //spawn players straight away
+
+		//make sure we have enough spawns
+		if (!level.dmSpawnPointCount)
+		{
+			gi.bprintf(PRINT_HIGH, "ERROR: No deathmatch spawn points in map.\n");
+			GameEND();
+		}
+		if (!level.spSpawnPointCount)
+		{
+			gi.bprintf(PRINT_HIGH, "ERROR: No single player spawn points in map.\n");
+			GameEND();
+		}
 
 		return;
 	}

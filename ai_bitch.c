@@ -967,10 +967,10 @@ void Bitchkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//
 		{
 			attacker->client->resp.score++;
 
-			if (!(self->cast_info.aiflags & AI_MELEE))//FREDZ give cash
-                attacker->client->pers.currentcash += 3;
+			if ((self->cast_info.aiflags & AI_MELEE))//FREDZ give cash
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_BITCH_ME);
             else
-                attacker->client->pers.currentcash += 4;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_BITCH);
 
 
 			//FREDZ killstreak

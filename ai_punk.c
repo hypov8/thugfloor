@@ -1305,19 +1305,19 @@ void Punkkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//F
 			attacker->client->resp.score++;
 
             if (self->spawnflags & PUNK_SHOTGUN)//FREDZ give cash
-                attacker->client->pers.currentcash += 5;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_SG);
             else if (self->spawnflags & PUNK_TOMMYGUN)
-                attacker->client->pers.currentcash += 5;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_TG);
             else if (self->spawnflags &	PUNK_HMG)
-                attacker->client->pers.currentcash += 10;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_HMG);
             else if (self->spawnflags & PUNK_BAZOOKA)
-                attacker->client->pers.currentcash += 8;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_RL);
             else if (self->spawnflags & PUNK_FLAMEGUN)
-                attacker->client->pers.currentcash += 6;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_FL);
             else if (self->spawnflags & PUNK_GRENADE)
-                attacker->client->pers.currentcash += 7;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_GL);
             else    //Flashlight?
-                attacker->client->pers.currentcash += 4;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_ME);
 
 
 

@@ -1312,19 +1312,19 @@ void Shortykilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)/
 			attacker->client->resp.score++;
 
             if (self->spawnflags & SHORTY_SHOTGUN)//FREDZ give cash
-                attacker->client->pers.currentcash += 5;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_SHORTY_SG);
             else if (self->spawnflags & SHORTY_TOMMYGUN)
-                attacker->client->pers.currentcash += 5;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_SHORTY_TG);
             else if (self->spawnflags &	SHORTY_HMG)
-                attacker->client->pers.currentcash += 10;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_SHORTY_HMG);
             else if (self->spawnflags & SHORTY_BAZOOKA)
-                attacker->client->pers.currentcash += 8;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_SHORTY_RL);
             else if (self->spawnflags & SHORTY_FLAMEGUN)
-                attacker->client->pers.currentcash += 6;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_SHORTY_FL);
             else if (self->spawnflags & SHORTY_GRENADE)
-                attacker->client->pers.currentcash += 7;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_SHORTY_GL);
             else    //Flashlight?
-                attacker->client->pers.currentcash += 4;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_SHORTY_ME);
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

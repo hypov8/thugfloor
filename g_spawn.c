@@ -764,7 +764,11 @@ void ED_CallSpawn (edict_t *ent)
 		return;
 	}
 
-
+	//get level spawn counts
+	if (!Q_strcasecmp(ent->classname, "info_player_deathmatch"))
+		level.dmSpawnPointCount += 1;
+	else if (!Q_strcasecmp(ent->classname, "info_player_start"))
+		level.spSpawnPointCount += 1;
 
 
   	if (!strcmp( ent->classname, "hmg_mod_cooling")  || !strcmp( ent->classname, "hmg_mod_colling" ))//FREDZ temp fix?

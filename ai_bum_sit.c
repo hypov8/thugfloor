@@ -221,7 +221,7 @@ void BumSitkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)/
 		{
 			attacker->client->resp.score++;
 
-			attacker->client->pers.currentcash += 1;//FREDZ give cash
+			attacker->client->pers.currentcash += giveCashOnKill(BOT_BUM);//FREDZ give cash
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

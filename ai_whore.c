@@ -1291,19 +1291,19 @@ void Whorekilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//
 			attacker->client->resp.score++;
 
             if (self->spawnflags & WHORE_SHOTGUN)//FREDZ give cash
-                attacker->client->pers.currentcash += 5;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_SG);
             else if (self->spawnflags & WHORE_TOMMYGUN)
-                attacker->client->pers.currentcash += 5;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_TG);
             else if (self->spawnflags &	WHORE_HMG)
-                attacker->client->pers.currentcash += 10;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_HMG);
             else if (self->spawnflags & WHORE_BAZOOKA)
-                attacker->client->pers.currentcash += 8;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_RL);
             else if (self->spawnflags & WHORE_FLAMEGUN)
-                attacker->client->pers.currentcash += 6;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_FL);
             else if (self->spawnflags & WHORE_GRENADE)
-                attacker->client->pers.currentcash += 7;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_GL);
             else    //Flashlight?
-                attacker->client->pers.currentcash += 4;
+				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_ME);
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

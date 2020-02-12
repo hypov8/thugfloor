@@ -1948,7 +1948,8 @@ void PutClientInServer (edict_t *ent)
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
 		ent->client->pers.weapon = NULL;
-//		ent->client->pers.spectator = SPECTATING; // MH: disable to not make everyone specs at start of map
+		//if (level.maxplayers > 8)
+		//	ent->client->pers.spectator = SPECTATING;
 	}
 	else
 	{

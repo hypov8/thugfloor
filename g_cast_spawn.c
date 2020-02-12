@@ -878,7 +878,7 @@ void cast_TF_spawn(int ammount, int type)
 			spawn->cast_group = 22; //hypov8 does this work?
 
 		if (!spawn->health)
-			spawn->health = 100;
+			spawn->health = 100; //todo multiplyer?
 
 		//set what player to attack
 		cast_TF_setEnemyPlayer(spawn);
@@ -909,7 +909,7 @@ static int wave_medGame[8] = { 13, 14, 16, 17, 17, 20, 21, 1 };
 //Devide by 5:
 //static int wave_longGame[11] = { 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 1 };
 //Devide by 2:
-static int wave_longGame[11] = { 2, 14, 16, 17, 17, 17, 17, 20, 21, 21, 1 };//testing 13, 14, 16, 17, 17, 17, 17, 20, 21, 21, 1
+static int wave_longGame[11] = { 13, 14, 16, 17, 17, 17, 17, 20, 21, 21, 1 };
 
 //wave skill. number of enemy allowed in level at 1 time. max 8 players
 //originale:
@@ -970,6 +970,13 @@ void cast_TF_setupEnemyCounters(void)
 	}
 	currWave_plysCount = playerCount;
 	currWave_castMax = wave_skill[sk][playerCount]; //skill based enemy limits
+
+	//make sure we have enough spawns(level size)
+	if (level.dmSpawnPointCount < currWave_castMax)
+		currWave_castMax = (int)( (float)level.dmSpawnPointCount * .75);
+	if (currWave_castMax < 4)
+		currWave_castMax = 4; //force 4 as min
+
 
 	//get wave count
 	if ((int)maxwaves->value == 2)

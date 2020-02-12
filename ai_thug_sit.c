@@ -1009,7 +1009,7 @@ void ThugSitkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)
 		{
 			attacker->client->resp.score++;
 
-			attacker->client->pers.currentcash += 2;//FREDZ give cash
+			attacker->client->pers.currentcash += giveCashOnKill(BOT_THUG_SIT);//FREDZ give cash
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

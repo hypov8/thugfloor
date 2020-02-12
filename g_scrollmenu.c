@@ -479,24 +479,28 @@ void ScrollMenuRight(edict_t *ent)
 
 void ScrollMenuPrev(edict_t *ent)
 {
-	if (!ent->current_menu_side)
+	if (!ent->current_menu_side) //using left menu
 	{
-		if (menu_header.name[ent->current_menu_left - 1])
+		ent->current_menu_left--;
+		ent->current_menu_right = 0;
+
+		if (ent->current_menu_left < 0)
 		{
-			ent->current_menu_left--;
-			ent->current_menu_right = 0;
-		}
-		else
-		{
-			ent->current_menu_left = 0;//FREDZ fix
+			ent->current_menu_left = 7;
+			while (!menu_header.name[ent->current_menu_left])
+				ent->current_menu_left -= 1;
 		}
 	}
-	else
+	else //using a right menu
 	{
-		if (menu_item_names[ent->current_menu_left].name[ent->current_menu_right - 1])
-			ent->current_menu_right--;
-		else
-			ent->current_menu_right = 0;
+		ent->current_menu_right--;
+
+		if (ent->current_menu_right < 0)
+		{
+			ent->current_menu_right = 7;
+			while (!menu_item_names[ent->current_menu_left].name[ent->current_menu_right])
+				ent->current_menu_right -= 1;
+		}
 	}
 
 	ScrollMenuMessage( ent );
