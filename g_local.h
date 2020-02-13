@@ -119,7 +119,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.13"
+#define	GAMEVERSION	"Thug Floor v0.14"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -1355,7 +1355,7 @@ void SP_cast_pawn_o_matic (edict_t *self);
 //
 // Papa 10.6.99
 
-//hypov8 used to give cash out to cast types. 
+//hypov8 used to give cash out to cast types.
 //use later for other events types
 typedef enum
 {

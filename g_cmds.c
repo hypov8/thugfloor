@@ -929,7 +929,7 @@ void Cmd_Spawn_f (edict_t *ent)
 
 	spawn = G_Spawn();
 
-	name = gi.args ();
+//	name = gi.args ();
 	spawn->classname = gi.TagMalloc(sizeof(name)+1, TAG_LEVEL);
 	strcpy( spawn->classname, name );
 
@@ -2143,8 +2143,8 @@ void Cmd_Give_f (edict_t *ent)
 		if (gi.argc() == 3)
 		{
 			ent->client->pers.currentcash += atoi(gi.argv(2));
-			if (ent->client->pers.currentcash > 9999)//FREDZ max limit
-				ent->client->pers.currentcash = 9999;
+			if (ent->client->pers.currentcash > MAX_PLAYER_CASH)//FREDZ max limit
+				ent->client->pers.currentcash = MAX_PLAYER_CASH;
 		}
 		else
 			ent->client->pers.currentcash += 100;
@@ -4098,21 +4098,61 @@ void Cmd_DropCash_f (edict_t *ent)
 	if (ent->solid == SOLID_NOT)
 		return;
 
-/*	if (ent->client->last_wave > (level.time - 3) && (ent->client->last_wave <= level.time))
+	if (ent->client->last_wave > (level.time - 3) && (ent->client->last_wave <= level.time))
 		return;
-	ent->client->last_wave = level.time;*/
+//	ent->client->last_wave = level.time;
 
 	s = gi.args();
 
-		if (gi.argc() == 3)//FREDZ
+    if ((int)(dmflags->value) & DF_DROP_CASH)
+	{
+    /*    if (Q_stricmp(s, "all") == 0)//Not working
+        {
+            if (ent->client->pers.currentcash)
+            {
+                cash = SpawnTheWeapon( ent, "item_cashroll" );
+                cash->currentcash = ent->client->pers.currentcash;
+                ent->client->pers.currentcash = 0;
+
+                switch (rand()%3)
+                {
+                case 0:
+                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/heresmoney.wav"), 1, ATTN_NORM, 0);
+                    break;
+                case 1:
+                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
+                    break;
+                case 2:
+                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
+                    break;
+                }
+                return;
+            }
+        }*/
+        if (gi.argc() == 3)
 		{
-			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) && (ent->client->pers.bagcash == 0))//FREDZ
+			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) /*&& (ent->client->pers.bagcash == 0)*/)//FREDZ
 				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_nodollar.wav"), 1, ATTN_NORM, 0);
 
 			if (ent->client->pers.currentcash)
 			{
+			    int ammount;
+
+			    ammount = atoi(gi.argv(3));
+
+                if (ammount>MAX_PLAYER_CASH)//Need fix
+                {
+                    gi.cprintf(ent,PRINT_HIGH,"You can not give that much\n");
+                    return;
+                }
+                if (ammount=0)//Need fix
+                {
+                    gi.cprintf (ent, PRINT_HIGH, "No cash to drop.\n");
+                    return;
+                }
+
 				cash = SpawnTheWeapon( ent, "item_cashroll" );
-				cash->currentcash += atoi(gi.argv(2));
+				cash->currentcash += ammount;
 
 				if ((ent->gender == GENDER_MALE)
 					&& (ent->client->pers.currentcash >= cash->currentcash) && (cash->currentcash >= 2) && (cash->currentcash != 50))//FREDZ
@@ -4149,7 +4189,7 @@ void Cmd_DropCash_f (edict_t *ent)
 		}
 		else//FREDZ old code with a bit updates
 		{
-			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) && (ent->client->pers.bagcash == 0))//FREDZ
+			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) /*&& (ent->client->pers.bagcash == 0)*/)//FREDZ
 				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_nodollar.wav"), 1, ATTN_NORM, 0);
 
 			if (ent->client->pers.currentcash)
@@ -4177,7 +4217,7 @@ void Cmd_DropCash_f (edict_t *ent)
                     cash->currentcash = 10;
                     ent->client->pers.currentcash -= 10;
                 }
-                else
+                else//Less then 10
                 {
                     cash = SpawnTheWeapon( ent, "item_cashroll" );
                     cash->currentcash = ent->client->pers.currentcash;
@@ -4185,7 +4225,6 @@ void Cmd_DropCash_f (edict_t *ent)
                 }
 
 			}
-
 /*//FREDZ bagman cash
 			//FREDZ to drop full cash
 			if (ent->client->pers.fakeThief) //FREDZ fix
@@ -4203,6 +4242,7 @@ void Cmd_DropCash_f (edict_t *ent)
 			}*/
 			return;//FREDZ
 		}
+	}
 }
 #if 0
 //Old

@@ -137,7 +137,7 @@ char *ep_names[] =
 //............................................................................
 
 // This sets the self->name_index according to the list above
-void	EP_SetNameIndex ( edict_t *self )
+void EP_SetNameIndex ( edict_t *self )
 {
 	int i;
 
@@ -158,7 +158,9 @@ void	EP_SetNameIndex ( edict_t *self )
 	}
 
 	// no match found!
-	gi.dprintf( "EP_SetNameIndex: Un-matched \"name\" (%s)\n", self->name );
+//	if (developer->value)//FREDZ anoying
+//       gi.dprintf( "EP_SetNameIndex: Un-matched \"name\" (%s)\n", self->name );
+
 	self->name_index = -1;
 }
 

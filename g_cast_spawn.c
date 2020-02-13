@@ -97,6 +97,7 @@ void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int idx)
 void cast_TF_dog(edict_t *self)
 {
 	self->classname = "cast_dog";
+	self->health = 100;//Default otherwise 200
 }
 void cast_TF_rat(edict_t *self)
 {
@@ -244,7 +245,7 @@ void cast_TF_thug_pistol(edict_t *self)
 	cast_TF_applyRandSkin(self, skins, idx);
 }
 void cast_TF_thug_shotgun(edict_t *self)
-{	
+{
 	static localteam_skins_s skins[] = {
 	//name,			//skin,			classname		flags	HP		count	head
 	"bigwillie",	"109 046 047", "cast_punk",		8192,	0,		0,		 0,	//bar_sy Got normally 350 health
@@ -278,7 +279,7 @@ cast_TF_applyRandSkin(self, skins, idx);
 void cast_TF_thug_bazooka(edict_t *self)
 {
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "moker");//steel4 Got normally 800 health
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "111 027 023");
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "111 027 023"); //steel4 teamno2
 	self->spawnflags = 8;
 	self->classname = "cast_punk";
 }
@@ -360,7 +361,7 @@ void cast_TF_Skidrow_street(edict_t *self)//sr3 street1, no names
 	cast_TF_applyRandSkin(self, skins, idx);
 }
 void cast_TF_Skidrow_hallway(edict_t *self)//sr3 hallway1,  no names
-{	
+{
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
 	"",     	"006 006 002",	"cast_runt",	0,	    0,		0,	    0,
@@ -370,7 +371,7 @@ void cast_TF_Skidrow_hallway(edict_t *self)//sr3 hallway1,  no names
 	cast_TF_applyRandSkin(self, skins, idx);
 }
 void cast_TF_Skidrow_postbattery(edict_t *self)//sr3 postbattery1 and 2,mostly shotty,  no names
-{	
+{
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
 	"",	        "004 001 001",	"cast_punk",    0,      120,	0,    0,    //postbattery1
@@ -557,13 +558,92 @@ void cast_TF_Shipyard_boss(edict_t *self)
     self->acc = 4;
 	self->health = 650 * currWave_plysCount;
 }
+
+void cast_TF_Steeltown_teamno(edict_t *self)//steel1,steel2,steel3,steel4 teamno1, 2, 3, 7 no names
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+	"",	        "017 044 010",	"cast_bitch",   0,      100,    0,      0,    //steel1 teamno1
+    "",	        "030 024 022",	"cast_punk",    0,      100,    0,      0,    //steel1 teamno1
+    "",	        "022 020 022",	"cast_shorty",  64,     150,    0,      0,    //steel3 teamno1
+    "",	        "500 021 022",	"cast_punk",    0,      100,    0,      1,    //steel3 teamno1
+    "",	        "023 021 022",	"cast_shorty",  0,      120,    0,      0,    //steel3 teamno1
+    "",	        "500 021 022",	"cast_punk",    64,     200,    0,      1,    //steel4 teamno1
+    "",	        "501 024 022",	"cast_punk",    64,     100,    0,      1,    //steel1 teamno2
+	"",	        "135 025 022",	"cast_punk",    64,     100,    0,      0,    //steel1 teamno2
+    "",	        "501 021 022",	"cast_punk",    0,      120,    0,      1,    //steel3 teamno2
+    "",	        "025 021 022",	"cast_shorty",  0,      100,    0,      0,    //steel3 teamno2
+    "",	        "501 024 022",	"cast_punk",    0,      120,    0,      0,    //steel3 teamno2
+    "",	        "023 021 021",	"cast_shorty",  0,      200,    0,      0,    //steel4 teamno2
+    "",	        "022 020 020",	"cast_shorty",  64,     200,    0,      0,    //steel4 teamno2
+	"",	        "500 021 022",	"cast_punk",    0,      100,    0,      1,    //steel1 teamno3
+    "",     	"022 020 022",	"cast_runt",    0,      100,    0,      0,    //steel1 teamno3
+    "",	        "700 025 022",	"cast_punk",    4,      120,    0,      0,    //steel1 teamno3 flamethrower
+    "",	        "022 021 022",	"cast_shorty",  0,      100,    0,      0,    //steel3 teamno3
+    "",	        "024 020 022",	"cast_shorty",  0,      100,    0,      0,    //steel3 teamno3
+    "",	        "700 025 022",	"cast_punk",    4,      100,    0,      0,    //steel3 teamno3 flamethrower
+    "",	        "500 021 022",	"cast_punk",    64,     120,    0,      1,    //steel2 teamno7
+    "",	        "500 022 020",	"cast_punk",    0,      120,    0,      1,    //steel2 teamno7
+    "",	        "024 021 022",	"cast_shorty",  0,      100,    0,      0,    //steel3 teamno7
+    "",	        "022 020 022",	"cast_shorty",  16,     100,    0,      0,    //steel3 teamno7 hmg
+    "",	        "136 024 022",	"cast_punk",    16,     100,    0,      0,    //steel3 teamno7 hmg
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Steeltown_grp(edict_t *self)//steel2 grp1, 2 and 3, no names
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+    "",	        "024 021 020",	"cast_runt",    0,      150,    0,      0,    //grp1
+	"",	        "020 021 021",	"cast_whore",   0,      100,    0,      0,    //grp1
+	"",	        "500 021 020",	"cast_punk",    0,      150,    0,      1,    //grp2
+    "",	        "023 021 020",	"cast_runt",    0,      100,    0,      0,    //grp2
+	"",	        "020 020 021",	"cast_whore",   0,      100,    0,      0,    //grp3
+    "",     	"020 020 021",	"cast_whore",   64,     100,    0,      0,    //grp3
+    "",	        "700 024 020",	"cast_punk",    4,      150,    0,      0,    //grp3 flamethrower
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Steeltown_names(edict_t *self)
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+	"Bambi",	"044 042 003",  "cast_bitch",	0,	    100,	0,		0,	//bar_st
+    "Rochelle",	"601 009 012",  "cast_whore",	0,	    300,	0,		2,	//bar_st
+    "Brittany",	"046 040 010",  "cast_bitch",	0,	    100,	0,		0,	//steel1
+    "Kroker",	"023 020 020",  "cast_runt",	64,	    150,	1,		0,	//steel1
+    "Momo",		"013 045 006",  "cast_runt",	0,	    100,	0,		0,	//steel1 //bouncer
+    "Mathew",	"048 042 015",  "cast_runt",	0,	    100,	0,		0,	//steel1
+	"Kid_1",	"134 132 132",  "cast_runt",	64,	    100,	0,		0,	//steel2
+	"Kid_2",	"132 132 132",  "cast_runt",	64,	    100,	0,		0,	//steel2
+	"Kid_3",	"133 132 132",  "cast_runt",	64,	    100,	0,		0,	//steel2
+    "Kid_4",	"133 132 132",  "cast_thug",	64,		100,	0,		0,	//steel3
+    "Kid_5",	"134 132 132",  "cast_thug",	64,		100,	0,		0,	//steel3
+    "David",	"132 132 132",  "cast_punk",	64,		300,	0,		0,  //steel3 //Basicly a Kid_ just much health
+    "Oscar",	"044 012 006",  "cast_punk",	64,		250,	0,		0,  //steel2
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Steeltown_boss(edict_t *self)
+{
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Moker");//steel4
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "111 027 023");
+	self->spawnflags = 8;//bazooka
+    self->moral = 5;
+    self->acc = 5;
+//    self->localteam = teamno2;
+	self->classname = "cast_punk";
+    self->health = 800 * currWave_plysCount;
+}
 //FREDZ todo
-//Steeltown
 //Trainyard
 //Radio City
 void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "kingpin");
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Kingpin");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "120 120 120");
 	self->spawnflags = 0;//pistol
     self->acc = 5;
@@ -575,7 +655,7 @@ void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
 }
 void cast_TF_Crystal_Palace_boss_blunt(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "blunt");
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Blunt");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "080 059 059");
 	self->spawnflags = 18;//hmg
 	self->classname = "cast_whore";
@@ -772,9 +852,22 @@ void cast_TF_spawnWave6(edict_t *spawn)
 }
 void cast_TF_spawnWave7(edict_t *spawn)
 {
-	//todo
+	switch (rand() % 11)
+	{
+	case 0:	cast_TF_dog(spawn);break;
+    case 1:	cast_TF_dog(spawn);break;
+	case 2:	cast_TF_rat(spawn);break;
+    case 3:	cast_TF_rat(spawn);break;
+	case 4:	cast_TF_Steeltown_teamno(spawn);break;
+    case 5:	cast_TF_Steeltown_teamno(spawn);break;
+	case 6:	cast_TF_Steeltown_grp(spawn);break;
+	case 7:	cast_TF_Steeltown_names(spawn);break;
+    case 8:	cast_TF_Steeltown_names(spawn);break;
+	case 9:	cast_TF_Steeltown_names(spawn);break;
+    case 10: cast_TF_Steeltown_boss(spawn);break;//FREDZ probably should only spawn ones
+	}
 }
-void cast_TF_spawnWave8(edict_t *spawn)
+void cast_TF_spawnWave8(edict_t *spawn)//Trainyard
 {
 	//todo
 }
@@ -782,7 +875,7 @@ void cast_TF_spawnWave9(edict_t *spawn)
 {
 	//todo
 }
-void cast_TF_spawnWave10(edict_t *spawn)
+void cast_TF_spawnWave10(edict_t *spawn)//Radiocity
 {
 	//todo
 }

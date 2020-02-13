@@ -7,7 +7,14 @@
 
 -hud and scoreboard can be done better
 
+-level.buyzone weapon disapear.
 
-pawn o guy should have godmodus but there was some fix in coop mod that he doesn't shoot back
-don't think holster should be needed. (Maybe that people can not shoot weapon)
-you want to drop weapons for other players
+-Does spec need fix? solid/noclip
+
+-max players allowed to enter a wave
+
+-rename maxwaves cvar
+
+-drop cash need fix for 0, 9999 and all or weird value's not integer, atoi is probably causing problems
+
+-localteam adding

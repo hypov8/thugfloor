@@ -1554,9 +1554,6 @@ void SelectSpawnPoint (edict_t *ent, vec3_t origin, vec3_t angles)
 			if (!spot)
             {
 				gi.error ("Couldn't find spawn point %s\n", game.spawnpoint);
-/*                gi.bprintf(PRINT_HIGH, "No info_player_start in this map.\n");
-                gi.bprintf(PRINT_HIGH, "Map not suitable for this mod please remove it.\n");
-                GameEND ();//FREDZ*/
             }
 		}
 	}

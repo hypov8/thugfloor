@@ -708,20 +708,13 @@ void Think_Weapon (edict_t *ent)
 		ChangeWeapon (ent);
 	}
 
-    if (level.buyzone)//FREDZ
-    {
-        ChangeWeapon (ent);//makes weapon disapear need fix.
-        return;
-    }
-
-
 	// JOSEPH 10-FEB-99
 	if (level.bar_lvl)
 		return;
 	// END JOSEPH
 
 	// Unholster a holstered gun if fired
-/*	if ((!ent->client->pers.weapon) && ent->client->pers.holsteredweapon && (((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK)))
+/*	if ((!ent->client->pers.weapon) && ent->client->pers.holsteredweapon && (((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK)))//FREDZ this is on in Default SDK
 	{
 		ent->client->newweapon = ent->client->pers.holsteredweapon;
 		ChangeWeapon (ent);
@@ -1032,7 +1025,7 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 
 	if (ent->client->weaponstate == WEAPON_READY)
 	{
-		if ( ((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK) )
+		if (((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK) && (!level.buyzone))//FREDZ seems to work still weapon disapear
 		{
 			ent->client->latched_buttons &= ~BUTTON_ATTACK;
 
