@@ -1357,7 +1357,7 @@ void SP_cast_pawn_o_matic (edict_t *self);
 
 //hypov8 used to give cash out to cast types.
 //use later for other events types
-typedef enum
+enum
 {
 	BOT_BITCH_ME,	/*bitch melee*/
 	BOT_BITCH,		/*bitch*/
