@@ -903,7 +903,7 @@ void G_SetClientEffects (edict_t *ent)
 		}
 	}
 
-	if (ent->client->quad_framenum > level.framenum)
+	if (ent->client->quad_framenum > level.framenum)//Q2
 	{
 		remaining = ent->client->quad_framenum - level.framenum;
 		if (remaining > 30 || (remaining & 4) )
@@ -911,7 +911,7 @@ void G_SetClientEffects (edict_t *ent)
 	}
 
 	// RAFAEL
-	if (ent->client->quadfire_framenum > level.framenum)
+	if (ent->client->quadfire_framenum > level.framenum)//Q2 Xatrix
 	{
 		remaining = ent->client->quadfire_framenum - level.framenum;
 		if (remaining > 30 || (remaining & 4) )
@@ -919,7 +919,7 @@ void G_SetClientEffects (edict_t *ent)
 	}
 
 
-	if (ent->client->invincible_framenum > level.framenum)
+	if (ent->client->invincible_framenum > level.framenum)//Q2
 	{
 		remaining = ent->client->invincible_framenum - level.framenum;
 		if (remaining > 30 || (remaining & 4) ) {

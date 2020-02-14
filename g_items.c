@@ -17,24 +17,23 @@ void Weapon_SPistol (edict_t *ent);
 void Weapon_Pistol (edict_t *ent);
 void Weapon_Tommygun (edict_t *ent);
 
-void Weapon_Blaster (edict_t *ent);
+//void Weapon_Blaster (edict_t *ent);//FREDZ Quake2
 void Weapon_Shotgun (edict_t *ent);
-void Weapon_SuperShotgun (edict_t *ent);
-void Weapon_Machinegun (edict_t *ent);
-void Weapon_Chaingun (edict_t *ent);
-void Weapon_HyperBlaster (edict_t *ent);
+//void Weapon_SuperShotgun (edict_t *ent);//FREDZ Quake2
+//void Weapon_Machinegun (edict_t *ent);//FREDZ Quake2
+//void Weapon_Chaingun (edict_t *ent);//FREDZ Quake2
+//void Weapon_HyperBlaster (edict_t *ent);//FREDZ Quake2
 void Weapon_RocketLauncher (edict_t *ent);
-void Weapon_Grenade (edict_t *ent);
+//void Weapon_Grenade (edict_t *ent);//FREDZ Quake2
 void Weapon_GrenadeLauncher (edict_t *ent);
-void Weapon_Railgun (edict_t *ent);
-void Weapon_BFG (edict_t *ent);
+//void Weapon_Railgun (edict_t *ent);//FREDZ Quake2
+//void Weapon_BFG (edict_t *ent);//FREDZ Quake2
 // RAFAEL
-void Weapon_Ionripper (edict_t *ent);
-void Weapon_Phalanx (edict_t *ent);
-void Weapon_Trap (edict_t *ent);
+//void Weapon_Ionripper (edict_t *ent);//FREDZ Quake2 Xatrix
+//void Weapon_Phalanx (edict_t *ent);//FREDZ Quake2 Xatrix
+//void Weapon_Trap (edict_t *ent);//FREDZ Quake2 Xatrix
 
 void Weapon_FlameThrower (edict_t *ent);
-
 void Weapon_Barmachinegun (edict_t *ent);
 
 gitem_armor_t jacketarmor_info	= { 25,  50, .30, .00, ARMOR_JACKET};
@@ -50,13 +49,13 @@ int	power_shield_index;
 #define HEALTH_IGNORE_MAX	1
 #define HEALTH_TIMED		2
 
-void Use_Quad (edict_t *ent, gitem_t *item);
+//void Use_Quad (edict_t *ent, gitem_t *item);//FREDZ Quake2
 // RAFAEL
-void Use_QuadFire (edict_t *ent, gitem_t *item);
+//void Use_QuadFire (edict_t *ent, gitem_t *item);//FREDZ Quake2 Xatrix
 
-static int	quad_drop_timeout_hack;
+//static int	quad_drop_timeout_hack;//FREDZ Quake2
 // RAFAEL
-static int	quad_fire_drop_timeout_hack;
+//static int	quad_fire_drop_timeout_hack;//FREDZ Quake2 Xatrix
 
 //======================================================================
 
@@ -375,7 +374,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 }
 
 //======================================================================
-
+/*
 void Use_Quad (edict_t *ent, gitem_t *item)//FREDZ q2 never used
 {
 	int		timeout;
@@ -407,6 +406,7 @@ void Use_Quad (edict_t *ent, gitem_t *item)//FREDZ q2 never used
 // =====================================================================
 
 // RAFAEL
+
 void Use_QuadFire (edict_t *ent, gitem_t *item)//FREDZ q2 Xatrix mod never used
 {
 	int		timeout;
@@ -494,7 +494,7 @@ void	Use_Silencer (edict_t *ent, gitem_t *item)//Q2
 //	ent->client->pers.silencer_shots += 30;
 
 //	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);
-}
+}*/
 
 //======================================================================
 
@@ -1532,7 +1532,7 @@ void droptofloor (edict_t *ent)
 	if (tr.startsolid)
 	{
 		// RAFAEL
-		if (strcmp (ent->classname, "foodcube") == 0)
+		if (strcmp (ent->classname, "foodcube") == 0)//Q2 Xatrix
 		{
 			VectorCopy (ent->s.origin, tr.endpos);
 			ent->velocity[2] = 0;
@@ -3984,7 +3984,7 @@ void SP_item_health_mega (edict_t *self)
 }
 
 // RAFAEL
-void SP_item_foodcube (edict_t *self)
+void SP_item_foodcube (edict_t *self)//Q2 Xatrix
 {
 	if ( deathmatch->value && ((int)dmflags->value & DF_NO_HEALTH) )
 	{

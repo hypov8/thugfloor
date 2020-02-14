@@ -271,7 +271,7 @@ void cast_TF_thug_tommygun(edict_t *self)
     "donny",	"512 131 010", "cast_punk",		64,		0,		0,		1,      //rc4 Got normally 200 health
     "oscar",	"044 012 006", "cast_punk",		64,		0,		0,		0,      //steel2 Got normally 250 health
     "david",	"132 132 132", "cast_punk",		64,		0,		0,		0,      //steel3 Got normally 300 health
-    "tyrone",	"507 082 054", "cast_punk",		64,		0,		0,		1,     //steel3 Got normally 500 health
+ //   "tyrone",	"507 082 054", "cast_punk",		64,		0,		0,		1,     //steel3 Got normally 500 health
 	};
 int idx = rand() % ARYSIZE(skins);
 cast_TF_applyRandSkin(self, skins, idx);
@@ -297,9 +297,9 @@ void cast_TF_Skidrow_courtyard(edict_t *self)//sr1 Police/Security
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
 	"johnny",	"011 007 004",	"cast_thug",	64, 	80,	    0,       0,
-    "louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	 0,//Not really police, more person they try to secure
     "bernie",   "011 012 004",  "cast_runt",	0,	    100,	1,	     0,
-    "arnold",	"012 007 004",	"cast_punk",	0,	    200,	0,	     0,
+    "arnold",	"012 007 004",	"cast_punk",	0,	    200,	0,	     0,//Shotgun
+    "louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	 0,//Not really police, more person they try to secure
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
@@ -320,7 +320,7 @@ void cast_TF_Skidrow_treehouse(edict_t *self)//sewer treehouse, ugly skins, no n
     //
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
-	"",         "004 003 001",	"cast_runt",	0,	    100,	0,	    0, //todo: indeed no name, also not really needed? expect for friendly characters:/
+	"",         "004 003 001",	"cast_runt",	0,	    100,	0,	    0,
     "",         "004 001 007",	"cast_punk",	0,	    100,	0,	    0,
 	};
 	int idx = rand() % ARYSIZE(skins);
@@ -329,7 +329,7 @@ void cast_TF_Skidrow_treehouse(edict_t *self)//sewer treehouse, ugly skins, no n
 void cast_TF_Skidrow_motards(edict_t *self)//sr2 motards, ugly skins all pistol, no names
 {	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
-	"",          "003 003 001",	"cast_runt",	0,	    0,		0,	    0,
+	"",         "003 003 001",	"cast_runt",	0,	    0,		0,	    0,
     "",         "002 001 001",	"cast_bitch",	0,	    0,		0,	    0,
     "",	        "005 001 001",  "cast_thug",	0,	    0,		0,	    0,
 	};
@@ -340,10 +340,10 @@ void cast_TF_Skidrow_motards(edict_t *self)//sr2 motards, ugly skins all pistol,
 void cast_TF_Skidrow_courtyard2(edict_t *self)//sr3 courtyard2 and 1, no names
 {	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
-	"",	        "514 003 002",	"cast_punk",	0,	    0,		0,	    1,//courtyard2
     "",	        "010 006 002",	"cast_runt",	0,	    0,		0,	    0,//courtyard1
     "",	        "514 004 002",  "cast_punk",	0,	    0,		0,	    1,//courtyard1
     "",	        "513 004 002",  "cast_punk",	0,	    0,		0,	    1,//courtyard1
+    "",	        "514 003 002",	"cast_punk",	0,	    0,		0,	    1,//courtyard2
     "",	        "006 005 002",	"cast_runt",	0,	    0,		0,	    0,//courtyard2
 	};
 	int idx = rand() % ARYSIZE(skins);
@@ -375,10 +375,10 @@ void cast_TF_Skidrow_postbattery(edict_t *self)//sr3 postbattery1 and 2,mostly s
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
 	"",	        "004 001 001",	"cast_punk",    0,      120,	0,    0,    //postbattery1
+    "",	        "004 001 001",	"cast_punk",    0,      80,		0,    0,    //postbattery1
 	"",	        "008 008 002",	"cast_runt",    0,      120,	0,    0,    //postbattery2
 	"",     	"514 003 002",	"cast_punk",    0,      120,	0,    1,    //postbattery2
 	"",	        "009 007 002",	"cast_runt",    0,      100,	0,    0,    //postbattery2
-	"",	        "004 001 001",	"cast_punk",    0,      80,		0,    0,    //postbattery1
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
@@ -387,26 +387,26 @@ void cast_TF_Skidrow_names(edict_t *self)
 {
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
-	"Betty",	"008 006 003",	"cast_bitch",	64,	    100,	0,  	0,    //sr1
-	"Beth",		"009 007 004",	"cast_bitch",	64,	    100,	0,  	0,    //sr1
-	"Lisa",		"012 015 012",	"cast_bitch",	64,	    120,	0,  	0,    //sr1
-	"Mona",		"014 012 003",	"cast_bitch",	0,	    100,	0,  	0,    //sr2
-	"bubba",	"017 016 008",	"cast_runt",	64,	    100,	9,  	0,    //sr1
-	"magicj",	"020 011 005",	"cast_runt",	64,	    100,	0,  	0,   	//sr1
-	"momo",		"020 011 003",	"cast_runt",	0,	    100,	0,  	0,	//sr2 //bouncer
-	"sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	0,    //bar_sr
-	"lenny",	"018 011 007",	"cast_runt",	0,	    100,	0,  	0,	//bar_sr
-	"momo",		"072 014 009",	"cast_shorty",	8192,   150,	0,  	0, 	//sr1
-	"leroy",	"010 010 003",	"cast_thug",	64,	    100,	0,  	0,    //sr1
-	"brewster", "002 001 001",	"cast_thug",	64,	    100,	0,  	0,	//sr1
-	"rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	//bar_sr
+	"Betty",	"008 006 003",	"cast_bitch",	64,	    100,	0,  	0,    //sr1 melee
+	"Beth",		"009 007 004",	"cast_bitch",	64,	    100,	0,  	0,    //sr1 melee
+	"Lisa",		"012 015 012",	"cast_bitch",	64,	    120,	0,  	0,    //sr1 melee
+	"Momo",		"072 014 009",	"cast_shorty",	8192,   150,	0,  	0, 	  //sr1 shogun
+	"Leroy",	"010 010 003",	"cast_thug",	64,	    100,	0,  	0,    //sr1 melee
+	"Brewster", "002 001 001",	"cast_thug",	64,	    100,	0,  	0,	  //sr1 melee
+	"Bubba",	"017 016 008",	"cast_runt",	64,	    100,	9,  	0,    //sr1 melee
+	"Magicj",	"020 011 005",	"cast_runt",	64,	    100,	0,  	0,    //sr1 melee
+	"Momo",		"020 011 003",	"cast_runt",	0,	    100,	0,  	0,	  //sr2 //bouncer pistol
+    "Mona",		"014 012 003",	"cast_bitch",	0,	    100,	0,  	0,    //sr2 pistol
+	"Sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	0,    //bar_sr pistol
+	"Lenny",	"018 011 007",	"cast_runt",	0,	    100,	0,  	0,	  //bar_sr pistol
+	"Rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	  //bar_sr pistol
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
 }
 void cast_TF_Skidrow_boss_lamont(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "lamont");
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Lamont");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "024 017 010");
 	self->spawnflags = 0;//pistol
 	self->classname = "cast_thug";
@@ -416,7 +416,7 @@ void cast_TF_Skidrow_boss_lamont(edict_t *self)
 }
 void cast_TF_Skidrow_boss_jesus(edict_t *self)//sr4
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "jesus");
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Jesus");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "21 017 010");
 	self->spawnflags = 0;//pistol
 	self->classname = "cast_runt";
@@ -461,26 +461,26 @@ void cast_TF_Poisonville_names(edict_t *self)
 {
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
-    "yolanda",	"041 050 003",	"cast_bitch",   0,      200,    0,      0, 	//pv_h
-    "Mung",     "013 010 006",	"cast_runt",    64,     100,    9,      0,	//pv_h
-    "Fingers",	"025 009 009",	"cast_thug",    0,      150,    0,      0,	//bar_pv
-	"Burt",	    "063 041 010",	"cast_thug",    0,      100,    0,      0,	//bar_pv
-    "Clarence", "047 013 003",  "cast_runt",    0,      100,    9,      0,	//bar_pv
-    "Candy",	"015 017 013",  "cast_bitch",   0,      100,    0,      0,	//bar_pv
-    "Louie",    "043 041 009",  "cast_runt",    0,      100,    0,      0,	//bar_pv
-    "Laurel",	"504 032 031",	"cast_punk",    8192,   200,    0,      1,	//pv_h
-	"Hardey",	"114 032 031",	"cast_punk",    8192,   200,    0,      0,	//pv_h
-    "Dubs",     "108 009 006",  "cast_punk",    64,     220,    0,      0,	//pv_h
-    "Momo",     "072 014 009",  "cast_shorty",  0,      100,    0,      0,	//pv_h
+    "Yolanda",	"041 050 003",	"cast_bitch",   0,      200,    0,      0, 	//pv_h pistol
+    "Mung",     "013 010 006",	"cast_runt",    64,     100,    9,      0,	//pv_h melee
+    "Laurel",	"504 032 031",	"cast_punk",    0,      200,    0,      1,	//pv_h shotgun
+	"Hardey",	"114 032 031",	"cast_punk",    0,      200,    0,      0,	//pv_h shotgun
+    "Dubs",     "108 009 006",  "cast_punk",    64,     220,    0,      0,	//pv_h tommygun
+    "Momo",     "072 014 009",  "cast_shorty",  0,      100,    0,      0,	//pv_h shotgun
+    "Fingers",	"025 009 009",	"cast_thug",    0,      150,    0,      0,	//bar_pv pistol
+	"Burt",	    "063 041 010",	"cast_thug",    0,      100,    0,      0,	//bar_pv pistol
+    "Clarence", "047 013 003",  "cast_runt",    0,      100,    9,      0,	//bar_pv pistol
+    "Candy",	"015 017 013",  "cast_bitch",   0,      100,    0,      0,	//bar_pv pistol
+    "Louie",    "043 041 009",  "cast_runt",    0,      100,    0,      0,	//bar_pv pistol
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
 }
 void cast_TF_Poisonville_boss(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "nikkiblanco");
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Nikkiblanco");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "122 122 122");
-	self->spawnflags = 16;//Flametrhower
+	self->spawnflags = 16;//Flamethrower
 	self->classname = "cast_punk";
 	self->moral = 5;
 //	self->scale = 1.06;
@@ -490,12 +490,12 @@ void cast_TF_Shipyard_deckmonkeys(edict_t *self)//sy1 deck_monkeys and 2, shotty
 {
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
-	"",	        "061 062 060",	"cast_shorty",  0,      300,    0,      0,    //deck_monkeys2
 	"",     	"060 060 060",	"cast_shorty",  0,      250,    0,      0,    //deck_monkeys
-	"",	        "060 060 060",	"cast_whore",   64,     100,    0,      0,    //deck_monkeys2
-	"",	        "508 060 060",	"cast_punk",    0,      300,    0,      1,    //deck_monkeys2
     "",	        "515 062 060",	"cast_punk",    64,     250,    0,      1,    //deck_monkeys
 	"",	        "515 060 060",	"cast_punk",    64,     250,    0,      1,    //deck_monkeys
+    "",	        "061 062 060",	"cast_shorty",  0,      300,    0,      0,    //deck_monkeys2
+    "",	        "060 060 060",	"cast_whore",   64,     100,    0,      0,    //deck_monkeys2
+	"",	        "508 060 060",	"cast_punk",    0,      300,    0,      1,    //deck_monkeys2
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
@@ -506,7 +506,7 @@ void cast_TF_Shipyard_goons(edict_t *self)//sy2 goons, shotty and tommyguns, no 
 	//name,		//skin,			classname		flags	HP		count	head
 	"",	        "515 063 060",	"cast_punk",    0,      250,    0,      1,
 	"",     	"060 060 060",	"cast_whore",   0,      250,    0,      0,
-	"",	        "515 063 060",	"cast_punk",    0,       20,    0,      1,//Health not a typer error or xatrix did that :p
+	"",	        "515 063 060",	"cast_punk",    0,       20,    0,      1,//Health not a typer error or Xatrix did that :p
 	"",	        "515 063 060",	"cast_punk",    0,      250,    0,      1,
     "",	        "063 064 060",	"cast_shorty",  64,     225,    0,      0,
 	"",	        "101 065 060",	"cast_punk",    64,     225,    0,      0,
@@ -535,7 +535,7 @@ void cast_TF_Shipyard_names(edict_t *self)
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
     "Dogg",     "016 014 003",  "cast_runt",    0,      100,    0,      0,    //bar_sy
-    "Selma",	"600 043 003",  "cast_bitch",   0,      100,    0,      2, 	//bar_sy
+    "Selma",	"600 043 003",  "cast_bitch",   0,      100,    0,      2, 	  //bar_sy
     "BigWillie","109 046 047",  "cast_punk",    0,      350,    0,      0,    //bar_sy
     "Sal",      "064 047 047",  "cast_shorty",  64,     250,    0,      0,    //bar_sy
     "Lefty",    "064 046 047",  "cast_punk",    64,     250,    0,      0,    //bar_sy
@@ -638,8 +638,72 @@ void cast_TF_Steeltown_boss(edict_t *self)
 	self->classname = "cast_punk";
     self->health = 800 * currWave_plysCount;
 }
-//FREDZ todo
-//Trainyard
+
+void cast_TF_Trainyard_trainwreck(edict_t *self)//ty1 trainwreck, no names
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+    "",	        "507 081 054",	"cast_punk",    64,     100,    0,      1,
+	"",	        "051 051 052",	"cast_punk",    64,     150,    0,      0,
+	"",	        "050 053 054",	"cast_shorty",  16,     100,    0,      0,  //hmg
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Trainyard_frontline(edict_t *self)//ty2 frontline, all tommygun no names
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+    "",	        "054 051 054",	"cast_shorty",  64,     100,    0,      0,
+	"",	        "507 051 052",	"cast_punk",    64,     100,    0,      1,
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Trainyard_trainteam(edict_t *self)//ty3 trainteam, no names
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+    "",	        "071 070 021",	"cast_whore",   64,     100,    0,      0,
+    "",	        "050 051 054",	"cast_shorty",  16,     100,    0,      0,  //hmg
+	"",	        "054 052 052",	"cast_punk",    128,    100,    0,      0,  //grenade
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Trainyard_poop(edict_t *self)//ty4 poop, no names
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+    "",	        "507 052 052",	"cast_punk",    0,      100,    0,      1,
+    "",	        "507 081 054",	"cast_punk",    16,     100,    0,      1,  //hmg
+	"",	        "072 073 021",	"cast_whore",   0,      100,    0,      0,
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Trainyard_names(edict_t *self)//Only 2 names
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+	"Luke",	    "049 046 046",  "cast_runt",	0,	    100,	0,		0,	//ty1
+    "Hann",	    "029 006 010",  "cast_thug",	0,	    100,	0,		0,	//ty1
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Trainyard_boss(edict_t *self)
+{
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Tyrone");//ty4
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "507 082 054");
+	self->spawnflags = 64;//Tommygun
+    self->moral = 5;
+    self->acc = 4;
+//	self->scale = 1.05;
+    self->head = 1;
+	self->classname = "cast_punk";
+    self->health = 500 * currWave_plysCount;
+}
 //Radio City
 void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
 {
@@ -752,7 +816,7 @@ void cast_TF_setEnemyPlayer(edict_t *spawn)
 // rand spawn types
 void cast_TF_spawnWave1(edict_t *spawn)
 {
-	switch (rand() % 6)
+	switch (rand() % 10)
 	{
 	case 0:	cast_TF_dog(spawn);break;
     case 1:	cast_TF_rat(spawn);break;
@@ -760,10 +824,10 @@ void cast_TF_spawnWave1(edict_t *spawn)
     case 3:	cast_TF_rat(spawn);break;
 	case 4:	cast_TF_Skidrow_treehouse(spawn);break;
 	case 5:	cast_TF_Skidrow_sewer_rats(spawn);break;
-//	case 5:	cast_TF_Skidrow_names(spawn);break;//FREDZ abit hard first round, maybe need fix
-//  case 6:	cast_TF_Skidrow_names(spawn);break;
-//  case 7:	cast_TF_Skidrow_names(spawn);break;
-//  case 8:	cast_TF_Skidrow_names(spawn);break;
+	case 6:	cast_TF_Skidrow_names(spawn);break;//FREDZ abit hard first round, maybe need fix
+    case 7:	cast_TF_Skidrow_names(spawn);break;
+    case 8:	cast_TF_Skidrow_names(spawn);break;
+    case 9:	cast_TF_Skidrow_names(spawn);break;
 	}
 }
 void cast_TF_spawnWave2(edict_t *spawn)
@@ -869,9 +933,21 @@ void cast_TF_spawnWave7(edict_t *spawn)
 }
 void cast_TF_spawnWave8(edict_t *spawn)//Trainyard
 {
-	//todo
+	switch (rand() % 10)
+	{
+	case 0:	cast_TF_dog(spawn);break;
+    case 1:	cast_TF_dog(spawn);break;
+	case 2:	cast_TF_rat(spawn);break;
+    case 3:	cast_TF_rat(spawn);break;
+	case 4:	cast_TF_Trainyard_trainwreck(spawn);break;
+    case 5:	cast_TF_Trainyard_frontline(spawn);break;
+	case 6:	cast_TF_Trainyard_trainteam(spawn);break;
+	case 7:	cast_TF_Trainyard_poop(spawn);break;
+	case 8:	cast_TF_Trainyard_names(spawn);break;
+    case 9: cast_TF_Trainyard_boss(spawn);break;//FREDZ probably should only spawn ones
+	}
 }
-void cast_TF_spawnWave9(edict_t *spawn)
+void cast_TF_spawnWave9(edict_t *spawn)//Radiocity
 {
 	//todo
 }

@@ -9,6 +9,7 @@
 		<Build>
 			<Target title="Release">
 				<Option output="bin/Release/gamex86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="D:/Kingpin" />
 				<Option object_output="obj/Release/" />
 				<Option type="3" />
 				<Option compiler="msvctk" />
@@ -21,6 +22,82 @@
 					<Add option="/DBUILD_DLL" />
 					<Add option="/DNDEBUG" />
 				</Compiler>
+			</Target>
+			<Target title="Debug">
+				<Option platforms="Windows;" />
+				<Option output="D:/GOG Games/Kingpin/thugfloor/gamex86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="D:/GOG Games/Kingpin" />
+				<Option object_output="./debug_cb/obj" />
+				<Option type="3" />
+				<Option compiler="microsoft_visual_c_2015" />
+				<Option parameters="+set port 31515 +set game thugfloor +set deathmatch 1 +set cheats 1 +verbose 0 +logfile 0 +exec server.cfg" />
+				<Option host_application="D:/Kingpin/kingpin.exe" />
+				<Option run_host_application_in_terminal="0" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="/MTd" />
+					<Add option="/GS" />
+					<Add option="/Od" />
+					<Add option="/W3" />
+					<Add option="/Zc:trigraphs" />
+					<Add option="/Zc:forScope" />
+					<Add option="/Zi" />
+					<Add option='/Fd&quot;.\debug_cb\vc120.pdb&quot;' />
+					<Add option="/GR-" />
+					<Add option="/Oy-" />
+					<Add option="/Gm-" />
+					<Add option="/EHsc" />
+					<Add option="/WX-" />
+					<Add option="/FS" />
+					<Add option="/DBUILD_DLL" />
+					<Add option="/DNDEBUG" />
+					<Add option="/DHYPODEBUG" />
+					<Add option="/DFREDZDEBUG" />
+					<Add option="/DBETADEBUG" />
+					<Add option="/D_CRT_SECURE_NO_WARNINGS" />
+				</Compiler>
+				<Linker>
+					<Add option="/debug" />
+					<Add option="/NODEFAULTLIB:libc" />
+					<Add option="/ASSEMBLYDEBUG" />
+					<Add option='/PDB:&quot;$(TARGET_OUTPUT_DIR)gamex86.pdb&quot;' />
+					<Add option="/DYNAMICBASE" />
+					<Add option="/MACHINE:X86" />
+					<Add option="/SUBSYSTEM:WINDOWS" />
+					<Add option="/MANIFEST" />
+					<Add option="/NXCOMPAT" />
+					<Add option="/SAFESEH:NO" />
+					<Add option="/OPT:NOICF" />
+					<Add library="navlib/NavLib.lib" />
+				</Linker>
+			</Target>
+			<Target title="debug_GCC">
+				<Option platforms="Windows;" />
+				<Option output="D:/GOG Games/Kingpin/thugfloor/gamex86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="D:/GOG Games/Kingpin" />
+				<Option object_output="./debug_cb/obj" />
+				<Option type="3" />
+				<Option compiler="microsoft_visual_c_2015" />
+				<Option createStaticLib="1" />
+				<Option projectCompilerOptionsRelation="1" />
+				<Option projectLinkerOptionsRelation="1" />
+				<Compiler>
+					<Add option="-std=c99" />
+					<Add option="-pg" />
+					<Add option="-m32" />
+					<Add option="-g" />
+					<Add option="-DC_ONLY" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DHYPODEBUG" />
+					<Add option="-DFREDZDEBUG" />
+					<Add option="-DBETADEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add option="-m32" />
+					<Add library="./navlib/NavLib.lib" />
+				</Linker>
 			</Target>
 		</Build>
 		<Linker>

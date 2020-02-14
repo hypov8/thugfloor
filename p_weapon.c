@@ -3,14 +3,14 @@
 #include "g_local.h"
 #include "m_player.h"
 
-static qboolean	is_quad;
+static qboolean	is_quad;//Q2
 // RAFAEL
-static qboolean is_quadfire;
+//static qboolean is_quadfire;//Q2 Xatrix
 static byte		is_silenced;
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);
 // RAFAEL
-void weapon_trap_fire (edict_t *ent, qboolean held);
+//void weapon_trap_fire (edict_t *ent, qboolean held);//Q2 Xatrix
 
 static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
 {
@@ -723,9 +723,9 @@ void Think_Weapon (edict_t *ent)
 	else */
 	if (ent->client->pers.weapon && ent->client->pers.weapon->weaponthink)
 	{
-		is_quad = (ent->client->quad_framenum > level.framenum);
+		is_quad = (ent->client->quad_framenum > level.framenum);//Q2
 		// RAFAEL
-		is_quadfire = (ent->client->quadfire_framenum > level.framenum);
+//		is_quadfire = (ent->client->quadfire_framenum > level.framenum);//Q2 Xatrix
 		//if (ent->client->pers.silencer_shots)
 		//	is_silenced = MZ_SILENCED;
 		//else
@@ -1025,7 +1025,7 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 
 	if (ent->client->weaponstate == WEAPON_READY)
 	{
-		if (((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK) && (!level.buyzone))//FREDZ seems to work still weapon disapear
+		if (((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK) && (!level.buyzone))//FREDZ seems to work, not sure if it works for all weapons yet
 		{
 			ent->client->latched_buttons &= ~BUTTON_ATTACK;
 
@@ -1218,7 +1218,7 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 	}
 */
 }
-
+/*//FREDZ Quake2
 void Weapon_Grenade (edict_t *ent)
 {
 	if ((ent->client->newweapon) && (ent->client->weaponstate == WEAPON_READY))
@@ -1324,7 +1324,7 @@ void Weapon_Grenade (edict_t *ent)
 		}
 	}
 }
-
+*/
 
 
 // JOSEPH 18-DEC-98

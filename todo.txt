@@ -1,13 +1,11 @@
 
 -players still can kill each other void T_Damage and void T_DamageMDX  (fixed but not tested)
 
--but sounds and maybe talking need to be fixed (not tested, see coop mod)
+-but sounds wave and maybe talking need to be fixed (not tested, see coop mod)
 
 -spawning of enemies need to be tweaked 
 
 -hud and scoreboard can be done better
-
--level.buyzone weapon disapear.
 
 -Does spec need fix? solid/noclip
 
@@ -18,3 +16,5 @@
 -drop cash need fix for 0, 9999 and all or weird value's not integer, atoi is probably causing problems
 
 -localteam adding
+
+-rat makes some weird walking sound
