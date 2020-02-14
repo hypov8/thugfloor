@@ -507,7 +507,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 		if (attacker->svflags & SVF_MONSTER)
 		{
 			//Bitch
-			if (strcmp(attacker->classname, "cast_bitch"))
+			if (!strcmp(attacker->classname, "cast_bitch"))
 			{
 				switch (mod)
 				{
@@ -544,7 +544,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				}
 			}
 			//Runt
-			else if (strcmp(attacker->classname, "cast_runt"))
+			else if (!strcmp(attacker->classname, "cast_runt"))
 			{
 				switch (mod)
 				{
@@ -581,7 +581,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				}
 			}
 			//Shorty
-			else if (strcmp(attacker->classname, "cast_shorty"))
+			else if (!strcmp(attacker->classname, "cast_shorty"))
 			{
 				switch (mod)
 				{
@@ -618,7 +618,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				}
 			}
 			//Thug
-			else if (strcmp(attacker->classname, "cast_thug"))
+			else if (!strcmp(attacker->classname, "cast_thug"))
 			{
 				switch (mod)
 				{
@@ -655,7 +655,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				}
 			}
 			//Punk
-			else if (strcmp(attacker->classname, "cast_punk"))
+			else if (!strcmp(attacker->classname, "cast_punk"))
 			{
 				switch (mod)
 				{
@@ -692,7 +692,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				}
 			}
 			//Whore
-			else if (strcmp(attacker->classname, "cast_whore"))
+			else if (!strcmp(attacker->classname, "cast_whore"))
 			{
 				switch (mod)
 				{

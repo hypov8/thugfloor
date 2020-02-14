@@ -644,10 +644,10 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 			gi.bprintf(PRINT_HIGH, "ERROR: No deathmatch spawn points in map.\n");
 			GameEND();
 		}
-        if (level.dmSpawnPointCount<=4)
+		if (level.dmSpawnPointCount < 4)
 		{
-			gi.bprintf(PRINT_HIGH, "ERROR: Not enough deathmatch spawn points in map.\n");
-			GameEND();
+			gi.bprintf(PRINT_HIGH, "WARNING: Not enough deathmatch spawn points in map.\n");
+			//GameEND(); //hypov8 this is not 'required'. bots can spawn ontop of each other
 		}
 
 		return;

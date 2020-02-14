@@ -296,7 +296,7 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 		if (attacker->svflags & SVF_MONSTER)
 		{
 			//Bitch
-			if (strcmp(attacker->classname, "cast_bitch"))
+			if (!strcmp(attacker->classname, "cast_bitch"))
 			{
 				switch (mod)
 				{
@@ -333,7 +333,7 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 				}
 			}
 			//Runt
-			else if (strcmp(attacker->classname, "cast_runt"))
+			else if (!strcmp(attacker->classname, "cast_runt"))
 			{
 				switch (mod)
 				{
@@ -370,7 +370,7 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 				}
 			}
 			//Shorty
-			else if (strcmp(attacker->classname, "cast_shorty"))
+			else if (!strcmp(attacker->classname, "cast_shorty"))
 			{
 				switch (mod)
 				{
@@ -407,7 +407,7 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 				}
 			}
 			//Thug
-			else if (strcmp(attacker->classname, "cast_thug"))
+			else if (!strcmp(attacker->classname, "cast_thug"))
 			{
 				switch (mod)
 				{
@@ -444,7 +444,7 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 				}
 			}
 			//Punk
-			else if (strcmp(attacker->classname, "cast_punk"))
+			else if (!strcmp(attacker->classname, "cast_punk"))
 			{
 				switch (mod)
 				{
@@ -481,7 +481,7 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 				}
 			}
 			//Whore
-			else if (strcmp(attacker->classname, "cast_whore"))
+			else if (!strcmp(attacker->classname, "cast_whore"))
 			{
 				switch (mod)
 				{
