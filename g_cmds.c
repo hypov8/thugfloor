@@ -4093,7 +4093,8 @@ skipnext:*/
 void Cmd_DropCash_f (edict_t *ent)
 {
     edict_t		*cash;
-	char		*s;
+	char		*arg3Val;
+	int			argCnt;
 
 	if (ent->solid == SOLID_NOT)
 		return;
@@ -4102,11 +4103,12 @@ void Cmd_DropCash_f (edict_t *ent)
 		return;
 //	ent->client->last_wave = level.time;
 
-	s = gi.args();
+	arg3Val = gi.argv(2); //index3
+	argCnt = gi.argc();
 
     if ((int)(dmflags->value) & DF_DROP_CASH)
 	{
-    /*    if (Q_stricmp(s, "all") == 0)//Not working
+        if (argCnt == 3 && !Q_stricmp(arg3Val, "all")) //drop cash all
         {
             if (ent->client->pers.currentcash)
             {
@@ -4114,7 +4116,7 @@ void Cmd_DropCash_f (edict_t *ent)
                 cash->currentcash = ent->client->pers.currentcash;
                 ent->client->pers.currentcash = 0;
 
-                switch (rand()%3)
+                switch (rand()%3)//hypov8 todo: chick sounds?
                 {
                 case 0:
                     gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/heresmoney.wav"), 1, ATTN_NORM, 0);
@@ -4128,24 +4130,24 @@ void Cmd_DropCash_f (edict_t *ent)
                 }
                 return;
             }
-        }*/
-        if (gi.argc() == 3)
+        }
+        else if (gi.argc() == 3) //drop cash xx // is it typed any other way?	
 		{
 			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) /*&& (ent->client->pers.bagcash == 0)*/)//FREDZ
 				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_nodollar.wav"), 1, ATTN_NORM, 0);
+			else if (ent->gender == GENDER_FEMALE && ent->client->pers.currentcash == 0)//hypov8 no cash. sound for bitch
+				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/female/yolanda/nomoney.wav"), 1, ATTN_NORM, 0);
 
 			if (ent->client->pers.currentcash)
 			{
-			    int ammount;
-
-			    ammount = atoi(gi.argv(3));
+			    int ammount = atoi(arg3Val);
 
                 if (ammount>MAX_PLAYER_CASH)//Need fix
                 {
                     gi.cprintf(ent,PRINT_HIGH,"You can not give that much\n");
                     return;
                 }
-                if (ammount=0)//Need fix
+                if (ammount==0)//Need fix
                 {
                     gi.cprintf (ent, PRINT_HIGH, "No cash to drop.\n");
                     return;
@@ -4178,7 +4180,7 @@ void Cmd_DropCash_f (edict_t *ent)
 							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/nomoney1.wav"), 1, ATTN_NORM, 0);
 						else
 							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/nomoney2.wav"), 1, ATTN_NORM, 0);
-					}
+					} //hypov8 todo: chick sounds?
 					cash->currentcash = ent->client->pers.currentcash;
 					ent->client->pers.currentcash = 0;
 					return;
@@ -4187,10 +4189,12 @@ void Cmd_DropCash_f (edict_t *ent)
 			}
 			return;
 		}
-		else//FREDZ old code with a bit updates
+		else//FREDZ old code with a bit updates		//drop cash. no value
 		{
 			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) /*&& (ent->client->pers.bagcash == 0)*/)//FREDZ
 				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_nodollar.wav"), 1, ATTN_NORM, 0);
+			else if (ent->gender == GENDER_FEMALE && ent->client->pers.currentcash == 0)//hypov8 no cash. sound for bitch
+				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/female/yolanda/nomoney.wav"), 1, ATTN_NORM, 0);
 
 			if (ent->client->pers.currentcash)
 			{
@@ -4209,8 +4213,8 @@ void Cmd_DropCash_f (edict_t *ent)
 
 					if (ent->client->pers.currentcash == 50)
 						gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/yes50.wav"), 1, ATTN_NORM, 0);
-				}
-
+				}//hypov8 todo: chick sounds?
+				
 				if (ent->client->pers.currentcash >= 10)//FREDZ new check if we can drop 10
                 {
                     cash = SpawnTheWeapon( ent, "item_cashroll" );

@@ -266,7 +266,7 @@ foundspot:
 				trace_t		trace2;
 
 				// JOSEPH 5-JUN-99
-				if ((ent->classname && strcmp(ent->classname, "cast_dog")) || (ent->classname && strcmp(ent->classname, "cast_rat")))
+				if ((ent->classname && strcmp(ent->classname, "cast_dog")) && (ent->classname && strcmp(ent->classname, "cast_rat")))
 				{
 					ent->s.event = EV_FOOTSTEP0 + ent->footsteptype;
 				}
