@@ -733,6 +733,13 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		return;
 	}
 
+	if (targ->client && attacker->client && targ != attacker)
+		return; //skip human players
+
+	if (!targ->client && !attacker->client && targ != attacker)
+		return; //skip bots killing each other
+
+
     // easy mode takes half damage
 	if (deathmatch->value == 0 && targ->client)//FREDZ move to here to fix coop damage
 	{

@@ -1349,6 +1349,7 @@ void ScrollMenuRight (edict_t *ent);
 void ScrollMenuPrev (edict_t *ent);
 void ScrollMenuNext (edict_t *ent);
 void SP_cast_pawn_o_matic (edict_t *self);
+void ScrollMenuKeyLogger(edict_t *self); //scroll menu update keys
 
 //
 // tourney.c
@@ -1712,6 +1713,13 @@ struct gclient_s
 	clientHistory_t	saved;		// the client's saved position
 
 	qboolean	showscrollmenu;		//FREDZ set layout stat
+
+	byte	scrollmenu_fwd_do;
+	byte	scrollmenu_side_do;
+	short	scrollmenu_forward;		//FREDZ set layout stat
+	short	scrollmenu_side;		//FREDZ set layout stat
+
+
 };
 
 

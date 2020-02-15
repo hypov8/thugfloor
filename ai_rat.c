@@ -539,7 +539,10 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 }//FREDZ end
 void Rat_GibEntity( edict_t *self, edict_t *inflictor, float damage )//FREDZ less gibs
 {
-	vec3_t	dir;
+	vec3_t	dir, offset;
+
+	VectorCopy(self->s.origin, offset);
+	offset[2] += 8; //shift gibs out of floor
 
 	// turn off flames
 	if (self->onfiretime)
@@ -555,7 +558,7 @@ void Rat_GibEntity( edict_t *self, edict_t *inflictor, float damage )//FREDZ les
 	//FREDZ copied from rat_die and altered
 	gi.WriteByte (svc_temp_entity);
 	gi.WriteByte (TE_GIBS);
-	gi.WritePosition (self->s.origin);
+	gi.WritePosition (offset);
 	gi.WriteDir (dir);
 	gi.WriteByte ( 1 );	// number of gibs
 	gi.WriteByte ( 0 );	// scale of direction to add to velocity

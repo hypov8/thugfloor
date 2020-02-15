@@ -331,7 +331,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 	for (k=i=0 ; i<maxclients->value ; i++)
 	{
 		player = g_edicts + 1 + i;
-		if (!player->inuse || player->client->pers.spectator != SPECTATING)
+		if (!player->inuse || player->client->pers.spectator == PLAYING)
 			continue;
 
 		if (curtime - player->client->pers.lastpacket >= 5000)
@@ -340,6 +340,10 @@ void SpectatorScoreboardMessage (edict_t *ent)
 			tag = "096";
 		else if (player->client->pers.admin > NOT_ADMIN)
 			tag = "779";
+		else if (player->client->pers.player_dead == TRUE)
+			tag = "900";
+		else if (player->client->pers.spectator == PLAYER_READY)
+			tag = "333";//FREDZ just joined, grey to black
 		else if (player == ent)
 			tag = "990";
 		else
@@ -1081,7 +1085,8 @@ skip2:
 			for (i=0 ; i<maxclients->value ; i++)
 			{
 				dood = g_edicts + 1 + i;
-				if (dood->client && ((dood->inuse && dood->client->pers.spectator == SPECTATING) || (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
+				if (dood->client && ((dood->inuse && dood->client->pers.spectator != PLAYING) 
+					|| (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
 					found = true;
 			}
 		}

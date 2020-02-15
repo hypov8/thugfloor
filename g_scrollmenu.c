@@ -140,6 +140,119 @@ void ScrollMenuMessage (edict_t *ent)
 	gi.unicast (ent, false);//true);
 }
 
+qboolean Pickup_Armor_Scroll(char *name, edict_t *other)
+{
+	if (strcmp(name, "item_armor_helmet") == 0)
+	{
+		gitem_t *itemh = FindItem("Helmet Armor");
+		gitem_t *itemhh = FindItem("Helmet Armor Heavy");
+
+		if ((other->client->pers.inventory[ITEM_INDEX(itemh)] == 100) ||
+			(other->client->pers.inventory[ITEM_INDEX(itemhh)] == 100))
+			return false;
+
+		if (other->client->pers.inventory[ITEM_INDEX(itemhh)])
+		{
+			//			other->client->pers.inventory[ITEM_INDEX(itemhh)] += 25;
+			other->client->pers.inventory[ITEM_INDEX(itemhh)] += 50;//FREDZ nobody like this part that upgrade is only 25
+			if (other->client->pers.inventory[ITEM_INDEX(itemhh)] > 100)
+				other->client->pers.inventory[ITEM_INDEX(itemhh)] = 100;
+		}
+		else
+		{
+			other->client->pers.inventory[ITEM_INDEX(itemh)] += 50;
+			if (other->client->pers.inventory[ITEM_INDEX(itemh)] > 100)
+				other->client->pers.inventory[ITEM_INDEX(itemh)] = 100;
+		}
+	}
+	else if (strcmp(name, "item_armor_jacket") == 0)
+	{
+		gitem_t *itemj = FindItem("Jacket Armor");
+		gitem_t *itemjh = FindItem("Jacket Armor Heavy");
+
+		if ((other->client->pers.inventory[ITEM_INDEX(itemj)] == 100) ||
+			(other->client->pers.inventory[ITEM_INDEX(itemjh)] == 100))
+			return false;
+
+		if (other->client->pers.inventory[ITEM_INDEX(itemjh)])
+		{
+			//			other->client->pers.inventory[ITEM_INDEX(itemjh)] += 25;
+			other->client->pers.inventory[ITEM_INDEX(itemjh)] += 50;//FREDZ nobody like this part that upgrade is only 25
+			if (other->client->pers.inventory[ITEM_INDEX(itemjh)] > 100)
+				other->client->pers.inventory[ITEM_INDEX(itemjh)] = 100;
+		}
+		else
+		{
+			other->client->pers.inventory[ITEM_INDEX(itemj)] += 50;
+			if (other->client->pers.inventory[ITEM_INDEX(itemj)] > 100)
+				other->client->pers.inventory[ITEM_INDEX(itemj)] = 100;
+		}
+	}
+	else if (strcmp(name, "item_armor_legs") == 0)
+	{
+		gitem_t *iteml = FindItem("Legs Armor");
+		gitem_t *itemlh = FindItem("Legs Armor Heavy");
+
+		if ((other->client->pers.inventory[ITEM_INDEX(iteml)] == 100) ||
+			(other->client->pers.inventory[ITEM_INDEX(itemlh)] == 100))
+			return false;
+
+		if (other->client->pers.inventory[ITEM_INDEX(itemlh)])
+		{
+			//			other->client->pers.inventory[ITEM_INDEX(itemlh)] += 25;
+			other->client->pers.inventory[ITEM_INDEX(itemlh)] += 50;//FREDZ nobody like this part that upgrade is only 25
+			if (other->client->pers.inventory[ITEM_INDEX(itemlh)] > 100)
+				other->client->pers.inventory[ITEM_INDEX(itemlh)] = 100;
+		}
+		else
+		{
+			other->client->pers.inventory[ITEM_INDEX(iteml)] += 50;
+			if (other->client->pers.inventory[ITEM_INDEX(iteml)] > 100)
+				other->client->pers.inventory[ITEM_INDEX(iteml)] = 100;
+		}
+	}
+	else if (strcmp(name, "item_armor_helmet_heavy") == 0)
+	{
+		gitem_t *itemh = FindItem("Helmet Armor");
+		gitem_t *itemhh = FindItem("Helmet Armor Heavy");
+
+		if (other->client->pers.inventory[ITEM_INDEX(itemhh)] == 100)
+			return false;
+
+		if (other->client->pers.inventory[ITEM_INDEX(itemh)])
+			other->client->pers.inventory[ITEM_INDEX(itemh)] = 0;
+
+		other->client->pers.inventory[ITEM_INDEX(itemhh)] = 100;
+	}
+	else if (strcmp(name, "item_armor_jacket_heavy") == 0)
+	{
+		gitem_t *itemj = FindItem("Jacket Armor");
+		gitem_t *itemjh = FindItem("Jacket Armor Heavy");
+
+		if (other->client->pers.inventory[ITEM_INDEX(itemjh)] == 100)
+			return false;
+
+		if (other->client->pers.inventory[ITEM_INDEX(itemj)])
+			other->client->pers.inventory[ITEM_INDEX(itemj)] = 0;
+
+		other->client->pers.inventory[ITEM_INDEX(itemjh)] = 100;
+	}
+	else if (strcmp(name, "item_armor_legs_heavy") == 0)
+	{
+		gitem_t *iteml = FindItem("Legs Armor");
+		gitem_t *itemlh = FindItem("Legs Armor Heavy");
+
+		if (other->client->pers.inventory[ITEM_INDEX(itemlh)] == 100)
+			return false;
+
+		if (other->client->pers.inventory[ITEM_INDEX(iteml)])
+			other->client->pers.inventory[ITEM_INDEX(iteml)] = 0;
+
+		other->client->pers.inventory[ITEM_INDEX(itemlh)] = 100;
+	}
+	return true;
+}
+
 extern void AutoLoadWeapon( gclient_t *client, gitem_t *weapon, gitem_t *ammo );
 void ScrollMenuBuy(edict_t *ent)
 {
@@ -275,6 +388,14 @@ void ScrollMenuBuy(edict_t *ent)
 			return;
 		}
 
+		if (!Add_Ammo(ent, it, it->quantity))
+		{
+			gi.centerprintf(ent, "you're all full up... you can't hold any more\n");
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup1.wav"), 1, ATTN_NORM, 0);
+			ent->timestamp = level.time + 2;
+			return;
+		}
+
 		i = rand()%3;
 		switch (i)
 		{
@@ -292,14 +413,6 @@ void ScrollMenuBuy(edict_t *ent)
 			break;
 		}
 		ent->timestamp = level.time + 2;
-
-		if ( !Add_Ammo( ent, it, it->quantity ) )
-		{
-			gi.centerprintf (ent, "you're all full up... you can't hold any more\n");
-			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup1.wav"), 1, ATTN_NORM, 0);
-			ent->timestamp = level.time + 2;
-			return;
-		}
 	}
 	else if (it->flags & IT_ARMOR)
 	{
@@ -321,6 +434,14 @@ void ScrollMenuBuy(edict_t *ent)
 			return;
 		}
 
+		if (!Pickup_Armor_Scroll(it->classname, ent))
+		{
+			gi.centerprintf(ent, "you don't need any more armor...\nyou're full up\n");
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup2.wav"), 1, ATTN_NORM, 0);
+			ent->timestamp = level.time + 2;
+			return;
+		}
+
 		i = rand()%3;
 		switch (i)
 		{
@@ -339,7 +460,7 @@ void ScrollMenuBuy(edict_t *ent)
 		}
 		ent->timestamp = level.time + 2;
 
-		ent->client->pers.inventory[ITEM_INDEX(it)] = it->quantity;
+		//ent->client->pers.inventory[ITEM_INDEX(it)] = it->quantity;
 	}
 	else if (it->flags & IT_WEAPON)
 	{
@@ -365,28 +486,18 @@ void ScrollMenuBuy(edict_t *ent)
 			return;
 		}
 
-		i = rand()%3;
-		switch (i)
-		{
-		case 0:
-			gi.centerprintf (ent, "It's all yours\n");
-			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/sold1.wav"), 1, ATTN_NORM, 0);
-			break;
-		case 1:
-			gi.centerprintf (ent, "Here ya go\n");
-			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/sold2.wav"), 1, ATTN_NORM, 0);
-			break;
-		case 2:
-			gi.centerprintf (ent, "Sold\n");
-			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/sold3.wav"), 1, ATTN_NORM, 0);
-			break;
-		}
 
 		if (ent->current_menu_left == 1)//FREDZ mods
 		{
+			qboolean haveIten = 0;
+
 			if (ent->current_menu_right == 0)
 			{
 				it_weapon = FindItem ("Pistol Silencer");
+				if (ent->client->pers.silencer_shots == 20)
+					haveIten = 1;
+				else
+					ent->client->pers.silencer_shots = 20; //can re'buy
 			}
 			else if (ent->current_menu_right == 1)
 			{
@@ -403,9 +514,23 @@ void ScrollMenuBuy(edict_t *ent)
 			else if (ent->current_menu_right == 4)
 			{
 				it_weapon = FindItem ("HMG Cooling Mod");
+				if (ent->client->pers.hmg_shots = 30)
+					haveIten = 1;
+				else
+					ent->client->pers.hmg_shots = 30;
 			}
 
 			index_weapon = ITEM_INDEX(it_weapon);
+
+			if (ent->client->pers.inventory[index_weapon] &&
+				(ent->current_menu_right == 1||ent->current_menu_right == 2||ent->current_menu_right == 3|| haveIten)
+			)
+			{
+				gi.centerprintf(ent, "you don't need any more...\nyou're full up\n");
+				gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup2.wav"), 1, ATTN_NORM, 0);
+				ent->timestamp = level.time + 2;
+				return;
+			}
 
 			it_ent = G_Spawn();
 			it_ent->classname = it_weapon->classname;
@@ -414,14 +539,19 @@ void ScrollMenuBuy(edict_t *ent)
 			if (it_ent->inuse)
 					G_FreeEdict(it_ent);
 
-			ent->client->pers.hmg_shots = 30;//FREDZ fix
-			ent->client->pers.silencer_shots = 20;//FREDZ fix
-
 			ent->timestamp = level.time + 2;
 		}
 		else
 		{
 			ent->timestamp = level.time + 2;
+
+			if (ent->client->pers.inventory[index])
+			{
+				gi.centerprintf(ent, "you have that weapon...\nyou're full up\n"); //todo sound/text?
+				gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup2.wav"), 1, ATTN_NORM, 0);
+				return;
+			}
+
 			it_ent = G_Spawn();
 			it_ent->classname = it->classname;
 			SpawnItem (it_ent, it);
@@ -449,6 +579,24 @@ void ScrollMenuBuy(edict_t *ent)
 
 			if (it->use)
 				ent->client->pers.selected_item = ent->client->ps.stats[STAT_SELECTED_ITEM] = ITEM_INDEX(it);
+		}
+
+		//moved down here after checks.. play 2 sounds ok?
+		i = rand() % 3;
+		switch (i)
+		{
+		case 0:
+			gi.centerprintf(ent, "It's all yours\n");
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/sold1.wav"), 1, ATTN_NORM, 0);
+			break;
+		case 1:
+			gi.centerprintf(ent, "Here ya go\n");
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/sold2.wav"), 1, ATTN_NORM, 0);
+			break;
+		case 2:
+			gi.centerprintf(ent, "Sold\n");
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/sold3.wav"), 1, ATTN_NORM, 0);
+			break;
 		}
 	}
 
@@ -601,5 +749,24 @@ void SP_cast_pawn_o_matic( edict_t *self )
 	self->flags |= FL_GODMODE;
 
 	SP_cast_runt(self);
+}
+
+//scroll menu, update keys using id movement code
+void ScrollMenuKeyLogger(edict_t *ent)
+{
+	if (ent->client->scrollmenu_fwd_do == 1) {
+		if (ent->client->scrollmenu_forward > 0)
+			ScrollMenuPrev(ent);
+		else
+			ScrollMenuNext(ent);
+		ent->client->scrollmenu_fwd_do = 2;
+	}
+	if (ent->client->scrollmenu_side_do ==1) {
+		if (ent->client->scrollmenu_side > 0)
+			ScrollMenuRight(ent);
+		else
+			ScrollMenuLeft(ent);
+		ent->client->scrollmenu_side_do = 2;
+	}
 }
 

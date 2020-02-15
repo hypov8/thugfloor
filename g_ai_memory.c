@@ -1141,7 +1141,7 @@ void AI_UpdateCharacterMemories( int max_iterations )
 	static int src_index, dest_index;
 	int			num_iterations=0;
 	edict_t		*src, *dest;
-	int			i;
+	int			i, plyr;
 
 	/*if (deathmatch->value)
 		return;*/
@@ -1153,30 +1153,32 @@ void AI_UpdateCharacterMemories( int max_iterations )
 		return;
 
 	// first check client sightings
-	dest = level.characters[0]; //hypov8 todo: not just client 1?
-
-	if (dest && !(dest->flags & FL_NOTARGET))
+	for (plyr = 0; plyr < maxclients->value; plyr++)
 	{
-		for (i=1; i< MAX_CHARACTERS /*level.num_characters*/; i++)
+		dest = level.characters[plyr]; //hypov8 todo: not just client 1?
+
+		if (dest && !(dest->flags & FL_NOTARGET))
 		{
-			src = level.characters[i];
+			for (i = 1; i < MAX_CHARACTERS /*level.num_characters*/; i++)
+			{
+				src = level.characters[i];
 
-			if (!src)
-				continue;
+				if (!src)
+					continue;
 
-			if (src->health <= 0)
-				continue;
+				if (src->health <= 0)
+					continue;
 
-			if (src->client)
-				continue;
+				if (src->client)
+					continue;
 
-			if (src->cast_group < 2)
-				continue;
+				if (src->cast_group < 2)
+					continue;
 
-			AI_CheckRecordMemory( src, dest );
+				AI_CheckRecordMemory(src, dest);
+			}
 		}
 	}
-
 	if (src_index >= MAX_CHARACTERS /*level.num_characters*/)
 		src_index = 0;
 

@@ -5860,7 +5860,9 @@ void ClientCommand (edict_t *ent)
 	else if (ent->client->showscrollmenu)
 	{
 
-		if (Q_stricmp (cmd, "invuse") == 0)
+		if (Q_stricmp (cmd, "invuse") == 0 || Q_stricmp (cmd, "key1") == 0 
+			||Q_stricmp (cmd, "reload") == 0 ||Q_stricmp (cmd, "holster") == 0 //any other commands to accept menu?
+		)
 			ScrollMenuBuy (ent);
 
 		//FREDZ To initiate scroll menu
@@ -5869,7 +5871,7 @@ void ClientCommand (edict_t *ent)
 			Cmd_InitMenu_f (ent);
 		//End AS
 
-		else if (Q_stricmp (cmd, "leftarrow") == 0)//FREDZ maybe add more key options for this?
+		/*else if (Q_stricmp (cmd, "leftarrow") == 0)//FREDZ maybe add more key options for this?
 			ScrollMenuLeft (ent);
 		else if (Q_stricmp (cmd, "rightarrow") == 0)
 			ScrollMenuRight (ent);
@@ -5877,10 +5879,8 @@ void ClientCommand (edict_t *ent)
 		else if (Q_stricmp (cmd, "uparrow") == 0)
 			ScrollMenuPrev (ent);
 		else if (Q_stricmp (cmd, "downarrow") == 0)
-			ScrollMenuNext (ent);
+			ScrollMenuNext (ent);*/
 		// END JOSEPH
-		else if (Q_stricmp (cmd, "key1") == 0)
-			ScrollMenuBuy (ent);
 
 		else if (Q_stricmp (cmd, "inven") == 0)
 			Cmd_Inven_f (ent);

@@ -3525,6 +3525,24 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
     //FREDZ
 	else if (ent->client->showscrollmenu)
 	{
+		//reset keys if up
+		if (!ucmd->forwardmove && ent->client->scrollmenu_fwd_do == 2)
+			ent->client->scrollmenu_fwd_do = 0;
+		if (!ucmd->sidemove && ent->client->scrollmenu_side_do == 2)
+			ent->client->scrollmenu_side_do = 0;
+
+		//scroll menu update keys
+		if (ucmd->forwardmove && ent->client->scrollmenu_fwd_do == 0)
+		{
+			ent->client->scrollmenu_fwd_do = 1;
+			ent->client->scrollmenu_forward = ucmd->forwardmove;
+		}
+		if (ucmd->sidemove && ent->client->scrollmenu_side_do == 0)
+		{
+			ent->client->scrollmenu_side_do = 1;
+			ent->client->scrollmenu_side = ucmd->sidemove;
+		}
+
 		//client->ps.pmove.pm_type = PM_FREEZE;
 		client->ps.pmove.pm_type = PM_DEAD;
 		return;
@@ -4330,6 +4348,11 @@ void ClientBeginServerFrame (edict_t *ent)
 			gi.cprintf( ent, PRINT_HIGH, "SOUND TODO: WARNING: Jet Pack power is LOW\n");
 		}
 	}
+
+	//scroll menu update keys
+	if (ent->client->showscrollmenu)
+		ScrollMenuKeyLogger(ent);
+
 }
 
 // MH: cprintf removed (switched back to using gi.cprintf)

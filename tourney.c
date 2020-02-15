@@ -283,6 +283,10 @@ void WaveStart () // Starts the match
 			self->client->showhelp = false;
 			self->client->showinventory = false;
 			self->client->showscrollmenu = false;
+			//reset buy menu. did you want to let ppl buy after the 60 secs? 
+			self->current_menu_side = 0;
+			self->current_menu_left = 0;
+			self->current_menu_right = 0;
 
 			//give cash to ppl entering a new game
 			if (level.waveNum == 0)

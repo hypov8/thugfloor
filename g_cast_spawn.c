@@ -1041,13 +1041,26 @@ void cast_TF_spawn(int ammount, int type)
 
 		ED_CallSpawn(spawn);
 
+		spawn->start_ent = spawnspot; // go back to spawnpoint
+
 		if(!Q_strcasecmp(spawn->classname, "cast_dog"))
 			spawn->cast_group = 23; //hypov8 does this work?
+		if(!Q_strcasecmp(spawn->classname, "cast_rat"))
+			spawn->cast_group = 22;
 		else
-			spawn->cast_group = 22; //hypov8 does this work?
+			spawn->cast_group = 21;
 
-		if (!spawn->health)
-			spawn->health = 100; //todo multiplyer?
+		if (!spawn->health)	spawn->health = 100;
+
+		//make enemy health varable
+		if ((int)maxwaves->value == 2)
+			spawn->health =  (int)((float)spawn->health * (0.5f + (float)level.waveNum / 22.0f)); //50% to 100%
+		else if ((int)maxwaves->value == 1)
+			spawn->health =  (int)((float)spawn->health * (0.5f + (float)level.waveNum / 16.0f)); //50% to 100%
+		else
+			spawn->health =  (int)((float)spawn->health * (0.5f + (float)level.waveNum / 10.0f)); //50% to 100%
+
+		if (spawn->health< 10)	spawn->health = 10;
 
 		//set what player to attack
 		cast_TF_setEnemyPlayer(spawn);
@@ -1057,48 +1070,28 @@ void cast_TF_spawn(int ammount, int type)
 	}
 }
 
-//FREDZ tweak probably devide this to 2 and to up divide by 2? makes sence with the 2.5 before with money?
-//wave total enemy counts
-//originale:
-//static int wave_shortGame[5] = { 25, 32, 35, 42, 1 };
-//Devide by 5:
-//static int wave_shortGame[5] = { 5, 6, 7, 8, 1 };
-//Devide by 2:
+//total enemy counts per wave. 
+//this will be multiplied by player counts later
+#if 0 // HYPODEBUG
+static int wave_shortGame[5] = { 2, 2, 2, 2, 1 };
+static int wave_medGame[8] = { 2, 2, 2, 2, 2, 2, 2, 1 };
+static int wave_longGame[11] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
+#else
 static int wave_shortGame[5] = { 13, 16, 17, 21, 1 };
-
-//originale:
-//static int wave_medGame[8] = { 25, 28, 32, 35, 35, 40, 42, 1 };
-//Devide by 5:
-//static int wave_medGame[8] = { 5, 6, 7, 7, 7, 8, 8, 1 };
-//Devide by 2:
 static int wave_medGame[8] = { 13, 14, 16, 17, 17, 20, 21, 1 };
+static int wave_longGame[11] = { 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 1 };
+#endif
 
-//originale:
-//static int wave_longGame[11] = { 25, 28, 32, 32, 35, 35, 35, 40, 42, 42, 1 };
-//Devide by 5:
-//static int wave_longGame[11] = { 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 1 };
-//Devide by 2:
-static int wave_longGame[11] = { 13, 14, 16, 17, 17, 17, 17, 20, 21, 21, 1 };
-
-//wave skill. number of enemy allowed in level at 1 time. max 8 players
-//originale:
-/*
+//max number of active enemy's spawned into a level. 
+//the more players the more active enemy
 static int wave_skill[5][9] = {
-	{ 0, 10, 14, 32, 32, 32, 32, 32, 32},   //novice
-	{ 0, 11, 18, 32, 32, 32, 32, 32, 32},   //easy
-	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 },  //medium
-	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 },  //hard
-	{ 0, 12, 18, 32, 32, 32, 32, 32, 32 }   //real
-};*/
-//Devide by 2:
-static int wave_skill[5][9] = {
-//num players
-//0, 1, 2, 3, 4, 5, 6. 7, 8
-	{ 0, 5, 7, 16, 16, 16, 16, 16, 16},     //novice
-	{ 0, 5, 9, 16, 16, 16, 16, 16, 16},     //easy
-	{ 0, 6, 9, 16, 16, 16, 16, 16, 16 },    //medium
-	{ 0, 6, 9, 16, 16, 16, 16, 16, 16 },    //hard
-	{ 0, 6, 9, 16, 16, 16, 16, 16, 16 }     //real
+	//num players
+	//0, 1, 2, 3, 4, 5, 6, 7,  8		//max 8 players
+	{ 0, 4, 5, 6, 7, 8, 9, 10, 11},     //novice
+	{ 0, 5, 6, 7, 8, 9, 10, 11, 12},     //easy
+	{ 0, 6, 8, 10, 12, 14, 16, 16, 16 },    //medium
+	{ 0, 7, 9, 11, 13, 15, 16, 16, 16 },    //hard
+	{ 0, 8, 11, 14, 16, 16, 16, 16, 16 }     //real
 };
 
 /*
@@ -1161,7 +1154,7 @@ void cast_TF_setupEnemyCounters(void)
 	else
 	{
 		currWave_length = 5;//short wave
-		level.waveEnemyCount = wave_longGame[level.waveNum] * playerCount;
+		level.waveEnemyCount = wave_shortGame[level.waveNum] * playerCount;
 	}
 }
 
