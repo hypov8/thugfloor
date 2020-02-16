@@ -2579,7 +2579,7 @@ void ClientBegin (edict_t *ent)
 		}
 
 	}
-	else if (strstr(level.mapname, "office_"))
+	else if (strstr(level.mapname, "office_"))//FREDZ Office used in rc5 localteam
 	{
 		level.bar_lvl = true;
 		Cmd_HolsterBar_f (ent);
@@ -3332,8 +3332,8 @@ void ClientDisconnect (edict_t *ent)
 	if (ent->inuse)
 	{
 		// MH: drop cash before leaving
-		if ((ent->solid != SOLID_NOT) && (level.waveNum != 1))//FREDZ some people joint accidently first round.
-			DropCash(ent);
+//		if ((ent->solid != SOLID_NOT) && (level.waveNum != 1))//FREDZ some people joint accidently first round.//Not using
+//			DropCash(ent);
 
 		// MH; cancel their vote
 		if (ent->vote == CALLED_VOTE)
@@ -4358,6 +4358,7 @@ void ClientBeginServerFrame (edict_t *ent)
 // MH: cprintf removed (switched back to using gi.cprintf)
 
 // MH: drop cash
+/*
 void DropCash(edict_t *self)
 {
 	edict_t *cash;
@@ -4402,3 +4403,4 @@ void DropCash(edict_t *self)
 		cash->velocity[2] = 300;
 	}
 }
+*/

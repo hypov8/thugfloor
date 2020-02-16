@@ -1,7 +1,6 @@
 
--players still can kill each other void T_Damage and void T_DamageMDX  (fixed but not tested)
 
--but sounds wave and maybe talking need to be fixed (not tested, see coop mod)
+-but sounds wave and maybe talking need to be fixed (working now, not fully tested)
 
 -spawning of enemies need to be tweaked 
 
@@ -12,8 +11,6 @@
 -max players allowed to enter a wave
 
 -rename maxwaves cvar
-
--drop cash need fix for 0, 9999 and all or weird value's not integer, atoi is probably causing problems
 
 -localteam adding
 

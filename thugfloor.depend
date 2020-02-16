@@ -6188,3 +6188,356 @@
 1581379655 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 15\voice_punk.c
 	"g_local.h"
 
+1581824809 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_bitch.c
+	"g_local.h"
+	"ai_bitch.h"
+	"voice_bitch.h"
+	"ai_bitch_tables.h"
+
+1581821522 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_local.h
+	"q_shared.h"
+	"game.h"
+	"g_nav.h"
+	"vehicles.h"
+	"g_teamplay.h"
+	"file.h"
+	"g_ai.h"
+	"voice.h"
+	"ep_all.h"
+	<ctype.h>
+	"versioncheck.h"
+
+1581469970 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\q_shared.h
+	<assert.h>
+	<math.h>
+	<stdio.h>
+	<stdarg.h>
+	<string.h>
+	<stdlib.h>
+	<time.h>
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\game.h
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_nav.h
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\vehicles.h
+
+1580781419 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_teamplay.h
+
+1581821557 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\file.h
+
+1578712259 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_ai.h
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\voice.h
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_all.h
+
+1580344436 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\versioncheck.h
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_bitch.h
+
+1532380526 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\voice_bitch.h
+
+1460079152 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_bitch_tables.h
+
+1581690074 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_bum_sit.c
+	"g_local.h"
+	"ai_bum_sit.h"
+	"voice_punk.h"
+	"ai_bum_sit_tables.h"
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_bum_sit.h
+
+1532380526 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\voice_punk.h
+
+1541154638 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_bum_sit_tables.h
+
+1581824614 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_dog.c
+	"g_local.h"
+	"ai_dog.h"
+	"ai_dog_tables.h"
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_dog.h
+
+1579906053 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_dog_tables.h
+
+1581824789 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_punk.c
+	"g_local.h"
+	"ai_punk.h"
+	"voice_punk.h"
+	"ai_punk_tables.h"
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_punk.h
+
+1460241644 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_punk_tables.h
+
+1581824614 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_runt.c
+	"g_local.h"
+	"ai_runt.h"
+	"voice_punk.h"
+	"ai_runt_tables.h"
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_runt.h
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_runt_tables.h
+
+1581824611 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_shorty.c
+	"g_local.h"
+	"ai_shorty.h"
+	"voice_punk.h"
+	"ai_shorty_tables.h"
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_shorty.h
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_shorty_tables.h
+
+1581824803 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_thug.c
+	"g_local.h"
+	"ai_thug.h"
+	"voice_punk.h"
+	"ai_thug_tables.h"
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_thug.h
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_thug_tables.h
+
+1581824781 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_thug_sit.c
+	"g_local.h"
+	"ai_thug_sit.h"
+	"voice_punk.h"
+	"ai_thug_sit_tables.h"
+
+934279268 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_thug_sit.h
+
+934279266 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_thug_sit_tables.h
+
+1581690074 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_whore.c
+	"g_local.h"
+	"ai_whore.h"
+	"voice_bitch.h"
+	"ai_whore_tables.h"
+
+934279266 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_whore.h
+
+934279266 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_whore_tables.h
+
+1581553308 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_all.c
+	"g_local.h"
+
+1532380344 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_crystalpalace.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+
+1532380344 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_log.c
+	"g_local.h"
+
+1532380344 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_posionville.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+	"ep_log.h"
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_log.h
+
+1532380344 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_radiocity.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+	"ep_log.h"
+
+1532380344 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_shipyards.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+	"ep_log.h"
+
+1581205734 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_skidrow.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+	"ep_log.h"
+
+1532380344 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_steeltown.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+	"ep_log.h"
+
+1532380344 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ep_trainyard.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+	"ep_log.h"
+
+1581821588 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\file.c
+	"g_local.h"
+	"file.h"
+	<stdio.h>
+	<io.h>
+	<unistd.h>
+
+1581379655 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_ai.c
+	"g_local.h"
+	"g_func.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+
+1532380344 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_func.h
+
+1581289772 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_ai_ents.c
+	"g_local.h"
+	"g_func.h"
+
+1581205734 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_ai_fight.c
+	"g_local.h"
+
+1581690074 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_cast.c
+	"g_local.h"
+	"ai_thug_sit.h"
+
+1557447405 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_chase.c
+	"g_local.h"
+
+1581379655 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_func.c
+	"g_local.h"
+	"g_func.h"
+
+1581814746 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_items.c
+	"g_local.h"
+
+1580782380 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_joe_misc.c
+	"g_local.h"
+
+1581379655 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_main.c
+	"g_local.h"
+	"voice_bitch.h"
+	"voice_punk.h"
+
+1581379655 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_misc.c
+	"g_local.h"
+
+1578713175 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_pawn.c
+	"g_local.h"
+
+1581384159 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_phys.c
+	"g_local.h"
+
+1581379655 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_save.c
+	"g_local.h"
+	<crtdbg.h>
+
+1581823856 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_spawn.c
+	"g_local.h"
+
+1532380346 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_svcmds.c
+	"g_local.h"
+
+1581205734 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_target.c
+	"g_local.h"
+
+1580781810 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_teamplay.c
+	"g_local.h"
+
+1580782147 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_trigger.c
+	"g_local.h"
+
+1581205734 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_utils.c
+	"g_local.h"
+
+1581464864 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_weapon.c
+	"g_local.h"
+
+1532380346 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\m_bbox.c
+	"g_local.h"
+
+1532380346 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\m_move.c
+	"g_local.h"
+
+1581822297 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\p_view.c
+	"g_local.h"
+	"m_player.h"
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\m_player.h
+
+1581645341 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\p_weapon.c
+	"g_local.h"
+	"m_player.h"
+
+1578692182 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\q_shared.c
+	"q_shared.h"
+	<time.h>
+	<sys/time.h>
+
+1532380346 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\unlagged.c
+	"g_local.h"
+
+1532380346 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\vehicles.c
+	"g_local.h"
+	"veh_defs.h"
+
+1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\veh_defs.h
+
+1580344062 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\versioncheck.c
+	"g_local.h"
+
+1532380346 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\voice.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+
+1532380526 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\voice_bitch.c
+	"g_local.h"
+
+1581379655 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\voice_punk.c
+	"g_local.h"
+
+1581824816 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_rat.c
+	"g_local.h"
+	"ai_rat.h"
+	"ai_rat_tables.h"
+
+1579892162 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_rat.h
+
+1579917092 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\ai_rat_tables.h
+
+1581808807 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_ai_memory.c
+	"g_local.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+
+1581824258 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_cast_spawn.c
+	"g_local.h"
+	"g_cast_spawn.h"
+
+1581524123 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_cast_spawn.h
+
+1581821875 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_cmds.c
+	"g_local.h"
+	"m_player.h"
+	"voice_punk.h"
+	"voice_bitch.h"
+	"../client/anorms.h"
+
+1581808807 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_combat.c
+	"g_local.h"
+	"voice_bitch.h"
+	"voice_punk.h"
+
+1581819721 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\g_scrollmenu.c
+	"g_local.h"
+
+1581826619 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\p_client.c
+	"g_local.h"
+	"m_player.h"
+	"voice_bitch.h"
+	"voice_punk.h"
+	<stddef.h>
+
+1581808807 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\p_hud.c
+	"g_local.h"
+
+1581821522 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 17\tourney.c
+	"g_local.h"
+	"g_cast_spawn.h"
+

@@ -1699,7 +1699,8 @@ void SP_cast_thug(edict_t *self)
 			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug/bald_head.mdx");
 			break;
 		case 2:
-			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug/ski_head.mdx");
+//			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug/ski_head.mdx");//FREDZ Model does not exist
+            self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug/head.mdx");
 			break;
 		case 3:
 			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug/weld_head.mdx");

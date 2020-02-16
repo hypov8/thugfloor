@@ -27,6 +27,7 @@ struct MENU_ITEM_NAMES
 	int		price[8];
 } menu_item_names[MAX_MENU_ITEMS] =
 {
+    //Missing crowbar for 100?
 	//Weapons
 	{ {"Pistol", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 150, 250, 750, 200, 350, 500} },
 	//Mod's

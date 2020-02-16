@@ -466,8 +466,8 @@ void Cmd_Spec_f (edict_t *self)
 		return;
 
 	// MH: drop cash
-	if (self->solid != SOLID_NOT)
-		DropCash(self);
+//	if (self->solid != SOLID_NOT)//FREDZ Not using
+//		DropCash(self);
 
 /*	if (teamplay->value && self->client->pers.team) {
 		gi.bprintf (PRINT_HIGH, "%s left %s\n", self->client->pers.netname, team_names[self->client->pers.team]); // MH: changed PRINT_MEDIUM back to PRINT_HIGH
@@ -958,11 +958,14 @@ void Cmd_Speech_f (edict_t *ent, edict_t *other, char *cmd)
 	edict_t		*best=NULL;
 	cast_memory_t	*mem;
 
+	/*
 	if (deathmatch->value)
 	{
 		gi.cprintf (ent, PRINT_HIGH, "No speech in deathmatch\n");
 		return;
-	}
+	}*/
+    if (ent->client->pers.spectator==SPECTATING)
+		return;
 
 	if (speechtime > (level.time - TALK_OTHER_DELAY) && speechtime < level.time)
 		return;
@@ -974,16 +977,19 @@ void Cmd_Speech_f (edict_t *ent, edict_t *other, char *cmd)
 		ent->client->hud_self_talk_time = level.time + 2.0;
 		// END JOSEPH
 
-		if ((other->svflags & SVF_MONSTER) && (other->cast_info.talk))
+        if (((other->svflags & SVF_MONSTER) && (other->cast_info.talk)) || other->client)
 			best = other;
 
 		if (best)
 		{
-			mem = level.global_cast_memory[best->character_index][ent->character_index];
-
-			if (!mem)
+			if (!best->client)
 			{
-				AI_RecordSighting( best, ent, VectorDistance( best->s.origin, ent->s.origin ) );
+				mem = level.global_cast_memory[best->character_index][ent->character_index];
+
+				if (!mem)
+				{
+					AI_RecordSighting( best, ent, VectorDistance( best->s.origin, ent->s.origin ) );
+				}
 			}
 
 //			if (strcmp (best->classname, "cast_bitch") == 0)
@@ -992,12 +998,14 @@ void Cmd_Speech_f (edict_t *ent, edict_t *other, char *cmd)
 				// Voice_Random( ent, best, neutral_talk_player, NUM_NEUTRAL_TALK_PLAYER );
 			Voice_Random( ent, best, neutral_talk_player, 5 );
 
+			if (!best->client)
+			{
+				// character should turn to us
+				best->cast_info.last_talk_turn = level.time;
+				best->cast_info.talk_ent = ent;
 
-			// character should turn to us
-			best->cast_info.last_talk_turn = level.time;
-			best->cast_info.talk_ent = ent;
-
-			AI_CheckTalk( best );
+				AI_CheckTalk( best );
+			}
 		}
 		else
 		{
@@ -1011,24 +1019,27 @@ void Cmd_Speech_f (edict_t *ent, edict_t *other, char *cmd)
 		ent->client->hud_self_talk_time = level.time + 2.0;
 		// END JOSEPH
 
-		if (	(other->svflags & SVF_MONSTER)
+		if (	((other->svflags & SVF_MONSTER)
 			&&	(other->cast_info.talk)
 			&&	(other->cast_group != ent->cast_group))
+			||	(other->client))
 		{
 			best = other;
 		}
 
 		if (best)
 		{
-
-			mem = level.global_cast_memory[best->character_index][ent->character_index];
-
-			if (!mem)
+			if (!best->client)
 			{
-				AI_RecordSighting( best, ent, VectorDistance( best->s.origin, ent->s.origin ) );
-			}
+				mem = level.global_cast_memory[best->character_index][ent->character_index];
 
-			mem->flags |= MEMORY_ASSHOLE;
+				if (!mem)
+				{
+					AI_RecordSighting( best, ent, VectorDistance( best->s.origin, ent->s.origin ) );
+				}
+
+				mem->flags |= MEMORY_ASSHOLE;
+			}
 
 			// Ridah, hack so Momo knows if we swear at him twice
 			if (best->name_index == NAME_MOMO)
@@ -1071,11 +1082,14 @@ void Cmd_Speech_f (edict_t *ent, edict_t *other, char *cmd)
 				Voice_Random( ent, best, player_profanity_level1, NUM_PLAYER_PROFANITY_LEVEL1 );
 			}
 
-			// character should turn to us
-			best->cast_info.last_talk_turn = level.time;	// so they don't look for AI characters
-			best->cast_info.talk_ent = ent;
+			if (!best->client)
+			{
+				// character should turn to us
+				best->cast_info.last_talk_turn = level.time;	// so they don't look for AI characters
+				best->cast_info.talk_ent = ent;
 
-			AI_CheckTalk( best );
+				AI_CheckTalk( best );
+			}
 		}
 		else
 		{
@@ -1704,13 +1718,14 @@ edict_t	*GetKeyEnt( edict_t *ent )
 }
 // END JOSEPH
 
-void Cmd_Wave_f (edict_t *ent, edict_t *other, int who);
+//void Cmd_Wave_f (edict_t *ent, edict_t *other, int who);
 
 void Cmd_Key_f (edict_t *ent, int who)
 {
 	char		*cmd;
 
-	if (disable_curse) return;
+//	if (disable_curse)
+ //       return;
 
 	if (ent->solid == SOLID_NOT) // MH: check if solid (rather than not spectating)
 		return;
@@ -1720,16 +1735,17 @@ void Cmd_Key_f (edict_t *ent, int who)
 
 	cmd = gi.argv (0);
 
-    key_ent = GetKeyEnt( ent );
+//    key_ent = GetKeyEnt( ent );
 
-	//if (key_ent = GetKeyEnt( ent ))
+	if (key_ent = GetKeyEnt( ent ))
 	{
-		void Cmd_Wave_f (edict_t *ent, edict_t *other, int who);
+//		void Cmd_Wave_f (edict_t *ent, edict_t *other, int who);
+        void Cmd_Wave_f (edict_t *ent, edict_t *other);
 		cast_memory_t *mem;
 
-		if (deathmatch->value)
+ /*		if (deathmatch->value)
 		{
-            if(unlimited_curse)key_ent=NULL;
+           if(unlimited_curse)key_ent=NULL;
             else
             {
                 if(!key_ent)return;
@@ -1738,8 +1754,14 @@ void Cmd_Key_f (edict_t *ent, int who)
             if(unlimited_curse)
                 level.speaktime = level.time + 7;
 			return;
-		}
-        if(key_ent)
+		}*/
+  /*      if (deathmatch->value)
+		{
+			Cmd_Wave_f( ent, key_ent );
+			return;
+		}*/
+
+ //       if(key_ent)
         {
             // JOSEPH 18-FEB-99
             ent->client->ps.stats[STAT_HUD_SELF_TALK] = TT_COMMAND;
@@ -1783,8 +1805,8 @@ void Cmd_Key_f (edict_t *ent, int who)
         }
 
 	}
-    if(!key_ent)
-	//else	// noone to talk to, so make it an order in case anyone's listening
+//    if(!key_ent)
+	else	// noone to talk to, so make it an order in case anyone's listening
 	{
 		int flags;
 
@@ -1801,7 +1823,7 @@ void Cmd_Key_f (edict_t *ent, int who)
 	}
 
 
-	level.speaktime = level.time + 7;
+	level.speaktime = level.time + 1.0;
 
 }
 
@@ -1936,13 +1958,15 @@ qboolean OnSameTeam (edict_t *ent1, edict_t *ent2)
 	}*/
 
 
-	if (!((int)(dmflags->value) & (DF_MODELTEAMS /*| DF_SKINTEAMS*/)))
-		return false;
-    else//FREDZ remove friendly fire, maybe use DF_NO_FRIENDLY_FIRE
-	{
+	if ((int)(dmflags->value) & (DF_NO_FRIENDLY_FIRE))//FREDZ Fix friendly fire
+    {
 		if (ent1 && ent2 && ent1->client && ent2->client)
 			return true;
 	}
+
+	if (!((int)(dmflags->value) & (DF_MODELTEAMS /*| DF_SKINTEAMS*/)))
+		return false;
+
 
 
 //	strcpy (ent1Team, ClientTeam (ent1));
@@ -3828,99 +3852,109 @@ void Cmd_CheckStats_f (edict_t *ent)//FREDZ
 Cmd_Wave_f
 =================
 */
-void Cmd_Wave_f (edict_t *ent, edict_t *other, int who)
+void Cmd_Wave_f (edict_t *ent, edict_t *other)
 {
 	char *cmd;
-//	int	rnd;
+	int	rnd;
 
 	cmd = gi.argv(0);
 
+	if (!other->client)
+		return;
 
-    if(other!=NULL)
-    {
-        if (!other->client)
-            return;
-
-        if (!ent->solid)
-            return;
-    }
+	if (!ent->solid)
+		return;
 
 	// can't wave when ducked
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 		return;
 
-	if (ent->client->last_wave > (level.time - 2.5) && (ent->client->last_wave <= level.time))
+	if (ent->client->last_wave > (level.time - 2) && (ent->client->last_wave <= level.time))
 		return;
 
 	ent->client->last_wave = level.time;
 
 	// say something
 	{
-		if (ent->gender == GENDER_MALE)
+
+//		if (!teamplay->value || (ent->client->pers.team != other->client->pers.team))
 		{
-			switch(who)
+			if (strstr(cmd, "key1"))
 			{
-				case KINGPIN:
-					Voice_Random(ent, other, kingpin_random, NUM_KINGPIN_RANDOM);
-					break;
-				case LEROY:
-					Voice_Random(ent, other, leroy_random, NUM_LEROY_RANDOM);
-					break;
-				case MJ:
-					Voice_Random(ent, other, mj_random, NUM_MJ_RANDOM);
-					break;
-				case MOMO:
-					Voice_Random(ent, other, momo_random, NUM_MOMO_RANDOM);
-					break;
-				case LAMONT:
-					Voice_Random(ent, other, lamont_random, NUM_LAMONT_RANDOM);
-					break;
-				case JESUS:
-					Voice_Random(ent, other, jesus_random, NUM_JESUS_RANDOM);
-					break;
-				case TYRONE:
-					Voice_Random(ent, other, tyrone_random, NUM_TYRONE_RANDOM);
-					break;
-				case WILLY:
-					Voice_Random(ent, other, willy_random, NUM_WILLY_RANDOM);
-					break;
-				case MOKER:
-					Voice_Random(ent, other, moker_random, NUM_MOKER_RANDOM);
-					break;
-				case HEILMAN:
-					Voice_Random(ent, other, heilman_random, NUM_HEILMAN_RANDOM);
-					break;
-				default:
+				if (ent->gender == GENDER_MALE)
 					Voice_Random(ent, other, player_profanity_level2, NUM_PLAYER_PROFANITY_LEVEL2);
+				else if (ent->gender == GENDER_FEMALE)
+					Voice_Random(ent, other, f_profanity_level2, F_NUM_PROFANITY_LEVEL2);
+			}
+			else	// profanity 3
+			{
+				if (ent->gender == GENDER_MALE)
+					Voice_Random(ent, other, player_profanity_level3, NUM_PLAYER_PROFANITY_LEVEL3);
+				else if (ent->gender == GENDER_FEMALE)
+					Voice_Random(ent, other, f_profanity_level3, F_NUM_PROFANITY_LEVEL3);
 			}
 		}
-		else if (ent->gender == GENDER_FEMALE)
+//		else	// stay here/moving out
 		{
-			switch(who)
+			if (strstr(cmd, "key3"))
+			{		// hold
+				if (ent->gender == GENDER_MALE)
+					Voice_Random(ent, other, holdposition, NUM_HOLDPOSITION);
+				else if (ent->gender == GENDER_FEMALE)
+//					Voice_Random(ent, other, f_holdposition, F_NUM_HOLDPOSITION);
+					Voice_Random(ent, other, rc_f_profanity_level1, 5);
+			}
+			else if (strstr(cmd, "key2"))	// lets go
 			{
-				case BAMBI:
-					Voice_Random(ent, other, bambi_random, F_NUM_BAMBI_RANDOM);
-					break;
-				case YOLANDA:
-					Voice_Random(ent, other, yolanda_random, F_NUM_YOLANDA_RANDOM);
-					break;
-				case MONA:
-					Voice_Random(ent, other, mona_random, F_NUM_MONA_RANDOM);
-					break;
-				case LOLA:
-					Voice_Random(ent, other, lola_random, F_NUM_LOLA_RANDOM);
-					break;
-				case BLUNT:
-					Voice_Random(ent, other, blunt_random, F_NUM_BLUNT_RANDOM);
-					break;
-				case BETH:
-					Voice_Random(ent, other, beth_random, F_NUM_BETH_RANDOM);
-					break;
-				default:
-					Voice_Random(ent, other, f_profanity_level2, F_NUM_PROFANITY_LEVEL2);
+				if (ent->gender == GENDER_MALE)
+					Voice_Random(ent, other, followme, NUM_FOLLOWME);
+				else if (ent->gender == GENDER_FEMALE)
+//					Voice_Random(ent, other, f_followme, F_NUM_FOLLOWME);
+					Voice_Random(ent, other, rc_lola, 7);
+			}
+			else // converse
+			{
+				if (ent->gender == GENDER_MALE)
+				{
+					if (other->gender == GENDER_FEMALE)
+						Voice_Random(ent, other, f_neutral_talk_player, F_NUM_NEUTRAL_TALK_PLAYER);
+					else
+						Voice_Random(ent, other, neutral_talk_player, NUM_NEUTRAL_TALK_PLAYER);
+				}
+				else if (ent->gender == GENDER_FEMALE)
+				{
+					Voice_Random(ent, other, f_neutral_talk, F_NUM_NEUTRAL_TALK);
+				}
 			}
 		}
 	}
+
+	if (ent->client->anim_priority > ANIM_WAVE)
+		return;
+
+	ent->client->anim_priority = ANIM_WAVE;
+
+	rnd = rand() % 3;
+
+	switch (rnd)
+	{
+	case 0:
+//		gi.cprintf (ent, PRINT_HIGH, "flipoff\n");
+		ent->s.frame = FRAME_tg_bird_01-1;
+		ent->client->anim_end = FRAME_tg_bird_10;
+		break;
+	case 1:
+//		gi.cprintf (ent, PRINT_HIGH, "salute\n");
+		ent->s.frame = FRAME_tg_crch_grab_01-1;
+		ent->client->anim_end = FRAME_tg_crch_grab_16;
+		break;
+	case 2:
+//		gi.cprintf (ent, PRINT_HIGH, "taunt\n");
+		ent->s.frame = FRAME_tg_chin_flip_01-1;
+		ent->client->anim_end = FRAME_tg_chin_flip_15;
+		break;
+	}
+
 }
 
 
@@ -4106,6 +4140,8 @@ void Cmd_DropCash_f (edict_t *ent)
 	arg3Val = gi.argv(2); //index3
 	argCnt = gi.argc();
 
+	//FREDZ sound\actors\female\hiredgirl\  also got some female sound files but sound is differnt and maybe not fitting.
+
     if ((int)(dmflags->value) & DF_DROP_CASH)
 	{
         if (argCnt == 3 && !Q_stricmp(arg3Val, "all")) //drop cash all
@@ -4116,22 +4152,28 @@ void Cmd_DropCash_f (edict_t *ent)
                 cash->currentcash = ent->client->pers.currentcash;
                 ent->client->pers.currentcash = 0;
 
-                switch (rand()%3)//hypov8 todo: chick sounds?
+                if (ent->gender == GENDER_MALE)
                 {
-                case 0:
-                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/heresmoney.wav"), 1, ATTN_NORM, 0);
-                    break;
-                case 1:
-                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
-                    break;
-                case 2:
-                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
-                    break;
+                     switch (rand()%3)
+                    {
+                    case 0:
+                        gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/heresmoney.wav"), 1, ATTN_NORM, 0);
+                        break;
+                    case 1:
+                        gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
+                        break;
+                    case 2:
+                        gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
+                        break;
+                    }
                 }
+                else if (ent->gender == GENDER_FEMALE)
+                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/female/yolanda/herego.wav"), 1, ATTN_NORM, 0);
+
                 return;
-            }
+            }//FREDZ todo no money? but stilll type give all. allot of stuff double anyway probably can be optimized
         }
-        else if (gi.argc() == 3) //drop cash xx // is it typed any other way?	
+        else if (gi.argc() == 3) //drop cash xx // is it typed any other way?
 		{
 			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) /*&& (ent->client->pers.bagcash == 0)*/)//FREDZ
 				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_nodollar.wav"), 1, ATTN_NORM, 0);
@@ -4142,12 +4184,12 @@ void Cmd_DropCash_f (edict_t *ent)
 			{
 			    int ammount = atoi(arg3Val);
 
-                if (ammount>MAX_PLAYER_CASH)//Need fix
+                if (ammount>MAX_PLAYER_CASH)
                 {
                     gi.cprintf(ent,PRINT_HIGH,"You can not give that much\n");
                     return;
                 }
-                if (ammount==0)//Need fix
+                if (ammount==0)
                 {
                     gi.cprintf (ent, PRINT_HIGH, "No cash to drop.\n");
                     return;
@@ -4159,10 +4201,18 @@ void Cmd_DropCash_f (edict_t *ent)
 				if ((ent->gender == GENDER_MALE)
 					&& (ent->client->pers.currentcash >= cash->currentcash) && (cash->currentcash >= 2) && (cash->currentcash != 50))//FREDZ
 				{
-					if (cash->currentcash < 150)
-						gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
-					else
-						gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
+                    switch (rand()%3)//hypov8 todo: chick sounds?
+                    {
+                    case 0:
+                        gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/heresmoney.wav"), 1, ATTN_NORM, 0);
+                        break;
+                    case 1:
+                        gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
+                        break;
+                    case 2:
+                        gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
+                        break;
+                    }
 				}
 				if ((ent->gender == GENDER_MALE) && (cash->currentcash == 1))
 					gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_heresdollar.wav"), 1, ATTN_NORM, 0);
@@ -4170,7 +4220,10 @@ void Cmd_DropCash_f (edict_t *ent)
 				if ((ent->gender == GENDER_MALE) && (cash->currentcash == 50) && (ent->client->pers.currentcash >= 50))
 					gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/yes50.wav"), 1, ATTN_NORM, 0);
 
-				if (ent->client->pers.currentcash < cash->currentcash)
+                if ((ent->gender == GENDER_FEMALE) && (cash->currentcash <= 1))
+                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/female/yolanda/herego.wav"), 1, ATTN_NORM, 0);
+
+				if (ent->client->pers.currentcash < cash->currentcash)//Not enough cash but drops everything
 				{
 					if (ent->gender == GENDER_MALE)
 					{
@@ -4180,7 +4233,10 @@ void Cmd_DropCash_f (edict_t *ent)
 							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/nomoney1.wav"), 1, ATTN_NORM, 0);
 						else
 							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/nomoney2.wav"), 1, ATTN_NORM, 0);
-					} //hypov8 todo: chick sounds?
+					}
+                    else if (ent->gender == GENDER_FEMALE)
+                        gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/female/yolanda/nomoney.wav"), 1, ATTN_NORM, 0);
+
 					cash->currentcash = ent->client->pers.currentcash;
 					ent->client->pers.currentcash = 0;
 					return;
@@ -4189,7 +4245,7 @@ void Cmd_DropCash_f (edict_t *ent)
 			}
 			return;
 		}
-		else//FREDZ old code with a bit updates		//drop cash. no value
+		else//FREDZ drop cash. no value
 		{
 			if ((ent->gender == GENDER_MALE) && (ent->client->pers.currentcash == 0) /*&& (ent->client->pers.bagcash == 0)*/)//FREDZ
 				gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/p_nodollar.wav"), 1, ATTN_NORM, 0);
@@ -4202,10 +4258,18 @@ void Cmd_DropCash_f (edict_t *ent)
 				{
 					if ((ent->client->pers.currentcash >= 2) && (ent->client->pers.currentcash != 50))
 					{
-						if (ent->client->pers.currentcash < 150)
-							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
-						else
-							gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
+                        switch (rand()%3)
+                        {
+                        case 0:
+                            gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/heresmoney.wav"), 1, ATTN_NORM, 0);
+                            break;
+                        case 1:
+                            gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money2.wav"), 1, ATTN_NORM, 0);
+                            break;
+                        case 2:
+                            gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/money1.wav"), 1, ATTN_NORM, 0);
+                            break;
+                        }
 					}
 
 					if (ent->client->pers.currentcash == 1)
@@ -4213,8 +4277,10 @@ void Cmd_DropCash_f (edict_t *ent)
 
 					if (ent->client->pers.currentcash == 50)
 						gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/player/male/yes50.wav"), 1, ATTN_NORM, 0);
-				}//hypov8 todo: chick sounds?
-				
+				}
+				else if ((ent->gender == GENDER_FEMALE) && (ent->client->pers.currentcash <= 1))
+                    gi.sound(ent, CHAN_AUTO, gi.soundindex("actors/female/yolanda/herego.wav"), 1, ATTN_NORM, 0);
+
 				if (ent->client->pers.currentcash >= 10)//FREDZ new check if we can drop 10
                 {
                     cash = SpawnTheWeapon( ent, "item_cashroll" );
@@ -4479,6 +4545,7 @@ void Cmd_DmflagsSettings_f (edict_t *ent)//FREDZ
 
 	gi.cprintf(ent, PRINT_HIGH,"===============================\n\n");
 }
+/*
 void Cmd_CurseList_f (edict_t *ent)
 {
 	if(disable_curse)
@@ -4501,7 +4568,7 @@ void Cmd_CurseList_f (edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH,"MOKER\n");
 	gi.cprintf(ent, PRINT_HIGH,"HEILMAN\n");
 	gi.cprintf(ent, PRINT_HIGH,"=============================\n\n");
-}
+}*/
 
 
 void Cmd_CommandList_f (edict_t *ent)
@@ -5860,7 +5927,7 @@ void ClientCommand (edict_t *ent)
 	else if (ent->client->showscrollmenu)
 	{
 
-		if (Q_stricmp (cmd, "invuse") == 0 || Q_stricmp (cmd, "key1") == 0 
+		if (Q_stricmp (cmd, "invuse") == 0// || Q_stricmp (cmd, "key1") == 0//Talk to them?
 			||Q_stricmp (cmd, "reload") == 0 ||Q_stricmp (cmd, "holster") == 0 //any other commands to accept menu?
 		)
 			ScrollMenuBuy (ent);
@@ -6089,7 +6156,7 @@ void ClientCommand (edict_t *ent)
     // mute
     else if (Q_stricmp (cmd, "mute") == 0)
 		Cmd_Mute_f(ent,gi.argv(1));
-
+/*
 	//taunt commands
 	else if (Q_stricmp (cmd, "kingpin") == 0)
 		Cmd_Key_f(ent,KINGPIN);
@@ -6123,13 +6190,13 @@ void ClientCommand (edict_t *ent)
 		Cmd_Key_f(ent,BLUNT);
 	else if (Q_stricmp (cmd, "beth") == 0)
 		Cmd_Key_f(ent,BETH);
-	else if (Q_stricmp (cmd, "curselist") == 0)
-		Cmd_CurseList_f(ent);
+//	else if (Q_stricmp (cmd, "curselist") == 0)
+//		Cmd_CurseList_f(ent);
 
 	else if (strstr (cmd, "curse") == cmd)
 		Cmd_Key_f (ent,0);
 	else if (strstr (cmd, "taunt") == cmd)
-		Cmd_Key_f (ent,0);
+		Cmd_Key_f (ent,0);*/
     else if (Q_stricmp (cmd, "toggle_asc") == 0)
         Cmd_Toggle_ASC_f(ent);
  //   else if (Q_stricmp (cmd, "toggle_spec") == 0)

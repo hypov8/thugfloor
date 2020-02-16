@@ -1882,14 +1882,15 @@ void SP_cast_punk(edict_t *self)
 		case 1:
 			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/punk/bald_head.mdx");
 			break;
-		case 2:
-			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/punk/ski_head.mdx");
+		case 2://Missing model
+//			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/punk/ski_head.mdx");
+            self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/punk/head.mdx");//FREDZ Model does not exist
 			break;
 		case 3:
 			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/punk/weld_head.mdx");
 			break;
 		default:
-	self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/punk/head.mdx");
+            self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/punk/head.mdx");
 			break;
 	}
 	if (head_skin)

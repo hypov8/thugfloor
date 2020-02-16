@@ -1763,6 +1763,9 @@ void SP_cast_runt (edict_t *self)
 		head_skin = body_skin = legs_skin = NULL;
 	}
 
+    if (self->head)
+        self->head = 0;
+
 	// ------------------------------------------------------------------------
 	// initialize all model_part data
 	memset(&(self->s.model_parts[0]), 0, sizeof(model_part_t) * MAX_MODEL_PARTS);

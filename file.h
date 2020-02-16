@@ -25,8 +25,8 @@
 #define		KEEP_ADMIN_STRING		"keep_admin_status"
 #define		DEFAULT_RANDOM_MAP_STRING	"default_random_map"
 #define		DISABLE_ANON_TEXT_STRING	"disable_anon_text"
-#define		DISABLE_CURSE_STRING	"disable_curse"
-#define		UNLIMITED_CURSE_STRING	"unlimited_curse"
+//#define		DISABLE_CURSE_STRING	"disable_curse"
+//#define		UNLIMITED_CURSE_STRING	"unlimited_curse"
 #define		DISABLE_ASC_STRING	    "disable_asc"
 //#define		ENABLE_NOFLAMEHACK_CHECK_STRING	    "kick_flamehack"
 #define		ENABLE_SEE_KILLER_HEALTH_STRING	"enable_killerhealth"
@@ -66,9 +66,9 @@
 #define		KEEP_ADMIN_KEYWORD			23
 #define		DEFAULT_RANDOM_MAP_KEYWORD	24
 #define		DISABLE_ANON_TEXT_KEYWORD	25
-#define		DISABLE_CURSE_KEYWORD		28
+//#define		DISABLE_CURSE_KEYWORD		28
 #define		ENABLE_SEE_KILLER_HEALTH_KEYWORD 29
-#define		UNLIMITED_CURSE_KEYWORD		30
+//#define		UNLIMITED_CURSE_KEYWORD		30
 //#define		URL_KEYWORD			        31
 #define     DISABLE_ASC_KEYWORD          32
 //#define     ENABLE_NOFLAMEHACK_CHECK_KEYWORD  33

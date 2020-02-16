@@ -115,11 +115,11 @@ int proccess_line(char*	buffer)
 	if (strstr(buffer, DISABLE_ANON_TEXT_STRING))
 		return DISABLE_ANON_TEXT_KEYWORD;
 
-	if (strstr(buffer, DISABLE_CURSE_STRING))
-		return DISABLE_CURSE_KEYWORD;
+//	if (strstr(buffer, DISABLE_CURSE_STRING))
+//		return DISABLE_CURSE_KEYWORD;
 
-    if (strstr(buffer, UNLIMITED_CURSE_STRING))
-		return UNLIMITED_CURSE_KEYWORD;
+//   if (strstr(buffer, UNLIMITED_CURSE_STRING))
+//		return UNLIMITED_CURSE_KEYWORD;
 
     if (strstr(buffer, DISABLE_ASC_STRING))
 		return DISABLE_ASC_KEYWORD;
@@ -185,8 +185,8 @@ int proccess_ini_file()
 	keep_admin_status = false;
 	default_random_map = false;
 	disable_anon_text = false;
-	disable_curse = false;
-    unlimited_curse = false;
+//	disable_curse = false;
+//   unlimited_curse = false;
 //    enable_asc = false;
  	enable_killerhealth = false;
 
@@ -319,12 +319,12 @@ int proccess_ini_file()
 		case DISABLE_ANON_TEXT_KEYWORD:
 			disable_anon_text = true;
 			break;
-		case DISABLE_CURSE_KEYWORD:
+/*		case DISABLE_CURSE_KEYWORD:
 			disable_curse = true;
 			break;
         case UNLIMITED_CURSE_KEYWORD:
 			unlimited_curse = true;
-			break;
+			break;*/
 			// MH: removed (disble_asc = enable anti spawncamp???)
 /*        case DISABLE_ASC_KEYWORD:
 		//	enable_asc = true;

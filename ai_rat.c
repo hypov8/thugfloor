@@ -831,6 +831,7 @@ void SP_cast_rat (edict_t *self)
 
 	if (!self->health)
 		self->health = 10;//FREDZ should be 10
+
 	self->gib_health = -10;
 	self->mass = 5;//FREDZ 100 on dog
 

@@ -38,9 +38,9 @@ int num_rconx_pass;
 int keep_admin_status;
 int default_random_map;
 int disable_anon_text;
-int disable_curse;
+//int disable_curse;
 //int enable_asc;
-int unlimited_curse;
+//int unlimited_curse;
 int enable_killerhealth;
 
 
@@ -283,7 +283,7 @@ void WaveStart () // Starts the match
 			self->client->showhelp = false;
 			self->client->showinventory = false;
 			self->client->showscrollmenu = false;
-			//reset buy menu. did you want to let ppl buy after the 60 secs? 
+			//reset buy menu. did you want to let ppl buy after the 60 secs?
 			self->current_menu_side = 0;
 			self->current_menu_left = 0;
 			self->current_menu_right = 0;

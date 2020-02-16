@@ -1542,7 +1542,11 @@ char *thugfloor_statusbar =
 "hnum "
 
 // cash
-"cnum "
+"cnum "//Not possible to move?
+
+//"xv 350 "
+//"frags "
+//Needs frags?
 
 // Bagged cash
 //"bagcash "
@@ -1578,7 +1582,17 @@ char *thugfloor_statusbar =
 "	xr	-55 "
 "	num 2 23"
 "endif "
-"if 22 " 
+/*
+"xr -52 "
+"yb -55 "
+"string \"of \" "
+
+"xr -98 "
+"yb -65 "
+"num 2 21 "	// 21 = STAT_BAGCASH
+*/
+
+"if 22 "
 "	yt  280	"
 "	xr	-95 "
 "string \"Enemy Left\" "

@@ -83,13 +83,13 @@ void P_DamageFeedback (edict_t *player)
 	{
 		r = 1 + (rand()&1);
 		player->pain_debounce_time = level.time + 0.7;
-/*		if (player->health < 25)
+		if (player->health < 25)//FREDZ some people used this for cheat in dm not needed for sp
 			l = 25;
 		else if (player->health < 50)
 			l = 50;
 		else if (player->health < 75)
 			l = 75;
-		else*/
+		else
 			l = 100;
 		gi.sound (player, CHAN_VOICE, gi.soundindex(va("*pain%i_%i.wav", l, r)), 1, ATTN_NORM, 0);
 	}

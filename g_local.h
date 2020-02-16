@@ -119,7 +119,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.15"
+#define	GAMEVERSION	"Thug Floor v0.17"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -1250,7 +1250,7 @@ void player_pain (edict_t *self, edict_t *other, float kick, int damage, int mdx
 void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point, int mdx_part, int mdx_subobject);
 void ClientBeginDeathmatch (edict_t *ent);
 edict_t *SelectDeathmatchSpawnPoint (edict_t *ent);//FREDZ
-void DropCash(edict_t *self); // MH: drop cash
+//void DropCash(edict_t *self); // MH: drop cash
 
 
 //
@@ -2198,9 +2198,9 @@ extern int num_rconx_pass;
 extern int keep_admin_status;
 extern int default_random_map;
 extern int disable_anon_text;
-extern int disable_curse;
+//extern int disable_curse;
 //extern int enable_asc;
-extern int unlimited_curse;
+//extern int unlimited_curse;
 extern int enable_killerhealth;
 
 typedef struct   // Message of the Day

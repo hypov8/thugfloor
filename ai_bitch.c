@@ -1693,7 +1693,8 @@ void SP_cast_bitch(edict_t *self)
 	switch (self->head)
 	{
 		case 1:
-			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/bitch/bald_head.mdx");
+//			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/bitch/bald_head.mdx");//FREDZ Model does not exist
+            self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/bitch/head.mdx");
 			break;
 		case 2:
 			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/bitch/pony_head.mdx");

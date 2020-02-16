@@ -1647,7 +1647,7 @@ void SP_cast_thug_sit(edict_t *self)
 			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug_sit/weld_head.mdx");
 			break;
 		default:
-	self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug_sit/head.mdx");
+            self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug_sit/head.mdx");
 			break;
 	}
 	if (head_skin)

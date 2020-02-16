@@ -971,7 +971,6 @@ void SP_cast_dog (edict_t *self)
             self->skin = 2;
 	}
 
-
 	VectorSet (self->mins, -16, -16, -24);
 	VectorSet (self->maxs,  16,  16,  DUCKING_MAX_Z+2);
 

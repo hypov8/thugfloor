@@ -1868,6 +1868,9 @@ void SP_cast_shorty(edict_t *self)
 		head_skin = body_skin = legs_skin = NULL;
 	}
 
+    if (self->head)
+        self->head = 0;
+
 	tommy_soundindex = gi.soundindex("weapons/machinegun/machgf1b.wav");
 	shotgun_soundindex = gi.soundindex("weapons/shotgun/shotgf1b.wav");
 	shotgun_reload_soundindex = gi.soundindex("weapons/shotgun/shotgr1b.wav");
@@ -1895,6 +1898,7 @@ void SP_cast_shorty(edict_t *self)
 			self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/shorty/head.mdx");
 			break;
 	}*/
+
 	self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/shorty/head.mdx");//FREDZ Only model using
 	if (head_skin)
 	{
