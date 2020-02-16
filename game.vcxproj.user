@@ -8,7 +8,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='f_dBugLan|Win32'">
     <LocalDebuggerCommand>$(OutDir)..\kingpin.exe</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments> +set port 31515 +set game thugfloor +set deathmatch 1 +set cheats 1 +verbose 0 +logfile 0 +exec server.cfg</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments> +set port 31510 +set game thugfloor +set deathmatch 1 +set cheats 1 +verbose 0 +logfile 0 +exec server.cfg</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>

@@ -1542,7 +1542,15 @@ char *thugfloor_statusbar =
 "hnum "
 
 // cash
-"cnum "//Not possible to move?
+//"cnum "//Not possible to move? is posible :)
+//new cash placement
+"yt 10 "
+"xr -55 "
+"num 4 16 " //9999 max? STAT_CASH 16
+"xr -100 "
+"picn /pics/h_money.tga "
+"xr -130 "
+"string \"Cash\" "
 
 //"xv 350 "
 //"frags "

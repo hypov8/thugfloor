@@ -219,6 +219,11 @@ Decide what time to shift everyone back to, and do it
 void G_DoTimeShiftFor( edict_t *ent ) {	
 	int time;
 
+	//hypov8 antilag does not work between entities and players
+	//maybe its posible we add cast as a vaid player? i have not looked into whats involved
+	//max player value will need to be compensated
+	//this might fix the lag issue with failed prdition on cast..
+
 	// if it's enabled server-side and the client wants it
 	if (antilag->value && ent->client && !ent->client->pers.noantilag) {
 		time = (level.framenum - 1) * 100 + curtime - level.frameStartTime - ent->client->ping;

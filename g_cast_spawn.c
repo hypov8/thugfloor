@@ -12,6 +12,7 @@ static int currWave_plysCount = 0; //players
 static int currWave_length = 0; //long, med, short
 static int currWave_castMax = 0; //max enemy allowed on map
 
+#define TEST_NEWSKIN
 
 void cast_pawn_o_matic_free()
 {
@@ -79,9 +80,23 @@ void cast_pawn_o_matic_spawn ()
 	}
 }
 
-//apply skins.. cleanup code...
-void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int idx)
+
+//apply skins.. consider skill
+void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int skinCount)
 {
+#ifdef TEST_NEWSKIN //only 2 waves can be stested. crashes on 3rd
+
+	//this split skins into 5 groups. low skill needs to be at top and high skill at bottom of list
+	//some overlap of skill settings will be generated. about 2 above/below actual skill.
+	int range = ceil(((float)skinCount / 3)); //3 instead of 5. adds some varance
+	int idxStart = range * ((int)skill->value *.6); //0-4
+	int ran = rand() % (range);
+	int idx = idxStart + ran;
+	if (idx >= skinCount)
+		idx = skinCount - 1; //just incase. ceil rounds up
+#else
+	int idx = skinCount;
+#endif
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].name);
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].skin);
 	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].classname);
@@ -90,6 +105,86 @@ void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int idx)
 	self->count = skins[idx].count;
 	self->head = skins[idx].head;
 }
+
+#ifdef TEST_NEWSKIN //example skin method
+/*
+======================
+cast_TF_Wave1_Skidrow
+wave 1 skidrow
+
+combine every skin that should be in skidrow
+sort them from weakest to best
+todo: this is example. skins only sorted by weapon, not skill
+======================
+*/
+void cast_TF_Wave1_Skidrow(edict_t *self)
+{
+	static localteam_skins_s skins[] = {
+		//name,		//skin,			classname		flags	HP		count	head
+		"johnny",	"011 007 004",	"cast_thug",	64, 	80,	    0,      0,	//melee			//Skidrow_courtyard
+		"Leroy",	"010 010 003",	"cast_thug",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
+		"Brewster", "002 001 001",	"cast_thug",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
+		"Bubba",	"017 016 008",	"cast_runt",	64,	    100,	9,  	0,	//sr1 melee		//Skidrow_names
+		"Magicj",	"020 011 005",	"cast_runt",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
+		"buttmunch", "001 001 001",	"cast_runt",	64,	    100,	0,	    0,	//melee	//sr1 Sewer Rats
+		"",	        "010 004 002",  "cast_runt",	64,	    100,	0,	    0,  //melee		//Skidrow_street //sr3 street1
+		"Betty",	"008 006 003",	"cast_bitch",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
+		"Beth",		"009 007 004",	"cast_bitch",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
+
+		"punky",     "005 003 001",	"cast_runt",	0,	    50,	    0,	    0,	//pistol		//sr1 Sewer Rats
+		"Momo",		"020 011 003",	"cast_runt",	0,	    100,	0,  	0,	//sr2 //bouncer pistol //Skidrow_names
+		"Mona",		"014 012 003",	"cast_bitch",	0,	    100,	0,  	0,	//sr2 pistol			//Skidrow_names
+		"Sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	0,   //bar_sr pistol		//Skidrow_names
+		"Lenny",	"018 011 007",	"cast_runt",	0,	    100,	0,  	0,	//bar_sr pistol		//Skidrow_names
+		"Rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	//bar_sr pistol		//Skidrow_names
+		"",	        "006 006 002",	"cast_runt",	0,	    100,	0,	    0,  //pistol	//Skidrow_street //sr3 street1
+		"",	        "008 008 002",	"cast_runt",	0,	    100,	0,	    0,  //pistol	//Skidrow_street //sr3 street1
+		"bernie",   "011 012 004",  "cast_runt",	0,	    100,	1,	    0,	//pistol		//Skidrow_courtyard
+		"louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	0,	//pistol //Not really police, more person they try to secure 
+	};
+
+	cast_TF_applyRandSkin(self, skins, ARYSIZE(skins));
+}
+void cast_TF_Wave2_Skidrow(edict_t *self)
+{
+	static localteam_skins_s skins[] = {
+		//name,		//skin,			classname		flags	HP		count	head
+
+		"Leroy",	"010 010 003",	"cast_thug",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
+		"Brewster", "002 001 001",	"cast_thug",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
+		"Bubba",	"017 016 008",	"cast_runt",	64,	    100,	9,  	0,	//sr1 melee		//Skidrow_names
+		"Beth",		"009 007 004",	"cast_bitch",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
+		"Lisa",		"012 015 012",	"cast_bitch",	64,	    120,	0,  	0,	//sr1 melee		//Skidrow_names
+
+		"",         "004 003 001",	"cast_runt",	0,	    100,	0,	    0,	//pistol		//sewer treehouse, ugly skins
+		"",         "003 003 001",	"cast_runt",	0,	    100,	0,	    0,	//pistol		//sr2 motards, ugly skins
+		"",         "002 001 001",	"cast_bitch",	0,	    100,	0,	    0,	//pistol		//sr2 motards, ugly skins
+		"",	        "005 001 001",  "cast_thug",	0,	    100,	0,	    0,	//pistol		//sr2 motards, ugly skins
+		"",	        "010 006 002",	"cast_runt",	0,	    100,	0,	    0,	//courtyard1 pistol
+		"",	        "006 005 002",	"cast_runt",	0,	    100,	0,	    0,	//courtyard2 pistol
+		"",     	"006 006 002",	"cast_runt",	0,	    100,	0,	    0,  //pistol		//sr3 hallway1
+		"",	        "009 007 002",	"cast_runt",    0,      100,	0,		0,    //postbattery2  pistol
+		"",	        "008 008 002",	"cast_runt",    0,      120,	0,		0,    //postbattery2  pistol
+		"igmo",      "003 002 001", "cast_thug",	0,	    200,	0,	    0,	//pistol		//sr1 Sewer Rats
+
+		"",	        "004 001 001",	"cast_punk",    0,      80,		0,		0,    //postbattery1  shotgun
+		"",         "004 001 007",	"cast_punk",	0,	    100,	0,	    0,	//shotgun	//sewer treehouse, ugly skins
+		"",	        "514 004 002",  "cast_punk",	0,	    100,	0,	    1,	//courtyard1 shotgun
+		"",	        "513 004 002",  "cast_punk",	0,	    100,	0,	    1,	//courtyard1 shotgun
+		"",	        "514 003 002",	"cast_punk",	0,	    100,	0,	    1,	//courtyard2 shotgun
+		"",	        "514 003 002",	"cast_punk",	0,	    100,	0,	    0,  //shotgun		//sr3 hallway1
+		"",	        "004 001 001",	"cast_punk",    0,      120,	0,		0,    //postbattery1  shotgun
+		"",     	"514 003 002",	"cast_punk",    0,      120,	0,		1,    //postbattery2  shotgun
+		"Momo",		"072 014 009",	"cast_shorty",	8192,   150,	0,  	0,	//sr1 shotgun		//Skidrow_names
+		"arnold",	"012 007 004",	"cast_punk",	0,	    200,	0,	    0,	//Shotgun		//Skidrow_courtyard
+	};
+
+	cast_TF_applyRandSkin(self, skins, ARYSIZE(skins));
+}
+
+#endif
+
+
 
 ///////////////////////
 // setup cast skins
@@ -935,6 +1030,21 @@ void cast_TF_setEnemyPlayer(edict_t *spawn)
 // rand spawn types
 void cast_TF_spawnWave1(edict_t *spawn)
 {
+#ifdef TEST_NEWSKIN
+	switch (rand() % 10)
+	{
+	case 0:	cast_TF_dog(spawn);break;
+	case 1:	cast_TF_rat(spawn);break;
+	case 2:	cast_TF_rat(spawn);break;
+	case 3:	cast_TF_rat(spawn);break;
+	case 4:	cast_TF_Wave1_Skidrow(spawn);break;
+	case 5:	cast_TF_Wave1_Skidrow(spawn);break;
+	case 6:	cast_TF_Wave1_Skidrow(spawn);break;
+	case 7:	cast_TF_Wave1_Skidrow(spawn);break;
+	case 8:	cast_TF_Wave1_Skidrow(spawn);break;
+	case 9:	cast_TF_Wave1_Skidrow(spawn);break;
+	}
+#else
 	switch (rand() % 10)
 	{
 	case 0:	cast_TF_dog(spawn);break;
@@ -948,27 +1058,54 @@ void cast_TF_spawnWave1(edict_t *spawn)
     case 8:	cast_TF_Skidrow_names(spawn);break;
     case 9:	cast_TF_Skidrow_names(spawn);break;
 	}
+#endif
 }
 void cast_TF_spawnWave2(edict_t *spawn)
 {
-	switch (rand() % 15)
+	if (level.waveEnemyCount == currWave_castMax)
+		cast_TF_Skidrow_boss(spawn);//spawn boss when almost done
+	else
+#ifdef TEST_NEWSKIN
 	{
-	case 0:	cast_TF_dog(spawn);break;
-    case 1:	cast_TF_dog(spawn);break;
-	case 2:	cast_TF_rat(spawn);break;
-    case 3:	cast_TF_rat(spawn);break;
-	case 4:	cast_TF_Skidrow_courtyard(spawn);break;
-	case 5:	cast_TF_Skidrow_motards(spawn);break;
-    case 6:	cast_TF_Skidrow_courtyard2(spawn);break;
-    case 7:	cast_TF_Skidrow_street(spawn);break;
-    case 8:	cast_TF_Skidrow_hallway(spawn);break;
-    case 9:	cast_TF_Skidrow_postbattery(spawn);break;
-	case 10: cast_TF_Skidrow_names(spawn);break;
-    case 11: cast_TF_Skidrow_names(spawn);break;
-    case 12: cast_TF_Skidrow_names(spawn);break;
-    case 13: cast_TF_Skidrow_names(spawn);break;
-    case 14: cast_TF_Skidrow_boss(spawn);break;//FREDZ probably should only spawn ones
+		switch (rand() % 14)
+		{
+		case 0:	cast_TF_dog(spawn);break;
+		case 1:	cast_TF_dog(spawn);break;
+		case 2:	cast_TF_rat(spawn);break;
+		case 3:	cast_TF_rat(spawn);break;
+		case 4:	cast_TF_Wave2_Skidrow(spawn);break;
+		case 5:	cast_TF_Wave2_Skidrow(spawn);break;
+		case 6:	cast_TF_Wave2_Skidrow(spawn);break;
+		case 7:	cast_TF_Wave2_Skidrow(spawn);break;
+		case 8:	cast_TF_Wave2_Skidrow(spawn);break;
+		case 9:	cast_TF_Wave2_Skidrow(spawn);break;
+		case 10: cast_TF_Wave2_Skidrow(spawn);break;
+		case 11: cast_TF_Wave2_Skidrow(spawn);break;
+		case 12: cast_TF_Wave2_Skidrow(spawn);break;
+		case 13: cast_TF_Wave2_Skidrow(spawn);break;
+		}
 	}
+#else
+	{
+		switch (rand() % 14)
+		{
+		case 0:	cast_TF_dog(spawn);break;
+		case 1:	cast_TF_dog(spawn);break;
+		case 2:	cast_TF_rat(spawn);break;
+		case 3:	cast_TF_rat(spawn);break;
+		case 4:	cast_TF_Skidrow_courtyard(spawn);break;
+		case 5:	cast_TF_Skidrow_motards(spawn);break;
+		case 6:	cast_TF_Skidrow_courtyard2(spawn);break;
+		case 7:	cast_TF_Skidrow_street(spawn);break;
+		case 8:	cast_TF_Skidrow_hallway(spawn);break;
+		case 9:	cast_TF_Skidrow_postbattery(spawn);break;
+		case 10: cast_TF_Skidrow_names(spawn);break;
+		case 11: cast_TF_Skidrow_names(spawn);break;
+		case 12: cast_TF_Skidrow_names(spawn);break;
+		case 13: cast_TF_Skidrow_names(spawn);break;
+		}
+	}
+#endif
 }
 void cast_TF_spawnWave3(edict_t *spawn)
 {
@@ -1215,7 +1352,7 @@ void cast_TF_spawn(int ammount, int type)
 
 //total enemy counts per wave.
 //this will be multiplied by player counts later
-#if 1 // HYPODEBUG
+#if 0 // HYPODEBUG
 static int wave_shortGame[5] = { 2, 2, 2, 2, 1 };
 static int wave_medGame[8] = { 2, 2, 2, 2, 2, 2, 2, 1 };
 static int wave_longGame[11] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
