@@ -689,7 +689,7 @@ void rat_bite (edict_t *self)
 	vec3_t	start;//, offset;
 	vec3_t	forward, right;
 
-	float damage = 8;
+	float damage = 1;//FREDZ to high was 8. Rat is always 1 damage?
 
 	if (self->cast_info.currentmove == &rat_move_sit_up)
 		damage *= 2;		// double handed attack
@@ -874,6 +874,11 @@ void SP_cast_rat (edict_t *self)
 // Temp fix for Dog in SR2 that follows lamont
 //if (self->leader_target)
 //	self->target = NULL;
+
+	if (!self->cast_info.scale)
+		self->cast_info.scale = MODEL_SCALE;
+
+	self->s.scale = self->cast_info.scale - 1.0;
 
 	// we're a dog, therefore we don't hide
 	self->cast_info.aiflags |= AI_NO_TAKE_COVER;

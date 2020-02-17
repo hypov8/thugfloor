@@ -1085,7 +1085,7 @@ skip2:
 			for (i=0 ; i<maxclients->value ; i++)
 			{
 				dood = g_edicts + 1 + i;
-				if (dood->client && ((dood->inuse && dood->client->pers.spectator != PLAYING) 
+				if (dood->client && ((dood->inuse && dood->client->pers.spectator != PLAYING)
 					|| (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
 					found = true;
 			}
@@ -1275,6 +1275,8 @@ void G_SetStats (edict_t *ent)
 	gitem_t		*item;
 	int			index, cells;
 	int			power_armor_type;
+	 vec3_t          start, forward, end;
+	 trace_t         tr;
 
 	// if chasecam, show stats of player we are following
 	if (ent->client->chase_target && ent->client->chase_target->client)
@@ -1688,6 +1690,20 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_TIMER] = 0;
 	}
 	*/
+
+	//FREDZ example code need better fix for enemies, just copy and past now, Cmd_CheckStats_f show maybe some kind of example :/ rangefinder
+    VectorCopy(ent->s.origin, start);
+    start[2] += ent->viewheight;
+    AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+    VectorMA(start, 8192, forward, end);
+    tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT|CONTENTS_SLIME|CONTENTS_LAVA);
+    // check for sky and max the range if found
+    if ( tr.surface && (tr.surface->flags & SURF_SKY) )
+        ent->client->ps.stats[STAT_RANGEFINDER] = 9999;
+    else
+        ent->client->ps.stats[STAT_RANGEFINDER] = (int)(tr.fraction * 8192);
+
+
 
 // Papa - Here is the Timer for the hud
 	// MH: fixed to show starting timer when timelimit=0

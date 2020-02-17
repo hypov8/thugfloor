@@ -3819,7 +3819,7 @@ void Cmd_Players_f (edict_t *ent)
 
 	gi.cprintf (ent, PRINT_HIGH, "\n%i players\n", count);
 }
-void Cmd_CheckStats_f (edict_t *ent)//FREDZ
+void Cmd_CheckStats_f (edict_t *ent)//FREDZ some player finder range
 {
 	int		i, j;
 	edict_t	*player;
@@ -3847,6 +3847,11 @@ void Cmd_CheckStats_f (edict_t *ent)//FREDZ
 	}
 	gi.centerprintf(ent, "%s", stats);
 }
+void Cmd_Compass_f (edict_t *ent)
+  {
+   gi.cprintf (ent, PRINT_HIGH, "%d %d %d \n",ent->client->ps.pmove.origin[1], ent->client->ps.pmove.origin[2],
+  ent->client->ps.pmove.origin[3]);  //should be one line
+  }
 /*
 =================
 Cmd_Wave_f
@@ -5833,6 +5838,18 @@ void ClientCommand (edict_t *ent)
 		Cmd_Players_f (ent);
 		return;
 	}
+    if (Q_stricmp (cmd, "checkstats") == 0)
+	{
+		Cmd_CheckStats_f (ent);
+		return;
+	}
+    if (Q_stricmp (cmd, "compass") == 0)
+	{
+		Cmd_Compass_f (ent);
+		return;
+	}
+
+
 	if (Q_stricmp (cmd, "say") == 0)
 	{
 		Cmd_Say_f (ent, false, false);

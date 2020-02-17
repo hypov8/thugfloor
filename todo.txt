@@ -1,4 +1,4 @@
-
+-fix sharky abit better
 
 -but sounds wave and maybe talking need to be fixed (working now, not fully tested)
 
@@ -12,6 +12,8 @@
 
 -rename maxwaves cvar
 
--localteam adding
+-rat makes some weird walking sound, damage to high
 
--rat makes some weird walking sound
+-if people join and wait to long they go to idle modus :/
+
+-sound pawn o matic need fix if you already got something

@@ -1542,7 +1542,7 @@ char *thugfloor_statusbar =
 "hnum "
 
 // cash
-//"cnum "//Not possible to move? is posible :)
+//"cnum "//Not possible to move? is posible :) cool :)
 //new cash placement
 "yt 10 "
 "xr -55 "
@@ -1554,10 +1554,17 @@ char *thugfloor_statusbar =
 
 //"xv 350 "
 //"frags "
-//Needs frags?
+//Needs frags? need to show frags aswell below cash
 
-// Bagged cash
-//"bagcash "
+
+//FREDZ example? rangefinder, should probably moved more to the left
+"if 21 "
+"   xv 210 "
+"      num 4   16 "
+"   xv 234 "
+"   yb -59 "
+"   string RANGE "
+"endif "
 
 // ammo
 "if 2 "

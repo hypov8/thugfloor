@@ -1127,6 +1127,7 @@ typedef enum
 #define STAT_DEPOSITED           22//hypov8 stat enemy left
 #define STAT_WAVEROUND           23//FREDZ show wave rounds
 //#define STAT_BAG_CASH            24
+#define STAT_RANGEFINDER	     24//FREDZ testing
 
 #define STAT_TEAM1_SCORE		 26
 #define STAT_TEAM2_SCORE		 27

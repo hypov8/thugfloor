@@ -362,7 +362,7 @@ int giveCashOnKill(int type)
 
 	switch (type)
 	{
-    case BOT_RAT:			cashOut = 1; break;		/*rat*/
+    case BOT_RAT:			cashOut = 5; break;		/*rat*/
     case BOT_DOG:			cashOut = 3; break;		/*dog*/
     case BOT_BUM:			cashOut = 1; break;		/*bum sit*/
     case BOT_THUG_SIT:		cashOut = 2; break;		/*thug sit*/

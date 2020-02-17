@@ -12,7 +12,7 @@ static int currWave_plysCount = 0; //players
 static int currWave_length = 0; //long, med, short
 static int currWave_castMax = 0; //max enemy allowed on map
 
-#define TEST_NEWSKIN
+#define TEST_NEWSKIN 0
 
 void cast_pawn_o_matic_free()
 {
@@ -84,7 +84,7 @@ void cast_pawn_o_matic_spawn ()
 //apply skins.. consider skill
 void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int skinCount)
 {
-#ifdef TEST_NEWSKIN //only 2 waves can be stested. crashes on 3rd
+#if TEST_NEWSKIN //only 2 waves can be stested. crashes on 3rd
 
 	//this split skins into 5 groups. low skill needs to be at top and high skill at bottom of list
 	//some overlap of skill settings will be generated. about 2 above/below actual skill.
@@ -106,7 +106,7 @@ void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int skinCoun
 	self->head = skins[idx].head;
 }
 
-#ifdef TEST_NEWSKIN //example skin method
+#if TEST_NEWSKIN //example skin method
 /*
 ======================
 cast_TF_Wave1_Skidrow
@@ -140,7 +140,7 @@ void cast_TF_Wave1_Skidrow(edict_t *self)
 		"",	        "006 006 002",	"cast_runt",	0,	    100,	0,	    0,  //pistol	//Skidrow_street //sr3 street1
 		"",	        "008 008 002",	"cast_runt",	0,	    100,	0,	    0,  //pistol	//Skidrow_street //sr3 street1
 		"bernie",   "011 012 004",  "cast_runt",	0,	    100,	1,	    0,	//pistol		//Skidrow_courtyard
-		"louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	0,	//pistol //Not really police, more person they try to secure 
+		"louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	0,	//pistol //Not really police, more person they try to secure
 	};
 
 	cast_TF_applyRandSkin(self, skins, ARYSIZE(skins));
@@ -197,6 +197,7 @@ void cast_TF_dog(edict_t *self)
 void cast_TF_rat(edict_t *self)
 {
 	self->classname = "cast_rat";
+    self->cast_info.scale = 2.00;//FREDZ twice as big?
 }
 void cast_TF_bitch_melee(edict_t *self)
 {
@@ -495,6 +496,21 @@ void cast_TF_Skidrow_names(edict_t *self)
 	"Sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	0,    //bar_sr pistol
 	"Lenny",	"018 011 007",	"cast_runt",	0,	    100,	0,  	0,	  //bar_sr pistol
 	"Rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	  //bar_sr pistol
+	};
+	int idx = rand() % ARYSIZE(skins);
+	cast_TF_applyRandSkin(self, skins, idx);
+}
+void cast_TF_Skidrow_names_melee(edict_t *self)
+{
+	static localteam_skins_s skins[] = {
+	//name,		//skin,			classname		flags	HP		count	head
+	"Betty",	"008 006 003",	"cast_bitch",	64,	    100,	0,  	0,    //sr1 melee
+	"Beth",		"009 007 004",	"cast_bitch",	64,	    100,	0,  	0,    //sr1 melee
+	"Lisa",		"012 015 012",	"cast_bitch",	64,	    120,	0,  	0,    //sr1 melee
+	"Leroy",	"010 010 003",	"cast_thug",	64,	    100,	0,  	0,    //sr1 melee
+	"Brewster", "002 001 001",	"cast_thug",	64,	    100,	0,  	0,	  //sr1 melee
+	"Bubba",	"017 016 008",	"cast_runt",	64,	    100,	9,  	0,    //sr1 melee
+	"Magicj",	"020 011 005",	"cast_runt",	64,	    100,	0,  	0,    //sr1 melee
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
@@ -919,6 +935,14 @@ void cast_TF_Radio_City_names(edict_t *self)
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
 }
+void cast_TF_Radio_City_boss(edict_t *self)
+{
+	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "nikkiblanco");//rcboss1
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "122 122 122");
+	self->spawnflags = 64;//Tommygun
+	self->classname = "cast_punk";
+	self->health = 800 * currWave_plysCount;
+}
 void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
 {
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Kingpin");
@@ -1030,7 +1054,7 @@ void cast_TF_setEnemyPlayer(edict_t *spawn)
 // rand spawn types
 void cast_TF_spawnWave1(edict_t *spawn)
 {
-#ifdef TEST_NEWSKIN
+#if TEST_NEWSKIN
 	switch (rand() % 10)
 	{
 	case 0:	cast_TF_dog(spawn);break;
@@ -1045,18 +1069,16 @@ void cast_TF_spawnWave1(edict_t *spawn)
 	case 9:	cast_TF_Wave1_Skidrow(spawn);break;
 	}
 #else
-	switch (rand() % 10)
+	switch (rand() % 6)//Easyr or to easy and need pistol?, no rats
 	{
 	case 0:	cast_TF_dog(spawn);break;
-    case 1:	cast_TF_rat(spawn);break;
-    case 2:	cast_TF_rat(spawn);break;
-    case 3:	cast_TF_rat(spawn);break;
-	case 4:	cast_TF_Skidrow_treehouse(spawn);break;
-	case 5:	cast_TF_Skidrow_sewer_rats(spawn);break;
-	case 6:	cast_TF_Skidrow_names(spawn);break;//FREDZ abit hard first round, maybe need fix
-    case 7:	cast_TF_Skidrow_names(spawn);break;
-    case 8:	cast_TF_Skidrow_names(spawn);break;
-    case 9:	cast_TF_Skidrow_names(spawn);break;
+//	case 1:	cast_TF_Skidrow_treehouse(spawn);break;
+//	case 2:	cast_TF_Skidrow_sewer_rats(spawn);break;
+	case 1:	cast_TF_Skidrow_names_melee(spawn);break;
+    case 2:	cast_TF_Skidrow_names_melee(spawn);break;
+    case 3:	cast_TF_Skidrow_names_melee(spawn);break;
+    case 4:	cast_TF_Skidrow_names_melee(spawn);break;
+    case 5:	cast_TF_Skidrow_names_melee(spawn);break;
 	}
 #endif
 }
@@ -1065,7 +1087,7 @@ void cast_TF_spawnWave2(edict_t *spawn)
 	if (level.waveEnemyCount == currWave_castMax)
 		cast_TF_Skidrow_boss(spawn);//spawn boss when almost done
 	else
-#ifdef TEST_NEWSKIN
+#if TEST_NEWSKIN
 	{
 		switch (rand() % 14)
 		{
@@ -1232,7 +1254,8 @@ void cast_TF_spawnWave10(edict_t *spawn)//Radiocity
 	case 8:	cast_TF_Radio_City_dragon_street(spawn);break;
 //    case 9:	cast_TF_Radio_City_dragon_office(spawn);break;
 	case 9:	cast_TF_Radio_City_names(spawn);break;
-	case 10:	cast_TF_Radio_City_names(spawn);break;
+	case 10: cast_TF_Radio_City_names(spawn);break;
+	case 11: cast_TF_Radio_City_boss(spawn);break;//FREDZ probably should only spawn ones
 	}
 }
 void cast_TF_spawnWaveBoss(edict_t *spawn)
