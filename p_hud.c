@@ -1275,8 +1275,6 @@ void G_SetStats (edict_t *ent)
 	gitem_t		*item;
 	int			index, cells;
 	int			power_armor_type;
-	 vec3_t          start, forward, end;
-	 trace_t         tr;
 
 	// if chasecam, show stats of player we are following
 	if (ent->client->chase_target && ent->client->chase_target->client)
@@ -1691,6 +1689,7 @@ void G_SetStats (edict_t *ent)
 	}
 	*/
 
+
 	//hypov8 this should go somewhere else!!!
 	if ( level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE)
 	{
@@ -1734,6 +1733,7 @@ void G_SetStats (edict_t *ent)
 			int idx = 0;
 			ent->client->ps.stats[STAT_ENEMYRANGE] = ent->client->botRange;
 			ent->client->ps.stats[STAT_ENEMYANGLE] = ent->client->botAngle;
+#if 0
 			//todo index them?
 			//forward
 			if (ent->client->botAngle >= -22.5 && ent->client->botAngle <= 22.5)
@@ -1754,38 +1754,22 @@ void G_SetStats (edict_t *ent)
 
 			else if (ent->client->botAngle < -67.5 && ent->client->botAngle <= -135)
 				idx = gi.imageindex("pics/h_c_270.tga");
-
+#endif
 
 			ent->client->ps.stats[STAT_COMPUS] = CS_IMAGES+idx;
 		}
+
 		else
 		{
 			ent->client->ps.stats[STAT_ENEMYRANGE] = 0;
-			ent->client->ps.stats[STAT_COMPUS] = 0;
+			ent->client->ps.stats[STAT_COMPUS] = 0;//FREDZ not sure if compus is needed maybe confusing
 		}
-
-
-
-		//FREDZ example code need better fix for enemies, just copy and past now, Cmd_CheckStats_f show maybe some kind of example :/ rangefinder
-		/*VectorCopy(ent->s.origin, start);
-		start[2] += ent->viewheight;
-		AngleVectors(ent->client->v_angle, forward, NULL, NULL);
-		VectorMA(start, 8192, forward, end);
-		tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT | CONTENTS_SLIME | CONTENTS_LAVA);
-		// check for sky and max the range if found
-		if (tr.surface && (tr.surface->flags & SURF_SKY))
-			ent->client->ps.stats[STAT_ENEMYRANGE] = 9999;
-		else
-			ent->client->ps.stats[STAT_ENEMYRANGE] = (int)(tr.fraction * 8192);*/
 	}
 	else
 	{
 		ent->client->ps.stats[STAT_ENEMYRANGE] = 0;
 		ent->client->ps.stats[STAT_COMPUS] = 0;
 	}
-
-
-
 
 
 // Papa - Here is the Timer for the hud

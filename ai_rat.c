@@ -876,6 +876,7 @@ void SP_cast_rat (edict_t *self)
 //	self->target = NULL;
 
 	//im not sure what this is ment to do.. but this is doing some weird shit to rat!
+	//It's scale rat model see cast_TF_rat
 	if (!self->cast_info.scale)
 		self->cast_info.scale = MODEL_SCALE;
 

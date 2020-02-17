@@ -3819,7 +3819,7 @@ void Cmd_Players_f (edict_t *ent)
 
 	gi.cprintf (ent, PRINT_HIGH, "\n%i players\n", count);
 }
-void Cmd_CheckStats_f (edict_t *ent)//FREDZ some player finder range
+void Cmd_Playerrange_f(edict_t *ent)
 {
 	int		i, j;
 	edict_t	*player;
@@ -3847,11 +3847,37 @@ void Cmd_CheckStats_f (edict_t *ent)//FREDZ some player finder range
 	}
 	gi.centerprintf(ent, "%s", stats);
 }
-void Cmd_Compass_f (edict_t *ent)
-  {
-   gi.cprintf (ent, PRINT_HIGH, "%d %d %d \n",ent->client->ps.pmove.origin[1], ent->client->ps.pmove.origin[2],
-  ent->client->ps.pmove.origin[3]);  //should be one line
-  }
+void Cmd_Castrange_f(edict_t *ent)//FREDZ maybe better to make it help screen??
+{
+	int		i, j;
+	char	stats[500];
+	vec3_t	v;
+	float	len;
+	edict_t			*icast;
+
+	j = sprintf(stats, "            Name Health Range\n=============================\n");
+
+	for (i=0; i< MAX_CHARACTERS; i++)
+	{
+		if (!level.characters[i])
+			continue;
+
+		icast = level.characters[i];
+
+		if (icast->health <= 0 || !icast->inuse)
+			continue;
+
+        if (!strcmp(icast->classname, "player"))
+            continue;
+
+        VectorSubtract (ent->s.origin, icast->s.origin, v);
+		len = VectorLength (v);
+		j += sprintf(stats + j, "%16s %6d %5.0f\n", icast->classname, icast->health, len);
+		if (j > 450)
+			break;
+	}
+	gi.centerprintf(ent, "%s", stats);
+}
 /*
 =================
 Cmd_Wave_f
@@ -5838,17 +5864,16 @@ void ClientCommand (edict_t *ent)
 		Cmd_Players_f (ent);
 		return;
 	}
-    if (Q_stricmp (cmd, "checkstats") == 0)
+    if (Q_stricmp (cmd, "playerrange") == 0)
 	{
-		Cmd_CheckStats_f (ent);
+		Cmd_Playerrange_f (ent);
 		return;
 	}
-    if (Q_stricmp (cmd, "compass") == 0)
+    if (Q_stricmp (cmd, "castrange") == 0)
 	{
-		Cmd_Compass_f (ent);
+		Cmd_Castrange_f (ent);
 		return;
 	}
-
 
 	if (Q_stricmp (cmd, "say") == 0)
 	{

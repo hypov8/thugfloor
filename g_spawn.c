@@ -1561,7 +1561,7 @@ char *thugfloor_statusbar =
 "if 24"
 "	yt  130"
 "	xr	-90 "
-"string \"Waves Left\""
+"string \"Waves Left\""// 3 waves of 4? or something like that?
 "	yt	145"
 "	xr	-75"
 "	num 4 24 "	// STAT_WAVEROUND 24
@@ -1587,7 +1587,9 @@ char *thugfloor_statusbar =
 "	num 4 10 "
 "endif "
 
+//FREDZ giving other example
 // rangefinder
+/*
 "if 21"
 "	xm 65"
 "	yb -55 "
@@ -1602,13 +1604,24 @@ char *thugfloor_statusbar =
 "	xm 120"
 "	yb -40"
 "	num 4 22 "		//STAT_ENEMYANGLE 22
- 
+
 "	xm 10"
 "	ym -40"
 "	pic 26 "		//STAT_COMPUS 26
 
 "endif "
+*/
+// Range
+"if 21"
+"	yt 70"
+"	xr -973 "
+"string \"Range\""
+"	yt 85"
+"	xr -975"
+"	num 4 21 "
+"endif "
 
+//FREDZ maybe better to make it help screen?? range can also just used for pawn o matic to see where to go in the end?
 
 // ammo
 "if 2 "
@@ -2082,6 +2095,7 @@ void SP_worldspawn (edict_t *ent)
 		//end tical
 	}
 
+#if 0
 	//hypov8 cache compus
 	gi.imageindex ("pics/h_c_000.tga");
 	gi.imageindex ("pics/h_c_045.tga");
@@ -2089,5 +2103,6 @@ void SP_worldspawn (edict_t *ent)
 	gi.imageindex ("pics/h_c_180.tga");
 	gi.imageindex ("pics/h_c_270.tga");
 	gi.imageindex ("pics/h_c_315.tga");
+#endif
 }
 

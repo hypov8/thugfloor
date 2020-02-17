@@ -27,13 +27,14 @@ struct MENU_ITEM_NAMES
 	int		price[8];
 } menu_item_names[MAX_MENU_ITEMS] =
 {
-    //Missing crowbar for 100?
 	//Weapons
-	{ {"Pistol", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 150, 250, 750, 200, 350, 500} },
+//	{ {"Pistol", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 150, 250, 750, 200, 350, 500} },//Originale pawn o matic
+    { {"Crowbar", "Pistol", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {100, 50, 150, 250, 750, 350, 500, 500} },
 	//Mod's
 	{ {"Pistol Silencer", "Pistol RoF Mod", "Pistol Magnum Mod", "Pistol Reload Mod","HMG Cooling Mod"}, {10, 25, 50, 25, 50} },
 	//Ammo
-	{ {"Bullets", "Shells", "308cal", "Grenades", "Rockets", "Gas"}, {5, 25, 20, 100, 100, 25} },
+//	{ {"Bullets", "Shells", "308cal", "Grenades", "Rockets", "Gas"}, {5, 25, 20, 100, 100, 25} },//Originale pawn o matic
+    { {"Bullets", "Shells", "308cal", "Grenades", "Rockets", "Gas"}, {5, 25, 30, 50, 50, 50} },//FREDZ better prices?
 	//Health
 //	{ {"Small Health", "Large Health", "Adrenaline"}, {25, 50, 100} },
 	{ {"Small Health", "Large Health"}, {25, 50} },
