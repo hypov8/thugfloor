@@ -1719,6 +1719,9 @@ struct gclient_s
 	short	scrollmenu_forward;		//FREDZ set layout stat
 	short	scrollmenu_side;		//FREDZ set layout stat
 
+	int		botRange;	//store hud radar
+	int		botAngle;	//store hud radar
+
 
 };
 

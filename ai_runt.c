@@ -1912,13 +1912,8 @@ void SP_cast_runt (edict_t *self)
 
 	self->cast_info.checkattack = AI_CheckAttack;
 
-	//its posible to shoot pawnGuy with the 2 and 3rd hmg bullet still
-	//this stops him attacking. maybe posible with nads/RL etc..
-	if (Q_strcasecmp(self->name, "Sharky"))//FREDZ is probably better fix for it :)
-	{
-		self->cast_info.attack = runt_attack;
-		self->cast_info.long_attack = runt_long_attack;
-	}
+	self->cast_info.attack = runt_attack;
+	self->cast_info.long_attack = runt_long_attack;
 
 	self->cast_info.talk = runt_talk;
 	self->cast_info.avoid = runt_avoid;

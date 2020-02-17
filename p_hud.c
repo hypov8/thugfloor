@@ -1299,7 +1299,7 @@ void G_SetStats (edict_t *ent)
 
 		// MH: keep own score
 		ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
-		ent->client->ps.stats[STAT_DEPOSITED] = level.waveEnemyCount; // ent->client->resp.deposited;
+		ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount; // ent->client->resp.deposited;
 
 		return;
 	}
@@ -1691,17 +1691,100 @@ void G_SetStats (edict_t *ent)
 	}
 	*/
 
-	//FREDZ example code need better fix for enemies, just copy and past now, Cmd_CheckStats_f show maybe some kind of example :/ rangefinder
-    VectorCopy(ent->s.origin, start);
-    start[2] += ent->viewheight;
-    AngleVectors(ent->client->v_angle, forward, NULL, NULL);
-    VectorMA(start, 8192, forward, end);
-    tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT|CONTENTS_SLIME|CONTENTS_LAVA);
-    // check for sky and max the range if found
-    if ( tr.surface && (tr.surface->flags & SURF_SKY) )
-        ent->client->ps.stats[STAT_RANGEFINDER] = 9999;
-    else
-        ent->client->ps.stats[STAT_RANGEFINDER] = (int)(tr.fraction * 8192);
+	//hypov8 this should go somewhere else!!!
+	if ( level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE)
+	{
+		if (!(level.framenum % 5) || !ent->client->botRange) // is it updating fast enough?
+		{
+			int i, index = 0;
+			float best = 99999.0f;
+			for (i = 0; i < MAX_CHARACTERS; i++)
+			{
+				if (level.characters[i] && level.characters[i]->inuse && !level.characters[i]->client
+					&&level.characters[i]->health > 0 && !level.characters[i]->deadflag)
+				{
+					float v = VectorDistance(ent->s.origin, level.characters[i]->s.origin);
+					if (v < best)
+					{
+						best = v;
+						index = i;
+					}
+				}
+			}
+
+			if (index > 0)
+			{
+				vec3_t vDist, vAngle, angles;
+				float dot;
+				VectorCopy(ent->s.angles, vAngle);
+				VectorSubtract(level.characters[index]->s.origin, ent->s.origin, vDist);
+				vDist[2] = 0;
+				vectoangles(vDist, angles);
+				dot = AngleDiff(vAngle[YAW], angles[YAW]);
+				dot = -dot; //inverse
+				//dot += 180; //360 angle
+
+				ent->client->botRange = (int)best;
+				ent->client->botAngle = (int)dot;
+			}
+		}
+
+		if (ent->client->botRange)
+		{
+			int idx = 0;
+			ent->client->ps.stats[STAT_ENEMYRANGE] = ent->client->botRange;
+			ent->client->ps.stats[STAT_ENEMYANGLE] = ent->client->botAngle;
+			//todo index them?
+			//forward
+			if (ent->client->botAngle >= -22.5 && ent->client->botAngle <= 22.5)
+				idx = gi.imageindex("pics/h_c_000.tga");
+			//back
+			else if (ent->client->botAngle > 135 || ent->client->botAngle < -225) //180
+				idx = gi.imageindex("pics/h_c_180.tga");
+
+			//right
+			else if (ent->client->botAngle > 22.5 && ent->client->botAngle <= 67.5)
+				idx = gi.imageindex("pics/h_c_045.tga");
+			else if (ent->client->botAngle > 67.5 && ent->client->botAngle <= 135)
+				idx = gi.imageindex("pics/h_c_090.tga");
+
+			//left
+			else if (ent->client->botAngle < -22.5 && ent->client->botAngle >= -67.5)
+				idx = gi.imageindex("pics/h_c_315.tga");
+
+			else if (ent->client->botAngle < -67.5 && ent->client->botAngle <= -135)
+				idx = gi.imageindex("pics/h_c_270.tga");
+
+
+			ent->client->ps.stats[STAT_COMPUS] = CS_IMAGES+idx;
+		}
+		else
+		{
+			ent->client->ps.stats[STAT_ENEMYRANGE] = 0;
+			ent->client->ps.stats[STAT_COMPUS] = 0;
+		}
+
+
+
+		//FREDZ example code need better fix for enemies, just copy and past now, Cmd_CheckStats_f show maybe some kind of example :/ rangefinder
+		/*VectorCopy(ent->s.origin, start);
+		start[2] += ent->viewheight;
+		AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+		VectorMA(start, 8192, forward, end);
+		tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT | CONTENTS_SLIME | CONTENTS_LAVA);
+		// check for sky and max the range if found
+		if (tr.surface && (tr.surface->flags & SURF_SKY))
+			ent->client->ps.stats[STAT_ENEMYRANGE] = 9999;
+		else
+			ent->client->ps.stats[STAT_ENEMYRANGE] = (int)(tr.fraction * 8192);*/
+	}
+	else
+	{
+		ent->client->ps.stats[STAT_ENEMYRANGE] = 0;
+		ent->client->ps.stats[STAT_COMPUS] = 0;
+	}
+
+
 
 
 
@@ -1792,7 +1875,7 @@ void G_SetStats (edict_t *ent)
 	// frags
 	//
 	ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
-	ent->client->ps.stats[STAT_DEPOSITED] = level.waveEnemyCount;// ent->client->resp.deposited;
+	ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount;// ent->client->resp.deposited;
 
 	// END
 

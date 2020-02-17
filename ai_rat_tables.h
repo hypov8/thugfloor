@@ -21,13 +21,13 @@ mframe_t	rat_frames_sit_up[] =
 {
     NULL,	  0.004, NULL,	        // frame 0
 	NULL,	  5.304, rat_pounce,	// frame 1
-	NULL,	  0.102, rat_pounce,	// frame 2
-	NULL,	  8.523, rat_pounce,	// frame 3
+	NULL,	  0.102, NULL,	// frame 2
+	NULL,	  8.523, NULL,	// frame 3
 	NULL,	 19.589, rat_bite,	    // frame 4
 	NULL,	  3.179, rat_pounce,	// frame 5
-	NULL,	 18.590, rat_bite,	    // frame 6
-	NULL,	  4.629, rat_pounce,	// frame 7
-	NULL,	 -4.434, rat_bite,	    // frame 8
+	NULL,	 18.590, NULL,	    // frame 6
+	NULL,	  4.629, NULL,	// frame 7
+	NULL,	 -4.434, NULL,	    // frame 8
 	NULL,	  3.514, rat_bite,	    // frame 9
 };
 mmove_t	rat_move_sit_up = {FRAME_situp_01, FRAME_situp_10, rat_frames_sit_up, AI_EndAttack};

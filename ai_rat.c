@@ -875,6 +875,7 @@ void SP_cast_rat (edict_t *self)
 //if (self->leader_target)
 //	self->target = NULL;
 
+	//im not sure what this is ment to do.. but this is doing some weird shit to rat!
 	if (!self->cast_info.scale)
 		self->cast_info.scale = MODEL_SCALE;
 

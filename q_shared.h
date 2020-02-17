@@ -1115,7 +1115,7 @@ typedef enum
 #define STAT_HUD_SELF_TALK       22
 #define STAT_HUD_ENEMY_TALK_TIME 23
 #define STAT_HUD_SELF_TALK_TIME  24
-#define STAT_FORCE_HUD           25
+#define STAT_FORCE_HUD           25 //hypov8 is this needed?
 
 #define STAT_HUD_HIRE1			 26
 #define STAT_HUD_HIRE2			 27
@@ -1123,16 +1123,17 @@ typedef enum
 #define STAT_HUD_HIRE2_CMD		 29
 
 // Ridah, duplicated these for use in teamplay, since they aren't used at all in multiplay
-#define STAT_BAGCASH		     21
-#define STAT_DEPOSITED           22//hypov8 stat enemy left
-#define STAT_WAVEROUND           23//FREDZ show wave rounds
-//#define STAT_BAG_CASH            24
-#define STAT_RANGEFINDER	     24//FREDZ testing
+#define STAT_ENEMYRANGE			21//FREDZ testing
+#define STAT_ENEMYANGLE			22
+#define STAT_ENEMYCOUNT			23//hypov8 stat enemy left
+#define STAT_WAVEROUND			24//FREDZ show wave rounds
+#define STAT_COMPUS				26 //compus icon
 
-#define STAT_TEAM1_SCORE		 26
-#define STAT_TEAM2_SCORE		 27
-#define STAT_TEAM1_FLASH		 28		// 0 - no flash, 1 - green, 2 - red
-#define STAT_TEAM2_FLASH		 29		// 0 - no flash, 1 - green, 2 - red
+
+//#define STAT_TEAM1_SCORE		 26
+//#define STAT_TEAM2_SCORE		 27
+//#define STAT_TEAM1_FLASH		 28		// 0 - no flash, 1 - green, 2 - red
+//#define STAT_TEAM2_FLASH		 29		// 0 - no flash, 1 - green, 2 - red
 // done.
 
 // BEGIN HITMEN //FREDZ

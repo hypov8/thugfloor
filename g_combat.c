@@ -733,6 +733,10 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		return;
 	}
 
+
+	if (level.modeset != WAVE_ACTIVE)
+		return;	//stop shooting pawnGuy
+
 	if (targ->client && attacker->client && targ != attacker)
 		return; //skip human players
 

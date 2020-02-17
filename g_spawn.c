@@ -1541,30 +1541,74 @@ char *thugfloor_statusbar =
 // health
 "hnum "
 
-// cash
-//"cnum "//Not possible to move? is posible :) cool :)
-//new cash placement
-"yt 10 "
-"xr -55 "
-"num 4 16 " //9999 max? STAT_CASH 16
-"xr -100 "
-"picn /pics/h_money.tga "
-"xr -130 "
+// frags
+"yt 10 " //10
+"xr -45 "
+"string \"Kills\" "
+"yt 25 " //25
+"xr -75 "
+"num 4 14 "		// STAT_FRAGS 14
+
+//cash
+"yt 70 " //70
+"xr -40 "
 "string \"Cash\" "
+"yt 85 " //85
+"xr -75 "
+"num 4 16 "		//9999 max? STAT_CASH 16
 
-//"xv 350 "
-//"frags "
-//Needs frags? need to show frags aswell below cash
-
-
-//FREDZ example? rangefinder, should probably moved more to the left
-"if 21 "
-"   xv 210 "
-"      num 4   16 "
-"   xv 234 "
-"   yb -59 "
-"   string RANGE "
+// waves left
+"if 24"
+"	yt  130"
+"	xr	-90 "
+"string \"Waves Left\""
+"	yt	145"
+"	xr	-75"
+"	num 4 24 "	// STAT_WAVEROUND 24
 "endif "
+
+// enemy left
+"if 23"
+"	yt  190"
+"	xr	-88 "
+"string \"Enemy Left\""
+"	yt	205"
+"	xr	-75"
+"	num 4 23 "	// STAT_ENEMYCOUNT 23
+"endif "
+
+// timer
+"if 10"
+"	yt 250"
+"	xr -73 "
+"string \"Time Left\""
+"	yt 265"
+"	xr -75"
+"	num 4 10 "
+"endif "
+
+// rangefinder
+"if 21"
+"	xm 65"
+"	yb -55 "
+"string \"RANGE\""
+"	xm 40"
+"	yb -40"
+"	num 4 21"		// STAT_ENEMYRANGE 21
+
+"	xm 145"
+"	yb -55 "
+"string \"ANGLE\""
+"	xm 120"
+"	yb -40"
+"	num 4 22 "		//STAT_ENEMYANGLE 22
+ 
+"	xm 10"
+"	ym -40"
+"	pic 26 "		//STAT_COMPUS 26
+
+"endif "
+
 
 // ammo
 "if 2 "
@@ -1576,44 +1620,6 @@ char *thugfloor_statusbar =
 // picked up item
 "if 17 "
 "stat_string 8 7 "
-"endif "
-
-// timer
-"if 10 "
-"yt 100 "
-"xr -75 "
-"string \"Time Left\" "
-"yt 115 "
-"xr -55 "
-"num 2 10 "
-"endif "
-
-// FREDZ waves
-"if 23 "
-"	yt  190	"
-"	xr	-95 "
-"string \"Waves Left\" "
-"	yt	205 "
-"	xr	-55 "
-"	num 2 23"
-"endif "
-/*
-"xr -52 "
-"yb -55 "
-"string \"of \" "
-
-"xr -98 "
-"yb -65 "
-"num 2 21 "	// 21 = STAT_BAGCASH
-*/
-
-"if 22 "
-"	yt  280	"
-"	xr	-95 "
-"string \"Enemy Left\" "
-"	yt	295 "
-"	xr	-55 "
-"	num 2 22" //hypov8 hud STAT_DEPOSITED
 "endif "
 ;
 
@@ -2075,5 +2081,13 @@ void SP_worldspawn (edict_t *ent)
 		}
 		//end tical
 	}
+
+	//hypov8 cache compus
+	gi.imageindex ("pics/h_c_000.tga");
+	gi.imageindex ("pics/h_c_045.tga");
+	gi.imageindex ("pics/h_c_090.tga");
+	gi.imageindex ("pics/h_c_180.tga");
+	gi.imageindex ("pics/h_c_270.tga");
+	gi.imageindex ("pics/h_c_315.tga");
 }
 
