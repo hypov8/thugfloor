@@ -1164,6 +1164,10 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
+#if HYPODEBUG
+	level.waveNum = 10; //test end boss
+#endif
+
 // parse ents
 	while (1)
 	{
@@ -1556,69 +1560,69 @@ char *thugfloor_statusbar =
 "yt 85 " //85
 "xr -75 "
 "num 4 16 "		//9999 max? STAT_CASH 16
-
-// waves left
-"if 24"
-"	yt  130"
-"	xr	-90 "
-"string \"Waves Left\""// 3 waves of 4? or something like that?
-"	yt	145"
-"	xr	-75"
-"	num 4 24 "	// STAT_WAVEROUND 24
-"endif "
-
-// enemy left
-"if 23"
-"	yt  190"
-"	xr	-88 "
-"string \"Enemy Left\""
-"	yt	205"
-"	xr	-75"
-"	num 4 23 "	// STAT_ENEMYCOUNT 23
-"endif "
+"yt 60 "
+"xr -80 "
+"picn /pics/h_money.tga "
 
 // timer
 "if 10"
-"	yt 250"
+"	yt 130"
 "	xr -73 "
 "string \"Time Left\""
-"	yt 265"
-"	xr -75"
+"	yt 145"
+"	xr -80"
 "	num 4 10 "
 "endif "
 
-//FREDZ giving other example
-// rangefinder
-/*
-"if 21"
-"	xm 65"
-"	yb -55 "
-"string \"RANGE\""
-"	xm 40"
-"	yb -40"
-"	num 4 21"		// STAT_ENEMYRANGE 21
-
-"	xm 145"
-"	yb -55 "
-"string \"ANGLE\""
-"	xm 120"
-"	yb -40"
-"	num 4 22 "		//STAT_ENEMYANGLE 22
-
-"	xm 10"
-"	ym -40"
-"	pic 26 "		//STAT_COMPUS 26
-
+///////////////
+//thugfloor hud
+///////////////
+// enemy
+"if 23"
+"	yt  70"
+"	xl	5 "
+"string \"Enemy\""
+"	yt	85"
+"	xl	5"
+"	num 2 23 "	// STAT_ENEMYCOUNT 23
 "endif "
-*/
+
+// waves
+"if 24"
+"	yt  130"
+"	xl	5 "
+"string \"Wave\""// 3 waves of 4? or something like that?
+"	yt	145"
+"	xl	0"
+"	num 2 26"	// STAT_COMPUS 26 //wavenum
+
+"	yt  175"
+"	xl	20 "
+"string \"of\""// 3 waves of 4? or something like that?
+"	yt	160"
+"	xl	30"
+"	num 2 24 "	// STAT_WAVEROUND 24
+"endif "
+
+// boss health
+"if 27"
+"	yt 210"
+"	xl 5 "
+"string \"BOSS HP\""
+"	yt 225"
+"	xl 5"
+"	num 3 27 "		// STAT_BOSS 27
+"endif "
+
+
 // Range
 "if 21"
-"	yt 70"
-"	xr -973 "
-"string \"Enemy Range\""
-"	yt 85"
-"	xr -975"
-"	num 4 21 "
+"	yt 270"
+"	xl 5 "
+"string \"Distance\""
+"	yt 285"
+"	xl 5"
+"	num 4 21 "		// STAT_ENEMYRANGE 21
 "endif "
 
 //FREDZ maybe better to make it help screen?? range can also just used for pawn o matic to see where to go in the end?

@@ -436,7 +436,7 @@ void InitGame (void)
 
 	timescale		= gi.cvar("timescale", "1.0", 0);
 
-	maxwaves		= gi.cvar("maxwaves","2", CVAR_LATCH|CVAR_SERVERINFO); //hypov8
+	wavetype = gi.cvar("wavetype", WAVE_DEFAULT, CVAR_LATCH|CVAR_SERVERINFO); //hypov8 //default long?
 	nav_dynamic = gi.cvar("nav_dynamic", "1", 0); //hypov8 nav. set to on default
 
     // speed hack fix

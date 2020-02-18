@@ -522,14 +522,14 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 		self->switch_teams_frame = level.framenum;
 		//FREDZ end
 
-		self->client->pers.spectator = PLAYER_READY; //hypov8dont enter a current wave
+		self->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
 
 		self->flags &= ~FL_GODMODE;
 		self->health = 0;
 		meansOfDeath = MOD_RESTART;
 		self->solid = SOLID_NOT;
 		ClientBeginDeathmatch( self );
-		self->client->pers.currentcash = waveGiveCash(2); // 150 + (int)(250.0f * (float)((level.waveNum + 1) / maxwaves->value));
+		self->client->pers.currentcash = waveGiveCash(2);
 		gi.bprintf( PRINT_HIGH, "%s joined game\n", self->client->pers.netname);
 		return;
 	}
@@ -4447,12 +4447,12 @@ void Cmd_PrintSettings_f (edict_t *ent)
 		sk = "real";
 
     //get wave count
-	if ((int)maxwaves->value == 2)		//long
-		numWaves = 11;
-	else if ((int)maxwaves->value == 1)	//med
-		numWaves = 8;
-	else 								//short
-		numWaves = 5;
+	if ((int)wavetype->value == 0)		//short
+		numWaves = WAVELEN_SHORT;
+	else if ((int)wavetype->value == 1)	//med
+		numWaves = WAVELEN_MED;
+	else 								//long
+		numWaves = WAVELEN_LONG;
 
 	gi.cprintf(ent, PRINT_HIGH,"Map                : %s\n", level.mapname);//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"Skill mode         : %s\n", sk);//FREDZ
@@ -5142,13 +5142,13 @@ void Cmd_SetMaxWaves_f (edict_t *ent, char *value)
 	{
 		if (ent->client->pers.admin > NOT_ADMIN )
 		{
-			CHECKFIXED("maxwaves");
+			CHECKFIXED("wavetype");
 		}
 		else
 			gi.cprintf(ent,PRINT_HIGH,"You do not have admin\n");
 	}
 	else
-		gi.cprintf(ent,PRINT_HIGH,"maxwaves settings are as follows:\n 0: 5  waves\n 1: 8  waves\n 2: 11 waves\n");
+		gi.cprintf(ent,PRINT_HIGH,"wavetype settings are as follows:\n 0: 5  waves\n 1: 8  waves\n 2: 11 waves\n");
 }
 
 void Cmd_SetPassword_f (edict_t *ent, char *value)
@@ -6163,7 +6163,7 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp (cmd, "setdm_realmode") == 0)
 		Cmd_SetRealMode_f (ent, gi.argv (1));
 
-	else if (Q_stricmp (cmd, "setmax_waves") == 0)//FREDZ
+	else if (Q_stricmp (cmd, "setwavetype") == 0)//FREDZ
 		Cmd_SetMaxWaves_f (ent, gi.argv (1));
 	else if (Q_stricmp (cmd, "setskill") == 0) //FREDZ
 		Cmd_SetSkill_f (ent, gi.argv (1));

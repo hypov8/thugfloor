@@ -72,7 +72,10 @@
 #define WAVE_IDLE		7
 #define WAVE_END		8
 
-
+#define	WAVELEN_LONG 11
+#define	WAVELEN_MED 8
+#define	WAVELEN_SHORT 5
+#define WAVE_DEFAULT "2" //long
 
 // admin types
 
@@ -920,7 +923,7 @@ extern	cvar_t	*burn_b;
 
 extern	cvar_t	*timescale;
 
-extern	cvar_t	*maxwaves;//hypov8
+extern	cvar_t	*wavetype;//hypov8
 extern	cvar_t	*nav_dynamic;//hypov8
 //extern	cvar_t	*teamplay;//FREDZ not using
 //extern	cvar_t	*g_cashspawndelay;
@@ -2178,7 +2181,7 @@ extern char default_password[16];
 /*extern char default_timelimit[16];
 extern char default_fraglimit[16];*/
 extern char default_dm_realmode[16];
-extern char default_maxwaves[16];
+extern char default_wavetype[16];
 extern char custom_map_filename[32];  // stores where various files can be found
 extern char ban_name_filename[32];
 extern char ban_ip_filename[32];

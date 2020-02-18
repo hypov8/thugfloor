@@ -1128,6 +1128,7 @@ typedef enum
 #define STAT_ENEMYCOUNT			23//hypov8 stat enemy left
 #define STAT_WAVEROUND			24//FREDZ show wave rounds
 #define STAT_COMPUS				26 //compus icon
+#define STAT_BOSS				27 //show boss health
 
 
 //#define STAT_TEAM1_SCORE		 26

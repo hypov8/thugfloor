@@ -2,6 +2,10 @@
 
 #define ENABLE_INDEX_NAMES		1
 
+extern edict_t *boss_entityID;
+extern int boss_maxHP;
+extern int currWave_plysCount;
+
 static const char *gameheader[] =
 {
 	GAMEVERSION " By FREDZ and Hypov8",
@@ -1708,9 +1712,27 @@ void G_SetStats (edict_t *ent)
 	}
 	*/
 
+	//show boss health
+	if (level.modeset == WAVE_ACTIVE)
+	{
+		if (boss_entityID !=NULL &&(
+			((int)wavetype->value == 0 && level.waveNum == WAVELEN_SHORT - 1) ||
+			((int)wavetype->value == 1 && level.waveNum == WAVELEN_MED - 1) ||
+			((int)wavetype->value >= 2 && level.waveNum == WAVELEN_LONG - 1)
+			))
+		{
+			ent->client->ps.stats[STAT_BOSS] = (int)(100.0f * boss_entityID->health / (float)boss_maxHP);
+		}
+		else
+			ent->client->ps.stats[STAT_BOSS] = 0;	
+	}
+	else
+		ent->client->ps.stats[STAT_BOSS] = 0;
+
 
 	//hypov8 this should go somewhere else!!!
-	if ( level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE)
+	//show distance to pawnGuy an last 4 players
+	if (level.modeset == WAVE_BUYZONE || (level.modeset == WAVE_ACTIVE && currWave_plysCount <=4))
 	{
 		if (!(level.framenum % 5) || !ent->client->botRange) // is it updating fast enough?
 		{
@@ -1829,15 +1851,20 @@ void G_SetStats (edict_t *ent)
 
 	if (level.modeset != PREGAME && level.modeset != WAVE_IDLE) //show waves left at end of match
 	{
-		if ((int)maxwaves->value == 2 )			//long
-			ent->client->ps.stats[STAT_WAVEROUND] = 11 - level.waveNum;
-		else if  ((int)maxwaves->value ==  1)	//med
-			ent->client->ps.stats[STAT_WAVEROUND] = 8 - level.waveNum;
-		else									//short
-			ent->client->ps.stats[STAT_WAVEROUND] = 5 - level.waveNum;
+		if ((int)wavetype->value == 0 )			//short
+			ent->client->ps.stats[STAT_WAVEROUND] = WAVELEN_SHORT;
+		else if  ((int)wavetype->value ==  1)	//med
+			ent->client->ps.stats[STAT_WAVEROUND] = WAVELEN_MED;
+		else									//long
+			ent->client->ps.stats[STAT_WAVEROUND] = WAVELEN_LONG;
+
+		ent->client->ps.stats[STAT_COMPUS] = level.waveNum+1;
 	}
-    else
-        ent->client->ps.stats[STAT_WAVEROUND] = 0;
+	else
+	{
+		ent->client->ps.stats[STAT_WAVEROUND] = 0;
+		ent->client->ps.stats[STAT_COMPUS] = 0;
+	}
 
 	// END JOSEPH
 

@@ -15,7 +15,7 @@ char default_timelimit[16];
 char default_cashlimit[16];
 char default_fraglimit[16];*/
 char default_dm_realmode[16];
-char default_maxwaves[16];
+char default_wavetype[16];
 
 char custom_map_filename[32];  // stores where various files can be found
 char ban_name_filename[32];
@@ -124,7 +124,7 @@ void ResetServer () // completely resets the server including map
 	gi.cvar_set("fraglimit",default_fraglimit);
 	gi.cvar_set("cashlimit",default_cashlimit);*/
 	gi.cvar_set("dm_realmode",default_dm_realmode);
-    gi.cvar_set("maxwaves",default_maxwaves);
+    gi.cvar_set("wavetype",default_wavetype); //todo: comp.ini
 	gi.cvar_set("anti_spawncamp", "1");//FREDZ
 	gi.cvar_set("cheats","0");
 
@@ -420,12 +420,12 @@ int waveGiveCash(int type)
 	float real		= 1550.0f / 2.5f;
 
 	//get wave count
-	if ((int)maxwaves->value == 2)		//long
-		numWaves = 11;
-	else if ((int)maxwaves->value == 1)	//med
-		numWaves = 8;
-	else 								//short
-		numWaves = 5;
+	if ((int)wavetype->value == 0)		//short
+		numWaves =WAVELEN_SHORT;
+	else if ((int)wavetype->value == 1)	//med
+		numWaves = WAVELEN_MED;
+	else 								//long
+		numWaves = WAVELEN_LONG;
 
 	//use skill value
 	if (skill->value == 0)			spawn_cash = novice;
@@ -472,7 +472,7 @@ void WaveEnd () //hypov8 end of the match
 			count_players++;
 		//give cash to ppl that survived the wave
 		if (self->client->pers.spectator == PLAYING)
-			self->client->pers.currentcash += waveGiveCash(1); // 150 + (int)(250.0f * (float)((level.waveNum + 1) / maxwaves->value));
+			self->client->pers.currentcash += waveGiveCash(1);
 
 		//spawn players into buying time
 		if (self->client->pers.spectator == PLAYER_READY)
@@ -481,7 +481,7 @@ void WaveEnd () //hypov8 end of the match
             self->health = 0;
             meansOfDeath = MOD_RESTART;
             ClientBeginDeathmatch( self );
-			self->client->pers.currentcash = waveGiveCash(2); // 150 + (int)(250.0f * (float)((level.waveNum + 1) / maxwaves->value)); //dead!!
+			self->client->pers.currentcash = waveGiveCash(2); //dead!!
 		}
 	}
 
@@ -502,7 +502,7 @@ void WaveBuy()  // start buy zone
 	level.player_num = 0;
 	level.modeset = WAVE_BUYZONE;
 	level.startframe = level.framenum;
-	gi.bprintf (PRINT_HIGH,"Buy zone wave %i will end in 60 seconds.\n", level.waveNum);
+	gi.bprintf (PRINT_HIGH,"Buy zone for wave %i will end in 60 seconds.\n", level.waveNum+1);
     G_ClearUp (NULL, FOFS(classname));
 
     level.buyzone = true;//FREDZ stop shooting
@@ -608,7 +608,7 @@ void CheckStartWave ()  // 15 countdown before matches
         #endif
 	}
 
-	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 49))
+	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 105)) //150-45
 		gi.bprintf(PRINT_HIGH,"Wave %i will start in %d seconds!\n", level.waveNum + 1, (140 - (level.framenum - level.startframe)) / 10);
 }
 
@@ -633,7 +633,7 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 			gi.bprintf(PRINT_HIGH, "Players need to join to start a wave.\n");
 
 		//if (maxwaves->value > 11.0f)
-		//	gi.cvar_forceset("maxwaves", "11");
+		//	gi.cvar_forceset("wavetype", "11");
 
 		level.modeset = WAVE_SPAWN_PLYR; //spawn players straight away
 
@@ -664,7 +664,11 @@ void CheckBuyWave ()
 	int      i;
 	int      count_players = 0;
 
+#if HYPODEBUG
+	if (level.framenum >= level.startframe + 30)//3 seconds
+#else
 	if (level.framenum >= level.startframe + 595)//60 seconds
+#endif
 	{
 		WaveStart_Countdown();
 		return;
@@ -686,16 +690,16 @@ void CheckBuyWave ()
 
 int CheckEndWave_GameType()
 {
-	if ((int)maxwaves->value == 2) {		//long
-		if (level.waveNum == 11)
+	if ((int)wavetype->value == 0) {		//short
+		if (level.waveNum == WAVELEN_SHORT -1)
 			return  1;
 	}
-	else if ((int)maxwaves->value == 1) {	//med
-		if (level.waveNum == 8)
+	else if ((int)wavetype->value == 1) {	//med
+		if (level.waveNum == WAVELEN_MED -1)
 			return 1;
 	}
-	else {									//short
-		if (level.waveNum == 5)
+	else {									//long
+		if (level.waveNum == WAVELEN_LONG -1)
 			return 1;
 	}
 
@@ -715,7 +719,7 @@ void CheckEndWave() //add timelimit
 			WaveEnd();
 		else
 		{
-			gi.bprintf(PRINT_HIGH, "Player won.\n");
+			gi.bprintf(PRINT_HIGH, "Player won.\n"); //todo: better name then players?
 			GameEND();
 		}
 	}

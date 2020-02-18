@@ -8,9 +8,15 @@ edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
 void cast_TF_spawn(int ammount, int type);
 static int currWave_castCount = 0; //enemy currently on map
-static int currWave_plysCount = 0; //players
+int currWave_plysCount = 0; //players
 static int currWave_length = 0; //long, med, short
 static int currWave_castMax = 0; //max enemy allowed on map
+
+//boss info
+edict_t *boss_entityID = NULL;
+int boss_maxHP;
+static int boss_called_help = 0; //1 = melee, 2= pistol, 3= shotty
+
 
 #define TEST_NEWSKIN 0
 
@@ -84,7 +90,7 @@ void cast_pawn_o_matic_spawn ()
 //apply skins.. consider skill
 void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int skinCount)
 {
-#if TEST_NEWSKIN //only 2 waves can be stested. crashes on 3rd
+#if TEST_NEWSKIN //only 2 waves can be tested. crashes on 3rd
 
 	//this split skins into 5 groups. low skill needs to be at top and high skill at bottom of list
 	//some overlap of skill settings will be generated. about 2 above/below actual skill.
@@ -183,7 +189,6 @@ void cast_TF_Wave2_Skidrow(edict_t *self)
 }
 
 #endif
-
 
 
 ///////////////////////
@@ -904,10 +909,10 @@ void cast_TF_Radio_City_boss(edict_t *self)
 	self->classname = "cast_punk";
 	self->health = 800 * currWave_plysCount;
 }
+
+
 void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
 {
-    int health25, maxhealth = 0;
-
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Kingpin");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "120 120 120");
 	self->spawnflags = 0;//pistol
@@ -915,20 +920,13 @@ void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
     self->cal = 5;
 //	self->scale = 1.15;
 	self->classname = "cast_runt";
-
-	maxhealth = 1500 * currWave_plysCount;
-	health25=maxhealth/4;
-
-	self->health = maxhealth;
-
-	if (maxhealth == ((health25*2) || health25))//FREDZ not sure if this correct place and probably need fix
-        cast_TF_cast_melee (self);//Spawn some enemies.
+	self->health = 1500 * currWave_plysCount;
 }
 void cast_TF_Crystal_Palace_boss_blunt(edict_t *self)
 {
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Blunt");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "080 059 059");
-	self->spawnflags = 18;//hmg
+	self->spawnflags = 16;//hmg //18 =triger spawned (>>2)
 	self->classname = "cast_whore";
 	self->health = 1500 * currWave_plysCount;//150000 normally
 }
@@ -939,9 +937,60 @@ void cast_TF_Crystal_Palace_boss(edict_t *spawn)
 	case 0:		cast_TF_Crystal_Palace_boss_kingpin(spawn);break;
 	case 1:		cast_TF_Crystal_Palace_boss_blunt(spawn);break;
 	}
+
+	//store boss hp/ID.
+	boss_maxHP = spawn->health;
+	boss_entityID = spawn;
 }
 // end setup cast skins
 ///////////////////////
+
+extern voice_table_t nickiblanco[];
+extern voice_table_t ty_tyrone[];
+extern voice_table_t steeltown_moker[];
+extern voice_table_t sr_jesus[];
+extern voice_table_t heilman[];
+extern voice_table_t blunt[];
+extern voice_table_t kingpin[];
+
+
+
+void cast_boss_sounds()
+{
+	voice_table_t *tmpVoice = kingpin;
+	edict_t *self;
+	int i, index;
+
+	//hypov8 disable. boss allways taunts!!!!
+	return;
+
+	//set bot specific sound table and index
+	switch (boss_entityID->name_index)
+	{
+	case NAME_NICKIBLANCO: tmpVoice = nickiblanco;	break;
+	case  NAME_TYRONE: tmpVoice = ty_tyrone;	break;
+	case NAME_MOKER: tmpVoice = steeltown_moker;	break;
+	case NAME_JESUS: tmpVoice = sr_jesus;	break;
+	case NAME_HEILMAN: tmpVoice = heilman;	break;
+	case NAME_BLUNT: tmpVoice = blunt;	break;
+
+	default:
+	case NAME_KINGPIN: tmpVoice = kingpin;
+		index = 8; //sick the dogs on your ass
+		if (boss_called_help == 2)
+			index = 7; // Your ass is goin' down
+		else if (boss_called_help == 3)
+			index = 9; //You come close, but you never made it		
+		break;
+	}
+
+	for_each_player(self, i)
+	{
+		if (self->client->pers.spectator == PLAYING)
+			Voice_Specific(boss_entityID, self, kingpin, index);
+	}
+
+}
 
 //check if enemy has died or kill them for endWave/endGame
 int cast_TF_checkEnemyState()
@@ -970,10 +1019,6 @@ int cast_TF_checkEnemyState()
 						|| level.characters[i]->s.origin[2] < -4096 //fallen in void!!!
 						) //timelimit reached?
 					{
-						// free cast array //hypov8 todo: this is wrong
-						//if (level.characters[i]->character_index)
-						//AI_UnloadCastMemory(level.characters[i]);
-						//G_FreeEdict(level.characters[i]);
 						level.characters[i]->character_index = 0;
 						level.characters[i] = NULL;
 						level.num_characters--;
@@ -990,6 +1035,30 @@ int cast_TF_checkEnemyState()
 	//free slot. add enemy
 	if (level.modeset == WAVE_ACTIVE)
 	{
+		//final boss. spawn some help
+		if (level.waveNum == currWave_length)
+		{
+			if (boss_called_help == 0 && boss_entityID && boss_entityID->health < (boss_maxHP *.75))
+			{
+				boss_called_help = 1;
+				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??	
+				cast_boss_sounds();
+			}
+			else if (boss_called_help == 1 && boss_entityID && boss_entityID->health < (boss_maxHP *.5))
+			{
+				boss_called_help = 2;
+				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??	
+				cast_boss_sounds();
+			}
+			else if (boss_called_help == 2 && boss_entityID && boss_entityID->health < (boss_maxHP *.25))
+			{
+				boss_called_help = 3;
+				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??	
+				cast_boss_sounds();
+			}
+		}
+
+
 		if (count < level.waveEnemyCount && count < currWave_castMax)
 			cast_TF_spawn(0, 0);
 	}
@@ -998,6 +1067,7 @@ int cast_TF_checkEnemyState()
 		//level.num_characters = 0;
 		currWave_castCount = 0; //reset spawned cast count
 	}
+
 
 	return currWave_castCount;
 }
@@ -1207,7 +1277,15 @@ void cast_TF_spawnWave10(edict_t *spawn)//Radiocity
 }
 void cast_TF_spawnWaveBoss(edict_t *spawn)
 {
-	cast_TF_Crystal_Palace_boss(spawn);
+	//boss.. or his helpers?
+	if (boss_called_help == 0)
+		cast_TF_Crystal_Palace_boss(spawn);
+	else if (boss_called_help == 1)
+		cast_TF_cast_melee(spawn);
+	else if (boss_called_help == 2)
+		cast_TF_cast_pistol(spawn);
+	else if (boss_called_help == 3)
+		cast_TF_cast_shotgun(spawn);
 }
 //end rand spawn types
 //////////////////////
@@ -1216,7 +1294,7 @@ void cast_TF_spawnWaveBoss(edict_t *spawn)
 //generate types based on game length
 void cast_TF_spawnTypes(edict_t *spawn)
 {
-	if (currWave_length == 11)	// long wave
+	if (currWave_length == WAVELEN_LONG -1)	// long wave
 	{
 		switch (level.waveNum)
 		{
@@ -1233,7 +1311,7 @@ void cast_TF_spawnTypes(edict_t *spawn)
 		case 10: cast_TF_spawnWaveBoss(spawn); break; //wave 11
 		}
 	}
-	else if (currWave_length == 8)//med wave
+	else if (currWave_length == WAVELEN_MED - 1)//med wave
 	{
 		switch (level.waveNum)
 		{
@@ -1247,7 +1325,7 @@ void cast_TF_spawnTypes(edict_t *spawn)
 		case 7: cast_TF_spawnWaveBoss(spawn); break; //wave 8
 		}
 	}
-	else 	//short wave
+	else 	//WAVELEN_SHORT //short wave
 	{
 		switch (level.waveNum)
 		{
@@ -1304,14 +1382,15 @@ void cast_TF_spawn(int ammount, int type)
             spawn->health = 100;
 
 		//make enemy health varable
-		if ((int)maxwaves->value == 2)//11 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + (float)level.waveNum / 22.0f)); //50% to 100%
-		else if ((int)maxwaves->value == 1)//8 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + (float)level.waveNum / 16.0f)); //50% to 100%
-		else//5 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + (float)level.waveNum / 10.0f)); //50% to 100%
 
-		if (spawn->health< 10)
+		if ((int)wavetype->value == 0)		//5 waves
+			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_SHORT-1)*2))); //50% to 100%
+		else if ((int)wavetype->value == 1)	//8 waves
+			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_MED-1)*2))); //50% to 100%
+		else								//11 waves
+			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_LONG-1)*2))); //50% to 100%
+
+		if (spawn->health < 10)
             spawn->health = 10;
 
 		//set what player to attack
@@ -1324,7 +1403,7 @@ void cast_TF_spawn(int ammount, int type)
 
 //total enemy counts per wave.
 //this will be multiplied by player counts later
-#if 0 // HYPODEBUG
+#if HYPODEBUG
 static int wave_shortGame[5] = { 2, 2, 2, 2, 1 };
 static int wave_medGame[8] = { 2, 2, 2, 2, 2, 2, 2, 1 };
 static int wave_longGame[11] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
@@ -1377,13 +1456,15 @@ void cast_TF_setupEnemyCounters(void)
 			if (!firstPlayer)
 			{
 				firstPlayer = 1;
-				self->nav_TF_isFirstPayer = 1; //hypov8 nav
+				self->nav_TF_isFirstPayer = 1; //hypov8 nav. todo: if player dies
 			}
 			self->cast_group = 1;
 		}
 	}
 	currWave_plysCount = playerCount;
 	currWave_castMax = wave_skill[sk][playerCount]; //skill based enemy limits
+	boss_called_help = 0;
+	boss_entityID = NULL;
 
 	//make sure we have enough spawns(level size)
 	if (level.dmSpawnPointCount < currWave_castMax)
@@ -1393,20 +1474,21 @@ void cast_TF_setupEnemyCounters(void)
 
 
 	//get wave count
-	if ((int)maxwaves->value == 2)
+	if ((int)wavetype->value == 0)
 	{
-		currWave_length = 11;//long wave
-		level.waveEnemyCount = wave_longGame[level.waveNum] * playerCount;
-	}
-	else if ((int)maxwaves->value == 1)
-	{
-		currWave_length = 8;//med wave
-		level.waveEnemyCount = wave_medGame[level.waveNum] * playerCount;
-	}
-	else
-	{
-		currWave_length = 5;//short wave
+		currWave_length = WAVELEN_SHORT - 1;//short wave
 		level.waveEnemyCount = wave_shortGame[level.waveNum] * playerCount;
 	}
+	else if ((int)wavetype->value == 1)
+	{
+		currWave_length = WAVELEN_MED - 1;//med wave
+		level.waveEnemyCount = wave_medGame[level.waveNum] * playerCount;
+	}
+	else //wavetype >= 2
+	{
+		currWave_length = WAVELEN_LONG - 1;//long wave
+		level.waveEnemyCount = wave_longGame[level.waveNum] * playerCount;
+	}
+
 }
 

@@ -114,7 +114,7 @@ cvar_t	*burn_b;
 
 cvar_t	*timescale;
 
-cvar_t	*maxwaves;//hypov8
+cvar_t	*wavetype;//hypov8
 cvar_t	*nav_dynamic;//hypov8
 //cvar_t	*teamplay;
 //cvar_t	*g_cashspawndelay;
@@ -551,7 +551,7 @@ void CheckDMRules (void)
 	int			i;
 	int		count=0;
 	edict_t	*doot;
-	//int maxwaves = 11;//FREDZ
+
 
 	if (level.intermissiontime)
 		return;
@@ -585,32 +585,6 @@ void CheckDMRules (void)
 			return;
 		}
 	}
-	#endif
-
-	#if 0
-    for (i=0 ; i<maxclients->value ; i++)
-    {
-        cl = game.clients + i;
-
-		if (!g_edicts[i+1].inuse)
-            continue;
-
-        if (cl->resp.score >= 10)//FREDZ depence on //hypov8 this is not correct. value needs to be reset every round
-        {
-            gi.bprintf (PRINT_HIGH, "Wave ended.\n");
-
-            if (level.waveNum < (int)maxwaves->value)
-            {
-                WaveEnd();
-            }
-            else
-            {
-                gi.bprintf (PRINT_HIGH, "Player won.\n");
-                GameEND ();//FREDZ
-            }
-            return;
-        }
-    }
 	#endif
 
 /*

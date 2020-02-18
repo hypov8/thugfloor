@@ -16,7 +16,7 @@
 #define		FPH_SCOREBOARD_STRING	"frags_per_hour_scoreboard"
 #define		DISABLE_ADMIN_STRING	"disable_admin_voting"
 #define		DEFAULT_REAL_STRING		"default_dm_realmode"
-#define		DEFAULT_MAXWAVES_STRING	"default_maxwaves"
+#define		DEFAULT_MAXWAVES_STRING	"default_wavetype"
 #define		FIXED_GAMETYPE_STRING	"fixed_gametype"
 #define		FIXED_SKILLTYPE_STRING	"fixed_skilltype"//FREDZ
 #define		ENABLE_PASSWORD_STRING	"enable_password"
