@@ -818,8 +818,10 @@ void SP_cast_rat (edict_t *self)
  //   if (!self->cast_group)//FREDZ doesn't work
 //	    self->cast_group = 2;
 
-	VectorSet (self->mins, -8, -8, 0);
-	VectorSet (self->maxs, 8, 8, 10);
+//	VectorSet (self->mins, -8, -8, 0);
+//	VectorSet (self->maxs, 8, 8, 10);
+	VectorSet (self->mins, -16, -8, -5);
+	VectorSet (self->maxs, 8, 8, 5);
 
 	self->s.skinnum = self->skin;
  	memset(&(self->s.model_parts[0]), 0, sizeof(model_part_t) * MAX_MODEL_PARTS);

@@ -6900,7 +6900,7 @@
 	"voice_bitch.h"
 	"ai_bitch_tables.h"
 
-1581954367 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_local.h
+1581994431 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_local.h
 	"q_shared.h"
 	"game.h"
 	"g_nav.h"
@@ -6942,7 +6942,7 @@
 
 1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\ai_bitch.h
 
-1532380526 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\voice_bitch.h
+1581990092 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\voice_bitch.h
 
 1460079152 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\ai_bitch_tables.h
 
@@ -6954,7 +6954,7 @@
 
 1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\ai_bum_sit.h
 
-1532380526 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\voice_punk.h
+1581990185 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\voice_punk.h
 
 1541154638 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\ai_bum_sit_tables.h
 
@@ -7097,7 +7097,7 @@
 	"g_local.h"
 	"ai_thug_sit.h"
 
-1581913920 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_cast_spawn.c
+1581997779 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_cast_spawn.c
 	"g_local.h"
 	"g_cast_spawn.h"
 
@@ -7110,7 +7110,7 @@
 	"g_local.h"
 	"g_func.h"
 
-1581814746 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_items.c
+1581981095 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_items.c
 	"g_local.h"
 
 1580782380 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_joe_misc.c
@@ -7161,7 +7161,7 @@
 1581901300 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\m_move.c
 	"g_local.h"
 
-1581826619 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\p_client.c
+1581966752 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\p_client.c
 	"g_local.h"
 	"m_player.h"
 	"voice_bitch.h"
@@ -7170,11 +7170,11 @@
 
 1532380346 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\m_player.h
 
-1581822297 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\p_view.c
+1581981158 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\p_view.c
 	"g_local.h"
 	"m_player.h"
 
-1581645341 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\p_weapon.c
+1581981260 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\p_weapon.c
 	"g_local.h"
 	"m_player.h"
 
@@ -7204,13 +7204,13 @@
 	"voice_punk.h"
 	"voice_bitch.h"
 
-1532380526 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\voice_bitch.c
+1581990069 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\voice_bitch.c
 	"g_local.h"
 
-1581379655 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\voice_punk.c
+1581990150 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\voice_punk.c
 	"g_local.h"
 
-1581955418 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\ai_rat.c
+1581984832 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\ai_rat.c
 	"g_local.h"
 	"ai_rat.h"
 	"ai_rat_tables.h"
@@ -7234,10 +7234,10 @@
 	"voice_bitch.h"
 	"voice_punk.h"
 
-1581960235 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_spawn.c
+1581981746 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_spawn.c
 	"g_local.h"
 
-1581960028 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\p_hud.c
+1581997053 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\p_hud.c
 	"g_local.h"
 
 1581959073 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 19\g_cmds.c

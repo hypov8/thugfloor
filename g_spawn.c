@@ -1615,7 +1615,7 @@ char *thugfloor_statusbar =
 "if 21"
 "	yt 70"
 "	xr -973 "
-"string \"Range\""
+"string \"Enemy Range\""
 "	yt 85"
 "	xr -975"
 "	num 4 21 "

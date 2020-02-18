@@ -4235,7 +4235,7 @@ void ClientBeginServerFrame (edict_t *ent)
 	// MH: moved idle checks here from ClientThink
      //check if idle
     if (ent->client->pers.spectator!=SPECTATING
-       && (/*level.modeset==MATCH ||*/ level.modeset==WAVE_ACTIVE)) // MH: removed FREEFORALL (idle timeout is never that short)
+       && (ent->client->pers.spectator == PLAYING && level.modeset==WAVE_ACTIVE))
     {
         if(((level.framenum - ent->check_idle)>(idle_client->value*10))) // MH: check_talk/shoot removed (included in check_idle)
         {

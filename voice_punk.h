@@ -38,7 +38,7 @@ extern voice_table_t profanity_level3[];
 #define NUM_PLAYER_PROFANITY_LEVEL1	11
 extern voice_table_t player_profanity_level1[];
 //20
-#define NUM_PLAYER_PROFANITY_LEVEL2	(17+95)
+#define NUM_PLAYER_PROFANITY_LEVEL2	17
 extern voice_table_t player_profanity_level2[];
 //3
 #define NUM_PLAYER_PROFANITY_LEVEL3	2
@@ -80,7 +80,7 @@ extern voice_table_t hiredguy_specific[];
 
 //===================================================================================
 
-#define NUM_FIGHTING	(10+9)
+#define NUM_FIGHTING	10
 extern voice_table_t fightsounds[];
 
 #define NUM_SPECIFIC	30
@@ -95,42 +95,8 @@ extern voice_table_t neutral_converse_to_female[];
 #define NUM_MOMO_SPECIFIC	17
 extern voice_table_t momo_specific[];
 
-//TiCaL start taunt definitions
-
-#define NUM_MALE_RANDOM 93
-extern voice_table_t m_profanity_random[];
-
-#define NUM_KINGPIN_RANDOM  12
-extern voice_table_t kingpin_random[];
-
-#define NUM_LEROY_RANDOM 9
-extern voice_table_t leroy_random[];
-
-#define NUM_MJ_RANDOM 4
+#define NUM_MJ_RANDOM	4
 extern voice_table_t mj_random[];
-
-#define NUM_MOMO_RANDOM	8
-extern voice_table_t momo_random[];
-
-#define NUM_LAMONT_RANDOM  15
-extern voice_table_t lamont_random[];
-
-#define NUM_JESUS_RANDOM  11
-extern voice_table_t jesus_random[];
-
-#define NUM_TYRONE_RANDOM  9
-extern voice_table_t tyrone_random[];
-
-#define NUM_WILLY_RANDOM  5
-extern voice_table_t willy_random[];
-
-#define NUM_MOKER_RANDOM  10
-extern voice_table_t moker_random[];
-
-#define NUM_HEILMAN_RANDOM  12
-extern voice_table_t heilman_random[];
-
-//TiCaL end taunt definitions
 
 // JOSEPH 29-MAY-99
 #define NUM_MALE_SPECIFIC 13
@@ -140,8 +106,8 @@ extern voice_table_t male_specific[];
 #define NUM_PLAYER_ANSWER 12
 extern voice_table_t player_answer[];
 
-//#define NUM_LAMONT_RANDOM 15
-//extern voice_table_t lamont_random[]; 
+#define NUM_LAMONT_RANDOM 15
+extern voice_table_t lamont_random[]; 
 
 // JOSEPH 12-MAR-99
 #define NUM_GRUNTING 5

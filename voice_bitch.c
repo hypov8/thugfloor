@@ -119,166 +119,9 @@ voice_table_t f_profanity_level2[] =
 	{NULL, "motherfucker what you lookin at?",					"what are You lookin at?",					"actors/female/profanity/level2/f_cuss2-1.wav", 0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
 	{NULL, "eat me you asshole",								"@*%$#! me you @*%$#!",						"actors/female/profanity/level2/f_cuss2-2.wav", 0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
 	{NULL, "keep talkin' asshole",								"keep talkin' @*%$#!",						"actors/female/profanity/level2/f_cuss2-3.wav", 0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
-	{NULL, "I'll bust your face",								"I'll bust your face",						"actors/female/profanity/level2/f_cuss2-4.wav", 0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
-
-	{NULL, "Yo, fuck you man",									"Yo, @*%$#! you man",						"actors/female/profanity/level3/f_cuss3-1.wav", 0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
-	{NULL, "back the fuck up bitch",							"back the @*%$#! up @*%$#!",				"actors/female/profanity/level3/f_cuss3-2.wav", 0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
-	{NULL, "fuck you you motherfucker",							"@*%$#! you @*%$#!",						"actors/female/profanity/level3/f_cuss3-3.wav", 0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
-
-	{NULL,"","","actors/female/bambi/curse1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/bambi/curse3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/beth_specific/pullshit.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/beth_specific/backoff.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny6.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/pain1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight5.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight4.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/brittany/curse3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/brittany/amb1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/lisa_specific/needgun.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/lola/curse3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry5.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/nobar1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/neutral/noshit.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/neutral/heybaby.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/neutral/umhmm.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/neutral/shitbaby.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/holyshit.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/howall.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/die.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/biggergun.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/readynow.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/shakin.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/party.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/fuckyou.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/pissoff.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/piece.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/mf.wav", 0, {0,0,0,0,0},0, 0},
-
-};
-//TiCaL start taunt voice table
-voice_table_t f_profanity_random[] =
-{
-	{NULL,"","","actors/female/bambi/curse1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/bambi/curse3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/beth_specific/pullshit.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/beth_specific/backoff.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny6.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/pain1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight5.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight4.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/brittany/curse3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/brittany/amb1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/lisa_specific/needgun.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/lola/curse3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry5.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/nobar1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/neutral/noshit.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/neutral/heybaby.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/neutral/umhmm.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/neutral/shitbaby.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/holyshit.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/howall.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/die.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/biggergun.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/readynow.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/shakin.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/party.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/fuckyou.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/pissoff.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/piece.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/mf.wav", 0, {0,0,0,0,0},0, 0},
-
+	{NULL, "I'll bust your face",								"I'll bust your face",						"actors/female/profanity/level2/f_cuss2-4.wav", 0, {0,0,0,0,0},0, 0 , TT_NEGATIVE}
 };
 
-//Tical
-voice_table_t yolanda_random[] =
-{
-	{NULL,"","","actors/female/yolanda/die.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/mf.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/fuckyou.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/piece.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/holyshit.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/pissoff.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/yolanda/shithead.wav", 0, {0,0,0,0,0},0, 0},
-
-};
-voice_table_t mona_random[] =
-{
-	{NULL,"","","actors/female/mona/angry1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry4.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/angry5.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/mona/badass.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level1/f_cuss1-1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level1/f_cuss1-2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level1/f_cuss1-3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level1/f_cuss1-4.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level1/f_cuss1-5.wav", 0, {0,0,0,0,0},0, 0},
-
-};
-voice_table_t lola_random[] =
-{
-	{NULL,"","","actors/female/lola/curse1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/lola/curse2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/lola/curse3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level2/f_cuss2-1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level2/f_cuss2-2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level2/f_cuss2-3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/profanity/level2/f_cuss2-4.wav", 0, {0,0,0,0,0},0, 0},
-
-};
-voice_table_t blunt_random[] =
-{
-	{NULL,"","","actors/female/blunt/fight1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight4.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/fight5.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny4.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny5.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/blunt/funny6.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/fighting/infacemf.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/fighting/f_backoff.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/fighting/f_die.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/fighting/f_die2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/fighting/f_die3.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/fighting/f_takethat.wav", 0, {0,0,0,0,0},0, 0},
-};
-voice_table_t beth_random[] =
-{
-	{NULL,"","","actors/female/beth/backoff.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/beth/droppiece.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/beth/pullshit.wav", 0, {0,0,0,0,0},0, 0},
-	
-};
-voice_table_t bambi_random[] =
-{
-	{NULL,"","","actors/female/bambi/curse1.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/bambi/curse2.wav", 0, {0,0,0,0,0},0, 0},
-	{NULL,"","","actors/female/bambi/curse3.wav", 0, {0,0,0,0,0},0, 0},
-	
-};
-//TiCaL end taunt voice table
-//3
 //3
 voice_table_t f_profanity_level3[] =
 {
@@ -339,9 +182,8 @@ voice_table_t f_fightsounds[] =
 	{NULL, "Die you son of a bitch",							"Die you son of a @*%$#!",					"actors/female/fighting/f_die.wav",			0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
 	{NULL, "Die you motherfucker",								"Die you @*%$#!",							"actors/female/fighting/f_die2.wav",		0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
 	{NULL, "I'll fuck you up you son of a bitch",				"I'll @*%$#! you up you son of a @*%$#!",	"actors/female/fighting/f_die3.wav",		0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
-	{NULL, "take that you motherfucker",						"take that you @*%$#!",						"actors/female/fighting/f_takethat.wav",	0, {0,0,0,0,0},0, 0 , TT_NEGATIVE},
+	{NULL, "take that you motherfucker",						"take that you @*%$#!",						"actors/female/fighting/f_takethat.wav",	0, {0,0,0,0,0},0, 0 , TT_NEGATIVE}
 	
-	{NULL,"","","actors/female/hiredgirl/orders/fighting/fight1.wav", 0, {0,0,0,0,0},0, 0},
 };
 
 // These are used for all specific speech functions throughout the game

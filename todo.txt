@@ -12,8 +12,8 @@
 
 -rename maxwaves cvar
 
--rat makes some weird walking sound, damage to high
+-rat makes some weird walking sound
 
--if people join and wait to long they go to idle modus :/
+-if people join and wait to long they go to idle modus :/ (should be fixed)
 
 -sound pawn o matic need fix if you already got something

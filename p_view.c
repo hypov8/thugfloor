@@ -891,7 +891,7 @@ void G_SetClientEffects (edict_t *ent)
 
 	if (ent->powerarmor_time > level.time)
 	{
-		pa_type = PowerArmorType (ent);
+		pa_type = PowerArmorType (ent);//Q2
 		if (pa_type == POWER_ARMOR_SCREEN)
 		{
 			ent->s.effects |= EF_POWERSCREEN;

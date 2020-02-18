@@ -1052,7 +1052,77 @@ Display the scoreboard
 */
 
 // Papa - This is the start of the scoreboard command, this sets the showscores value
+#if 1
+void Cmd_Score_f (edict_t *ent)//FREDZ todo
+{
+	int		i,found;
+	edict_t	*dood;
 
+	ent->client->showinventory = false;
+	ent->client->showhelp = false;
+
+	//FREDZ For menu code
+	ent->client->showscrollmenu = false;
+
+	if (ent->client->showscores == SCOREBOARD)
+		ent->client->showscores = SCOREBOARD2;
+	else//???FREDZ this needed???
+	if (level.modeset == ENDGAMEVOTE)
+	{
+		if (ent->client->showscores == SCORE_MAP_VOTE)
+//			ent->client->showscores = BESTSCORES;
+//		else if (ent->client->showscores == BESTSCORES)
+			ent->client->showscores = SCOREBOARD;
+		else if (ent->client->showscores == SCOREBOARD2)
+//			ent->client->showscores = SCOREBOARD3;
+//		else if (ent->client->showscores == SCOREBOARD3)
+		{
+			found = false;
+            // MH: also check for connecting players, which are included in spectators list
+			for (i=0 ; i<maxclients->value ; i++)
+			{
+				dood = g_edicts + 1 + i;
+				if (dood->client && ((dood->inuse && dood->client->pers.spectator != PLAYING)
+					|| (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
+					found = true;
+			}
+			if (found)
+				ent->client->showscores = SPECTATORS;
+			else
+				ent->client->showscores = SCORE_MAP_VOTE;
+		}
+		else
+			ent->client->showscores = SCORE_MAP_VOTE;
+	}
+	else if (ent->client->showscores == SCOREBOARD2)
+//		ent->client->showscores = SCOREBOARD3;
+//	else if (ent->client->showscores == SCOREBOARD3)
+	{
+		found = false;
+		for_each_player(dood,i)
+		{
+			if (dood->client->pers.spectator == SPECTATING)
+				found = true;
+		}
+		if (found)
+			ent->client->showscores = SPECTATORS;
+		else
+			ent->client->showscores = NO_SCOREBOARD;
+	}
+	else if (ent->client->showscores == SPECTATORS)
+	{
+		if (level.intermissiontime)
+			ent->client->showscores = SCOREBOARD;
+		else
+			ent->client->showscores = NO_SCOREBOARD;
+	}
+	else
+		ent->client->showscores = SCOREBOARD;
+
+    ent->client->resp.scoreboard_frame = 0; // MH: trigger scoreboard update instead of calling DeathmatchScoreboard
+//	DeathmatchScoreboard (ent);
+}
+#else
 void Cmd_Score_f (edict_t *ent)
 {
 	int		i;
@@ -1112,15 +1182,12 @@ skip2:
 
 	ent->client->resp.scoreboard_frame = 0; // MH: trigger scoreboard update instead of calling DeathmatchScoreboard
 }
-
+#endif
 void Cmd_Motd_f (edict_t *ent)//FREDZ still broken
 {
 	ent->client->showinventory = false;
 	ent->client->showhelp = false;
 	ent->client->showscrollmenu = false;//FREDZ For menu code
-
-	//FREDZ For menu code
-//	ent->client->showscrollmenu = false;
 
 	MOTDScoreboardMessage (ent);
 }
@@ -1180,54 +1247,6 @@ void HelpComputer (edict_t *ent, int page)
 	gi.WriteString (string);
 	gi.unicast (ent, true);
 }
-
-#if 0
-/*
-==================
-HelpComputer
-
-Draw help computer.
-==================
-*/
-void HelpComputer (edict_t *ent)
-{
-	char	string[1024];
-	char	*sk;
-
-	if (skill->value == 0)
-		sk = "easy";
-	else if (skill->value == 1)
-		sk = "medium";
-	else if (skill->value == 2)
-		sk = "hard";
-	else
-		sk = "hard+";
-/*
-	// send the layout
-	Com_sprintf (string, sizeof(string),
-		"xv 32 yv 8 picn help "			// background
-		"xv 202 yv 12 string2 \"%s\" "		// skill
-		"xv 0 yv 24 cstring2 \"%s\" "		// level name
-		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
-		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
-		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ",
-		sk,
-		level.level_name,
-		game.helpmessage1,
-		game.helpmessage2,
-		level.killed_monsters, level.total_monsters,
-		level.found_goals, level.total_goals,
-		level.found_secrets, level.total_secrets);
-*/
-	Com_sprintf (string, sizeof(string),
-		"xv 32 yv 8 string2 \"Help screen not yet implemented\" "	);
-
-	gi.WriteByte (svc_layout);
-	gi.WriteString (string);
-	gi.unicast (ent, true);
-}
-#endif
 
 /*
 ==================
@@ -1594,7 +1613,7 @@ void G_SetStats (edict_t *ent)
 	// armor
 	//
 	power_armor_type = PowerArmorType (ent);
-	if (power_armor_type)
+	if (power_armor_type)//Q2
 	{
 		cells = ent->client->pers.inventory[ITEM_INDEX(FindItem ("Gas"))];
 		if (cells == 0)

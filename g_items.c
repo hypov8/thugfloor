@@ -160,8 +160,8 @@ void SetRespawn (edict_t *ent, float delay)
 
 
 //======================================================================
-
-qboolean Pickup_Powerup (edict_t *ent, edict_t *other)
+/*
+qboolean Pickup_Powerup (edict_t *ent, edict_t *other)//Q2
 {
 	int		quantity;
 
@@ -181,25 +181,11 @@ qboolean Pickup_Powerup (edict_t *ent, edict_t *other)
 			SetRespawn (ent, ent->item->quantity);
 
 // Ridah, 27-may-99, not used
-/*
-		if (((int)dmflags->value & DF_INSTANT_ITEMS) || ((ent->item->use == Use_Quad) && (ent->spawnflags & DROPPED_PLAYER_ITEM)))
-		{
-			if ((ent->item->use == Use_Quad) && (ent->spawnflags & DROPPED_PLAYER_ITEM))
-				quad_drop_timeout_hack = (ent->nextthink - level.time) / FRAMETIME;
-			ent->item->use (other, ent->item);
-		}
-		// RAFAEL
-		else if (((int)dmflags->value & DF_INSTANT_ITEMS) || ((ent->item->use == Use_QuadFire) && (ent->spawnflags & DROPPED_PLAYER_ITEM)))
-		{
-			if ((ent->item->use == Use_QuadFire) && (ent->spawnflags & DROPPED_PLAYER_ITEM))
-				quad_fire_drop_timeout_hack = (ent->nextthink - level.time) / FRAMETIME;
-			ent->item->use (other, ent->item);
-		}
-*/
+
 	}
 
 	return true;
-}
+}*/
 
 void Drop_General (edict_t *ent, gitem_t *item)
 {
@@ -222,13 +208,14 @@ qboolean Pickup_Adrenaline (edict_t *ent, edict_t *other)
 		other->health = other->max_health;
 
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->value))
-		SetRespawn (ent, ent->item->quantity);
+        SetRespawn (ent, 30);
+//		SetRespawn (ent, ent->item->quantity);
 
 	return true;
 }
 // END JOSEPH
-
-qboolean Pickup_AncientHead (edict_t *ent, edict_t *other)
+/*
+qboolean Pickup_AncientHead (edict_t *ent, edict_t *other)//Q2
 {
 	other->max_health += 2;
 
@@ -236,9 +223,9 @@ qboolean Pickup_AncientHead (edict_t *ent, edict_t *other)
 		SetRespawn (ent, ent->item->quantity);
 
 	return true;
-}
-
-qboolean Pickup_Bandolier (edict_t *ent, edict_t *other)
+}*/
+/*
+qboolean Pickup_Bandolier (edict_t *ent, edict_t *other)//Q2
 {
 	gitem_t	*item;
 	int		index;
@@ -278,7 +265,7 @@ qboolean Pickup_Bandolier (edict_t *ent, edict_t *other)
 
 	return true;
 }
-
+*/
 qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 {
 	gitem_t	*item;
@@ -368,7 +355,8 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	}*/
 
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->value))
-		SetRespawn (ent, ent->item->quantity);
+        SetRespawn (ent, 30);
+//		SetRespawn (ent, ent->item->quantity);
 
 	return true;
 }
@@ -834,8 +822,8 @@ qboolean Pickup_Pistol_Mods (edict_t *ent, edict_t *other)
 
 	return true;
 }
-
-qboolean Pickup_Health (edict_t *ent, edict_t *other)
+/*
+qboolean Pickup_Health (edict_t *ent, edict_t *other)//Q2
 {
 	if (!(ent->style & HEALTH_IGNORE_MAX))
 		if (other->health >= other->max_health)
@@ -874,7 +862,7 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 	}
 
 	return true;
-}
+}*/
 
 //======================================================================
 
@@ -1093,7 +1081,7 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 
 //======================================================================
 
-int PowerArmorType (edict_t *ent)
+int PowerArmorType (edict_t *ent)//Q2
 {
 	if (!ent->client)
 		return POWER_ARMOR_NONE;
@@ -1109,8 +1097,8 @@ int PowerArmorType (edict_t *ent)
 
 	return POWER_ARMOR_NONE;
 }
-
-void Use_PowerArmor (edict_t *ent, gitem_t *item)
+/*
+void Use_PowerArmor (edict_t *ent, gitem_t *item)//Q2
 {
 	int		index;
 
@@ -1132,7 +1120,7 @@ void Use_PowerArmor (edict_t *ent, gitem_t *item)
 	}
 }
 
-qboolean Pickup_PowerArmor (edict_t *ent, edict_t *other)
+qboolean Pickup_PowerArmor (edict_t *ent, edict_t *other)//Q2
 {
 	int		quantity;
 
@@ -1152,12 +1140,12 @@ qboolean Pickup_PowerArmor (edict_t *ent, edict_t *other)
 	return true;
 }
 
-void Drop_PowerArmor (edict_t *ent, gitem_t *item)
+void Drop_PowerArmor (edict_t *ent, gitem_t *item)//Q2
 {
 	if ((ent->flags & FL_POWER_ARMOR) && (ent->client->pers.inventory[ITEM_INDEX(item)] == 1))
 		Use_PowerArmor (ent, item);
 	Drop_General (ent, item);
-}
+}*/
 
 //======================================================================
 
@@ -1714,7 +1702,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	{
 		if ( (int)dmflags->value & DF_NO_ARMOR )
 		{
-			if (item->pickup == Pickup_Armor || item->pickup == Pickup_PowerArmor)
+			if (item->pickup == Pickup_Armor)// || item->pickup == Pickup_PowerArmor)
 			{
 				G_FreeEdict (ent);
 				return;
@@ -1732,8 +1720,8 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 */
 		if ( (int)dmflags->value & DF_NO_HEALTH )
 		{
-			if (item->pickup == Pickup_Health || item->pickup == Pickup_Adrenaline || item->pickup == Pickup_AncientHead
-				|| item->pickup == Pickup_Health_Large || item->pickup == Pickup_Health_Small)
+			if (//item->pickup == Pickup_Health || item->pickup == Pickup_AncientHead
+				item->pickup == Pickup_Adrenaline || item->pickup == Pickup_Health_Large || item->pickup == Pickup_Health_Small)
 			{
 				G_FreeEdict (ent);
 				return;

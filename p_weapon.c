@@ -3,7 +3,7 @@
 #include "g_local.h"
 #include "m_player.h"
 
-static qboolean	is_quad;//Q2
+//static qboolean	is_quad;//Q2
 // RAFAEL
 //static qboolean is_quadfire;//Q2 Xatrix
 static byte		is_silenced;
@@ -723,7 +723,7 @@ void Think_Weapon (edict_t *ent)
 	else */
 	if (ent->client->pers.weapon && ent->client->pers.weapon->weaponthink)
 	{
-		is_quad = (ent->client->quad_framenum > level.framenum);//Q2
+//		is_quad = (ent->client->quad_framenum > level.framenum);//Q2
 		// RAFAEL
 //		is_quadfire = (ent->client->quadfire_framenum > level.framenum);//Q2 Xatrix
 		//if (ent->client->pers.silencer_shots)
@@ -1188,8 +1188,8 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 	float	radius;
 
 	radius = damage+40;
-	if (is_quad)
-		damage *= 4;
+//	if (is_quad)
+//		damage *= 4;
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
@@ -1432,8 +1432,8 @@ void Blackjack_Hit (edict_t *ent, vec3_t vorigin, int damage)
 	int			kick = 2;
 	vec3_t		offset;
 
-	if (is_quad)
-		damage *= 4;
+//	if (is_quad)
+//		damage *= 4;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
 	VectorSet(offset, 0, 0, ent->viewheight);
@@ -1501,8 +1501,8 @@ void Crowbar_Hit (edict_t *ent, vec3_t vorigin, int damage)
 	int			kick = 2;
 	vec3_t		offset;
 
-	if (is_quad)
-		damage *= 4;
+//	if (is_quad)
+//		damage *= 4;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
 	VectorSet(offset, 0, 0, ent->viewheight);
@@ -1687,8 +1687,8 @@ void Pistol_Fire (edict_t *ent, vec3_t vorigin, int damage)
 	int			kick = 2;
 	vec3_t		offset;
 
-	if (is_quad)
-		damage *= 4;
+//	if (is_quad)
+//		damage *= 4;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
 	VectorSet(offset, 0, 0, ent->viewheight);
@@ -1913,8 +1913,8 @@ void SPistol_Fire (edict_t *ent, vec3_t vorigin, int damage)
 
 	// is_silenced = MZ_SILENCED;
 
-	if (is_quad)
-		damage *= 4;
+//	if (is_quad)
+//		damage *= 4;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
 	VectorSet(offset, 0, 0, ent->viewheight);
@@ -2205,11 +2205,11 @@ void Tommygun_Fire (edict_t *ent)
 	else
 		ent->client->ps.gunframe = 5;
 
-	if (is_quad)
+/*	if (is_quad)//Q2
 	{
 		damage *= 4;
 		kick *= 4;
-	}
+	}*/
 
 	// Tommy is too powerful in real-mode
 	if (dm_realmode->value)
@@ -2404,11 +2404,11 @@ void FlameThrower_Fire (edict_t *ent)
 		return;
 	}
 
-	if (is_quad)
+/*	if (is_quad)//Q2
 	{
 		damage *= 4;
 		kick *= 4;
-	}
+	}*/
 
 	// get start / end positions
 	VectorAdd (ent->client->v_angle, ent->client->kick_angles, angles);
@@ -3108,11 +3108,11 @@ void weapon_rocketlauncher_fire (edict_t *ent)
 	damage = 100 + (int)(random() * 20.0);
 	radius_damage = 120;
 	damage_radius = 180;	// 256;
-	if (is_quad)
+/*	if (is_quad)//Q2
 	{
 		damage *= 4;
 		radius_damage *= 4;
-	}
+	}*/
 
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
