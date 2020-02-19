@@ -18,8 +18,6 @@ int boss_maxHP;
 static int boss_called_help = 0; //1 = melee, 2= pistol, 3= shotty
 
 
-#define HYPODEBUG 0
-
 void cast_pawn_o_matic_free()
 {
 	int i;
@@ -932,10 +930,12 @@ void cast_TF_Crystal_Palace_boss_blunt(edict_t *self)
 }
 void cast_TF_Crystal_Palace_boss(edict_t *spawn)
 {
-	switch (rand() % 2)
+	switch (rand() % 4) //a little more rand!!
 	{
 	case 0:		cast_TF_Crystal_Palace_boss_kingpin(spawn);break;
 	case 1:		cast_TF_Crystal_Palace_boss_blunt(spawn);break;
+	case 2:		cast_TF_Crystal_Palace_boss_kingpin(spawn);break;
+	case 3:		cast_TF_Crystal_Palace_boss_blunt(spawn);break;
 	}
 
 	//store boss hp/ID.
@@ -961,18 +961,22 @@ void cast_boss_sounds()
 	edict_t *self;
 	int i, index;
 
-	//hypov8 disable. boss allways taunts!!!!
-	return;
 
 	//set bot specific sound table and index
 	switch (boss_entityID->name_index)
 	{
-	case NAME_NICKIBLANCO: tmpVoice = nickiblanco;	break;
-	case  NAME_TYRONE: tmpVoice = ty_tyrone;	break;
+	case NAME_NICKIBLANCO: tmpVoice = nickiblanco;	break; //todo: more boss?
+	case NAME_TYRONE: tmpVoice = ty_tyrone;	break;
 	case NAME_MOKER: tmpVoice = steeltown_moker;	break;
 	case NAME_JESUS: tmpVoice = sr_jesus;	break;
 	case NAME_HEILMAN: tmpVoice = heilman;	break;
-	case NAME_BLUNT: tmpVoice = blunt;	break;
+	case NAME_BLUNT: tmpVoice = blunt;
+		index = 8; //I'm gonna unload in your fucking face!
+		if (boss_called_help == 2)
+			index = 13; // You're getting me all worked up!
+		else if (boss_called_help == 3)
+			index = 9; //You like to watch? Well, watch this!
+		break;
 
 	default:
 	case NAME_KINGPIN: tmpVoice = kingpin;
@@ -981,13 +985,14 @@ void cast_boss_sounds()
 			index = 7; // Your ass is goin' down
 		else if (boss_called_help == 3)
 			index = 9; //You come close, but you never made it
+
 		break;
 	}
 
 	for_each_player(self, i)
 	{
 		if (self->client->pers.spectator == PLAYING)
-			Voice_Specific(boss_entityID, self, kingpin, index);
+			Voice_Specific(boss_entityID, self, tmpVoice, index);
 	}
 
 }
@@ -1019,6 +1024,13 @@ int cast_TF_checkEnemyState()
 						|| level.characters[i]->s.origin[2] < -4096 //fallen in void!!!
 						) //timelimit reached?
 					{
+						//check if boss died
+						if (level.waveNum == currWave_length && boss_entityID && level.characters[i] == boss_entityID)
+						{
+							currWave_castCount = 1;
+							level.num_characters = 1;
+							level.waveEnemyCount = 1;
+						}
 						level.characters[i]->character_index = 0;
 						level.characters[i] = NULL;
 						level.num_characters--;
@@ -1041,32 +1053,28 @@ int cast_TF_checkEnemyState()
 			if (boss_called_help == 0 && boss_entityID && boss_entityID->health < (boss_maxHP *.75))
 			{
 				boss_called_help = 1;
-				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??
+				level.waveEnemyCount = currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
 				cast_boss_sounds();
 			}
 			else if (boss_called_help == 1 && boss_entityID && boss_entityID->health < (boss_maxHP *.5))
 			{
 				boss_called_help = 2;
-				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??
+				level.waveEnemyCount = currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
 				cast_boss_sounds();
 			}
 			else if (boss_called_help == 2 && boss_entityID && boss_entityID->health < (boss_maxHP *.25))
 			{
 				boss_called_help = 3;
-				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??
+				level.waveEnemyCount = currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
 				cast_boss_sounds();
 			}
 		}
-
 
 		if (count < level.waveEnemyCount && count < currWave_castMax)
 			cast_TF_spawn(0, 0);
 	}
 	else
-	{
-		//level.num_characters = 0;
 		currWave_castCount = 0; //reset spawned cast count
-	}
 
 
 	return currWave_castCount;
@@ -1403,7 +1411,7 @@ void cast_TF_spawn(int ammount, int type)
 
 //total enemy counts per wave.
 //this will be multiplied by player counts later
-#if HYPODEBUG
+#if 0 //HYPODEBUG
 static int wave_shortGame[5] = { 2, 2, 2, 2, 1 };
 static int wave_medGame[8] = { 2, 2, 2, 2, 2, 2, 2, 1 };
 static int wave_longGame[11] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
@@ -1449,7 +1457,7 @@ void cast_TF_setupEnemyCounters(void)
 	//count players that will enter the wave
 	for_each_player(self, i)
 	{
-		if (self->client->pers.spectator != SPECTATING)
+		if (self->client->pers.spectator == PLAYING)
 		{
 			playerCount++;
 			AddCharacterToGame(self); //add player to level.characters
@@ -1477,17 +1485,17 @@ void cast_TF_setupEnemyCounters(void)
 	if ((int)wavetype->value == 0)
 	{
 		currWave_length = WAVELEN_SHORT - 1;//short wave
-		level.waveEnemyCount = wave_shortGame[level.waveNum] * playerCount;
+		level.waveEnemyCount =(level.waveNum == currWave_length)? 1 :  wave_shortGame[level.waveNum] * playerCount; //force 1 boss
 	}
 	else if ((int)wavetype->value == 1)
 	{
 		currWave_length = WAVELEN_MED - 1;//med wave
-		level.waveEnemyCount = wave_medGame[level.waveNum] * playerCount;
+		level.waveEnemyCount =(level.waveNum == currWave_length)? 1 :  wave_medGame[level.waveNum] * playerCount; //force 1 boss
 	}
 	else //wavetype >= 2
 	{
 		currWave_length = WAVELEN_LONG - 1;//long wave
-		level.waveEnemyCount = wave_longGame[level.waveNum] * playerCount;
+		level.waveEnemyCount = (level.waveNum == currWave_length)? 1 : wave_longGame[level.waveNum] * playerCount; //force 1 boss
 	}
 
 }

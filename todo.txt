@@ -1,4 +1,4 @@
--fix sharky abit better?
+-fix sharky abit better?  //hypo.. should be fixed. stoped all damage having effect in buy time
 
 -add sound to some ai?
 
@@ -6,12 +6,12 @@
 
 -scoreboard can be done better
 
--Does spec need fix? solid/noclip
+-Does spec need fix? solid/noclip  //hypo yes.. can we use another spec mode and change gravity?
 
 -max players allowed to enter a wave
 
--rat makes some weird walking sound (not sure if fixable)
+-rat makes some weird walking sound (not sure if fixable) //hypo.. i think this is fixed?
 
--if people join and wait to long they go to idle modus :/ (should be fixed, need testing)
+-if people join and wait to long they go to idle modus :/ (should be fixed, need testing) //hypov8 added 1 more fix
 
 -add new votingboard

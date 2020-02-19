@@ -358,7 +358,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 			gi.bprintf (PRINT_MEDIUM, "%s %s.\n", self->client->pers.netname, message);
 			if ((deathmatch->value) && (mod != MOD_RESTART))
 			{
-				self->client->resp.score--;
+				self->client->resp.score--; //hypov8 dont realy need this...
 
                 if(enable_killerhealth)
                 {
@@ -463,7 +463,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				{
 					if (ff)
 					{
-						attacker->client->resp.score--;
+						attacker->client->resp.score--; //hypov8 dont realy need this...
 
 						// Oh dear we were just killed so that ends our kill streak.
 /*						if (self->client->resp.killstreak > self->client->resp.maxkillstreak)//FREDZ dunno this correct
@@ -773,7 +773,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				UPDATESCORE
 			}*/
 
-			self->client->resp.score--;
+			self->client->resp.score--; //hypov8 dont realy need this...
 			self->enemy = NULL;
 			return;
 		}//FREDZ end
@@ -782,7 +782,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 	gi.bprintf (PRINT_MEDIUM,"%s died.\n", self->client->pers.netname);
 	if ((deathmatch->value) && (mod != MOD_RESTART))
 	{
-		self->client->resp.score--;
+		self->client->resp.score--; //hypov8 dont realy need this...
 
 /*		if ((int)teamplay->value == 4)//FREDZ 4 was TM_GANGBANG
 		{
@@ -907,6 +907,7 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 	// MH: make sure the body shows up in the client's current position
 	G_UnTimeShiftClient( self );
 
+	//self->client->pers.spectator == PLAYER_READY
 	VectorClear (self->avelocity);
 
 	self->takedamage = DAMAGE_YES;
@@ -1637,7 +1638,7 @@ edict_t *cast_SelectRandomDeathmatchSpawnPoint(edict_t *ent)
 				count0++;
 		}
 	}
-
+	//hypov8 todo: should we spawn around the boss?
 	if (!count)
 		return NULL;
 
@@ -1931,7 +1932,7 @@ void PutClientInServer (edict_t *ent)
 //	if (((deathmatch->value) && (level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT)))
 //		|| (level.modeset == FREEFORALL) || (ent->client->pers.spectator == SPECTATING))
     if ((level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING)
-        || (level.modeset == WAVE_ACTIVE) //hypov8 dont enter a current wave
+        || (level.modeset == WAVE_ACTIVE && ent->client->pers.player_dead == FALSE) //hypov8 dont enter a current wave
         || (level.modeset == WAVE_START)
         )
 	{
@@ -2385,7 +2386,7 @@ void ClientBeginDeathmatch (edict_t *ent)
 	{
 		if ((ent->client->pers.spectator == SPECTATING) || (ent->client->showscores == SCORE_REJOIN) || (level.modeset == ENDGAMEVOTE)
          || (level.modeset == WAVE_START) //dont enter at 15 sec countdown?
-		 || (level.modeset == WAVE_ACTIVE)) //hypov8 dont enter a current wave
+		 || (level.modeset == WAVE_ACTIVE && ent->client->pers.player_dead == TRUE)) //hypov8 dont enter a current wave
 		{
 //			ent->movetype = MOVETYPE_NOCLIP;
             ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
@@ -4233,6 +4234,8 @@ void ClientBeginServerFrame (edict_t *ent)
 		Cmd_Spec_f(ent);
 	}
 
+#if 0 //hypov8 disable auto spec
+
 	// MH: moved idle checks here from ClientThink
      //check if idle
     if (ent->client->pers.spectator!=SPECTATING
@@ -4245,6 +4248,7 @@ void ClientBeginServerFrame (edict_t *ent)
             Cmd_Spec_f(ent);
         }
     }
+#endif
 #endif
 	// MH: count play time
 	if (client->pers.spectator != SPECTATING && (/*level.modeset==MATCH ||*/ level.modeset==WAVE_ACTIVE))

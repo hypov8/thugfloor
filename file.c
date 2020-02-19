@@ -131,6 +131,8 @@ int proccess_line(char*	buffer)
 		return ENABLE_SEE_KILLER_HEALTH_KEYWORD;
 
 
+	if (strstr(buffer, DEFAULT_WAVETYPE_STRING))
+		return DEFAULT_WAVETYPE_KEYWORD;
 
 
 	// MH: wait for players
@@ -159,7 +161,7 @@ int proccess_ini_file()
 	default_dmflags[0]=0;
 	default_password[0]=0;
 	default_dm_realmode[0]=0;
-	default_wavetype[0]=2;// WAVE_DEFAULT; //long //Not sure if this just not should be 0? otherwise dmflags also are put back to 0?
+	default_wavetype[0]=0;
 
 	admincode[0]=0;
 

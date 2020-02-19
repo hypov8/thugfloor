@@ -1751,6 +1751,8 @@ void G_SetStats (edict_t *ent)
 			))
 		{
 			ent->client->ps.stats[STAT_BOSS] = (int)(100.0f * boss_entityID->health / (float)boss_maxHP);
+			if (ent->client->ps.stats[STAT_BOSS] <= 0)
+				ent->client->ps.stats[STAT_BOSS] = 1; //zero dont display
 		}
 		else
 			ent->client->ps.stats[STAT_BOSS] = 0;
@@ -1782,63 +1784,17 @@ void G_SetStats (edict_t *ent)
 			}
 
 			if (index > 0)
-			{
-				vec3_t vDist, vAngle, angles;
-				float dot;
-				VectorCopy(ent->s.angles, vAngle);
-				VectorSubtract(level.characters[index]->s.origin, ent->s.origin, vDist);
-				vDist[2] = 0;
-				vectoangles(vDist, angles);
-				dot = AngleDiff(vAngle[YAW], angles[YAW]);
-				dot = -dot; //inverse
-				//dot += 180; //360 angle
-
 				ent->client->botRange = (int)best;
-				ent->client->botAngle = (int)dot;
-			}
 		}
 
 		if (ent->client->botRange)
-		{
-			int idx = 0;
 			ent->client->ps.stats[STAT_ENEMYRANGE] = ent->client->botRange;
-			ent->client->ps.stats[STAT_ENEMYANGLE] = ent->client->botAngle;
-#if 0
-			//todo index them?
-			//forward
-			if (ent->client->botAngle >= -22.5 && ent->client->botAngle <= 22.5)
-				idx = gi.imageindex("pics/h_c_000.tga");
-			//back
-			else if (ent->client->botAngle > 135 || ent->client->botAngle < -225) //180
-				idx = gi.imageindex("pics/h_c_180.tga");
-
-			//right
-			else if (ent->client->botAngle > 22.5 && ent->client->botAngle <= 67.5)
-				idx = gi.imageindex("pics/h_c_045.tga");
-			else if (ent->client->botAngle > 67.5 && ent->client->botAngle <= 135)
-				idx = gi.imageindex("pics/h_c_090.tga");
-
-			//left
-			else if (ent->client->botAngle < -22.5 && ent->client->botAngle >= -67.5)
-				idx = gi.imageindex("pics/h_c_315.tga");
-
-			else if (ent->client->botAngle < -67.5 && ent->client->botAngle <= -135)
-				idx = gi.imageindex("pics/h_c_270.tga");
-#endif
-
-			ent->client->ps.stats[STAT_WAVENUM] = CS_IMAGES+idx;
-		}
-
 		else
-		{
 			ent->client->ps.stats[STAT_ENEMYRANGE] = 0;
-			ent->client->ps.stats[STAT_WAVENUM] = 0;
-		}
 	}
 	else
 	{
 		ent->client->ps.stats[STAT_ENEMYRANGE] = 0;
-		ent->client->ps.stats[STAT_WAVENUM] = 0;
 	}
 
 
@@ -1867,7 +1823,7 @@ void G_SetStats (edict_t *ent)
 	else if (level.intermissiontime) // MH: applies to non-voting intermission too
 		ent->client->ps.stats[STAT_TIMER] =	((270 + 9 - (level.framenum - level.startframe)) / 10); // MH: changed voting time to 27s (music duration)
 
-	else if ((int)timelimit->value && (/*level.modeset == MATCH || */level.modeset == WAVE_ACTIVE)) // MH: only when timelimit!=0
+	else if ((int)timelimit->value && level.modeset == WAVE_ACTIVE) // MH: only when timelimit!=0
 		if (level.framenum > (level.startframe + (((int)timelimit->value  * 600) - 605)))
 			ent->client->ps.stats[STAT_TIMER] = ((((int)timelimit->value * 600) + level.startframe - level.framenum ) / 10);
 		else
@@ -1878,6 +1834,8 @@ void G_SetStats (edict_t *ent)
 	if (ent->client->ps.stats[STAT_TIMER] < 0 )
 		ent->client->ps.stats[STAT_TIMER] = 0;
 
+
+	//display current/total wave numbers
 	if (level.modeset != PREGAME && level.modeset != WAVE_IDLE) //show waves left at end of match
 	{
 		if ((int)wavetype->value == 0 )			//short

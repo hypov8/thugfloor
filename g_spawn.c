@@ -1164,7 +1164,7 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
-#if HYPODEBUG
+#if 0// HYPODEBUG
 	level.waveNum = 10; //test end boss
 #endif
 
@@ -1571,7 +1571,7 @@ char *thugfloor_statusbar =
 "string \"Time Left\""
 "	yt 145"
 "	xr -80"
-"	num 4 10 "
+"	num 4 10 " //STAT_TIMER 10
 "endif "
 
 ///////////////
@@ -1594,7 +1594,7 @@ char *thugfloor_statusbar =
 "string \"Wave\""// 3 waves of 4? or something like that?
 "	yt	145"
 "	xl	0"
-"	num 2 26"	// STAT_COMPUS 26 //wavenum
+"	num 2 26"	// STAT_WAVENUM 26 //wavenum
 
 "	yt  175"
 "	xl	20 "

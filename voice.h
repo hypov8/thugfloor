@@ -25,9 +25,9 @@ struct voice_table_s
 
 extern int gameinc;
 
-#define TALK_SELF_DELAY		9
-#define TALK_OTHER_DELAY	1.6
-#define	TALK_FIGHTING_DELAY	4
+#define TALK_SELF_DELAY		90
+#define TALK_OTHER_DELAY	16
+#define	TALK_FIGHTING_DELAY	40
 
 extern float	last_client_talk;		// records the last time the client was spoken to, so AI characters don't all respond at once
 

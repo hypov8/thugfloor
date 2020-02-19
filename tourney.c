@@ -124,7 +124,8 @@ void ResetServer () // completely resets the server including map
 	gi.cvar_set("fraglimit",default_fraglimit);
 	gi.cvar_set("cashlimit",default_cashlimit);*/
 	gi.cvar_set("dm_realmode",default_dm_realmode);
-    gi.cvar_set("wavetype",default_wavetype); //todo: comp.ini
+	if (default_wavetype[0])
+	    gi.cvar_set("wavetype",default_wavetype);	//only apply if keyword exists
 	gi.cvar_set("anti_spawncamp", "1");//FREDZ
 	gi.cvar_set("cheats","0");
 
@@ -708,15 +709,19 @@ void CheckEndWave() //add timelimit
 	int isEndGame = 0;
 
 	//check for level cleared
-	if (!cast_TF_checkEnemyState())
+	if (cast_TF_checkEnemyState() <= 0)
 	{
-		gi.bprintf(PRINT_HIGH, "Wave ended.\n");
+		gi.bprintf(PRINT_HIGH, "Wave %i ended.\n", level.waveNum+1);
 
 		if (!CheckEndWave_GameType())
 			WaveEnd();
 		else
 		{
-			gi.bprintf(PRINT_HIGH, "Player won.\n"); //todo: better name then players?
+			gi.bprintf(PRINT_HIGH, 
+				"===========================================================\n"
+				"The Boss is now dead.. It's time for a new Kingpin..\n"
+				"                       YOU!!!!\n"
+				"===========================================================\n"); //todo: better name then players?
 			GameEND();
 		}
 	}

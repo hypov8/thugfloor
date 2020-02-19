@@ -551,6 +551,8 @@ void CheckDMRules (void)
 	int			i;
 	int		count=0;
 	edict_t	*doot;
+	int respawntime = (int)timelimit->value * 600; //use timelimit as respawn counter
+	qboolean respawn = false;
 
 
 	if (level.intermissiontime)
@@ -559,12 +561,38 @@ void CheckDMRules (void)
 	if (!deathmatch->value)
 		return;
 
-	for_each_player (doot,i)
+	for_each_player(doot, i) 
+	{
 		count++;
+
+#if 1	//allow respawn every ~5 minutes?
+		if (respawntime && !((level.framenum + 1 - level.startframe) % respawntime))
+		{
+			//spawn players into active wave
+			if (doot->client->pers.spectator == PLAYER_READY && doot->client->pers.player_dead == TRUE) //only respawn players that were in a wave
+			{
+				doot->client->pers.spectator = PLAYING;
+				doot->flags &= ~FL_GODMODE;
+				doot->health = 0;
+				meansOfDeath = MOD_RESTART;
+				ClientBeginDeathmatch(doot);
+				doot->client->pers.currentcash = 0; // waveGiveCash(2); //dead!!
+
+			}
+			respawn = true;
+		}
+#endif
+
+	}
 	if ((count == 0) && (level.framenum > 12000))
 		ResetServer ();
 
-    #if 1 //FREDZ for testing rounds
+
+	if (respawn) //reset startframe(resets countdown)
+		level.startframe = level.framenum;
+
+
+    #if 0 //FREDZ for testing rounds
 	if (timelimit->value)
 	{
 		if (level.framenum > (level.startframe + ((int)timelimit->value) * 600 - 1))

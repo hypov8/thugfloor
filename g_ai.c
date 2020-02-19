@@ -4197,7 +4197,7 @@ got_goal:
 			goal_node = level.node_data->nodes[self->nav_data.goal_index-1];
 
 			// is it a crouching node?
-			if (goal_node->node_type & NODE_DUCKING)
+			if (goal_node && goal_node->node_type & NODE_DUCKING) //hypov8 posible bug
 			{
 				if (self->maxs[2] > DUCKING_MAX_Z)
 				{
@@ -4764,7 +4764,7 @@ done:
 			goal_node = level.node_data->nodes[self->nav_data.goal_index-1];
 
 			// is it a crouching node?
-			if (goal_node->node_type & NODE_DUCKING)
+			if (goal_node && goal_node->node_type & NODE_DUCKING) //hypov8 posible bug
 			{
 				if (self->maxs[2] == self->cast_info.standing_max_z)
 				{
