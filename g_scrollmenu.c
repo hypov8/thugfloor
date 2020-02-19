@@ -29,12 +29,14 @@ struct MENU_ITEM_NAMES
 {
 	//Weapons
 //	{ {"Pistol", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 150, 250, 750, 200, 350, 500} },//Originale pawn o matic
-    { {"Crowbar", "Pistol", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {100, 50, 150, 250, 750, 350, 500, 500} },
+    { {"Pistol", "Crowbar", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 100, 150, 250, 750, 350, 500, 500} },
 	//Mod's
-	{ {"Pistol Silencer", "Pistol RoF Mod", "Pistol Magnum Mod", "Pistol Reload Mod","HMG Cooling Mod"}, {10, 25, 50, 25, 50} },
+//	{ {"Pistol Silencer", "Pistol RoF Mod", "Pistol Magnum Mod", "Pistol Reload Mod","HMG Cooling Mod"}, {10, 25, 50, 25, 50} },
+    { {"Pistol Silencer", "Pistol RoF Mod", "Pistol Magnum Mod", "Pistol Reload Mod","HMG Cooling Mod"}, {10, 25, 50, 25, 100} },
 	//Ammo
 //	{ {"Bullets", "Shells", "308cal", "Grenades", "Rockets", "Gas"}, {5, 25, 20, 100, 100, 25} },//Originale pawn o matic
-    { {"Bullets", "Shells", "308cal", "Grenades", "Rockets", "Gas"}, {5, 25, 30, 50, 50, 50} },//FREDZ better prices?
+//    { {"Bullets", "Shells", "Cylinder", "308cal", "Grenades", "Rockets", "Gas"}, {5, 25, 25, 30, 50, 50, 50} },//FREDZ better prices?
+    { {"Bullets", "Shells", "308cal", "Grenades", "Rockets", "Gas"}, {5, 25, 30, 50, 50, 50} },
 	//Health
 //	{ {"Small Health", "Large Health", "Adrenaline"}, {25, 50, 100} },
 	{ {"Small Health", "Large Health"}, {25, 50} },
@@ -93,7 +95,7 @@ void ScrollMenuMessage (edict_t *ent)
 		{
 			if (i == ent->current_menu_left && !ent->current_menu_side)
 			{
-				lefttag = "999";
+				lefttag = "999";//color
 			}
 			else
 			{
@@ -102,7 +104,7 @@ void ScrollMenuMessage (edict_t *ent)
 
 			if (i == ent->current_menu_right && ent->current_menu_side)
 			{
-				righttag = "999";
+				righttag = "999";//color
 			}
 			else
 			{
@@ -128,7 +130,7 @@ void ScrollMenuMessage (edict_t *ent)
 				strcpy( rightname, "");
 			}
 
-			Com_sprintf(entry, sizeof(entry), "xl 20 yv %i dmstr %s \"%s\" xl 150 dmstr %s \"%s\" ", yofs-109, lefttag, leftname, righttag, rightname);
+			Com_sprintf(entry, sizeof(entry), "xl 220 yv %i dmstr %s \"%s\" xl 350 dmstr %s \"%s\" ", yofs-109, lefttag, leftname, righttag, rightname);
 			j = strlen(entry);
 			strcpy (string + stringlength, entry);
 			stringlength += j;
@@ -294,8 +296,18 @@ void ScrollMenuBuy(edict_t *ent)
 
 		if (ent->health >= ent->max_health)
 		{
-			gi.centerprintf (ent, "you don't need any more health...\nyou're full up\n");
-			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup2.wav"), 1, ATTN_NORM, 0);
+            i = rand()%2;
+			switch (i)
+			{
+			case 0:
+                gi.centerprintf (ent, "you don't need any more health...\nyou're full up\n");
+                gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup2.wav"), 1, ATTN_NORM, 0);
+				break;
+			case 1:
+ //               gi.centerprintf (ent, "he you fine..\nyou don't need more health\n");
+                gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup4.wav"), 1, ATTN_NORM, 0);//Never used
+				break;
+			}
 			ent->timestamp = level.time + 2;
 			return;
 		}
@@ -362,15 +374,9 @@ void ScrollMenuBuy(edict_t *ent)
 
 			ent->timestamp = level.time + 2;
 		}
-/*		if (it->classname, "item_health_lg")
-		{
-			ent->health += 25;
-		}
-		else//FREDZ never happends???
-			ent->health += 15;*/
 	}
 
-	if (it->flags & IT_AMMO)
+	if (it->flags & IT_AMMO)//Ammo
 	{
 		if (ent->client->pers.currentcash < menu_item_names[ent->current_menu_left].price[ent->current_menu_right])
 		{
@@ -416,7 +422,7 @@ void ScrollMenuBuy(edict_t *ent)
 		}
 		ent->timestamp = level.time + 2;
 	}
-	else if (it->flags & IT_ARMOR)
+	else if (it->flags & IT_ARMOR)//Armor
 	{
 		if (ent->client->pers.currentcash < menu_item_names[ent->current_menu_left].price[ent->current_menu_right])
 		{
@@ -438,8 +444,8 @@ void ScrollMenuBuy(edict_t *ent)
 
 		if (!Pickup_Armor_Scroll(it->classname, ent))
 		{
-			gi.centerprintf(ent, "you don't need any more armor...\nyou're full up\n");
-			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup2.wav"), 1, ATTN_NORM, 0);
+//			gi.centerprintf(ent, "you don't need any more armor...\nyou're full up\n");//Not correct text
+			gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup3.wav"), 1, ATTN_NORM, 0);//Or use maxed? //Normaly says you already got that
 			ent->timestamp = level.time + 2;
 			return;
 		}
@@ -464,7 +470,7 @@ void ScrollMenuBuy(edict_t *ent)
 
 		//ent->client->pers.inventory[ITEM_INDEX(it)] = it->quantity;
 	}
-	else if (it->flags & IT_WEAPON)
+	else if (it->flags & IT_WEAPON)//Weapons
 	{
 		gitem_t		*it_weapon;
 		int			index_weapon;
@@ -528,8 +534,18 @@ void ScrollMenuBuy(edict_t *ent)
 				(ent->current_menu_right == 1||ent->current_menu_right == 2||ent->current_menu_right == 3|| haveIten)
 			)
 			{
-				gi.centerprintf(ent, "you don't need any more...\nyou're full up\n");
-				gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup2.wav"), 1, ATTN_NORM, 0);
+                i = rand()%2;
+                switch (i)
+                {
+                case 0:
+                    gi.centerprintf (ent, "you already got that\n");
+                    gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/alreadyhave1.wav"), 1, ATTN_NORM, 0);
+                    break;
+                case 1:
+                    gi.centerprintf (ent, "hey, you don't need two... you already got one\n");
+                    gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/alreadyhave2.wav"), 1, ATTN_NORM, 0);
+                    break;
+                }
 				ent->timestamp = level.time + 2;
 				return;
 			}
@@ -543,14 +559,25 @@ void ScrollMenuBuy(edict_t *ent)
 
 			ent->timestamp = level.time + 2;
 		}
-		else
+		else//Weapons
 		{
 			ent->timestamp = level.time + 2;
 
 			if (ent->client->pers.inventory[index])
 			{
-				gi.centerprintf(ent, "you have that weapon...\nyou're full up\n"); //todo sound/text?
-				gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/fullup2.wav"), 1, ATTN_NORM, 0);
+                i = rand()%2;
+                switch (i)
+                {
+                case 0:
+                    gi.centerprintf (ent, "you already got that\n");
+                    gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/alreadyhave1.wav"), 1, ATTN_NORM, 0);
+                    break;
+                case 1:
+                    gi.centerprintf (ent, "hey, you don't need two... you already got one\n");
+                    gi.sound(ent, CHAN_ITEM, gi.soundindex("world/pawnomatic/alreadyhave2.wav"), 1, ATTN_NORM, 0);
+                    break;
+                }
+				ent->timestamp = level.time + 2;
 				return;
 			}
 
@@ -697,8 +724,12 @@ model="models\actors\runt\"
 */
 extern void SP_cast_runt (edict_t *self);
 extern void SP_coil_Skidrow (edict_t *self);
+extern voice_table_t pawnomatic_specific[];
 void SP_cast_pawn_o_matic( edict_t *self )
 {
+//	edict_t *other;
+//	int i;
+
 	//FREDZ only map rc got diffrent skin
 	if (!self->art_skins)
 	{
@@ -747,6 +778,14 @@ void SP_cast_pawn_o_matic( edict_t *self )
 
 	//FREDZ
 //	level.killed_monsters--;
+
+/*
+	for_each_player(other, i)
+	{
+		if (other->client->pers.spectator == PLAYING)
+			 Voice_Specific(self, other, pawnomatic_specific, 19);
+	}*/
+
 
 	self->flags |= FL_GODMODE;
 

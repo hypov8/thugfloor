@@ -1560,7 +1560,7 @@ char *thugfloor_statusbar =
 "yt 85 " //85
 "xr -75 "
 "num 4 16 "		//9999 max? STAT_CASH 16
-"yt 60 "
+"yt 55 "
 "xr -80 "
 "picn /pics/h_money.tga "
 

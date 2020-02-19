@@ -1,19 +1,17 @@
--fix sharky abit better
+-fix sharky abit better?
 
--but sounds wave and maybe talking need to be fixed (working now, not fully tested)
+-add sound to some ai?
 
--spawning of enemies need to be tweaked 
+-spawning of enemies need to be tweaked (need to be tested)
 
--hud and scoreboard can be done better
+-scoreboard can be done better
 
 -Does spec need fix? solid/noclip
 
 -max players allowed to enter a wave
 
--rename maxwaves cvar
+-rat makes some weird walking sound (not sure if fixable)
 
--rat makes some weird walking sound
+-if people join and wait to long they go to idle modus :/ (should be fixed, need testing)
 
--if people join and wait to long they go to idle modus :/ (should be fixed)
-
--sound pawn o matic need fix if you already got something
+-add new votingboard

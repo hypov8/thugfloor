@@ -18,7 +18,7 @@ int boss_maxHP;
 static int boss_called_help = 0; //1 = melee, 2= pistol, 3= shotty
 
 
-#define TEST_NEWSKIN 0
+#define HYPODEBUG 0
 
 void cast_pawn_o_matic_free()
 {
@@ -980,7 +980,7 @@ void cast_boss_sounds()
 		if (boss_called_help == 2)
 			index = 7; // Your ass is goin' down
 		else if (boss_called_help == 3)
-			index = 9; //You come close, but you never made it		
+			index = 9; //You come close, but you never made it
 		break;
 	}
 
@@ -1041,19 +1041,19 @@ int cast_TF_checkEnemyState()
 			if (boss_called_help == 0 && boss_entityID && boss_entityID->health < (boss_maxHP *.75))
 			{
 				boss_called_help = 1;
-				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??	
+				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??
 				cast_boss_sounds();
 			}
 			else if (boss_called_help == 1 && boss_entityID && boss_entityID->health < (boss_maxHP *.5))
 			{
 				boss_called_help = 2;
-				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??	
+				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??
 				cast_boss_sounds();
 			}
 			else if (boss_called_help == 2 && boss_entityID && boss_entityID->health < (boss_maxHP *.25))
 			{
 				boss_called_help = 3;
-				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??	
+				level.waveEnemyCount += 5 + (int)skill->value; //how many boss helpers to spawn??
 				cast_boss_sounds();
 			}
 		}

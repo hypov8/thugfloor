@@ -1940,8 +1940,8 @@ void PutClientInServer (edict_t *ent)
 			ent->client->pers.player_dead = TRUE;//FREDZ
 			ent->client->pers.spectator = PLAYER_READY;
 		}
-//		ent->movetype = MOVETYPE_NOCLIP;
-        ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
+		ent->movetype = MOVETYPE_NOCLIP;
+//        ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
 		ent->client->pers.weapon = NULL;
@@ -2387,7 +2387,8 @@ void ClientBeginDeathmatch (edict_t *ent)
          || (level.modeset == WAVE_START) //dont enter at 15 sec countdown?
 		 || (level.modeset == WAVE_ACTIVE)) //hypov8 dont enter a current wave
 		{
-			ent->movetype = MOVETYPE_NOCLIP;
+//			ent->movetype = MOVETYPE_NOCLIP;
+            ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
 			ent->solid = SOLID_NOT;
 			ent->svflags |= SVF_NOCLIENT;
 			ent->client->pers.weapon = NULL;

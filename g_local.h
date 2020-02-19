@@ -75,7 +75,6 @@
 #define	WAVELEN_LONG 11
 #define	WAVELEN_MED 8
 #define	WAVELEN_SHORT 5
-#define WAVE_DEFAULT "2" //long
 
 // admin types
 
@@ -107,9 +106,10 @@
 #define SCORE_MOTD			1
 #define	SCOREBOARD			2
 #define	SCOREBOARD2			3
-#define	SPECTATORS			4
-#define SCORE_REJOIN		5
-#define SCORE_MAP_VOTE		6
+#define	SCOREBOARD3			4
+#define	SPECTATORS			5
+#define SCORE_REJOIN		6
+#define SCORE_MAP_VOTE		7
 
 // spectating types
 #define LOCKED_CHASE		0
@@ -122,7 +122,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.19"
+#define	GAMEVERSION	"Thug Floor v0.20"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1

@@ -628,11 +628,11 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 	if (!Add_Ammo (other, ent->item, count))
 		return false;
 
-	if (weapon && !oldcount)
+/*	if (weapon && !oldcount)//Q2
 	{
 		if (other->client->pers.weapon != ent->item && ( !deathmatch->value || other->client->pers.weapon == FindItem("blaster") ) )
 			other->client->newweapon = ent->item;
-	}
+	}*/
 
 	if (!(ent->spawnflags & (DROPPED_ITEM | DROPPED_PLAYER_ITEM)) && (deathmatch->value))
 		SetRespawn (ent, 30);
@@ -741,8 +741,8 @@ qboolean Pickup_Cash (edict_t *ent, edict_t *other)
 // END JOSEPH
 
 //======================================================================
-
-void MegaHealth_think (edict_t *self)
+/*
+void MegaHealth_think (edict_t *self)//Q2
 {
 	if (self->owner->health > self->owner->max_health)
 	{
@@ -756,7 +756,7 @@ void MegaHealth_think (edict_t *self)
 	else
 		G_FreeEdict (self);
 }
-
+*/
 qboolean Pickup_Pistol_Mods (edict_t *ent, edict_t *other)
 {
 

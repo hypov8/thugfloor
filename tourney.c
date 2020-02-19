@@ -24,7 +24,7 @@ int allow_map_voting;
 int wait_for_players; // MH: wait for players
 int disable_admin_voting;
 int scoreboard_first;
-int fph_scoreboard;
+//int fph_scoreboard;//Never used
 int num_custom_maps;
 int num_netnames;
 int num_ips;
@@ -631,9 +631,6 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 
 		if (!count)
 			gi.bprintf(PRINT_HIGH, "Players need to join to start a wave.\n");
-
-		//if (maxwaves->value > 11.0f)
-		//	gi.cvar_forceset("wavetype", "11");
 
 		level.modeset = WAVE_SPAWN_PLYR; //spawn players straight away
 

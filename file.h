@@ -13,10 +13,10 @@
 #define		BAN_NAME_STRING			"ban_name_filename"
 #define		BAN_IP_STRING			"ban_ip_filename"
 #define		SCOREBOARD_FIRST_STRING	"scoreboard_first"
-#define		FPH_SCOREBOARD_STRING	"frags_per_hour_scoreboard"
+//#define		FPH_SCOREBOARD_STRING	"frags_per_hour_scoreboard"
 #define		DISABLE_ADMIN_STRING	"disable_admin_voting"
 #define		DEFAULT_REAL_STRING		"default_dm_realmode"
-#define		DEFAULT_MAXWAVES_STRING	"default_wavetype"
+#define		DEFAULT_WAVETYPE_STRING	"default_wavetype"
 #define		FIXED_GAMETYPE_STRING	"fixed_gametype"
 #define		FIXED_SKILLTYPE_STRING	"fixed_skilltype"//FREDZ
 #define		ENABLE_PASSWORD_STRING	"enable_password"
@@ -57,7 +57,7 @@
 #define		BAN_NAME_KEYWORD			14
 #define		BAN_IP_KEYWORD				15
 #define		SCOREBOARD_FIRST_KEYWORD	16
-#define		FPH_SCOREBOARD_KEYWORD		17
+//#define		FPH_SCOREBOARD_KEYWORD		17
 #define		DISABLE_ADMIN_KEYWORD		18
 #define		DEFAULT_REAL_KEYWORD		19
 #define		FIXED_GAMETYPE_KEYWORD		20
@@ -73,7 +73,7 @@
 #define     DISABLE_ASC_KEYWORD          32
 //#define     ENABLE_NOFLAMEHACK_CHECK_KEYWORD  33
 #define		FIXED_SKILLTYPE_KEYWORD		33
-#define		DEFAULT_MAXWAVES_KEYWORD	34
+#define		DEFAULT_WAVETYPE_KEYWORD	34
 
 #define     WAIT_FOR_PLAYERS_KEYWORD			46 // MH: wait for players
 //#define		BM_CUSTOM_MAP_KEYWORD				47 // MH: bagman map list

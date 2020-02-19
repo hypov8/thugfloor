@@ -756,6 +756,8 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	edict_t		*cl_ent;
 	char	*tag;
 	int		tmax;
+//    vec3_t	vs;
+    float	pldist;
 
 	string[0] = 0;
 	stringlength = 0;
@@ -771,9 +773,13 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		if (!cl_ent->inuse || (cl_ent->client->pers.spectator == SPECTATING && level.modeset == WAVE_ACTIVE))
 			continue;
 
-		if (fph_scoreboard)
+ //       VectorSubtract (ent->s.origin, cl_ent->s.origin, vs);
+//		pldist = VectorLength (vs);//FREDZ todo need fix
+        pldist = 0;
+
+/*		if (fph_scoreboard)
 			score = game.clients[i].resp.time ? game.clients[i].resp.score * 36000 / game.clients[i].resp.time : 0;
-		else
+		else*/
 			score = (game.clients[i].resp.score<<8) - game.clients[i].resp.deposited;
 
 		for (j=0 ; j<total ; j++)
@@ -789,6 +795,9 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		sorted[j] = i;
 		sortedscores[j] = score;
 		total++;
+
+	//	if (pldist > 9999)
+    //        break;
 	}
 
 	realtotal = total;
@@ -812,14 +821,20 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	// header
 	if (ent->client->showscores == SCOREBOARD)
 	{
-		if (fph_scoreboard)
+/*		if (fph_scoreboard)
 			Com_sprintf (entry, sizeof(entry),
 				"xr %i yv %i dmstr 663 \"NAME         ping hits   fph\" ",
 				-36*10 - 10, -60+-21 );
-		else
+		else*/
 			Com_sprintf (entry, sizeof(entry),
 				"xr %i yv %i dmstr 663 \"NAME         ping time  hits\" ",
 				-36*10 - 10, -60+-21 );
+	}
+    else if (ent->client->showscores==SCOREBOARD2) //FREDZ
+    {
+        Com_sprintf (entry, sizeof(entry),
+        "xr %i yv %i dmstr 663 \"NAME         health  cash  range\" ",
+            -36*10 - 10, -60+-21 );
 	}
 	else
 		Com_sprintf (entry, sizeof(entry),
@@ -866,28 +881,43 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		{
 			if (ent->client->pers.patched >= 3)
 			{
-				if (fph_scoreboard)
+/*				if (fph_scoreboard)
 					Com_sprintf (entry, sizeof(entry),
 						"ds %s %i %i %i %i ",
 						tag, sorted[i], cl->ping, cl->resp.score, cl->resp.time ? cl->resp.score * 36000 / cl->resp.time : 0);
-				else
+				else*/
 					Com_sprintf (entry, sizeof(entry),
 						"ds %s %i %i %i %i ",
 						tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );
 			}
 			else
 			{
-				if (fph_scoreboard)
+/*				if (fph_scoreboard)
 					Com_sprintf (entry, sizeof(entry),
 						"yv %i ds %s %i %i %i %i ",
 						-60+i*17, tag, sorted[i], cl->ping, cl->resp.score, cl->resp.time ? cl->resp.score * 36000 / cl->resp.time : 0);
-				else
+				else*/
 					Com_sprintf (entry, sizeof(entry),
 						"yv %i ds %s %i %i %i %i ",
 						-60+i*17, tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );
 			}
 		}
-		else
+        else if (ent->client->showscores==SCOREBOARD2) //FREDZ
+		{
+			if (ent->client->pers.patched >= 3)
+			{
+					Com_sprintf (entry, sizeof(entry),
+						"ds %s %i %i %i %i ",
+						tag, sorted[i], cl_ent->health, cl->pers.currentcash, pldist );
+			}
+			else
+			{
+					Com_sprintf (entry, sizeof(entry),
+						"yv %i ds %s %i %i %i %i ",
+						-60+i*17, tag, sorted[i], cl_ent->health, cl->pers.currentcash, pldist );
+			}
+		}
+		else//SCOREBOARD3
 		{
 			int fc = 0;
 			const char *fn = "-";
@@ -974,7 +1004,7 @@ void DeathmatchScoreboard (edict_t *ent)
 		VoteMapScoreboardMessage(ent);
 	else
     {
-			DeathmatchScoreboardMessage (ent);
+        DeathmatchScoreboardMessage (ent);
 	}
 
 
@@ -1070,16 +1100,15 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 
 	if (ent->client->showscores == SCOREBOARD)
 		ent->client->showscores = SCOREBOARD2;
-	else//???FREDZ this needed???
-	if (level.modeset == ENDGAMEVOTE)
+	else if (level.modeset == ENDGAMEVOTE)
 	{
 		if (ent->client->showscores == SCORE_MAP_VOTE)
 //			ent->client->showscores = BESTSCORES;
 //		else if (ent->client->showscores == BESTSCORES)
 			ent->client->showscores = SCOREBOARD;
 		else if (ent->client->showscores == SCOREBOARD2)
-//			ent->client->showscores = SCOREBOARD3;
-//		else if (ent->client->showscores == SCOREBOARD3)
+			ent->client->showscores = SCOREBOARD3;
+		else if (ent->client->showscores == SCOREBOARD3)
 		{
 			found = false;
             // MH: also check for connecting players, which are included in spectators list
@@ -1099,8 +1128,8 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 			ent->client->showscores = SCORE_MAP_VOTE;
 	}
 	else if (ent->client->showscores == SCOREBOARD2)
-//		ent->client->showscores = SCOREBOARD3;
-//	else if (ent->client->showscores == SCOREBOARD3)
+		ent->client->showscores = SCOREBOARD3;
+	else if (ent->client->showscores == SCOREBOARD3)
 	{
 		found = false;
 		for_each_player(dood,i)
@@ -1724,7 +1753,7 @@ void G_SetStats (edict_t *ent)
 			ent->client->ps.stats[STAT_BOSS] = (int)(100.0f * boss_entityID->health / (float)boss_maxHP);
 		}
 		else
-			ent->client->ps.stats[STAT_BOSS] = 0;	
+			ent->client->ps.stats[STAT_BOSS] = 0;
 	}
 	else
 		ent->client->ps.stats[STAT_BOSS] = 0;
@@ -1797,19 +1826,19 @@ void G_SetStats (edict_t *ent)
 				idx = gi.imageindex("pics/h_c_270.tga");
 #endif
 
-			ent->client->ps.stats[STAT_COMPUS] = CS_IMAGES+idx;
+			ent->client->ps.stats[STAT_WAVENUM] = CS_IMAGES+idx;
 		}
 
 		else
 		{
 			ent->client->ps.stats[STAT_ENEMYRANGE] = 0;
-			ent->client->ps.stats[STAT_COMPUS] = 0;//FREDZ not sure if compus is needed maybe confusing
+			ent->client->ps.stats[STAT_WAVENUM] = 0;
 		}
 	}
 	else
 	{
 		ent->client->ps.stats[STAT_ENEMYRANGE] = 0;
-		ent->client->ps.stats[STAT_COMPUS] = 0;
+		ent->client->ps.stats[STAT_WAVENUM] = 0;
 	}
 
 
@@ -1858,12 +1887,12 @@ void G_SetStats (edict_t *ent)
 		else									//long
 			ent->client->ps.stats[STAT_WAVEROUND] = WAVELEN_LONG;
 
-		ent->client->ps.stats[STAT_COMPUS] = level.waveNum+1;
+		ent->client->ps.stats[STAT_WAVENUM] = level.waveNum+1;
 	}
 	else
 	{
 		ent->client->ps.stats[STAT_WAVEROUND] = 0;
-		ent->client->ps.stats[STAT_COMPUS] = 0;
+		ent->client->ps.stats[STAT_WAVENUM] = 0;
 	}
 
 	// END JOSEPH

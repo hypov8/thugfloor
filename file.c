@@ -82,8 +82,8 @@ int proccess_line(char*	buffer)
 	if (strstr(buffer, SCOREBOARD_FIRST_STRING))
 		return SCOREBOARD_FIRST_KEYWORD;
 
-	if (strstr(buffer, FPH_SCOREBOARD_STRING))
-		return FPH_SCOREBOARD_KEYWORD;
+/*	if (strstr(buffer, FPH_SCOREBOARD_STRING))
+		return FPH_SCOREBOARD_KEYWORD;*/
 
 	if (strstr(buffer, DISABLE_ADMIN_STRING))
 		return DISABLE_ADMIN_KEYWORD;
@@ -159,7 +159,7 @@ int proccess_ini_file()
 	default_dmflags[0]=0;
 	default_password[0]=0;
 	default_dm_realmode[0]=0;
-	default_wavetype[0]= WAVE_DEFAULT; //long
+	default_wavetype[0]=2;// WAVE_DEFAULT; //long //Not sure if this just not should be 0? otherwise dmflags also are put back to 0?
 
 	admincode[0]=0;
 
@@ -170,7 +170,6 @@ int proccess_ini_file()
 //    server_url[0]=0;
 
 	// Set number of custom/rotation maps to 0
-//	game.num_rmaps = 0;
 	game.num_cmaps = 0;
 	allow_map_voting = false;
 	wait_for_players = false; // MH: wait for players
@@ -279,9 +278,9 @@ int proccess_ini_file()
 		case SCOREBOARD_FIRST_KEYWORD:
 			scoreboard_first = true;
 			break;
-		case FPH_SCOREBOARD_KEYWORD:
+/*		case FPH_SCOREBOARD_KEYWORD:
 			fph_scoreboard = true;
-			break;
+			break;*/
 		case DISABLE_ADMIN_KEYWORD:
 			disable_admin_voting = true;
 			break;
@@ -289,7 +288,7 @@ int proccess_ini_file()
 			sscanf(buffer, "%s %s", dummy, map);	// Quick ugly hack :)
 			strncpy(default_dm_realmode, map, 16);
 			break;
-        case DEFAULT_MAXWAVES_KEYWORD:
+        case DEFAULT_WAVETYPE_KEYWORD:
 			sscanf(buffer, "%s %s", dummy, map);
 			strncpy(default_wavetype, map, 16);
 			break;

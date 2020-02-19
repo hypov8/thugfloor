@@ -279,7 +279,6 @@ qboolean EP_CastSight ( edict_t *self, edict_t *other, cast_memory_t *cast_memor
 		return EP_Skidrow_CastSight ( self, other, cast_memory );
 	case EP_POISONVILLE :
 		return EP_Poisonville_CastSight ( self, other, cast_memory );
-
 	case EP_STEELTOWN:
 		return EP_Steeltown_CastSight ( self, other, cast_memory );
 		break;

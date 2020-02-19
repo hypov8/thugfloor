@@ -4615,14 +4615,17 @@ void Cmd_CommandList_f (edict_t *ent)
 	if (admincode[0])
         gi.cprintf(ent, PRINT_HIGH,"admin, ");
 	if (!disable_admin_voting)
-        gi.cprintf(ent, PRINT_HIGH,"elect, ");
-	gi.cprintf(ent, PRINT_HIGH,"resign, commands, settings, toggle_shadows\n");
+        gi.cprintf(ent, PRINT_HIGH,"elect, resign\n");
+	gi.cprintf(ent, PRINT_HIGH,"commands, settings, dmflagssettings\n");
     gi.cprintf(ent, PRINT_HIGH,"resetserver, changemap, maplist, mute\n");
 //	gi.cprintf(ent, PRINT_HIGH,"settimelimit, setfraglimit, setcashlimit, setidletime\n");
-	gi.cprintf(ent, PRINT_HIGH,"toggle_asc, curselist, toggle_spec\n");
-	if (enable_password) gi.cprintf(ent, PRINT_HIGH,"setpassword removepassword\n");
+	gi.cprintf(ent, PRINT_HIGH,"toggle_asc,  toggle_shadows\n");
+	gi.cprintf(ent, PRINT_HIGH,"playerrange,  castrange\n");
+
+	if (enable_password)
+        gi.cprintf(ent, PRINT_HIGH,"setpassword removepassword\n");
 	if (!fixed_gametype) {
-		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, setmax_waves\n");
+		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, setmaxtype\n");
 	}
     if (!fixed_skilltype)//FREDZ
 	{
@@ -5133,7 +5136,7 @@ void Cmd_SetRealMode_f (edict_t *ent, char *value)
 	else
 		gi.cprintf(ent,PRINT_HIGH,"dm_realmode settings are as follows:\n 0: Deathmatch\n 1: Realmode\n 2: Realmode with all weapons\n");
 }
-void Cmd_SetMaxWaves_f (edict_t *ent, char *value)
+void Cmd_SetMaxType_f (edict_t *ent, char *value)
 {
 	int		i;
 
@@ -6164,7 +6167,7 @@ void ClientCommand (edict_t *ent)
 		Cmd_SetRealMode_f (ent, gi.argv (1));
 
 	else if (Q_stricmp (cmd, "setwavetype") == 0)//FREDZ
-		Cmd_SetMaxWaves_f (ent, gi.argv (1));
+		Cmd_SetMaxType_f (ent, gi.argv (1));
 	else if (Q_stricmp (cmd, "setskill") == 0) //FREDZ
 		Cmd_SetSkill_f (ent, gi.argv (1));
 //	else if (Q_stricmp (cmd, "setteamplay") == 0)
