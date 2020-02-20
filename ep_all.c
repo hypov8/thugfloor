@@ -331,6 +331,9 @@ qboolean EP_EventSpeech (edict_t *self, edict_t *other, int saywhat)
 
 	switch (level.episode)
 	{
+    case EP_NONE:
+		return EP_None_EventSpeech (self, other, saywhat);
+		break;
 	case EP_SKIDROW:
 		return EP_Skidrow_EventSpeech (self, other, saywhat);
 		break;
@@ -348,6 +351,9 @@ qboolean EP_EventSpeech (edict_t *self, edict_t *other, int saywhat)
 		break;
 	case EP_RADIOCITY:
 		return EP_RC_EventSpeech (self, other, saywhat);
+		break;
+    default:
+        return EP_None_EventSpeech (self, other, saywhat);
 		break;
 	}
 

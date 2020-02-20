@@ -3633,6 +3633,9 @@ void PrecacheCutStuff (char* s)
 // JOSEPH 19-MAR-99-B
 void SP_misc_cutscene_trigger (edict_t *self)
 {
+    if (deathmatch->value)
+        return;
+
 	self->solid = SOLID_TRIGGER;
 	gi.setmodel (self, self->model);
     self->svflags |= SVF_NOCLIENT;

@@ -165,6 +165,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="ep_log.h" />
+		<Unit filename="ep_none.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="ep_posionville.c">
 			<Option compilerVar="CC" />
 		</Unit>

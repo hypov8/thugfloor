@@ -269,6 +269,7 @@ foundspot:
 				if ((ent->classname && strcmp(ent->classname, "cast_dog")) && (ent->classname && strcmp(ent->classname, "cast_rat")))
 				{
 					ent->s.event = EV_FOOTSTEP0 + ent->footsteptype;
+	//				ent->footsteptype = 5;//Snow sound
 				}
 				// END JOSEPH
 

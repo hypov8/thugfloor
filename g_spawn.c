@@ -745,6 +745,14 @@ void ED_CallSpawn (edict_t *ent)
 		return;
 	}
 
+ /*   if (!strncmp(ent->classname, "cast_", 9))//thugfloor singleplayer maps
+    {
+        ent->classname = "info_player_deathmatch";
+    }*/
+ /*   if (!strcmp( ent->classname, "info_player_coop"))//thugfloor singleplayer maps
+    {
+        ent->classname = "info_player_deathmatch";
+    }*/
 
 	//FREDZ probably also check g_items.c void SpawnItem
     if (!strncmp(ent->classname, "weapon_", 7))//FREDZ thugfloor ammo
@@ -1715,11 +1723,11 @@ void SP_worldspawn (edict_t *ent)
 	char mappic[100];
 
 	// Ridah, don't allow deathmatching in single player maps
-	if (ent->count && deathmatch->value)//FREDZ thugfloor maybe disable
+/*	if (ent->count && deathmatch->value)//FREDZ thugfloor maybe disable
 	{
 		gi.error("\nCannot play this map in DEATHMATCH mode.\n");
 		return;
-	}
+	}*/
 
 	if (!deathmatch->value)
 	{

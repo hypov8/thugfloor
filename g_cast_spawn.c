@@ -464,8 +464,8 @@ void cast_TF_Skidrow_names_pistol(edict_t *self)
 	"Momo",		"020 011 003",	"cast_runt",	0,	    100,	0,  	0,	  //sr2 //bouncer pistol
     "Mona",		"014 012 003",	"cast_bitch",	0,	    100,	0,  	0,    //sr2 pistol
 	"Sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	0,    //bar_sr pistol rented guy
+    "Rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	  //bar_sr pistol rented guy
 	"Lenny",	"018 011 007",	"cast_runt",	0,	    100,	0,  	0,	  //bar_sr pistol
-	"Rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	  //bar_sr pistol rented guy
 	"Louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	0,    //sr1 pistol
 	};
 	int idx = rand() % ARYSIZE(skins);
@@ -529,11 +529,11 @@ void cast_TF_Poisonville_names(edict_t *self)
 	//name,		//skin,			classname		flags	HP		count	head
     "Mung",     "013 010 006",	"cast_runt",    64,     100,    9,      0,	//pv_h melee
     "Yolanda",	"041 050 003",	"cast_bitch",   0,      200,    0,      0, 	//pv_h pistol
-    "Laurel",	"504 032 031",	"cast_punk",    0,      200,    0,      1,	//pv_h shotgun
-	"Hardey",	"114 032 031",	"cast_punk",    0,      200,    0,      0,	//pv_h shotgun
+    "Laurel",	"504 032 031",	"cast_punk",    0,      200,    0,      1,	//pv_h shotgun nikki cyclops
+	"Hardey",	"114 032 031",	"cast_punk",    0,      200,    0,      0,	//pv_h shotgun nikki
     "Momo",     "072 014 009",  "cast_shorty",  0,      100,    0,      0,	//pv_h shotgun
-    "Dubs",     "108 009 006",  "cast_punk",    64,     220,    0,      0,	//pv_h tommygun
-    "Fingers",	"025 009 009",	"cast_thug",    0,      150,    0,      0,	//bar_pv pistol
+    "Dubs",     "108 009 006",  "cast_punk",    64,     220,    0,      0,	//pv_h tommygun rented guy
+    "Fingers",	"025 009 009",	"cast_thug",    0,      150,    0,      0,	//bar_pv pistol rented guy
 	"Burt",	    "063 041 010",	"cast_thug",    0,      100,    0,      0,	//bar_pv pistol
     "Clarence", "047 013 003",  "cast_runt",    0,      100,    9,      0,	//bar_pv pistol
     "Candy",	"015 017 013",  "cast_bitch",   0,      100,    0,      0,	//bar_pv pistol
@@ -690,12 +690,12 @@ void cast_TF_Steeltown_names(edict_t *self)
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
 	"Bambi",	"044 042 003",  "cast_bitch",	0,	    100,	0,		0,	//bar_st pistol
-    "Rochelle",	"601 009 012",  "cast_whore",	0,	    300,	0,		2,	//bar_st shotgun
+    "Rochelle",	"601 009 012",  "cast_whore",	0,	    300,	0,		2,	//bar_st shotgun rented girl
     "Brittany",	"046 040 010",  "cast_bitch",	0,	    100,	0,		0,	//steel1 pistol
     "Kroker",	"023 020 020",  "cast_runt",	64,	    150,	1,		0,	//steel1 tommygun
     "Momo",		"013 045 006",  "cast_runt",	0,	    100,	0,		0,	//steel1 //bouncer pistol
     "Mathew",	"048 042 015",  "cast_runt",	0,	    100,	0,		0,	//steel1 pistol
-    "Oscar",	"044 012 006",  "cast_punk",	64,		250,	0,		0,  //steel2 tommygun
+    "Oscar",	"044 012 006",  "cast_punk",	64,		250,	0,		0,  //steel2 tommygun rented guy
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
@@ -883,18 +883,18 @@ void cast_TF_Radio_City_names(edict_t *self)
     "Burt",	    "023 017 005",  "cast_thug",	0,		100,	0,		0,		//bar_rc pistol
     "Candy",	"019 019 015",  "cast_bitch",	0,	    100,	0,		0,	    //bar_rc pistol
     "Scalper",	"103 044 009",  "cast_thug",	0,		100,	0,		0,		//bar_rc pistol
-    "Walter",	"130 130 010",  "cast_shorty",	16,		350,	0,		0,		//bar_rc hmg
+    "Walter",	"130 130 010",  "cast_shorty",	16,		350,	0,		0,		//bar_rc hmg joker skin
     "Harpo",	"142 140 140",  "cast_runt",	64,	    200,	0,		0,	    //rc1 tommygun
-    "Butch",	"131 130 010",	"cast_shorty",	0,	    100,	0,		0,	    //rc1 shotgun
+    "Butch",	"131 130 010",	"cast_shorty",	0,	    100,	0,		0,	    //rc1 shotgun joker skin
     "Bubba",	"042 042 010",  "cast_runt",	64,	    100,	9,		0,	    //rc1 tommygun
-    "Patrick",	"511 130 010",  "cast_punk",	64,		100,	0,		1,      //rc1 tommygun
+    "Patrick",	"511 130 010",  "cast_punk",	64,		100,	0,		1,      //rc1 tommygun joker skin
   	"Groucho",	"140 141 046",  "cast_runt",	64,	    150,	0,		0,	    //rc1 tommygun
 	"Chico",	"141 141 046",  "cast_runt",	64,	    150,	0,		0,	    //rc1 tommygun //same skin as grouncho
-	"Bubba",	"130 131 010",	"cast_shorty",	64,		100,    9,		0,	    //rc2 tommygun
+	"Bubba",	"130 131 010",	"cast_shorty",	64,		100,    9,		0,	    //rc2 tommygun joker skin
     "Lola",		"045 049 015",  "cast_bitch",	0,	    100,	0,		0, 	    //rc3 pistol
-	"Dude",		"130 131 010",	"cast_shorty",	0,	    200,	9,		0,      //rc3 pistol
+	"Dude",		"130 131 010",	"cast_shorty",	0,	    200,	9,		0,      //rc3 pistol joker skin
     "Momo",		"049 041 009",  "cast_runt",	0,	    100,	0,		0,	    //rc4 //bouncer pistol
-    "Donny",	"512 131 010",  "cast_punk",	64,		200,	0,		1,      //rc4 tommygun
+    "Donny",	"512 131 010",  "cast_punk",	64,		200,	0,		1,      //rc4 tommygun joker skin
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
@@ -1112,7 +1112,7 @@ void cast_TF_spawnWave1(edict_t *spawn)//Skidrow no rats
         case 4:	cast_TF_Skidrow_names_melee(spawn);break;
         case 5:	cast_TF_Skidrow_names_melee(spawn);break;
         }
- //       cast_TF_rat(spawn);//TEST
+//        cast_TF_rat(spawn);//TEST
     }
     else
     {

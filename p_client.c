@@ -358,7 +358,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 			gi.bprintf (PRINT_MEDIUM, "%s %s.\n", self->client->pers.netname, message);
 			if ((deathmatch->value) && (mod != MOD_RESTART))
 			{
-				self->client->resp.score--; //hypov8 dont realy need this...
+//				self->client->resp.score--; //hypov8 dont realy need this...
 
                 if(enable_killerhealth)
                 {
@@ -463,7 +463,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				{
 					if (ff)
 					{
-						attacker->client->resp.score--; //hypov8 dont realy need this...
+//						attacker->client->resp.score--; //hypov8 dont realy need this...
 
 						// Oh dear we were just killed so that ends our kill streak.
 /*						if (self->client->resp.killstreak > self->client->resp.maxkillstreak)//FREDZ dunno this correct
@@ -773,7 +773,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				UPDATESCORE
 			}*/
 
-			self->client->resp.score--; //hypov8 dont realy need this...
+//			self->client->resp.score--; //hypov8 dont realy need this...
 			self->enemy = NULL;
 			return;
 		}//FREDZ end
@@ -782,7 +782,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 	gi.bprintf (PRINT_MEDIUM,"%s died.\n", self->client->pers.netname);
 	if ((deathmatch->value) && (mod != MOD_RESTART))
 	{
-		self->client->resp.score--; //hypov8 dont realy need this...
+//		self->client->resp.score--; //hypov8 dont realy need this...
 
 /*		if ((int)teamplay->value == 4)//FREDZ 4 was TM_GANGBANG
 		{

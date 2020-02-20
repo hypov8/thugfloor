@@ -6,6 +6,7 @@
 
 //.............................................................................
 // Episode indexes
+#define	EP_NONE 		0
 #define	EP_SKIDROW		1
 #define EP_POISONVILLE  2
 #define EP_SHIPYARDS	3
@@ -18,13 +19,13 @@
 
 // Skidrow flags
 #define	EP_SKIDROW_MAGICJ_ASKED_DOLLAR	0x00000001 // 1
-#define EP_SKIDROW_BETH_GIVES_HINT		0x00000002 // 2 
+#define EP_SKIDROW_BETH_GIVES_HINT		0x00000002 // 2
 #define	EP_SKIDROW_AL_SAW_DEAD_LOUIE	0x00000004 // 3
 #define	EP_PAWNOMATIC_FIRST_TIME		0x00000008 // 4
 #define	EP_SKIDROW_GOT_COIL				0x00000010 // 5
 
 #define	EP_SKIDROW_MAGICJ_GAVE_DOLLAR	0x00000020 // 6
-#define	EP_SKIDROW_MOMO_ASKED_MONEY		0x00000040 // 7 
+#define	EP_SKIDROW_MOMO_ASKED_MONEY		0x00000040 // 7
 #define	EP_SKIDROW_MOMO_TOOK_MONEY		0x00000080 // 8
 #define	EP_SKIDROW_MOMO_FIRST_TIME		0x00000100 // 9
 
@@ -32,18 +33,18 @@
 
 #define	EP_SKIDROW_MOMO_GAVE_MONEY		0x00000800 // 11
 #define	EP_BAR_FIRST_TIME				0x00001000 // 12
-#define EP_SKIDROW_LENNY_TOOK_WATCH		0x00002000 // 13 
+#define EP_SKIDROW_LENNY_TOOK_WATCH		0x00002000 // 13
 
 #define	EP_SKIDROW_NICK_WARNING_1		0x00004000 // 14
 #define EP_SKIDROW_NICK_WARNING_2		0x00080000 // 15
 #define EP_SKIDROW_NICK_WARNING_3		0x00100000 // 16
 
 #define EP_SKIDROW_RUMMY_GAVE_WINE		0x00200000 // 17
-#define EP_SKIDROW_RUMMY_ASKED_WINE		0x00400000 // 18 
+#define EP_SKIDROW_RUMMY_ASKED_WINE		0x00400000 // 18
 
 #define	EP_SKIDROW_RATS_PISSED			0x00800000 // 19
 #define	EP_SKIDROW_CUT_SCENE_TWO		0x01000000 // 20
-#define EP_SKIDROW_MONA_FIRST_TIME		0x02000000 // 21 
+#define EP_SKIDROW_MONA_FIRST_TIME		0x02000000 // 21
 #define EP_SKIDROW_NICK_TOLD_BIKE		0x04000000 // 22
 #define EP_SKIDROW_FOUND_BIKE			0x08000000 // 23
 #define	EP_SKIDROW_RATS_FIND			0x10000000 // 24
@@ -71,11 +72,11 @@
 #define EP_PV_SENT_TO_GET_SAFEDOCS      0x00008000 // 16
 
 #define	EP_PV_LOUIE_SPEACH_1			0x00010000 // 17
-#define EP_PV_LOUIE_SPEACH_2			0x00020000 // 18 
+#define EP_PV_LOUIE_SPEACH_2			0x00020000 // 18
 #define EP_PV_TALKED_LOUIE_2			0x00040000 // 19
 
 #define	EP_PV_TALKED_LOUIE2				0x00080000 // 20
-#define	EP_PV_TALKED_LOUIE3				0x00100000 // 21 
+#define	EP_PV_TALKED_LOUIE3				0x00100000 // 21
 #define	EP_PV_TALKED_LOUIE4				0x00200000 // 22
 #define	EP_PV_TALKED_LOUIE5				0x00400000 // 23
 #define EP_PV_LOUIE_KEY					0x00800000 // 24
@@ -172,7 +173,7 @@
 
 #define EP_Steeltown_KIDS_CLUE1			0x00040000
 #define EP_Steeltown_KIDS_CLUE2			0x00080000
-#define EP_Steeltown_KROKER_BOLT		0x00100000	
+#define EP_Steeltown_KROKER_BOLT		0x00100000
 
 #define EP_Steeltown_DAVID_DEAD_A		0x00200000
 #define EP_Steeltown_DAVID_DEAD_B		0x00400000
@@ -188,7 +189,7 @@
 #define	EP_RC_FAILED_TEST				0x00000020
 #define EP_RC_PAWNOMATIC_FIRST_TIME		0x00000040
 
-#define EP_RC_BUTCH_FIRST				0x00000080 
+#define EP_RC_BUTCH_FIRST				0x00000080
 #define EP_RC_BUTCH_TALK1				0x00000100
 #define EP_RC_BUTCH_TALK2				0x00000200
 
@@ -208,7 +209,7 @@
 #define	EP_RC_LOLA_CLUE1				0x00100000
 #define EP_RC_SCALPER_NOTEPAD			0x00200000
 #define EP_RC_LOLA_NOTEBOOK				0x00400000
-#define EP_RC_JOKERS_NOTEPAD			0x00800000	
+#define EP_RC_JOKERS_NOTEPAD			0x00800000
 
 #define EP_RC_SCALPER_RANDOM			0x01000000
 #define EP_RC_THE_WARNING				0x02000000
@@ -254,7 +255,7 @@
 #define NAME_JOSEPH			32
 #define NAME_RUMMY			33
 #define	NAME_NICK			34
-#define NAME_JESUS			35	
+#define NAME_JESUS			35
 
 #define NAME_YOLANDA		36
 
@@ -284,7 +285,7 @@
 #define NAME_LARRY			54
 #define NAME_CURLY			55
 
-#define NAME_ED				56
+#define NAME_ED				56 //FREDZ Never used or diffrent name for Rummy
 
 #define	NAME_POPEYE			57
 #define NAME_DOGG			58 // this is the bartenders name... ?? (its what Rich wants)
@@ -299,7 +300,7 @@
 #define NAME_MUNG			66
 #define NAME_TYRONE			67
 
-#define NAME_LUKE			68	
+#define NAME_LUKE			68
 #define NAME_HANN			69
 
 // STEELTOWN
@@ -385,6 +386,9 @@ void		EP_SpecialEventDeath		( edict_t *self );
 
 void		EP_Flash_Newflag			(edict_t *self, int ep_flag);
 //.............................................................................
+// None procedural defines
+qboolean	EP_None_EventSpeech		    ( edict_t *self, edict_t *other, int saywhat );
+//.............................................................................
 // Skidrow procedural defines
 
 qboolean	EP_Skidrow_CastSight		( edict_t *self, edict_t *other, cast_memory_t *mem );
@@ -418,7 +422,7 @@ void		EP_Poisonville_ItemPickup	( edict_t *self, edict_t *other );
 void		EP_Poisonville_Script		( edict_t *ent, char *scriptname );
 //.............................................................................
 
-// 
+//
 // PoisonVille procedural defines
 
 int			EP_PV_HiredGuysFlags		( edict_t *player, edict_t *self );
@@ -437,7 +441,7 @@ void		EP_PV_SpecialEventDeath		( edict_t *self);
 qboolean	EP_PV_Flash_Newflag			(edict_t *self, int ep_flag);
 
 // Trainyard procedural defines
-qboolean	EP_Trainyard_EventSpeech	( edict_t *self, edict_t *other, int saywhat );	
+qboolean	EP_Trainyard_EventSpeech	( edict_t *self, edict_t *other, int saywhat );
 void		EP_Trainyard_ItemPickup		( edict_t *self, edict_t *other );
 void		EP_Trainyard_Script			( edict_t *self, char *scriptname );
 int			EP_Trainyard_HiredGuysFlags	( edict_t *player, edict_t *self );
@@ -451,7 +455,7 @@ void		EP_Trainyard_Player_Log		( edict_t *self, int page );
 qboolean	EP_TY_Flash_Newflag			(edict_t *self, int ep_flag);
 
 // Shipyard procedural defines
-qboolean	EP_SY_EventSpeech			( edict_t *self, edict_t *other, int saywhat );	
+qboolean	EP_SY_EventSpeech			( edict_t *self, edict_t *other, int saywhat );
 void		EP_SY_ItemPickup			( edict_t *self, edict_t *other );
 void		EP_SY_Script				( edict_t *self, char *scriptname );
 int			EP_SY_HiredGuysFlags		( edict_t *player, edict_t *self );
@@ -467,7 +471,7 @@ qboolean	EP_SY_Flash_Newflag			(edict_t *self, int ep_flag);
 
 
 // Steeltown procedural defines
-qboolean	EP_Steeltown_EventSpeech	(edict_t *self, edict_t *other, int saywhat );	
+qboolean	EP_Steeltown_EventSpeech	(edict_t *self, edict_t *other, int saywhat );
 void		EP_Steeltown_ItemPickup		(edict_t *self, edict_t *other );
 void		EP_Steeltown_Script			(edict_t *self, char *scriptname );
 int			EP_Steeltown_HiredGuysFlags (edict_t *player, edict_t *self );
@@ -488,7 +492,7 @@ void		EP_Steeltown_Player_Log		( edict_t *self, int page );
 qboolean	EP_Steeltown_Flash_Newflag			(edict_t *self, int ep_flag);
 
 // RadioCity procedural defines
-qboolean	EP_RC_EventSpeech			(edict_t *self, edict_t *other, int saywhat );	
+qboolean	EP_RC_EventSpeech			(edict_t *self, edict_t *other, int saywhat );
 void		EP_RC_ItemPickup			(edict_t *self, edict_t *other );
 void		EP_RC_Script				(edict_t *self, char *scriptname );
 int			EP_RC_HiredGuysFlags		(edict_t *player, edict_t *self );
@@ -509,7 +513,7 @@ void		EP_RC_Player_Log			( edict_t *self, int page );
 void		Resp_Scalper_GotTicket		( edict_t *self, edict_t *other, response_t response );
 qboolean	EP_RC_Flash_Newflag			(edict_t *self, int ep_flag);
 
-typedef enum 
+typedef enum
 {
 	say_neutral,
 	say_asshole,
