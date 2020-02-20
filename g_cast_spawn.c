@@ -7,8 +7,8 @@
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
 void cast_TF_spawn(int ammount, int type);
-static int currWave_castCount = 0; //enemy currently on map
-int currWave_plysCount = 0; //players
+int currWave_castCount = 0; //enemy currently on map
+static int currWave_plysCount = 0; //players
 static int currWave_length = 0; //long, med, short
 static int currWave_castMax = 0; //max enemy allowed on map
 

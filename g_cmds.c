@@ -2940,7 +2940,7 @@ void Cmd_Activate_f (edict_t *ent)
 	edict_t		*trav, *best;
 	float		best_dist=9999, this_dist;
 
-	if (ent->movetype == MOVETYPE_NOCLIP) {
+	if (ent->movetype == MOVETYPE_NOCLIP || ent->movetype == MOVETYPE_SPECTATOR) {
 		if (ent->client->pers.spectator == SPECTATING
       	||	ent->client->pers.spectator == PLAYER_READY //hypov8 dont enter a current wave
             )

@@ -178,6 +178,9 @@
     <ClCompile Include="g_utils.c">
       <Filter>thugfloor_c</Filter>
     </ClCompile>
+    <ClCompile Include="ep_none.c">
+      <Filter>thugfloor_c</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="g_cast_spawn.h">

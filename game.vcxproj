@@ -298,6 +298,7 @@
     <ClCompile Include="ep_all.c" />
     <ClCompile Include="ep_crystalpalace.c" />
     <ClCompile Include="ep_log.c" />
+    <ClCompile Include="ep_none.c" />
     <ClCompile Include="ep_posionville.c" />
     <ClCompile Include="ep_radiocity.c" />
     <ClCompile Include="ep_shipyards.c" />

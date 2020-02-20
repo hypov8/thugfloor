@@ -1941,8 +1941,8 @@ void PutClientInServer (edict_t *ent)
 			ent->client->pers.player_dead = TRUE;//FREDZ
 			ent->client->pers.spectator = PLAYER_READY;
 		}
-		ent->movetype = MOVETYPE_NOCLIP;
-//        ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
+//		ent->movetype = MOVETYPE_NOCLIP;
+        ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
 		ent->client->pers.weapon = NULL;
@@ -3989,7 +3989,7 @@ chasing:
 
 	gi.linkentity (ent);
 
-	if (ent->movetype != MOVETYPE_NOCLIP)
+	if (ent->movetype != MOVETYPE_NOCLIP && ent->movetype != MOVETYPE_SPECTATOR) //stop PLAYER_READY picking up items
 		G_TouchTriggers (ent);
 
 	// touch other objects

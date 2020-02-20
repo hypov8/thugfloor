@@ -4,7 +4,7 @@
 
 extern edict_t *boss_entityID;
 extern int boss_maxHP;
-extern int currWave_plysCount;
+extern int currWave_castCount;
 
 static const char *gameheader[] =
 {
@@ -1763,7 +1763,7 @@ void G_SetStats (edict_t *ent)
 
 	//hypov8 this should go somewhere else!!!
 	//show distance to pawnGuy an last 4 players
-	if (level.modeset == WAVE_BUYZONE || (level.modeset == WAVE_ACTIVE && currWave_plysCount <=4))
+	if (level.modeset == WAVE_BUYZONE || (level.modeset == WAVE_ACTIVE && currWave_castCount <=4))
 	{
 		if (!(level.framenum % 5) || !ent->client->botRange) // is it updating fast enough?
 		{
