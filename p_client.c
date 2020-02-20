@@ -1855,6 +1855,8 @@ void PutClientInServer (edict_t *ent)
 	int		i;
 	client_persistant_t	saved;
 	client_respawn_t	resp;
+	edict_t *self;
+	int      count_players = 0;
 
 	// find a spawn point
 	// do it before setting health back up, so farthest
@@ -1925,15 +1927,23 @@ void PutClientInServer (edict_t *ent)
 	// copy some data from the client to the entity
 	FetchClientEntData (ent);
 
+	//count current active players. limit to 8
+	for_each_player(self, i)
+	{
+		if (self != ent && self->client->pers.spectator != SPECTATING)
+			count_players++; //todo: test
+	}
+
 	// clear entity values
 	ent->groundentity = NULL;
 	ent->client = &game.clients[index];
 	ent->takedamage = DAMAGE_AIM;
 //	if (((deathmatch->value) && (level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT)))
 //		|| (level.modeset == FREEFORALL) || (ent->client->pers.spectator == SPECTATING))
-    if ((level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING)
-        || (level.modeset == WAVE_ACTIVE && ent->client->pers.player_dead == FALSE) //hypov8 dont enter a current wave
-        || (level.modeset == WAVE_START)
+	if ((level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING)
+		|| (level.modeset == WAVE_ACTIVE && ent->client->pers.player_dead == FALSE) //hypov8 dont enter a current wave
+		|| (level.modeset == WAVE_START)
+		|| (count_players >= 8)
         )
 	{
 		if (ent->client->pers.spectator == PLAYING) //player died mid wave
@@ -1946,8 +1956,8 @@ void PutClientInServer (edict_t *ent)
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
 		ent->client->pers.weapon = NULL;
-		//if (level.maxplayers > 8)
-		//	ent->client->pers.spectator = SPECTATING;
+		if (count_players >= 8) //message
+			ent->client->pers.spectator = SPECTATING;
 	}
 	else
 	{

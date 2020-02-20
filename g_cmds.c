@@ -2537,8 +2537,6 @@ void Cmd_Use_f (edict_t *ent)
 			}
 			else*/
 			{
-				ent->client->pers.spectator = PLAYING;
-
 				ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
 				ent->flags &= ~FL_GODMODE;
 				ent->health = 0;
@@ -2799,10 +2797,7 @@ void Cmd_InvUse_f (edict_t *ent)
 				ent->client->showscores = SCOREBOARD;
 			else */
                 {
-				ent->client->pers.spectator = PLAYING;
-
 				ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
-
 				ent->flags &= ~FL_GODMODE;
 				ent->health = 0;
 				meansOfDeath = MOD_RESTART;
