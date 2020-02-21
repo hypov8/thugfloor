@@ -270,6 +270,10 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 {
 	gitem_t	*item;
 	int		index;
+	int		max=0;
+
+    if (ent->solid == SOLID_NOT)
+		return true;
 
 	/*//FREDZ thugfloor don't use this part or replace with diffrent ammo
 	if (other->client->pers.max_bullets < 300)
@@ -287,6 +291,20 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	// RAFAEL
 //	if (other->client->pers.max_magslug < 100)//Q2 Xatrix mod
 //		other->client->pers.max_magslug = 100;
+
+/*//FREDZ 1 works :/
+    if ((other->client->pers.inventory[ITEM_INDEX(FindItem("Bullets"))] == other->client->pers.max_bullets) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("Shells"))] == other->client->pers.max_bullets) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("Gas"))] == other->client->pers.max_bullets) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("Grenades"))] == other->client->pers.max_bullets) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("Rockets"))] == other->client->pers.max_bullets) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("308cal"))] == other->client->pers.max_bullets))
+    {
+        gi.dprintf("\nMax ammo!.\n\n");
+        return false;
+    }*/
+
+
 
 	item = FindItem("Bullets");
 	if (item)

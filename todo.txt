@@ -8,8 +8,15 @@
 
 -Does spec need fix? solid/noclip  //hypo yes.. can we use another spec mode and change gravity? sounds good :)
 
--max players allowed to enter a wave
+-max players allowed to enter a wave (need testing)
 
 -if people join and wait to long they go to idle modus :/ (should be fixed, need testing) //hypov8 added 1 more fix
 
 -add new votingboard
+
+-fix button, map to open door, map kpdm2
+
+-if afk in buyzone go to spec
+
+-pickup youre own weapon up only, if you died
+

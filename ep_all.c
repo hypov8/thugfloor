@@ -329,33 +329,36 @@ qboolean EP_CastUse ( edict_t *self, edict_t *other, edict_t *activator )
 qboolean EP_EventSpeech (edict_t *self, edict_t *other, int saywhat)
 {
 
-	switch (level.episode)
-	{
-    case EP_NONE:
-		return EP_None_EventSpeech (self, other, saywhat);
-		break;
-	case EP_SKIDROW:
-		return EP_Skidrow_EventSpeech (self, other, saywhat);
-		break;
-	case EP_POISONVILLE:
-		return EP_Poisonville_EventSpeech (self, other, saywhat);
-		break;
-	case EP_TRAINYARD:
-		return EP_Trainyard_EventSpeech (self, other, saywhat);
-		break;
-	case EP_SHIPYARDS:
-		return EP_SY_EventSpeech (self, other, saywhat);
-		break;
-	case EP_STEELTOWN:
-		return EP_Steeltown_EventSpeech (self, other, saywhat);
-		break;
-	case EP_RADIOCITY:
-		return EP_RC_EventSpeech (self, other, saywhat);
-		break;
-    default:
+    if (level.episode)
+    {
+        switch (level.episode)
+        {
+        case EP_SKIDROW:
+            return EP_Skidrow_EventSpeech (self, other, saywhat);
+            break;
+        case EP_POISONVILLE:
+            return EP_Poisonville_EventSpeech (self, other, saywhat);
+            break;
+        case EP_TRAINYARD:
+            return EP_Trainyard_EventSpeech (self, other, saywhat);
+            break;
+        case EP_SHIPYARDS:
+            return EP_SY_EventSpeech (self, other, saywhat);
+            break;
+        case EP_STEELTOWN:
+            return EP_Steeltown_EventSpeech (self, other, saywhat);
+            break;
+        case EP_RADIOCITY:
+            return EP_RC_EventSpeech (self, other, saywhat);
+            break;
+        default:
+            return EP_None_EventSpeech (self, other, saywhat);
+            break;
+        }
+    }
+    else
         return EP_None_EventSpeech (self, other, saywhat);
-		break;
-	}
+
 
 	return false;
 }

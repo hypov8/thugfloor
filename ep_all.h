@@ -6,7 +6,6 @@
 
 //.............................................................................
 // Episode indexes
-#define	EP_NONE 		0
 #define	EP_SKIDROW		1
 #define EP_POISONVILLE  2
 #define EP_SHIPYARDS	3
