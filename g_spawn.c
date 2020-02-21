@@ -2106,15 +2106,5 @@ void SP_worldspawn (edict_t *ent)
 		}
 		//end tical
 	}
-
-#if 0
-	//hypov8 cache compus
-	gi.imageindex ("pics/h_c_000.tga");
-	gi.imageindex ("pics/h_c_045.tga");
-	gi.imageindex ("pics/h_c_090.tga");
-	gi.imageindex ("pics/h_c_180.tga");
-	gi.imageindex ("pics/h_c_270.tga");
-	gi.imageindex ("pics/h_c_315.tga");
-#endif
 }
 

@@ -335,7 +335,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 	for (k=i=0 ; i<maxclients->value ; i++)
 	{
 		player = g_edicts + 1 + i;
-		if (!player->inuse || player->client->pers.spectator == PLAYING)
+		if (!player->inuse || player->client->pers.spectator == PLAYING || player->client->pers.spectator == PLAYER_READY)
 			continue;
 
 		if (curtime - player->client->pers.lastpacket >= 5000)
@@ -399,7 +399,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 		}
 	}
 
-	if (ent->client->pers.spectator == SPECTATING && (level.modeset == WAVE_ACTIVE))
+	if (ent->client->pers.spectator == SPECTATING)// &&  ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
 	{
 		GetChaseMessage(ent,entry);
 		j = strlen(entry);
@@ -770,7 +770,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	for (i=0 ; i<game.maxclients ; i++)
 	{
 		cl_ent = g_edicts + 1 + i;
-		if (!cl_ent->inuse || (cl_ent->client->pers.spectator == SPECTATING && level.modeset == WAVE_ACTIVE))
+		if (!cl_ent->inuse || (cl_ent->client->pers.spectator == SPECTATING))// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
 			continue;
 
  //       VectorSubtract (ent->s.origin, cl_ent->s.origin, vs);
@@ -966,7 +966,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 
 skipscores:
 
-	if (ent->client->pers.spectator == SPECTATING && (level.modeset == WAVE_ACTIVE))
+	if (ent->client->pers.spectator == SPECTATING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
 	{
 		GetChaseMessage(ent,entry);
 		j = strlen(entry);
@@ -1115,7 +1115,7 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 			for (i=0 ; i<maxclients->value ; i++)
 			{
 				dood = g_edicts + 1 + i;
-				if (dood->client && ((dood->inuse && dood->client->pers.spectator != PLAYING)
+				if (dood->client && ((dood->inuse && dood->client->pers.spectator == SPECTATING)
 					|| (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
 					found = true;
 			}

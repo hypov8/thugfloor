@@ -7964,7 +7964,7 @@
 	"voice_bitch.h"
 	"ai_bitch_tables.h"
 
-1582157809 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_local.h
+1582299573 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_local.h
 	"q_shared.h"
 	"game.h"
 	"g_nav.h"
@@ -8000,7 +8000,7 @@
 
 1582124469 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\voice.h
 
-1582162946 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\ep_all.h
+1582259131 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\ep_all.h
 
 1580344436 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\versioncheck.h
 
@@ -8100,7 +8100,7 @@
 
 934279266 g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\ai_whore_tables.h
 
-1582162893 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\ep_all.c
+1582259124 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\ep_all.c
 	"g_local.h"
 
 1532380344 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\ep_crystalpalace.c
@@ -8185,7 +8185,7 @@
 	"g_local.h"
 	"ai_thug_sit.h"
 
-1582211922 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_cast_spawn.c
+1582299020 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_cast_spawn.c
 	"g_local.h"
 	"g_cast_spawn.h"
 
@@ -8194,7 +8194,7 @@
 1557447405 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_chase.c
 	"g_local.h"
 
-1582211922 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_cmds.c
+1582304910 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_cmds.c
 	"g_local.h"
 	"m_player.h"
 	"voice_punk.h"
@@ -8212,7 +8212,7 @@
 	"g_local.h"
 	"g_func.h"
 
-1582074391 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_items.c
+1582302496 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_items.c
 	"g_local.h"
 
 1580782380 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_joe_misc.c
@@ -8231,10 +8231,10 @@
 	"g_local.h"
 	<crtdbg.h>
 
-1582078435 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_scrollmenu.c
+1582304568 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_scrollmenu.c
 	"g_local.h"
 
-1582165777 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_spawn.c
+1582304501 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_spawn.c
 	"g_local.h"
 
 1532380346 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_svcmds.c
@@ -8261,21 +8261,21 @@
 1581901300 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\m_move.c
 	"g_local.h"
 
-1582211922 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\p_client.c
+1582302713 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\p_client.c
 	"g_local.h"
 	"m_player.h"
 	"voice_bitch.h"
 	"voice_punk.h"
 	<stddef.h>
 
-1582211922 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\p_hud.c
+1582300146 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\p_hud.c
 	"g_local.h"
 
 1581981158 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\p_view.c
 	"g_local.h"
 	"m_player.h"
 
-1581981260 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\p_weapon.c
+1582302831 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\p_weapon.c
 	"g_local.h"
 	"m_player.h"
 
@@ -8284,7 +8284,7 @@
 	<time.h>
 	<sys/time.h>
 
-1582124469 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\tourney.c
+1582299145 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\tourney.c
 	"g_local.h"
 	"g_cast_spawn.h"
 
@@ -8310,4 +8310,9 @@
 
 1581990150 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\voice_punk.c
 	"g_local.h"
+
+1582299576 source:g:\kingpinbackup\epartitionkingpin\source\eigen\thugfloor 22\g_main.c
+	"g_local.h"
+	"voice_bitch.h"
+	"voice_punk.h"
 

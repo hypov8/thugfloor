@@ -546,7 +546,7 @@ void cast_TF_Poisonville_boss(edict_t *self)
 {
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Nikkiblanco");
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "122 122 122");
-	self->spawnflags = 16;//Flamethrower
+	self->spawnflags = 4;//Flamethrower
 	self->classname = "cast_punk";
 	self->moral = 5;
 //	self->scale = 1.06;

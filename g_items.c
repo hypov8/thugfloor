@@ -292,17 +292,17 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 //	if (other->client->pers.max_magslug < 100)//Q2 Xatrix mod
 //		other->client->pers.max_magslug = 100;
 
-/*//FREDZ 1 works :/
+
     if ((other->client->pers.inventory[ITEM_INDEX(FindItem("Bullets"))] == other->client->pers.max_bullets) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("Shells"))] == other->client->pers.max_bullets) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("Gas"))] == other->client->pers.max_bullets) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("Grenades"))] == other->client->pers.max_bullets) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("Rockets"))] == other->client->pers.max_bullets) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("308cal"))] == other->client->pers.max_bullets))
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("Shells"))] == other->client->pers.max_shells) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("Gas"))] == other->client->pers.max_gas) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("Grenades"))] == other->client->pers.max_grenades) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("Rockets"))] == other->client->pers.max_rockets) &&
+        (other->client->pers.inventory[ITEM_INDEX(FindItem("308cal"))] == other->client->pers.max_308cal))
     {
-        gi.dprintf("\nMax ammo!.\n\n");
+//        gi.dprintf("\nMax ammo!.\n\n");
         return false;
-    }*/
+    }
 
 
 

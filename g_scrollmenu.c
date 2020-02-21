@@ -29,7 +29,7 @@ struct MENU_ITEM_NAMES
 {
 	//Weapons
 //	{ {"Pistol", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 150, 250, 750, 200, 350, 500} },//Originale pawn o matic
-    { {"Pistol", "Crowbar", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 100, 150, 250, 750, 350, 500, 500} },
+    { {"Pistol", "Crowbar", "Shotgun", "Tommygun", "Heavy machinegun", "Grenade Launcher", "Bazooka", "FlameThrower"}, {50, 100, 150, 250, 750, 450, 500, 550} },
 	//Mod's
 //	{ {"Pistol Silencer", "Pistol RoF Mod", "Pistol Magnum Mod", "Pistol Reload Mod","HMG Cooling Mod"}, {10, 25, 50, 25, 50} },
     { {"Pistol Silencer", "Pistol RoF Mod", "Pistol Magnum Mod", "Pistol Reload Mod","HMG Cooling Mod"}, {10, 25, 50, 25, 100} },

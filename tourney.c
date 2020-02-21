@@ -352,21 +352,21 @@ int giveCashOnKill(int type)
 {
 	int cashOut = 0;
 
-	int cashmelee=3;
-	int cashpistol=4;
-    int cashshotgun=5;
-    int cashtommygun=5;
-    int cashhmg=10;
-    int cashgrenade=7;
-    int cashbazooka=8;
-    int cashflamethrower=6;
+	int cashmelee=6;
+	int cashpistol=8;
+    int cashshotgun=10;
+    int cashtommygun=10;
+    int cashhmg=20;
+    int cashgrenade=14;
+    int cashbazooka=16;
+    int cashflamethrower=12;
 
 	switch (type)
 	{
-    case BOT_RAT:			cashOut = 5; break;		/*rat*/
-    case BOT_DOG:			cashOut = 3; break;		/*dog*/
+    case BOT_RAT:			cashOut = 10; break;		/*rat*/
+    case BOT_DOG:			cashOut = 6; break;		/*dog*/
     case BOT_BUM:			cashOut = 1; break;		/*bum sit*/
-    case BOT_THUG_SIT:		cashOut = 2; break;		/*thug sit*/
+    case BOT_THUG_SIT:		cashOut = 4; break;		/*thug sit*/
 	case BOT_BITCH_ME:		cashOut = cashmelee; break;		    /*bitch melee*/
 	case BOT_BITCH:			cashOut = cashpistol; break;	    /*bitch*/
 	case BOT_PUNK_SG:		cashOut = cashshotgun; break;		/*punk SG*/
@@ -717,7 +717,7 @@ void CheckEndWave() //add timelimit
 			WaveEnd();
 		else
 		{
-			gi.bprintf(PRINT_HIGH, 
+			gi.bprintf(PRINT_HIGH,
 				"===========================================================\n"
 				"The Boss is now dead.. It's time for a new Kingpin..\n"
 				"                       YOU!!!!\n"

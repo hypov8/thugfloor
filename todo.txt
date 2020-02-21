@@ -10,13 +10,13 @@
 
 -max players allowed to enter a wave (need testing)
 
--if people join and wait to long they go to idle modus :/ (should be fixed, need testing) //hypov8 added 1 more fix
+-if people join and wait to long they go to idle modus :/ (should be fixed, need testing) //hypov8 added 1 more fix`(fixed extra)
 
 -add new votingboard
 
--fix button, map to open door, map kpdm2
+-fix button, map to open door, map kpdm2 it's not G_TouchTriggers in p_client.c (should be fixed)
 
--if afk in buyzone go to spec
+-if afk in buyzone go to spec (should be fixed)
 
 -pickup youre own weapon up only, if you died
 

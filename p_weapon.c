@@ -112,6 +112,9 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 			return false;	// leave the weapon for others to pickup
 	}
 
+    if (ent->solid == SOLID_NOT)
+		return true;
+
 	// Ridah, start with gun loaded
 	if (!(other->client->pers.inventory[index]))
 		auto_reload = true;

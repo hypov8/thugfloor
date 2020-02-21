@@ -561,7 +561,7 @@ void CheckDMRules (void)
 	if (!deathmatch->value)
 		return;
 
-	for_each_player(doot, i) 
+	for_each_player(doot, i)
 	{
 		count++;
 
@@ -1180,7 +1180,7 @@ void G_RunFrame (void)
     {
 		CheckEndWave ();
         CheckEndGame ();
-        CheckDMRules ();//FREDZ maybe remove
+        CheckDMRules ();
     }
 
 	if (level.modeset == ENDGAMEVOTE)

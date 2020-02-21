@@ -799,9 +799,9 @@ void TossClientWeapon (edict_t *self)
 {
 	gitem_t		*item;
 	edict_t		*drop;
-	qboolean	quad;
+//	qboolean	quad;
 	// RAFAEL
-	qboolean	quadfire;
+//	qboolean	quadfire;
 	float		spread;
 
 	if (!deathmatch->value)
@@ -810,26 +810,26 @@ void TossClientWeapon (edict_t *self)
 	item = self->client->pers.weapon;
 	if (! self->client->pers.inventory[self->client->ammo_index] )
 		item = NULL;
-	if (item && (strcmp (item->pickup_name, "Blaster") == 0))
-		item = NULL;
+//	if (item && (strcmp (item->pickup_name, "Blaster") == 0))//Q2
+//		item = NULL;
 
 //	if (!((int)(dmflags->value) & DF_QUAD_DROP))
-		quad = false;
+//		quad = false;
 //	else
 //		quad = (self->client->quad_framenum > (level.framenum + 10));
 
 	// RAFAEL
 //	if (!((int)(dmflags->value) & DF_QUADFIRE_DROP))
-		quadfire = false;
+//		quadfire = false;
 //	else
 //		quadfire = (self->client->quadfire_framenum > (level.framenum + 10));
 
-
+/*
 	if (item && quad)
 		spread = 22.5;
 	else if (item && quadfire)
 		spread = 12.5;
-	else
+	else*/
 		spread = 0.0;
 
 	if (item)
@@ -839,8 +839,8 @@ void TossClientWeapon (edict_t *self)
 		self->client->v_angle[YAW] += spread;
 		drop->spawnflags = DROPPED_PLAYER_ITEM;
 	}
-
-	if (quad)
+/*
+	if (quad)//Q2
 	{
 		self->client->v_angle[YAW] += spread;
 		drop = Drop_Item (self, FindItemByClassname ("item_quad"));
@@ -853,7 +853,7 @@ void TossClientWeapon (edict_t *self)
 	}
 
 	// RAFAEL
-	if (quadfire)
+	if (quadfire)//Q2 Xatrix
 	{
 		self->client->v_angle[YAW] += spread;
 		drop = Drop_Item (self, FindItemByClassname ("item_quadfire"));
@@ -863,7 +863,7 @@ void TossClientWeapon (edict_t *self)
 		drop->touch = Touch_Item;
 		drop->nextthink = level.time + (self->client->quadfire_framenum - level.framenum) * FRAMETIME;
 		drop->think = G_FreeEdict;
-	}
+	}*/
 }
 
 
@@ -4234,7 +4234,7 @@ void ClientBeginServerFrame (edict_t *ent)
 */
 
 	client = ent->client;
-#ifndef HYPODEBUG //allow debug builds to not kick you
+
 	// MH: check if they're lagged-out
 	if (client->pers.spectator != SPECTATING && curtime-client->pers.lastpacket >= 5000)
 	{
@@ -4244,12 +4244,11 @@ void ClientBeginServerFrame (edict_t *ent)
 		Cmd_Spec_f(ent);
 	}
 
-#if 0 //hypov8 disable auto spec
+#if 1 //hypov8 disable auto spec
 
 	// MH: moved idle checks here from ClientThink
      //check if idle
-    if (ent->client->pers.spectator!=SPECTATING
-       && (ent->client->pers.spectator == PLAYING && level.modeset==WAVE_ACTIVE))
+    if (ent->client->pers.spectator == PLAYING && ((level.modeset==WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE)))
     {
         if(((level.framenum - ent->check_idle)>(idle_client->value*10))) // MH: check_talk/shoot removed (included in check_idle)
         {
@@ -4257,13 +4256,20 @@ void ClientBeginServerFrame (edict_t *ent)
             //make them spectators
             Cmd_Spec_f(ent);
         }
+        else if (((level.framenum - ent->check_idle)>450) && (level.modeset == WAVE_BUYZONE))//45 secs in buyzone
+        {
+			gi.bprintf (PRINT_HIGH, "%s has been idle for over %d seconds\n", client->pers.netname, 45);
+            //make them spectators
+            Cmd_Spec_f(ent);
+        }
     }
-#endif
-#endif
+
+
 	// MH: count play time
-	if (client->pers.spectator != SPECTATING && (/*level.modeset==MATCH ||*/ level.modeset==WAVE_ACTIVE))
+	if (ent->client->pers.spectator == PLAYING && ((level.modeset==WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE)))
 		ent->client->resp.time++;
 
+#endif
 	// Ridah, hack, make sure we duplicate the episode flags
 	ent->episode_flags |= ent->client->pers.episode_flags;
 	ent->client->pers.episode_flags |= ent->episode_flags;

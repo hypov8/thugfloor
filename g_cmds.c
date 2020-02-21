@@ -2935,7 +2935,8 @@ void Cmd_Activate_f (edict_t *ent)
 	edict_t		*trav, *best;
 	float		best_dist=9999, this_dist;
 
-	if (ent->movetype == MOVETYPE_NOCLIP || ent->movetype == MOVETYPE_SPECTATOR) {
+	if (ent->movetype == MOVETYPE_NOCLIP || ent->movetype == MOVETYPE_SPECTATOR)
+    {
 		if (ent->client->pers.spectator == SPECTATING
       	||	ent->client->pers.spectator == PLAYER_READY //hypov8 dont enter a current wave
             )
@@ -3840,7 +3841,7 @@ void Cmd_Playerrange_f(edict_t *ent)
 		if (j > 450)
 			break;
 	}
-	gi.centerprintf(ent, "%s", stats);
+	gi.cprintf(ent, PRINT_HIGH, "%s", stats);
 }
 void Cmd_Castrange_f(edict_t *ent)//FREDZ maybe better to make it help screen??
 {
@@ -3850,7 +3851,7 @@ void Cmd_Castrange_f(edict_t *ent)//FREDZ maybe better to make it help screen??
 	float	len;
 	edict_t			*icast;
 
-	j = sprintf(stats, "            Name Health Range\n=============================\n");
+	j = sprintf(stats, "       Name   Classname Health Range\n====================================\n");
 
 	for (i=0; i< MAX_CHARACTERS; i++)
 	{
@@ -3867,11 +3868,14 @@ void Cmd_Castrange_f(edict_t *ent)//FREDZ maybe better to make it help screen??
 
         VectorSubtract (ent->s.origin, icast->s.origin, v);
 		len = VectorLength (v);
-		j += sprintf(stats + j, "%16s %6d %5.0f\n", icast->classname, icast->health, len);
+		if (icast->name)
+            j += sprintf(stats + j, "%11s %11s %6d %5.0f\n", icast->name, icast->classname, icast->health, len);
+        else
+            j += sprintf(stats + j, "            %11s %6d %5.0f\n", icast->classname, icast->health, len);
 		if (j > 450)
 			break;
 	}
-	gi.centerprintf(ent, "%s", stats);
+	gi.cprintf(ent, PRINT_HIGH, "%s", stats);
 }
 /*
 =================

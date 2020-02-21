@@ -896,8 +896,8 @@ void button_fire (edict_t *self)
 {
 	if (self->moveinfo.state == STATE_UP || self->moveinfo.state == STATE_TOP)
 		return;
-	if (level.modeset != WAVE_ACTIVE || !self->nav_TF_isFirstPayer) //hypov8 nav
-		return;
+//	if (level.modeset != WAVE_ACTIVE || !self->nav_TF_isFirstPayer) //hypov8 nav //FREDZ gives problems with button kpdm2
+//		return;
 
 // BEGIN:	Xatrix/Ridah/Navigator/07-apr-1998
 	// if this button hasn't been pressed yet, spawn a node here
