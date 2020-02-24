@@ -4234,6 +4234,7 @@ void ClientBeginServerFrame (edict_t *ent)
 */
 
 	client = ent->client;
+#ifndef HYPODEBUG //allow debug builds to not kick you
 
 	// MH: check if they're lagged-out
 	if (client->pers.spectator != SPECTATING && curtime-client->pers.lastpacket >= 5000)
@@ -4244,26 +4245,26 @@ void ClientBeginServerFrame (edict_t *ent)
 		Cmd_Spec_f(ent);
 	}
 
-#if 1 //hypov8 disable auto spec
 
+	//hypov8 todo: this needs some thought...
+	//
 	// MH: moved idle checks here from ClientThink
      //check if idle
     if (ent->client->pers.spectator == PLAYING && ((level.modeset==WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE)))
     {
-        if(((level.framenum - ent->check_idle)>(idle_client->value*10))) // MH: check_talk/shoot removed (included in check_idle)
+       /* if(((level.framenum - ent->check_idle)>(idle_client->value*10))) // MH: check_talk/shoot removed (included in check_idle)
         {
 			gi.bprintf (PRINT_HIGH, "%s has been idle for over %d seconds\n", client->pers.netname, (int)idle_client->value); // MH: let everyone know they've idled-out
             //make them spectators
             Cmd_Spec_f(ent);
         }
-        else if (((level.framenum - ent->check_idle)>450) && (level.modeset == WAVE_BUYZONE))//45 secs in buyzone
+        else*/ if (((level.framenum - ent->check_idle)>450) && (level.modeset == WAVE_BUYZONE))//45 secs in buyzone
         {
 			gi.bprintf (PRINT_HIGH, "%s has been idle for over %d seconds\n", client->pers.netname, 45);
             //make them spectators
             Cmd_Spec_f(ent);
         }
     }
-
 
 	// MH: count play time
 	if (ent->client->pers.spectator == PLAYING && ((level.modeset==WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE)))

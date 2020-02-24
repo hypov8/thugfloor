@@ -18,6 +18,7 @@ typedef struct
 void cast_pawn_o_matic_spawn ();
 void cast_pawn_o_matic_free();
 int cast_TF_checkEnemyState(void);
+void cast_TF_free(void);
 void cast_TF_setupEnemyCounters(void);
 
 

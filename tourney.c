@@ -127,8 +127,9 @@ void ResetServer () // completely resets the server including map
 	if (default_wavetype[0])
 	    gi.cvar_set("wavetype",default_wavetype);	//only apply if keyword exists
 	gi.cvar_set("anti_spawncamp", "1");//FREDZ
+#ifndef HYPODEBUG
 	gi.cvar_set("cheats","0");
-
+#endif
 	if (default_random_map && num_custom_maps)
 		Com_sprintf (command, sizeof(command), "map \"%s\"\n", custom_list[rand()%num_custom_maps].custom_map);
 	else
@@ -451,7 +452,9 @@ int waveGiveCash(int type)
 void GameEND ()//FREDZ
 {
 	level.modeset = WAVE_IDLE; //dose not matter what it is!!
-	cast_TF_checkEnemyState(); //set me free!!
+	//cast_TF_checkEnemyState(); //set me free!!
+	cast_TF_free(); //set me free!!
+
     if (!allow_map_voting)
         EndDMLevel ();
     else
@@ -465,12 +468,17 @@ void WaveEnd () //hypov8 end of the match
 
     level.waveNum++;
 	level.modeset = WAVE_END;
-	cast_TF_checkEnemyState(); //set me free!!
+	//cast_TF_checkEnemyState(); //set me free!!
+	cast_TF_free(); //set me free!!
 
 	for_each_player(self,i)
 	{
 		if (self->client->pers.spectator != SPECTATING)
+		{
 			count_players++;
+			self->check_idle = level.framenum; //reset idle timer. boot idle players after 55 secs in buy time
+		}
+
 		//give cash to ppl that survived the wave
 		if (self->client->pers.spectator == PLAYING)
 			self->client->pers.currentcash += waveGiveCash(1);
@@ -610,7 +618,7 @@ void CheckStartWave ()  // 15 countdown before matches
 	}
 
 	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 105)) //150-45
-		gi.bprintf(PRINT_HIGH,"Wave %i will start in %d seconds!\n", level.waveNum + 1, (140 - (level.framenum - level.startframe)) / 10);
+		gi.bprintf(PRINT_HIGH,"Wave %i will start in %d seconds!\n", level.waveNum + 1, (150 - (level.framenum - level.startframe)) / 10);
 }
 
 
@@ -721,7 +729,7 @@ void CheckEndWave() //add timelimit
 				"===========================================================\n"
 				"The Boss is now dead.. It's time for a new Kingpin..\n"
 				"                       YOU!!!!\n"
-				"===========================================================\n"); //todo: better name then players?
+				"===========================================================\n"); //todo: better name then players? cutsceen..
 			GameEND();
 		}
 	}

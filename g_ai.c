@@ -4666,9 +4666,11 @@ done:
 		{	// it's been cleared
 			return;
 		}
-
+		
+		if (!goal_node) //catch NAV_Route_EntityToEntity issue?
+		{		int hypodebugger = 0;	}
 		// find the next waypoint
-		rval = NAV_Route_EntityToEntity( self, goal_node, (*goal), VIS_PARTIAL, false, &route);
+		rval = NAV_Route_EntityToEntity( self, goal_node, (*goal), VIS_PARTIAL, false, &route);  //hypov8 posible this caused crash in nav.lib
 
 		self->nav_data.goal_index = tempgoal.nav_data.goal_index = route.path+1;
 

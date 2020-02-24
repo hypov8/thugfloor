@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='h_dBubLan|Win32'">
     <LocalDebuggerCommand>$(OutDir)..\kingpin.exe</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments> +set port 31515 +set game thugfloor +set deathmatch 1 +set cheats 1 +verbose 0 +logfile 0 +exec server.cfg</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments> +set port 31510 +set game thugfloor +set deathmatch 1 +set cheats 1 +verbose 0 +logfile 0 +exec server.cfg</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
@@ -15,7 +15,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='h_dBugDed|Win32'">
     <LocalDebuggerCommandArguments> +set port 31515 +set game thugfloor +set developer 1 +set cheats 1 +set deathmatch 1 +verbose 0 +logfile 0 +exec server.cfg</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommand>$(OutDir)..\kpded2.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>$(OutDir)..\kpded2_.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='f_dBugDed|Win32'">

@@ -1026,7 +1026,7 @@ qboolean cast_start (edict_t *self)
 
 	self->nextthink = level.time + FRAMETIME;
 	self->svflags |= SVF_MONSTER;
-	self->s.renderfx |= RF_FRAMELERP;
+	//self->s.renderfx |= RF_FRAMELERP; //hypov8 this causes prediction errors.
 	self->takedamage = DAMAGE_AIM;
 	self->air_finished = level.time + 12;
 	self->use = cast_use;
