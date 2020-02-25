@@ -4,7 +4,7 @@
 
 extern edict_t *boss_entityID;
 extern int boss_maxHP;
-extern int currWave_castCount;
+//extern int currWave_castCount;
 
 static const char *gameheader[] =
 {
@@ -129,6 +129,11 @@ INTERMISSION
 
 void MoveClientToIntermission (edict_t *ent)
 {
+#if 1 //mm 2.0
+	if (ent->client->showscores == SCORE_REJOIN)
+		ClientRejoin(ent, true); // auto-rejoin
+#endif
+
 	if (deathmatch->value || coop->value)
 		ent->client->showscores = SCOREBOARD;
 	VectorCopy (level.intermission_origin, ent->s.origin);
@@ -1104,6 +1109,14 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 	//FREDZ For menu code
 	ent->client->showscrollmenu = false;
 
+#if 1 //mm 2.0
+	if (ent->client->showscores == SCORE_REJOIN)
+	{
+		ClientRejoin(ent, false);
+		return;
+	}
+#endif
+
 	if (ent->client->showscores == SCOREBOARD)
 		ent->client->showscores = SCOREBOARD2;
 	else if (level.modeset == ENDGAMEVOTE)
@@ -1769,7 +1782,7 @@ void G_SetStats (edict_t *ent)
 
 	//hypov8 this should go somewhere else!!!
 	//show distance to pawnGuy an last 4 players
-	if (level.modeset == WAVE_BUYZONE || (level.modeset == WAVE_ACTIVE && currWave_castCount <=4))
+	if (level.modeset == WAVE_BUYZONE || (level.modeset == WAVE_ACTIVE && level.currWave_castCount <=4))
 	{
 		if (!(level.framenum % 5) || !ent->client->botRange) // is it updating fast enough?
 		{
@@ -1830,10 +1843,10 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_TIMER] =	((270 + 9 - (level.framenum - level.startframe)) / 10); // MH: changed voting time to 27s (music duration)
 
 	else if ((int)timelimit->value && level.modeset == WAVE_ACTIVE) // MH: only when timelimit!=0
-		if (level.framenum > (level.startframe + (((int)timelimit->value  * 600) - 605)))
-			ent->client->ps.stats[STAT_TIMER] = ((((int)timelimit->value * 600) + level.startframe - level.framenum ) / 10);
+		if (level.framenum > (level.startframe + (((int)timelimit->value * 600) - 605)))
+			ent->client->ps.stats[STAT_TIMER] = ((((int)timelimit->value * 600) + level.startframe - level.framenum) / 10);
 		else
-			ent->client->ps.stats[STAT_TIMER] = ((((int)timelimit->value * 600) + level.startframe - level.framenum ) / 600);
+			ent->client->ps.stats[STAT_TIMER] = ((((int)timelimit->value * 600) + level.startframe - level.framenum) / 600);
 	else
 		ent->client->ps.stats[STAT_TIMER] = 0;
 

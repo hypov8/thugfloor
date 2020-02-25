@@ -123,6 +123,7 @@
     <IntDir>.\Debug/</IntDir>
     <GenerateManifest>true</GenerateManifest>
     <TargetName>$(ProjectName)x86</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='f_dBugDed|Win32'">
     <OutDir>D:\GOG Games\Kingpin\thugfloor\</OutDir>

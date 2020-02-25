@@ -743,6 +743,8 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	if (!targ->client && !attacker->client && targ != attacker)
 		return; //skip bots killing each other
 
+	//hypov8 note: "Sharky" can still get damage from other cast damage at end wave. flamer..
+	//todo inflictor?
 
     // easy mode takes half damage
 	if (deathmatch->value == 0 && targ->client)//FREDZ move to here to fix coop damage

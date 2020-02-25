@@ -2458,7 +2458,7 @@ void Cmd_Use_f (edict_t *ent)
 	gitem_t		*it;
 	char		*s;
 	int			index;
-	int			i, z;
+	//int			i, z;
 
 	s = gi.args();
 
@@ -2503,6 +2503,17 @@ void Cmd_Use_f (edict_t *ent)
 
 	if (ent->client->showscores == SCORE_REJOIN) // restores players frags, time, etc after they disconnect
 	{
+#if 1 //mm2.0
+		if (s)
+		{
+			if (!strcmp(s, "pipe"))
+				ClientRejoin(ent, true);
+			else if (!strcmp(s, "pistol"))
+				ClientRejoin(ent, false);
+		}
+		return;
+#else
+
 		if (s) {
 			index = -1;
 			for (i=0;i<level.player_num;i++)
@@ -2552,6 +2563,8 @@ void Cmd_Use_f (edict_t *ent)
 			}
 		}
 		return;
+#endif
+
 	}
 /*	else if ((teamplay->value) && ((!ent->client->pers.team) || (level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT) || (level.modeset == FREEFORALL)))
 	{
@@ -2755,11 +2768,15 @@ Cmd_InvUse_f
 void Cmd_InvUse_f (edict_t *ent)
 {
 	gitem_t		*it;
-    int         z;
+    //int         z;
 
 
 	if (ent->client->showscores == SCORE_REJOIN)
 	{
+#if 1 //mm 2.0
+		ClientRejoin(ent, false);
+		return;
+#else
 		int			i, index=-1;
 		for (i=0;i<level.player_num;i++)
 		{
@@ -2813,6 +2830,7 @@ void Cmd_InvUse_f (edict_t *ent)
 			level.player_num--;
 		}
 		return;
+#endif
 	}
 
 
@@ -4429,9 +4447,6 @@ void Cmd_PrintSettings_f (edict_t *ent)
 			break;
         case WAVE_IDLE :
 			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave Idle\n");
-			break;
-        case WAVE_END :
-			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave End\n");
 			break;
 	}
     if (skill->value == 0)//FREDZ

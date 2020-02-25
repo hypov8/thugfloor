@@ -550,6 +550,7 @@ void CheckDMRules (void)
 {
 	int			i;
 	int		count=0;
+	int     count_players = 0; //ready to play
 	edict_t	*doot;
 	int respawntime = (int)timelimit->value * 600; //use timelimit as respawn counter
 	qboolean respawn = false;
@@ -561,36 +562,55 @@ void CheckDMRules (void)
 	if (!deathmatch->value)
 		return;
 
+	if (CheckEndWave())
+		return;
+
+	if (respawntime)
+	{	//if changed mid wave, this will be incorrect
+		if (level.startframe - level.framenum + respawntime < 0)
+			level.startframe = level.framenum;
+	}
+
+	//check state of all players
 	for_each_player(doot, i)
 	{
 		count++;
 
-#if 1	//allow respawn every ~5 minutes?
 		if (respawntime && !((level.framenum + 1 - level.startframe) % respawntime))
 		{
 			//spawn players into active wave
-			if (doot->client->pers.spectator == PLAYER_READY && doot->client->pers.player_dead == TRUE) //only respawn players that were in a wave
+			if (doot->client->pers.spectator == PLAYER_READY) //only respawn players that were in a wave
 			{
-				doot->client->pers.spectator = PLAYING;
+				//doot->client->pers.spectator = PLAYING;
 				doot->flags &= ~FL_GODMODE;
 				doot->health = 0;
 				meansOfDeath = MOD_RESTART;
 				ClientBeginDeathmatch(doot);
 				doot->client->pers.currentcash = 0; // waveGiveCash(2); //dead!!
-
 			}
 			respawn = true;
 		}
-#endif
 
+		//this will end wave if everyone died
+		if (doot->client->pers.spectator == PLAYING)
+			count_players++;
 	}
-	if ((count == 0) && (level.framenum > 12000))
-		ResetServer ();
 
-
-	if (respawn) //reset startframe(resets countdown)
+	if (respawn) //clients entered wave
 		level.startframe = level.framenum;
 
+	if (!count_players)
+	{
+		gi.bprintf(PRINT_HIGH, "No players currently playing.\n");
+		GameEND();
+		return;
+	}
+
+	if ((count == 0) && (level.framenum > 12000))
+	{
+		if (ResetServer(true))
+			return;
+	}
 
     #if 0 //FREDZ for testing rounds
 	if (timelimit->value)
@@ -613,7 +633,7 @@ void CheckDMRules (void)
 			return;
 		}
 	}
-	#endif
+ #endif
 
 /*
 	if (fraglimit->value && (int)teamplay->value!=1) // MH: ignore fraglimit in bagman
@@ -1177,11 +1197,7 @@ void G_RunFrame (void)
 		CheckBuyWave ();
 
 	if (level.modeset == WAVE_ACTIVE)
-    {
-		CheckEndWave ();
-        CheckEndGame ();
         CheckDMRules ();
-    }
 
 	if (level.modeset == ENDGAMEVOTE)
 		CheckEndVoteTime ();

@@ -484,6 +484,9 @@ void G_FreeEdict (edict_t *ed)
 	{
 		level.characters[ed->character_index] = NULL;
 		level.num_characters--; //hypov8 todo: fix this?
+		ed->character_index = 0;
+		level.currWave_castCount--;
+		level.waveEnemyCount--;
 	}
 
 

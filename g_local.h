@@ -70,7 +70,6 @@
 #define WAVE_BUYZONE	5
 #define WAVE_START		6
 #define WAVE_IDLE		7
-#define WAVE_END		8
 
 #define	WAVELEN_LONG 11
 #define	WAVELEN_MED 8
@@ -572,10 +571,17 @@ typedef struct
 
 	// MH: time this server frame started
 	int			frameStartTime;
+#if 1 //mm 2.0
+	int		lastactive;
+
+	char playerskins[MAX_CLIENTS][MAX_QPATH]; // player skin configstrings
+#endif
 
     int		waveReady;
 	int     waveNum;
 	int		waveEnemyCount;		//totaly enemys to kill in wave
+	int		currWave_castCount; //total enemys in level
+
 	int		dmSpawnPointCount; //get dm spawns. guid to level size
 	int		spSpawnPointCount; //get sp spawns. atleast 1 required.
 	qboolean	buyzone;       //FREDZ disable shooting weapons in buyzone
@@ -1249,6 +1255,7 @@ void InitClientPersistant (gclient_t *client);
 void InitClientRespClear (gclient_t *client);
 void InitBodyQue (void);
 void ClientBeginServerFrame (edict_t *ent);
+void ClientRejoin(edict_t *ent, qboolean rejoin);
 void player_pain (edict_t *self, edict_t *other, float kick, int damage, int mdx_part, int mdx_subobject);
 void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point, int mdx_part, int mdx_subobject);
 void ClientBeginDeathmatch (edict_t *ent);
@@ -1404,12 +1411,12 @@ void CheckBuyWave ();//FREDZ
 void CheckAllPlayersSpawned ();
 void CheckVote();
 void CheckEndVoteTime ();
-void CheckEndGame();//FREDZ
-void CheckEndWave();
+//void CheckEndGame();//FREDZ
+qboolean CheckEndWave();
 int  CheckEndWave_GameType();
 int  waveGiveCash(int type);
 int  giveCashOnKill(int type);
-void ResetServer();
+qboolean ResetServer();
 void WaveBuy();//FREDZ
 void WaveStart();//hypov8
 void WaveIdle();//hypov8
@@ -2233,11 +2240,11 @@ extern MOTD_t	MOTD[20];
 
 typedef struct // stores player info if they disconnect
 {
-	char netname[16];
+	char player[MAX_QPATH];
 	int frags;
 	int	deposits;
 	int	team;
-	char skin[64];
+	//char skin[64];
 	int	time;
     int	accshot,acchit,fav[8],stole; // MH: added stole
     int mute;

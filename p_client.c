@@ -11,13 +11,23 @@
 #define NAME_BLANK_STR    "<No Name>"
 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
-
-void SP_misc_teleporter_dest (edict_t *ent);
+static int CheckClientRejoin(edict_t *ent);
 
 // MH: cloud spawning functions
 void think_new_first_raincloud_client (edict_t *self, edict_t *clent);
 void think_new_first_snowcloud_client (edict_t *self, edict_t *clent);
 
+#if 1 //mm 2.0
+static void playerskin(int playernum, char *s)
+{
+	// only update player's skin config if it has changed (saves a bit of bandwidth)
+	if (strcmp(level.playerskins[playernum], s))
+	{
+		strncpy(level.playerskins[playernum], s, sizeof(level.playerskins[playernum]) - 1);
+		gi.configstring(CS_PLAYERSKINS + playernum, s);
+	}
+}
+#endif
 
 /*QUAKED info_player_start (1 0 0) (-16 -16 -24) (16 16 48)
 The normal starting point for a level.
@@ -54,7 +64,6 @@ void SP_info_player_deathmatch(edict_t *self)
 		G_FreeEdict (self);
 		return;
 	}
-//	SP_misc_teleporter_dest (self);
 }
 
 /*QUAKED info_player_coop (1 0 1) (-16 -16 -24) (16 16 48)
@@ -1940,9 +1949,10 @@ void PutClientInServer (edict_t *ent)
 	ent->takedamage = DAMAGE_AIM;
 //	if (((deathmatch->value) && (level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT)))
 //		|| (level.modeset == FREEFORALL) || (ent->client->pers.spectator == SPECTATING))
-	if ((level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING)
-		|| (level.modeset == WAVE_ACTIVE && ent->client->pers.player_dead == FALSE) //hypov8 dont enter a current wave
-		|| (level.modeset == WAVE_START)
+	if ((level.modeset == WAVE_START) ||
+		(level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING) || level.intermissiontime
+		|| (level.modeset == WAVE_ACTIVE && ent->client->pers.spectator == PLAYING) //(ent->movetype == MOVETYPE_TOSS) //was dead
+		|| (level.modeset == WAVE_ACTIVE && (!timelimit->value || ent->client->resp.enterframe == level.framenum))
 		|| (count_players >= 8)
         )
 	{
@@ -1965,6 +1975,7 @@ void PutClientInServer (edict_t *ent)
 		ent->movetype = MOVETYPE_WALK;
 		ent->solid = SOLID_BBOX;
 		ent->client->pers.player_dead = FALSE;//FREDZ
+		AddCharacterToGame(ent); //hypov8 add player to level.characters
 
 //		ent->svflags = SVF_DEADMONSTER;//FREDZ thugfloor should make transparant player from kitmod
 //        ent->svflags |= SVF_DEADMONSTER;
@@ -2328,75 +2339,71 @@ void ClientBeginDeathmatch (edict_t *ent)
 {
 	int		save;
 
-//gi.dprintf("IN: ClientBeginDeathmatch(%d)\n",((int)ent-(int)g_edicts)/sizeof(edict_t));
-
 	save = ent->client->showscores;
 	G_InitEdict (ent);
 
-/*	if ((level.modeset == FREEFORALL) || (level.modeset == TEAMPLAY))//Not used
+#if 1 //mm 2.0
+	if ((ent->client->pers.spectator != SPECTATING && (level.modeset == WAVE_BUYZONE || level.modeset == WAVE_SPAWN_PLYR)) //|| level.modeset == WAVE_START
+		|| (ent->client->ps.pmove.pm_type >= PM_DEAD)
+		|| (level.modeset == WAVE_ACTIVE && timelimit->value)
+		|| (ent->client->resp.enterframe == level.framenum)
+		)
 	{
-		InitClientResp (ent->client);
-	}*/
+		if (ent->client->resp.enterframe == level.framenum)
+		{
+			if (save == SCORE_REJOIN)
+			{
+				if (level.intermissiontime)
+				{
+					ClientRejoin(ent, true); // auto-rejoin
+					save = 0;
+				}
+			}
+			//else if (teamplay->value && !ent->client->pers.team && ((int)dmflags->value & DF_AUTO_JOIN_TEAM) && !level.intermissiontime && level.modeset != MATCH)
+			//	Teamplay_AutoJoinTeam(ent);
+		}
+		// locate ent at a spawn point
+		PutClientInServer(ent);
+	}
+	else
+	{
+		ent->movetype = MOVETYPE_NOCLIP;
+		ent->solid = SOLID_NOT;
+		ent->svflags |= SVF_NOCLIENT;
+		gi.linkentity(ent);
+		ent->client->newweapon = ent->client->pers.weapon = NULL;
+		ChangeWeapon(ent);
+	}
+
+	if (/*!teamplay->value &&*/ ent->client->pers.spectator != SPECTATING && level.modeset != WAVE_ACTIVE)
+		gi.bprintf(PRINT_HIGH, "%s entered the game\n", ent->client->pers.netname);
+
+	if (save && ent->solid == SOLID_NOT)
+		ent->client->showscores = save;
+	//end mm2.0
+
+#else //mm old
 	//FREDZ remove
 	// locate ent at a spawn point (MH: stay at same place if spectating and not dead)
 	if (level.framenum == ent->client->resp.enterframe || ent->client->pers.spectator == PLAYING || ent->client->ps.pmove.pm_type >= PM_DEAD
-        || ent->client->pers.spectator == PLAYER_READY)//hypov8
-		PutClientInServer (ent);
-
-	// MH: go to intermission spot during intermission
-	if (level.intermissiontime)
+		|| ent->client->pers.spectator == PLAYER_READY)//hypov8
 	{
-		MoveClientToIntermission (ent);
-		ClientEndServerFrame (ent);
-		return;
+		PutClientInServer(ent);
+
+		// MH: go to intermission spot during intermission
+		if (level.intermissiontime)
+		{
+			MoveClientToIntermission(ent);
+			ClientEndServerFrame(ent);
+			return;
+		}
 	}
 
-	// Teamplay: if they aren't assigned to a team, make them a spectator
-/*	if (teamplay->value)
-	{
-		if ((level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT) || (level.modeset == FREEFORALL) || (level.modeset == ENDMATCHVOTING))
-		{
-			ent->movetype = MOVETYPE_NOCLIP;
-			ent->solid = SOLID_NOT;
-			ent->svflags |= SVF_NOCLIENT;
-			ent->client->pers.weapon = NULL;
-//			ent->client->pers.spectator = SPECTATING; // MH: disable to not make everyone specs at start of map
-		}
-		else if (ent->client->pers.team)
-		{
-			// so we don't KillBox() ourselves
-			ent->solid = SOLID_NOT;
-			gi.linkentity( ent );
 
-			if (!Teamplay_ValidateJoinTeam( ent, ent->client->pers.team ))
-			{
-				ent->client->pers.team = 0;
-				ent->client->pers.spectator = SPECTATING;
-			}
-
-		}
-
-		if (!ent->client->pers.team)
-		{
-			if (((int)dmflags->value) & DF_AUTO_JOIN_TEAM)
-			{
-				Teamplay_AutoJoinTeam( ent );
-			}
-			else
-			{
-				ent->movetype = MOVETYPE_NOCLIP;
-				ent->solid = SOLID_NOT;
-				ent->svflags |= SVF_NOCLIENT;
-				ent->client->pers.spectator = SPECTATING;
-				ent->client->pers.weapon = NULL;
-			}
-		}
-	}
-	else*/
+	else
 	{
 		if ((ent->client->pers.spectator == SPECTATING) || (ent->client->showscores == SCORE_REJOIN) || (level.modeset == ENDGAMEVOTE)
-         || (level.modeset == WAVE_START) //dont enter at 15 sec countdown?
-		 || (level.modeset == WAVE_ACTIVE && ent->client->pers.player_dead == TRUE)) //hypov8 dont enter a current wave
+         /*|| (level.modeset != WAVE_ACTIVE && level.modeset != WAVE_START && level.modeset != WAVE_BUYZONE)*/)
 		{
 //			ent->movetype = MOVETYPE_NOCLIP;
             ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
@@ -2413,11 +2420,7 @@ void ClientBeginDeathmatch (edict_t *ent)
 	ent->client->showscores = save;
 
 
-//	if (level.modeset == FINALCOUNT)
-//		ent->client->showscores = NO_SCOREBOARD;
-//	else if (level.modeset == MATCHSETUP)
-//		ent->client->showscores = SCOREBOARD;
-//    else if ((level.modeset == FREEFORALL) && (ent->client->showscores == NO_SCOREBOARD))
+
 	if ((level.modeset == PREGAME) && (ent->client->showscores == NO_SCOREBOARD))
 		ent->client->showscores = SCOREBOARD;
 	else if (ent->solid != SOLID_NOT)
@@ -2436,6 +2439,7 @@ void ClientBeginDeathmatch (edict_t *ent)
 	}
 
 //gi.dprintf("OUT: ClientBeginDeathmatch(%d)\n",((int)ent-(int)g_edicts)/sizeof(edict_t));
+#endif
 }
 
 
@@ -2470,7 +2474,7 @@ void ClientBegin (edict_t *ent)
 		set_version(ent);
 
 	ent->client = game.clients + (ent - g_edicts - 1);
-	InitClientRespClear (ent->client);
+
 
 // Papa - either show rejoin or MOTF scoreboards
 	if (ent->client->showscores != SCORE_REJOIN || !level.player_num) // MH: check player_num in case map changed
@@ -2500,7 +2504,8 @@ void ClientBegin (edict_t *ent)
 				}
 			}
 		}
-	} else
+	} 
+	else
 		ent->client->pers.admin=NOT_ADMIN; // MH: moved here from above (fix)
 
 	a=gi.cvar("rconx","",0)->string;
@@ -2515,7 +2520,7 @@ void ClientBegin (edict_t *ent)
 		}
 	}
 
-	ent->client->pers.lastpacket = Sys_Milliseconds(); // MH: update last packet time
+	ent->client->pers.lastpacket = curtime; // Sys_Milliseconds(); // MH: update last packet time
 	ent->check_idle = level.framenum; // MH: init idle timer
 
 	if (deathmatch->value)
@@ -2528,9 +2533,17 @@ void ClientBegin (edict_t *ent)
 				think_new_first_snowcloud_client(cloud, ent);
 		}
 
+		InitClientRespClear(ent->client);
 		ClientBeginDeathmatch (ent);
+		// make sure all view stuff is valid
+		ClientEndServerFrame(ent); //mm 2.0
 		return;
 	}
+
+	
+#if 1 //hypov8 note: nothing below this will get used in DM. unreachable code
+	InitClientRespClear(ent->client); //hypov8 add
+
 
 	ent->cast_group = 1;
 
@@ -2765,6 +2778,7 @@ void ClientBegin (edict_t *ent)
 		gi.SaveCurrentGame();
 		changing_levels = false;
 	}
+#endif
 }
 
 void maxrate_think(edict_t *self)
@@ -2794,7 +2808,7 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 {
 	char	*s;
 //	char	*fog;
-	int		playernum;
+	//int		playernum;
 	char	*extras;
     int     fIgnoreName = 0,a;
 
@@ -3074,10 +3088,16 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 
 	extras=Info_ValueForKey (userinfo, "extras");
 
+#if 1 //mm 2.0
+	// combine name and skin into a configstring
+	playerskin(ent - g_edicts - 1, va("%s\\%s %s", ent->client->pers.netname, s, extras)); //mm 2.0
+#else
 	playernum = ent-g_edicts-1;
 
 	// combine name and skin into a configstring
 	gi.configstring (CS_PLAYERSKINS+playernum, va("%s\\%s %s", ent->client->pers.netname, s, extras) );
+#endif
+
 
 	// fov
 	if (deathmatch->value && ((int)dmflags->value & DF_FIXED_FOV))
@@ -3304,7 +3324,7 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 	while (i < level.player_num)
 	{
 		// MH: not checking skins because they are random
-		if (Q_stricmp (ent->client->pers.netname,playerlist[i].netname) == 0)
+		if (Q_stricmp (ent->client->pers.netname,playerlist[i].player) == 0)
 			ent->client->showscores = SCORE_REJOIN;
 
 		i++;
@@ -3316,9 +3336,17 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 	else*/
 
     ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
+#if 1 //mm 2.0
+	// check to see if a player was disconnected
+	if (CheckClientRejoin(ent) >= 0)
+	{
+		ent->client->showscores = SCORE_REJOIN;
+		ent->client->pers.spectator = SPECTATING;
+	}
+	//level.lastactive = level.framenum;
+#endif
 
-
-	ent->client->pers.lastpacket = Sys_Milliseconds(); // MH: set last packet time
+	ent->client->pers.lastpacket = curtime; // Sys_Milliseconds(); // MH: set last packet time
 
 	return true;
 }
@@ -3351,12 +3379,19 @@ void ClientDisconnect (edict_t *ent)
 		if (ent->vote == CALLED_VOTE)
 			level.voteset = NO_VOTES;
 
+		playernum = ent - g_edicts - 1;
+
 //	sl_LogPlayerDisconnect( &gi, level, ent );	// Standard Logging
 	    ent->client->pers.fakeThief = 0;
 
 // Papa - store player info after they disconnect
-		if (ent->client->resp.time && (level.player_num < 63)) // MH: only store if they have played some time
+		if (ent->client->resp.time && ent->client->resp.score > 0) // MH: only store if they have played some time
 		{
+			if (level.player_num == 64)
+			{
+				memmove(playerlist, playerlist + 1, 63 * sizeof(playerlist[0]));
+				level.player_num--;
+			}
 			playerlist[level.player_num].frags = ent->client->resp.score;
 			playerlist[level.player_num].deposits = ent->client->resp.deposited;
 			playerlist[level.player_num].acchit = ent->client->resp.acchit;
@@ -3364,7 +3399,7 @@ void ClientDisconnect (edict_t *ent)
 			playerlist[level.player_num].stole = ent->client->resp.stole; // MH: added
 			playerlist[level.player_num].mute = ent->client->pers.mute;
 			//do the fav too
-			for(z=0;z<8;z++)
+			for (z = 0;z < 8;z++)
 			{
 			   playerlist[level.player_num].fav[z] = ent->client->resp.fav[z];
 			}
@@ -3374,7 +3409,7 @@ void ClientDisconnect (edict_t *ent)
 			skinvalue = Info_ValueForKey (ent->client->pers.userinfo, "skin");
 			strcpy (playerlist[level.player_num].skin, skinvalue);
 */
-			strcpy (playerlist[level.player_num].netname, ent->client->pers.netname);
+			strcpy (playerlist[level.player_num].player, level.playerskins[playernum]); //ent->client->pers.netname
 			level.player_num++;
 		}
 
@@ -3402,8 +3437,9 @@ void ClientDisconnect (edict_t *ent)
 		ent->inuse = false;
 
 		// MH: moved from below
-		playernum = ent-g_edicts-1;
-		gi.configstring (CS_PLAYERSKINS+playernum, "");
+		//playernum = ent-g_edicts-1;
+		//gi.configstring (CS_PLAYERSKINS+playernum, "");
+		playerskin(playernum, "");
 	}
 
 	// MH: kpded2 sets ping negative if they are reconnecting
@@ -4379,6 +4415,83 @@ void ClientBeginServerFrame (edict_t *ent)
 		ScrollMenuKeyLogger(ent);
 
 }
+
+#if 1 //mm2.0
+static int CheckClientRejoin(edict_t *ent)
+{
+	int i, playernum = ent - g_edicts - 1;
+	char s[MAX_QPATH];
+
+	strcpy(s, level.playerskins[playernum]);
+	/*if (teamplay->value)
+	{
+		char *p = strrchr(s, '/' );
+		memset(p+5, ' ', 7); // ignore body+legs
+	}*/
+	for (i=level.player_num-1; i>=0; i--)
+	{
+		if (!strcmp(s, playerlist[i].player)) //player
+			break;
+	}
+	return i;
+}
+void ClientRejoin(edict_t *ent, qboolean rejoin)
+{
+	int	i, index;
+
+	index = CheckClientRejoin(ent);
+	if (rejoin && index >= 0)
+	{
+		ent->client->resp.score = playerlist[index].frags;
+		ent->client->resp.deposited = playerlist[index].deposits;
+		ent->client->resp.stole = playerlist[index].stole;
+		ent->client->resp.acchit = playerlist[index].acchit;
+		ent->client->resp.accshot = playerlist[index].accshot;
+		for (i = 0; i<8; i++)
+			ent->client->resp.fav[i] = playerlist[index].fav[i];
+		ent->client->pers.team = playerlist[index].team;
+		ent->client->resp.time = playerlist[index].time;
+		/*if (ent->client->pers.team || !teamplay->value)
+		{
+			ent->client->pers.spectator = PLAYING;
+			if (ent->client->resp.enterframe != level.framenum)
+			{
+				if (teamplay->value)
+					Teamplay_ValidateJoinTeam(ent, ent->client->pers.team);
+				else
+					ClientBeginDeathmatch(ent);
+			}
+		}
+		else*/
+		{
+			ent->client->showscores = SCOREBOARD;
+			ent->client->resp.scoreboard_frame = 0;
+		}
+	}
+	else
+	{
+		/*if (teamplay->value)
+		{
+			ent->client->showscores = SCOREBOARD;
+			if (((int)dmflags->value & DF_AUTO_JOIN_TEAM) && !level.intermissiontime && level.modeset != MATCH)
+				Teamplay_AutoJoinTeam(ent);
+		}
+		else*/
+		{
+			ent->client->showscores = NO_SCOREBOARD;
+			ent->client->pers.spectator = PLAYER_READY; //was PLAYING
+			if (ent->client->resp.enterframe != level.framenum)
+				ClientBeginDeathmatch(ent);
+		}
+		ent->client->resp.scoreboard_frame = 0;
+	}
+	if (index >= 0)
+	{
+		level.player_num--;
+		memmove(playerlist + index, playerlist + index + 1, (level.player_num - index) * sizeof(playerlist[0]));
+	}
+}
+#endif
 
 // MH: cprintf removed (switched back to using gi.cprintf)
 

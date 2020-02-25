@@ -26,6 +26,9 @@ void Voice_Random( edict_t *self, edict_t *other, voice_table_t *voice_table, in
 	if (self->health <= 0)
 		return;
 
+	if (!other)
+		return; //hypov8 bugfix
+
 	if ( !(self->client) )
 	{
 		if ( level.episode == EP_RADIOCITY && (self->gender == GENDER_MALE || self->gender == GENDER_FEMALE) )//FREDZ EPISODE problem
@@ -221,6 +224,9 @@ void Voice_Specific( edict_t *self, edict_t *other, voice_table_t *voice_table, 
 
 	if (self->health <= 0)
 		return;
+
+	if (!other)
+		return; //hypov8 bugfix
 
 	if (!(self->client))
 	{

@@ -115,7 +115,7 @@ void MatchSetup () // Places the server in prematch mode
 	}
 }
 */
-void ResetServer () // completely resets the server including map
+qboolean ResetServer(qboolean ifneeded) // completely resets the server including map
 {
 	char command[64];
 
@@ -130,6 +130,17 @@ void ResetServer () // completely resets the server including map
 	if (default_wavetype[0])
 	    gi.cvar_set("wavetype",default_wavetype);	//only apply if keyword exists
 	gi.cvar_set("anti_spawncamp", "1");//FREDZ
+
+	// these do
+	if (ifneeded
+		//&& !(default_teamplay[0] && strcmp(teamplay->string, default_teamplay))
+		&& !(default_dm_realmode[0] && strcmp(dm_realmode->string, default_dm_realmode)))
+		return false;
+
+	/*if (default_teamplay[0])
+		gi.cvar_set("teamplay", default_teamplay);*/
+	if (default_dm_realmode[0])
+		gi.cvar_set("dm_realmode", default_dm_realmode);
 #ifndef HYPODEBUG
 	gi.cvar_set("cheats","0");
 #endif
@@ -138,6 +149,7 @@ void ResetServer () // completely resets the server including map
 	else
 		Com_sprintf (command, sizeof(command), "map \"%s\"\n", default_map);
 	gi.AddCommandString (command);
+	return true;
 }
 
 //int team_startcash[2]={0,0};
@@ -207,7 +219,6 @@ void SpawnPlayer () // Here I spawn players - 1 per server frame in hopes of red
                 self->health = 0;
                 meansOfDeath = MOD_RESTART;
                 team1 = true;
-                self->client->pers.spectator = PLAYING;
                 ClientBeginDeathmatch( self );
                 self->client->resp.is_spawn = true;
                 self->client->pers.player_dead = FALSE;//FREDZ
@@ -455,7 +466,6 @@ int waveGiveCash(int type)
 void GameEND ()//FREDZ
 {
 	level.modeset = WAVE_IDLE; //dose not matter what it is!!
-	//cast_TF_checkEnemyState(); //set me free!!
 	cast_TF_free(); //set me free!!
 
     if (!allow_map_voting)
@@ -470,8 +480,7 @@ void WaveEnd () //hypov8 end of the match
 	int     count_players = 0;
 
     level.waveNum++;
-	level.modeset = WAVE_END;
-	//cast_TF_checkEnemyState(); //set me free!!
+	level.modeset = WAVE_BUYZONE;
 	cast_TF_free(); //set me free!!
 
 	for_each_player(self,i)
@@ -511,7 +520,6 @@ void WaveEnd () //hypov8 end of the match
 
 void WaveBuy()  // start buy zone
 {
-	level.player_num = 0;
 	level.modeset = WAVE_BUYZONE;
 	level.startframe = level.framenum;
 	gi.bprintf (PRINT_HIGH,"Buy zone for wave %i will end in 60 seconds.\n", level.waveNum+1);
@@ -535,7 +543,6 @@ void WaveStart_Countdown()  // start the match
 
 	//free 3 pawnOmatic guys
 	cast_pawn_o_matic_free();
-	level.player_num = 0;
 	level.modeset = WAVE_START;
 	level.startframe = level.framenum;
 	gi.bprintf (PRINT_HIGH,"Wave %i will start in 15 seconds.\n", level.waveNum + 1);
@@ -568,7 +575,7 @@ void WaveIdle()
 	}
 
 	if ((count_players_inserver == 0) && (level.framenum > 12000))
-		ResetServer ();
+		ResetServer (false);
 
 	if (count_players)
 	{
@@ -715,17 +722,18 @@ int CheckEndWave_GameType()
 	return 0;
 }
 
-void CheckEndWave() //add timelimit
+qboolean CheckEndWave() //add timelimit
 {
-	int isEndGame = 0;
-
 	//check for level cleared
-	if (cast_TF_checkEnemyState() <= 0)
+	cast_TF_checkEnemyState();
+
+	if ( level.currWave_castCount <= 0)
 	{
 		if (!CheckEndWave_GameType())
 		{
 			gi.bprintf(PRINT_HIGH, "Wave %i ended.\n", level.waveNum + 1);
 			WaveEnd();
+			return true;
 		}
 		else
 		{
@@ -745,41 +753,12 @@ void CheckEndWave() //add timelimit
 			gi.dprintf("Wave Limit hit\n");
 
 			GameEND();
+			return true;
 		}
 	}
-
+	return false;
 }
 
-void CheckEndGame ()//FREDZ only starts if people have joined
-{
-    edict_t *self;
-    int		i;
-    int     count_players = 0;
-    int     count_players_inserver = 0;
-
-    for_each_player (self,i)
-    {
-        if (self->client->pers.spectator == PLAYING)
-			count_players++;
-
- /*       if (self->client->pers.spectator == PLAYER_READY)//Todo
-        {
-            gi.cprintf (self, PRINT_HIGH, "You need to wait until wave %i ended.\n", level.waveNum + 1);
-        }*/
-
-        count_players_inserver++;
-    }
-
-	if (count_players_inserver == 0)
-		ResetServer ();
-
-	if (!count_players)
-	{
-		gi.bprintf(PRINT_HIGH, "No players currently playing.\n");
-		GameEND ();
-		return;
-	}
-}
 //void getTeamTags();
 /*
 void CheckEndMatch () // check if time,frag,cash limits have been reached in a match
@@ -841,23 +820,48 @@ void CheckEndMatch () // check if time,frag,cash limits have been reached in a m
 */
 void CheckEndVoteTime () // check the timelimit for voting next level/start next map
 {
-	int		i,count[9];
+	int		i,count=0, votes[9];
 	edict_t *player;
 	char	command[64];
 	int		wining_map;
 
+	memset (&votes, 0, sizeof(votes));
+	for_each_player(player,i)
+	{
+		count++;
+		votes[player->vote]++;
+	}
+
+#if 1 // mm 2.0
+	if (!count && level.framenum > (level.lastactive + 30))
+	{
+		if (ResetServer(true))
+			return;
+		if (wait_for_players)
+		{
+			level.startframe = level.framenum;
+			level.player_num = 0;
+			/*if (team_cash[1] || team_cash[2])
+			{
+				team_cash[2] = team_cash[1] = 0;
+				UpdateScore();
+			}*/
+			level.lastactive = -1;
+			gi.dprintf("Waiting for players\n");
+			//UpdateTime();
+			if (kpded2) // enable kpded2's idle mode for reduced CPU usage while waiting for players (automatically disabled when players join)
+				gi.cvar_forceset("g_idle", "1");
+		}
+	}
+#endif
+
 	if (level.framenum > (level.startframe + 270)) // MH: changed voting time to 27s (music duration)
 	{
-		memset (&count, 0, sizeof(count));
-		for_each_player(player,i)
-		{
-			count[player->vote]++;
-		}
 		wining_map = 1;
 		for (i = 2;i < 9 ; i++)
 		{
 			// MH: removed rank counting
-			if (count[i] > count[wining_map])
+			if (votes[i] > votes[wining_map])
 				wining_map = i;
 		}
 		// MH: not writing maplist (no rank to update)

@@ -9,7 +9,7 @@
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
 void cast_TF_spawn();
-int currWave_castCount = 0; //enemy currently on map
+//int currWave_castCount = 0; //enemy currently on map
 static int currWave_plysCount = 0; //players
 static int currWave_length = 0; //long, med, short
 static int currWave_castMax = 0; //max enemy allowed on map
@@ -25,12 +25,14 @@ void cast_pawn_o_matic_free()
 	int i;
 	for (i = 0; i < BUYGUY_COUNT; i++)
 	{
-		if (pawnGuy[i] && pawnGuy[i]->inuse && !Q_stricmp(pawnGuy[i]->classname, "cast_pawn_o_matic")) //just incase
+		if (pawnGuy[i] && pawnGuy[i]->inuse && pawnGuy[i]->svflags & SVF_MONSTER)
 		{
 			AI_UnloadCastMemory(pawnGuy[i]);
 			G_FreeEdict(pawnGuy[i]);
 		}
 	}
+	level.currWave_castCount = 0;
+	level.waveEnemyCount = 0;
 }
 
 void cast_pawn_o_matic_spawn ()
@@ -80,10 +82,15 @@ void cast_pawn_o_matic_spawn ()
 		pawnGuy[count] = spawn;
 
 		count++;
+		//add enemy to counter
+		level.currWave_castCount++;
+
 		//no more required
 		if (count == BUYGUY_COUNT)
 			return;
 	}
+
+
 }
 
 
@@ -1003,18 +1010,18 @@ void cast_boss_sounds()
 void cast_TF_free(void)
 {
 	int i, count = 0;
+	level.currWave_castCount;
 
 	for (i = 0; i < MAX_CHARACTERS; i++)
 	{
 		if (level.characters[i])
 		{
 			//free characters
-			if (!level.characters[i]->client)
+			if (level.characters[i]->svflags & SVF_MONSTER) //cast
 			{
 				AI_UnloadCastMemory(level.characters[i]);
 				G_FreeEdict(level.characters[i]);
 			}
-			level.characters[i] = NULL;
 		}
 	}
 
@@ -1026,39 +1033,37 @@ void cast_TF_free(void)
 									//its used in ClientDisconnect. posible bug if 2 clients leave at once
 
 	}*/
-
 	//not sure yet why server will get skin data incorrect
 	//this causes svc_muzzleflash3 issues (3 is char "count" of skin "001")
 	//some times its sent in packet. some times its not.
 
-	currWave_castCount = 0; //reset spawned cast count
+
+	if (level.currWave_castCount)
+		level.currWave_castCount = 0; //reset spawned cast count
 }
 
 //check if enemy has died. add if required
-int cast_TF_checkEnemyState()
+void cast_TF_checkEnemyState()
 {
 	int i, count = 0;
 
 	for (i = 0; i < MAX_CHARACTERS; i++)
 	{
 		if (level.characters[i])
-		{
-			if ((level.characters[i]->inuse) && (level.characters[i]->svflags & SVF_MONSTER)) //!level.characters[i]->client)
+		{	
+			if (level.characters[i]->svflags & SVF_MONSTER) //cast
 			{
-				//active cast
-				if (level.characters[i]->health > 0)
-					count++;
-
-				//dead?
-				if (level.characters[i]->health <= 0
-					|| level.characters[i]->deadflag == DEAD_DEAD
-					|| level.characters[i]->s.origin[2] < -4096 //fallen in void!!!
+				if (level.characters[i]->inuse == 0 ||
+					level.characters[i]->health <= 0 ||
+					level.characters[i]->deadflag == DEAD_DEAD ||
+					level.characters[i]->s.origin[2] < -4096 //fallen in void!!!
 					)
+
 				{
 					//check if boss died
 					if (level.waveNum == currWave_length && boss_entityID && level.characters[i] == boss_entityID)
 					{
-						currWave_castCount = 1;
+						level.currWave_castCount = 1;
 						level.num_characters = 1;
 						level.waveEnemyCount = 1;
 					}
@@ -1067,8 +1072,21 @@ int cast_TF_checkEnemyState()
 					level.characters[i]->character_index = 0;
 					level.characters[i] = NULL;
 					level.num_characters--;
-					currWave_castCount--;
+					level.currWave_castCount--;
 					level.waveEnemyCount--;
+				}
+				else
+					count++; //count current cast
+
+			}
+			else //human
+			{
+				if (level.characters[i]->inuse == 0)
+				{
+					//free clients
+					level.characters[i]->character_index = 0;
+					level.characters[i] = NULL;
+					level.num_characters--;
 				}
 			}
 		}
@@ -1081,19 +1099,19 @@ int cast_TF_checkEnemyState()
 		if (boss_called_help == 0 && boss_entityID && boss_entityID->health < (boss_maxHP *.75))
 		{
 			boss_called_help = 1;
-			level.waveEnemyCount = currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
+			level.waveEnemyCount = level.currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
 			cast_boss_sounds();
 		}
 		else if (boss_called_help == 1 && boss_entityID && boss_entityID->health < (boss_maxHP *.5))
 		{
 			boss_called_help = 2;
-			level.waveEnemyCount = currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
+			level.waveEnemyCount = level.currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
 			cast_boss_sounds();
 		}
 		else if (boss_called_help == 2 && boss_entityID && boss_entityID->health < (boss_maxHP *.25))
 		{
 			boss_called_help = 3;
-			level.waveEnemyCount = currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
+			level.waveEnemyCount = level.currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
 			cast_boss_sounds();
 		}
 	}
@@ -1103,7 +1121,7 @@ int cast_TF_checkEnemyState()
 		cast_TF_spawn();
 
 
-	return currWave_castCount;
+	//return level.currWave_castCount;
 }
 
 // find the closest player to pick on
@@ -1377,7 +1395,7 @@ void cast_TF_spawn(void)
 	edict_t *spawn, *spawnspot;
 
 	{
-		if (currWave_castCount >= MAX_CHARACTERS)
+		if (level.currWave_castCount >= MAX_CHARACTERS)
 			return;
 
 		spawn = G_Spawn();
@@ -1430,7 +1448,7 @@ void cast_TF_spawn(void)
 		cast_TF_setEnemyPlayer(spawn);
 
 		//add enemy to counter
-		currWave_castCount++;
+		level.currWave_castCount++;
 	}
 }
 
