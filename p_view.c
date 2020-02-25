@@ -58,7 +58,7 @@ void P_DamageFeedback (edict_t *player)
 	static	vec3_t	acolor = {1.0, 1.0, 1.0};
 	static	vec3_t	bcolor = {1.0, 0.0, 0.0};
 	static	vec3_t	fcolor = {0.9, 0.6, 0.0};
-	static	vec3_t	icolor = {0.0, 0.9, 0.3};//FREDZ perfect color (MH: separated from fire/fcolor)
+	static	vec3_t	icolor = {0.9, 0.6, 0.0};//FREDZ normal color for flamethrower
 
 	client = player->client;
 
@@ -1942,7 +1942,7 @@ updatescore:
 //		char buf[48];//Monkey Mod 1.52
 		char buf[52];//FREDZ fix
 		ent->client->resp.checktex=level.framenum+120+(rand()&7); // MH: randomize
-#if 1 //hypov8 
+#if 1 //hypov8
 		sprintf(buf,"%s $gl_picmip $gl_maxtexsize\n",locktex); // let clients disable this visual effect
 #else
 		sprintf(buf,"%s $gl_picmip $gl_maxtexsize $gl_polyblend\n",locktex);

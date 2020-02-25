@@ -3615,7 +3615,10 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		client->ps.pmove.pm_type = PM_SPECTATOR;
 
     else if (ent->movetype == MOVETYPE_SPECTATOR)//FREDZ example some kind spec without noclip, just anoying sounds and movement abit weird.
-		client->ps.pmove.pm_type = PM_NORMAL_WITH_JETPACK;
+    {
+        client->ps.pmove.pm_type = PM_NORMAL_WITH_JETPACK;
+    }
+
 
 	// Ridah, Hovercars
 	else if (ent->flags & FL_HOVERCAR)
@@ -3774,7 +3777,7 @@ chasing:
 	// Ridah, Hovercars
 	if (!(ent->flags & (FL_HOVERCAR | FL_HOVERCAR_GROUND)))
 	// done.
-	if (ent->groundentity && !pm.groundentity && (pm.cmd.upmove >= 10) && (pm.waterlevel == 0))
+	if ((ent->groundentity && !pm.groundentity && (pm.cmd.upmove >= 10) && (pm.waterlevel == 0)) && !PM_NORMAL_WITH_JETPACK)
 	{
 		int rval;
 		rval = rand()%100;

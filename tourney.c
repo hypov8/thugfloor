@@ -1,10 +1,10 @@
 #include "g_local.h"
 #include "g_cast_spawn.h"
 
-#ifdef BETADEBUG
+//#ifdef BETADEBUG
 //hypov8 this should be "project" build dependent release/dev
 #define DIRECTSTART 1//FREDZ put on 0 for normal game
-#endif
+//#endif
 
 int	 vote_set[9];        // stores votes for next map
 
@@ -761,6 +761,11 @@ void CheckEndGame ()//FREDZ only starts if people have joined
     {
         if (self->client->pers.spectator == PLAYING)
 			count_players++;
+
+ /*       if (self->client->pers.spectator == PLAYER_READY)//Todo
+        {
+            gi.cprintf (self, PRINT_HIGH, "You need to wait until wave %i ended.\n", level.waveNum + 1);
+        }*/
 
         count_players_inserver++;
     }

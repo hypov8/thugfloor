@@ -1,6 +1,8 @@
 #include "g_local.h"
 #include "g_cast_spawn.h"
 
+#define HYPODEBUG 1
+
 #define ARYSIZE(x) (sizeof(x) / sizeof(x[0])) //get dynamic size of array
 
 #define BUYGUY_COUNT 3 //3 pawnOmatic guys?
@@ -1021,7 +1023,7 @@ void cast_TF_free(void)
 	{
 		//need a way to test if the exist
 		gi.configstring(i, "");		//hypov8 sending more then 1 of these in a row crash kp.
-									//its used in ClientDisconnect. posible bug if 2 clients leave at once 
+									//its used in ClientDisconnect. posible bug if 2 clients leave at once
 
 	}*/
 
@@ -1040,7 +1042,7 @@ int cast_TF_checkEnemyState()
 	for (i = 0; i < MAX_CHARACTERS; i++)
 	{
 		if (level.characters[i])
-		{		
+		{
 			if ((level.characters[i]->inuse) && (level.characters[i]->svflags & SVF_MONSTER)) //!level.characters[i]->client)
 			{
 				//active cast

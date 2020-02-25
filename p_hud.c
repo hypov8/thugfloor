@@ -344,10 +344,10 @@ void SpectatorScoreboardMessage (edict_t *ent)
 			tag = "096";
 		else if (player->client->pers.admin > NOT_ADMIN)
 			tag = "779";
-		else if (player->client->pers.player_dead == TRUE)
+/*		else if (player->client->pers.player_dead == TRUE)
 			tag = "900";
 		else if (player->client->pers.spectator == PLAYER_READY)
-			tag = "333";//FREDZ just joined, grey to black
+			tag = "333";//FREDZ just joined, grey to black*/
 		else if (player == ent)
 			tag = "990";
 		else
@@ -758,6 +758,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	int		tmax;
 //    vec3_t	vs;
     float	pldist;
+    char    status[10];
 
 	string[0] = 0;
 	stringlength = 0;
@@ -772,6 +773,10 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		cl_ent = g_edicts + 1 + i;
 		if (!cl_ent->inuse || (cl_ent->client->pers.spectator == SPECTATING))// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
 			continue;
+
+//		pldist = VectorDistance(ent->s.origin, cl_ent->s.origin);
+//		if (pldist > 9999.0f)
+//            pldist = 0;
 
  //       VectorSubtract (ent->s.origin, cl_ent->s.origin, vs);
 //		pldist = VectorLength (vs);//FREDZ todo need fix
@@ -795,9 +800,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		sorted[j] = i;
 		sortedscores[j] = score;
 		total++;
-
-	//	if (pldist > 9999)
-    //        break;
+		pldist = VectorDistance(ent->s.origin, cl_ent->s.origin);
 	}
 
 	realtotal = total;
@@ -827,19 +830,19 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 				-36*10 - 10, -60+-21 );
 		else*/
 			Com_sprintf (entry, sizeof(entry),
-				"xr %i yv %i dmstr 663 \"NAME         ping time  hits\" ",
-				-36*10 - 10, -60+-21 );
+				"xr %i yv %i dmstr 663 \"Status NAME         ping time  hits\" ",
+				-56*10 - 10, -60+-21 );//56 was 36
 	}
     else if (ent->client->showscores==SCOREBOARD2) //FREDZ
     {
         Com_sprintf (entry, sizeof(entry),
         "xr %i yv %i dmstr 663 \"NAME         health  cash  range\" ",
-            -36*10 - 10, -60+-21 );
+            -56*10 - 10, -60+-21 );//56 was 36
 	}
 	else
 		Com_sprintf (entry, sizeof(entry),
 			"xr %i yv %i dmstr 663 \"NAME        deaths  acc  fav\" ",
-			-36*10 - 10, -60+-21 );
+			-56*10 - 10, -60+-21 );//56 was 36
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
@@ -875,7 +878,10 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		else if (cl_ent->client->pers.admin > NOT_ADMIN)
 			tag = "779";
 		else
-			tag = "999";	// fullbright
+        {
+            tag = "999";	// fullbright
+        }
+
 
 		if (ent->client->showscores == SCOREBOARD)
 		{
@@ -899,7 +905,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 				else*/
 					Com_sprintf (entry, sizeof(entry),
 						"yv %i ds %s %i %i %i %i ",
-						-60+i*17, tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );
+						-60+i*17, tag, status, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );
 			}
 		}
         else if (ent->client->showscores==SCOREBOARD2) //FREDZ

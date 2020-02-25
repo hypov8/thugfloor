@@ -14,9 +14,35 @@
 
 -add new votingboard
 
--fix button, map to open door, map kpdm2 it's not G_TouchTriggers in p_client.c (should be fixed)
+-pickup youre own weapon up only, if you died or keep last weapon with what you died.
 
--if afk in buyzone go to spec (should be fixed)
+-keep money if you died, saving up money?
 
--pickup youre own weapon up only, if you died
+-show new players, how long they need to wait
+
+-cl_parsemuzzleflash 3 error somethimes when connect
+
+-somthimes 0 enemys to kill (fixed?)
+
+-nav data need to be off when it already got one
+
+-fix flametrhower color (should be fixed)
+
+
+killa:
+1. if you elect admin the buy guy wont show and u get stuck on a wave (i don't find this bug)
+2. there is a 100% cpu that crashes the server
+
+
+kila suggestions:
+1. a message informing u that you start game at next wave while in spec
+2.increase spawn rate of npc at first wave
+3. 2x killing enemy should result in cash being distributed percentage of damage given to enemy
+2x players
+3. boss need to be hightlighted more obvious
+4. radar disapears on occasions
+5.when a player dies, enemy reduce in size accordingly
+the first wave deff takes too long
+maybe half the enemy and give players 100 bucks at start?
+and later waves more enemy but less health for enemy
 

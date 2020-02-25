@@ -41,7 +41,8 @@ struct MENU_ITEM_NAMES
 //	{ {"Small Health", "Large Health", "Adrenaline"}, {25, 50, 100} },
 	{ {"Small Health", "Large Health"}, {25, 50} },
 	//Armor
-	{ {"Helmet Armor", "Jacket Armor", "Legs Armor", "Helmet Armor Heavy", "Jacket Armor Heavy", "Legs Armor Heavy"}, {100, 150, 100, 200, 300, 200} }
+//	{ {"Helmet Armor", "Jacket Armor", "Legs Armor", "Helmet Armor Heavy", "Jacket Armor Heavy", "Legs Armor Heavy"}, {100, 150, 100, 200, 300, 200} }//Originale pawn o matic
+	{ {"Helmet Armor", "Jacket Armor", "Legs Armor", "Helmet Armor Heavy", "Jacket Armor Heavy", "Legs Armor Heavy"}, {50, 75, 100, 100, 150, 100} }//Prices where to high
 };
 
 //FREDZ For scroll menu init
@@ -95,20 +96,20 @@ void ScrollMenuMessage (edict_t *ent)
 		{
 			if (i == ent->current_menu_left && !ent->current_menu_side)
 			{
-				lefttag = "999";//color
+				lefttag = "999";//color select
 			}
 			else
 			{
-				lefttag = "444";
+				lefttag = "764";
 			}
 
 			if (i == ent->current_menu_right && ent->current_menu_side)
 			{
-				righttag = "999";//color
+				righttag = "999";//color select
 			}
 			else
 			{
-				righttag = "444";
+				righttag = "764";
 			}
 
 
@@ -130,7 +131,7 @@ void ScrollMenuMessage (edict_t *ent)
 				strcpy( rightname, "");
 			}
 
-			Com_sprintf(entry, sizeof(entry), "xl 220 yv %i dmstr %s \"%s\" xl 350 dmstr %s \"%s\" ", yofs-109, lefttag, leftname, righttag, rightname);
+			Com_sprintf(entry, sizeof(entry), "xl 410 yv %i dmstr %s \"%s\" xl 540 dmstr %s \"%s\" ", yofs+40, lefttag, leftname, righttag, rightname);
 			j = strlen(entry);
 			strcpy (string + stringlength, entry);
 			stringlength += j;
