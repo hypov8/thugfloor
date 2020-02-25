@@ -835,6 +835,8 @@ void cast_think (edict_t *self)
 		Killed (self, self, self, 10, self->s.origin, PART_BODY, 0);
 	}
 */
+	if (antilag->value && self->solid != SOLID_NOT)
+		G_StoreHistory(self); //hypov8 store bots position for next frame trace
 }
 
 
@@ -1073,6 +1075,9 @@ qboolean cast_start (edict_t *self)
 	self->active_node_data = level.node_data;
 	self->nav_data.cache_node = -1;
 // END: Xatrix/Ridah/Navigator: init current node
+
+	if (antilag->value && self->solid != SOLID_NOT)
+		G_ResetHistory(self); //hypov8 reset cast for antilag
 
 	return true;
 }

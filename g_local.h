@@ -1710,10 +1710,10 @@ struct gclient_s
 	// MH: disable player movement
 	qboolean	nomove;
 
-	// MH: antilag stuff
-	int			historyHead;	// the head of the history queue
+	// MH: antilag stuff //hypov8 moved to edict for cast
+	/*int			historyHead;	// the head of the history queue
 	clientHistory_t	history[NUM_CLIENT_HISTORY]; // the history queue
-	clientHistory_t	saved;		// the client's saved position
+	clientHistory_t	saved;		// the client's saved position*/
 
 	qboolean	showscrollmenu;		//FREDZ set layout stat
 
@@ -1727,6 +1727,15 @@ struct gclient_s
 
 
 };
+
+typedef struct
+{
+	// MH: antilag stuff
+	int			historyHead;	// the head of the history queue
+	clientHistory_t	history[NUM_CLIENT_HISTORY]; // the history queue
+	clientHistory_t	saved;		// the client's saved position
+
+}antilag_t;
 
 
 // MORAL values
@@ -2112,7 +2121,13 @@ struct edict_s
 
 	//hypov8 only route on first player
 	int nav_TF_isFirstPayer; //nav first player
+
+	antilag_t antilag;
 };
+
+
+
+
 
 // RAFAEL
 #define ACTIVATE_GENERAL  1

@@ -1,7 +1,10 @@
 #include "g_local.h"
 #include "g_cast_spawn.h"
 
+#ifdef BETADEBUG
+//hypov8 this should be "project" build dependent release/dev
 #define DIRECTSTART 1//FREDZ put on 0 for normal game
+#endif
 
 int	 vote_set[9];        // stores votes for next map
 
@@ -719,17 +722,28 @@ void CheckEndWave() //add timelimit
 	//check for level cleared
 	if (cast_TF_checkEnemyState() <= 0)
 	{
-		gi.bprintf(PRINT_HIGH, "Wave %i ended.\n", level.waveNum+1);
-
 		if (!CheckEndWave_GameType())
+		{
+			gi.bprintf(PRINT_HIGH, "Wave %i ended.\n", level.waveNum + 1);
 			WaveEnd();
+		}
 		else
 		{
-			gi.bprintf(PRINT_HIGH,
-				"===========================================================\n"
-				"The Boss is now dead.. It's time for a new Kingpin..\n"
-				"                       YOU!!!!\n"
-				"===========================================================\n"); //todo: better name then players? cutsceen..
+			edict_t *self;
+			int		i;
+
+			for_each_player(self, i)
+			{
+				gi.cprintf(self, PRINT_HIGH,
+					"===========================================================\n"
+					"The Boss is now dead.. It's time for a new Kingpin..\n"
+					"                       YOU!!!!\n"
+					"===========================================================\n"); //todo: better name then players? cutsceen..
+			}
+
+			//print only this to ded console
+			gi.dprintf("Wave Limit hit\n");
+
 			GameEND();
 		}
 	}

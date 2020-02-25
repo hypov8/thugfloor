@@ -5785,17 +5785,25 @@ void ClientCommand (edict_t *ent)
 	}
 
 
-	if (!strcmp(cmd,locktex)) {
+	if (!strcmp(cmd,locktex)) 
+	{
+#if 1 //hypov8 let clients disable this visual effect
+        char *cmd2=gi.argv(2);
+		cmd=gi.argv(1);
+		if (gi.argc() != 3 || atof(cmd)!=0.0f || atof(cmd2)<16.0f) { // MH: added argc check and removed gl_polyblend check
+			KICKENT(ent,"%s is being kicked for using a texture cheat!\n");
+		}
+#else
        char *cmd3=gi.argv(3);
         char *cmd2=gi.argv(2);
 		cmd=gi.argv(1);
-
 
 		if (gi.argc() != 4 || atof(cmd)!=0.0f || atof(cmd2)<16.0f) { // MH: added argc check and removed gl_polyblend check
 			KICKENT(ent,"%s is being kicked for using a texture cheat!\n");
 		}
 		// MH: check gl_polyblend separately
-		else if (atof(cmd3)==0.0f) {
+		else if (atof(cmd3)==0.0f) 
+		{
             if (kick_flamehack->value || (ent->client->pers.spectator==SPECTATING))// && no_spec->value))  // MH: removed modeset check
             {
 				// MH: automatically change gl_polyblend from 0 to 2 once and only kick if they reset it
@@ -5813,7 +5821,8 @@ void ClientCommand (edict_t *ent)
             }
 		}
 		else
-			ent->client->pers.polyblender = (atof(cmd3) == 2);
+			ent->client->pers.polyblender = (atof(cmd3) == 2);*/
+#endif
 		return;
 	}
 

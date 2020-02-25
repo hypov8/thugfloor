@@ -1942,7 +1942,11 @@ updatescore:
 //		char buf[48];//Monkey Mod 1.52
 		char buf[52];//FREDZ fix
 		ent->client->resp.checktex=level.framenum+120+(rand()&7); // MH: randomize
+#if 1 //hypov8 
+		sprintf(buf,"%s $gl_picmip $gl_maxtexsize\n",locktex); // let clients disable this visual effect
+#else
 		sprintf(buf,"%s $gl_picmip $gl_maxtexsize $gl_polyblend\n",locktex);
+#endif
 		gi.WriteByte(13);
 		gi.WriteString(buf);
 		gi.unicast(ent, true);

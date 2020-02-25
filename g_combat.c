@@ -307,11 +307,11 @@ void SpawnDamage (edict_t *self, int type, vec3_t origin, vec3_t normal, int dam
 		return;
 
 	// MH: make sure the damage shows up where the client currently is when antilag is in effect
-	if (self->client && self->client->saved.time)
+	if (self->client && self->antilag.saved.time)
 	{
-		origin[0] += self->client->saved.origin[0] - self->s.origin[0];
-		origin[1] += self->client->saved.origin[1] - self->s.origin[1];
-		origin[2] += self->client->saved.origin[2] - self->s.origin[2];
+		origin[0] += self->antilag.saved.origin[0] - self->s.origin[0];
+		origin[1] += self->antilag.saved.origin[1] - self->s.origin[1];
+		origin[2] += self->antilag.saved.origin[2] - self->s.origin[2];
 	}
 
 	if (damage > 127)
