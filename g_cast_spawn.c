@@ -5,6 +5,7 @@
 
 #define ARYSIZE(x) (sizeof(x) / sizeof(x[0])) //get dynamic size of array
 
+
 #define BUYGUY_COUNT 3 //3 pawnOmatic guys?
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
@@ -19,7 +20,85 @@ edict_t *boss_entityID = NULL;
 int boss_maxHP;
 static int boss_called_help = 0; //1 = melee, 2= pistol, 3= shotty
 
+#if 0
+void cast_pawn_o_matic_free()
+{
+	int i;
+	for (i = 0; i < 1; i++)
+	{
+		if (pawnGuy[i] && pawnGuy[i]->inuse && pawnGuy[i]->svflags & SVF_MONSTER)
+		{
+			AI_UnloadCastMemory(pawnGuy[i]);
+			G_FreeEdict(pawnGuy[i]);
+		}
+	}
+	level.currWave_castCount = 0;
+	level.waveEnemyCount = 0;
+}
+void cast_pawn_o_matic_spawn ()//Randoms spawn testing
+{
+	edict_t *spawn,*spawnspot, *player;
+	int count = 0, i;
 
+
+	for_each_player(player, i)
+	{
+		if (player->client->pers.spectator != SPECTATING)
+		{
+			AddCharacterToGame(player); //add player to bot target list
+		}
+	}
+
+//	for (i=0 ; i<globals.num_edicts ; i++)
+	{
+/*		spawnspot = g_edicts + i;
+		if (!spawnspot->inuse)
+			continue;
+		if (!spawnspot->classname)
+			continue;
+		if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))//todo Should add special one for new maps or spawn on cast_pawn_o_matic spot
+			continue;*/
+
+		spawn = G_Spawn();
+		spawnspot = cast_SelectRandomDeathmatchSpawnPoint(spawn);
+		VectorCopy(spawnspot->s.angles, spawn->s.angles);
+		VectorCopy(spawnspot->s.origin, spawn->s.origin);
+		spawn->s.origin[2] += 1;
+
+		spawn->classname = "cast_pawn_o_matic";
+		spawn->cast_group = 1;
+		spawn->moral = 1;
+		gi.linkentity (spawn);
+
+		if (level.num_characters == MAX_CHARACTERS)
+		{
+			gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
+			G_FreeEdict(spawn);
+			return ;
+		}
+
+/*		{//Todo
+		    spawn->s.modelindex = 255;
+		    VectorCopy(player->s.origin, spawn->s.origin );
+		    gi.linkentity(spawn);
+		}*/
+
+		ED_CallSpawn(spawn);
+
+
+		//copy entity our list so we can free later
+		pawnGuy[count] = spawn;
+
+		count++;
+		//add enemy to counter
+		level.currWave_castCount++;
+
+		//no more required
+		if (count == 1)
+			return;
+	}
+}
+#else
 void cast_pawn_o_matic_free()
 {
 	int i;
@@ -34,7 +113,6 @@ void cast_pawn_o_matic_free()
 	level.currWave_castCount = 0;
 	level.waveEnemyCount = 0;
 }
-
 void cast_pawn_o_matic_spawn ()
 {
 	edict_t *spawn,*spawnspot, *player;
@@ -89,10 +167,8 @@ void cast_pawn_o_matic_spawn ()
 		if (count == BUYGUY_COUNT)
 			return;
 	}
-
-
 }
-
+#endif // 1
 
 //apply skins.. consider skill
 void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int skinCount)
@@ -1050,7 +1126,7 @@ void cast_TF_checkEnemyState()
 	for (i = 0; i < MAX_CHARACTERS; i++)
 	{
 		if (level.characters[i])
-		{	
+		{
 			if (level.characters[i]->svflags & SVF_MONSTER) //cast
 			{
 				if (level.characters[i]->inuse == 0 ||

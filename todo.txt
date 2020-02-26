@@ -6,7 +6,7 @@
 
 -scoreboard can be done better
 
--Does spec need fix? solid/noclip  //hypo yes.. can we use another spec mode and change gravity? sounds good :)
+-Does spec need fix? solid/noclip  (should be fixed?)
 
 -max players allowed to enter a wave (need testing)
 
@@ -16,7 +16,7 @@
 
 -pickup youre own weapon up only, if you died or keep last weapon with what you died.
 
--keep money if you died, saving up money?
+-keep money if you died, saving up money? (need to look into kf)
 
 -show new players, how long they need to wait
 
