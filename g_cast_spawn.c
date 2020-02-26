@@ -1520,6 +1520,8 @@ void cast_TF_spawn(void)
 		if (spawn->health < 10)
             spawn->health = 10;
 
+		spawn->max_health = spawn->health;
+
 		//set what player to attack
 		cast_TF_setEnemyPlayer(spawn);
 

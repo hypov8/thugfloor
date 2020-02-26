@@ -984,6 +984,9 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 				Voice_Random(attacker, self, f_fightsounds, F_NUM_FIGHTING);
 		}
 
+		//TF: store current wep
+		self->client->pers.weaponStore = self->client->pers.weapon;
+
 		// drop cash if we have some
 		// MH: copied from MM2
 /*		if ((int)teamplay->value == 1)
@@ -1128,6 +1131,20 @@ void InitClientPersistant (gclient_t *client)
 			ammo = FindItem (item->ammo);
 
 			AutoLoadWeapon( client, item, ammo );
+
+			//give weapon back to client. minimal ammo and no mods etc..
+			//should this be the first selected wep?
+			if (client->pers.weaponStore)
+			{
+				item = client->pers.weaponStore;
+				client->pers.inventory[ITEM_INDEX(item)] = 1;
+				if (item->ammo)
+				{
+					ammo = FindItem (item->ammo);
+					client->pers.inventory[ITEM_INDEX(ammo)] = ammo->quantity;
+				}
+			}
+
 	}
 	else	// start holstered in single player
 	{
@@ -1879,7 +1896,6 @@ void PutClientInServer (edict_t *ent)
 	if (deathmatch->value)
 	{
 		char		userinfo[MAX_INFO_STRING];
-
 		resp = client->resp;
 		memcpy (userinfo, client->pers.userinfo, sizeof(userinfo));
 		InitClientPersistant (client);
@@ -1959,7 +1975,8 @@ void PutClientInServer (edict_t *ent)
 		if (ent->client->pers.spectator == PLAYING) //player died mid wave
 		{
 			ent->client->pers.player_dead = TRUE;//FREDZ
-			ent->client->pers.spectator = PLAYER_READY;
+			ent->client->pers.spectator = PLAYER_READY;		
+			ent->client->pers.player_died = true;//reset player died mid wave. deny cash
 		}
 //		ent->movetype = MOVETYPE_NOCLIP;
         ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
@@ -1975,6 +1992,7 @@ void PutClientInServer (edict_t *ent)
 		ent->movetype = MOVETYPE_WALK;
 		ent->solid = SOLID_BBOX;
 		ent->client->pers.player_dead = FALSE;//FREDZ
+		//ent->client->pers.weaponStore = NULL;
 		AddCharacterToGame(ent); //hypov8 add player to level.characters
 
 //		ent->svflags = SVF_DEADMONSTER;//FREDZ thugfloor should make transparant player from kitmod
@@ -2330,7 +2348,7 @@ deathmatch mode, so clear everything out before starting them.
   NOTE: called every level load/change in deathmatch
 =====================
 */
-extern void Teamplay_AutoJoinTeam( edict_t *self );
+//extern void Teamplay_AutoJoinTeam( edict_t *self );
 
 
 // Papa - Here is where I control how a player enters the game
@@ -2520,8 +2538,11 @@ void ClientBegin (edict_t *ent)
 		}
 	}
 
-	ent->client->pers.lastpacket = curtime; // Sys_Milliseconds(); // MH: update last packet time
+	ent->client->pers.lastpacket = curtime; // MH: update last packet time
 	ent->check_idle = level.framenum; // MH: init idle timer
+
+	//TF: reset cash on level begin
+	ent->client->pers.currentcash = 0; //waveGiveCash(1);
 
 	if (deathmatch->value)
 	{
@@ -3346,7 +3367,7 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 	//level.lastactive = level.framenum;
 #endif
 
-	ent->client->pers.lastpacket = curtime; // Sys_Milliseconds(); // MH: set last packet time
+	ent->client->pers.lastpacket = curtime; // MH: set last packet time
 
 	return true;
 }
@@ -4337,6 +4358,7 @@ void ClientBeginServerFrame (edict_t *ent)
 				ent->flags &= ~FL_GODMODE;
 				ent->health = 0;
 				meansOfDeath = MOD_RESTART;
+				//ent->client->pers.weaponStore = ent->client->pers.weapon;
 				ClientBeginDeathmatch( ent );
 				return;
 			}

@@ -923,10 +923,10 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 				-36*10 - 10, -60+-21 );
 		else*/
 			Com_sprintf (entry, sizeof(entry),
-				"xr %i yv %i dmstr 663 \"Stat NAME           ping time  hits\" ",
-				-56*10 - 10, -60+-21 );//56 was 36
-	}
-    else if (ent->client->showscores==SCOREBOARD2) //FREDZ
+				"xr %i yv %i dmstr 663 \"Stat NAME           ping time  hits\" ",	//hypov8 note: "xr" is X aligned to Right.
+				-56*10 - 10, -60+-21 );//56 was 36									//menu overlaps player display on low rez.
+	}																				//either move menu to right or use "xm" (X aligned Middle)
+    else if (ent->client->showscores==SCOREBOARD2) //FREDZ							//or you can test client rez if patched and move accorodingly
     {
         Com_sprintf (entry, sizeof(entry),
         "xr %i yv %i dmstr 663 \"NAME       health  cash  range\" ",

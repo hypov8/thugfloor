@@ -218,10 +218,12 @@ void SpawnPlayer () // Here I spawn players - 1 per server frame in hopes of red
                 self->flags &= ~FL_GODMODE;
                 self->health = 0;
                 meansOfDeath = MOD_RESTART;
+				self->client->pers.weaponStore = NULL;
                 team1 = true;
                 ClientBeginDeathmatch( self );
                 self->client->resp.is_spawn = true;
-                self->client->pers.player_dead = FALSE;//FREDZ
+                self->client->pers.player_dead = FALSE;//FREDZ												   
+				self->client->pers.player_died = 0;//reset player died mid wave. deny cash
                 break;
             }
 		}
@@ -306,7 +308,7 @@ void WaveStart () // Starts the match
 
 			//give cash to ppl entering a new game
 			if (level.waveNum == 0)
-				self->client->pers.currentcash = 150;
+				self->client->pers.currentcash = 150; //waveGiveCash(1);
 		}
 	}
 
@@ -492,8 +494,10 @@ void WaveEnd () //hypov8 end of the match
 		}
 
 		//give cash to ppl that survived the wave
-		if (self->client->pers.spectator == PLAYING)
+		if (self->client->pers.spectator == PLAYING && !self->client->pers.player_died)
 			self->client->pers.currentcash += waveGiveCash(1);
+		
+
 
 		//spawn players into buying time
 		if (self->client->pers.spectator == PLAYER_READY)
@@ -502,8 +506,11 @@ void WaveEnd () //hypov8 end of the match
             self->health = 0;
             meansOfDeath = MOD_RESTART;
             ClientBeginDeathmatch( self );
-			self->client->pers.currentcash = waveGiveCash(2); //dead!!
+			self->client->pers.currentcash += self->client->pers.player_died? 0 : waveGiveCash(2); //dead or spec
 		}
+
+		//reset player died mid wave. deny cash
+		self->client->pers.player_died = 0;
 	}
 
 	if (!count_players)
@@ -681,7 +688,7 @@ void CheckBuyWave ()
 	int      count_players = 0;
 
 #if HYPODEBUG
-	if (level.framenum >= level.startframe + 30)//3 seconds
+	if (level.framenum >= level.startframe + 100)//10 seconds
 #else
 	if (level.framenum >= level.startframe + 595)//60 seconds
 #endif
@@ -848,7 +855,7 @@ void CheckEndVoteTime () // check the timelimit for voting next level/start next
 			}*/
 			level.lastactive = -1;
 			gi.dprintf("Waiting for players\n");
-			//UpdateTime();
+			UpdateTime();
 			if (kpded2) // enable kpded2's idle mode for reduced CPU usage while waiting for players (automatically disabled when players join)
 				gi.cvar_forceset("g_idle", "1");
 		}
@@ -925,6 +932,34 @@ int	CheckPlayerBan (char *userinfo)
 
 	return false;
 }
+
+//mm 2.0
+void UpdateTime()
+{
+	char buf[32] = " ";
+	if (level.lastactive < 0)
+		strcpy(buf, "waiting");
+	else if (level.modeset == WAVE_START)
+	{
+		int t = ((150 - (level.framenum - level.startframe)) / 10);
+		sprintf(buf, "start in %d", t);
+	}
+	else if (level.modeset == PREGAME)
+	{
+		int t = ((300 - level.framenum) / 10);
+		sprintf(buf, "start in %d", t);
+	}
+	else if ( level.modeset == WAVE_ACTIVE)
+	{
+		sprintf(buf, "%i enemy left", level.waveEnemyCount);
+	}
+	else if (level.intermissiontime)
+		strcpy(buf, "intermission");
+	gi.cvar_set(TIMENAME, buf);
+}
+
+
+
 /*
 /////////////////////////////////////////////////////
 // snap - team tags

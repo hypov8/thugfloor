@@ -579,14 +579,13 @@ void CheckDMRules (void)
 		if (respawntime && !((level.framenum + 1 - level.startframe) % respawntime))
 		{
 			//spawn players into active wave
-			if (doot->client->pers.spectator == PLAYER_READY) //only respawn players that were in a wave
+			if (doot->client->pers.spectator == PLAYER_READY)
 			{
-				//doot->client->pers.spectator = PLAYING;
 				doot->flags &= ~FL_GODMODE;
 				doot->health = 0;
 				meansOfDeath = MOD_RESTART;
 				ClientBeginDeathmatch(doot);
-				doot->client->pers.currentcash = 0; // waveGiveCash(2); //dead!!
+				doot->client->pers.weaponStore = NULL;
 			}
 			respawn = true;
 		}
@@ -818,27 +817,19 @@ void G_RunFrame (void)
 	int		i;
 	edict_t	*ent;
 
-	//FREDZ remove??
-	// MH: wait for players before map starts
-	if (level.framenum == 50 && wait_for_players)
+	//mm 2.0
+	if (level.framenum == 50 && wait_for_players && !allow_map_voting && !level.lastactive)
 	{
-		for (i=0 ; i<maxclients->value; i++)
-		{
-			ent = g_edicts + 1 + i;
-			if (ent->inuse && ent->client && ent->client->pers.connected)
-				break;
-		}
-		if (i==maxclients->value)
-		{
-			cvar_t *timename = gi.cvar(TIMENAME, "", 0);
-			if (strcmp(timename->string, "waiting"))
-			{
-				gi.cvar_set(TIMENAME, "waiting");
-				gi.dprintf("Waiting for players\n");
-			}
-			goto uptime;
-		}
+		level.lastactive = -1;
+		gi.dprintf("Waiting for players\n");
+		UpdateTime();
+		if (kpded2) // enable kpded2's idle mode for reduced CPU usage while waiting for players (automatically disabled when players join)
+			gi.cvar_forceset("g_idle", "1");
 	}
+
+	// skip frame processing if the server is waiting for players
+	if (level.lastactive < 0)
+		goto uptime;
 
 	level.framenum++;
 	level.time = level.framenum*FRAMETIME;
@@ -865,7 +856,6 @@ void G_RunFrame (void)
 
 
 	// Process Generic Combat AI layer
-
 	AI_ProcessCombat ();
 
 
@@ -1028,12 +1018,9 @@ void G_RunFrame (void)
 
 		if (ent->svflags & SVF_MONSTER)
 		{
-//			float	alpha;
-
-
 			// Blood trail
 			// JOSEPH 24-JAN-99
-			if ((!ent->deadflag) && (ent->health < ent->max_health) && (!(ent->svflags & SVF_PROP))/*&& ((ent->healtimer&3) == 2)*/)
+			if ((!ent->deadflag) && (ent->health < (int)(ent->max_health*.25)) && (!(ent->svflags & SVF_PROP))/*&& ((ent->healtimer&3) == 2)*/)
 			// END JOSEPH
 			{
 				vec3_t	stop;
@@ -1238,32 +1225,36 @@ void G_RunFrame (void)
 	// build the playerstate_t structures for all players
 	ClientEndServerFrames ();
 
-uptime:
+	if (idle_client->value < 60)
+		gi.cvar_set("idle_client", "60");
+
 	// MH: new uptime code
 	if (!(level.framenum % 10))
 	{
-		char buf[32];
-		int secs = (int)time(NULL) - starttime;
-		int mins = secs / 60;
-		int hours = mins / 60;
-		int days = hours / 24;
-		if (days)
-			sprintf(buf, "%dd %dh %dm", days, hours % 24, mins % 60);
-		else if (hours)
-			sprintf(buf, "%dh %dm", hours, mins % 60);
-		else if (mins)
-			sprintf(buf, "%dm", mins);
-		else
-			sprintf(buf, "%ds", secs);
-		gi.cvar_set("uptime", buf);
+		UpdateTime();
+uptime:
+		if (starttime)
+		{
+			char buf[32];
+			int secs = (int)time(NULL) - starttime;
+			int mins = secs / 60;
+			int hours = mins / 60;
+			int days = hours / 24;
+			if (days)
+				sprintf(buf, "%dd %dh %dm", days, hours % 24, mins % 60);
+			else if (hours)
+				sprintf(buf, "%dh %dm", hours, mins % 60);
+			else if (mins)
+				sprintf(buf, "%dm", mins);
+			else
+				sprintf(buf, "%ds", secs);
+			gi.cvar_set("uptime", buf);
 
-	    // snap - team tags
-//		if(teamplay->value)
-//			UPDATETEAM
+			// snap - team tags
+	//		if(teamplay->value)
+	//			UPDATETEAM
+		}
+
 	}
-
-	// MH: changed from 120
-    if(idle_client->value<60)
-        gi.cvar_set("idle_client", "60");
 }
 

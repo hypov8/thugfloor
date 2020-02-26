@@ -1425,6 +1425,7 @@ void GameEND();//FREDZ
 int	CheckNameBan (char *name);
 int	CheckPlayerBan (char *userinfo);
 edict_t *GetAdmin(); // MH: get the current admin
+void UpdateTime(); //mm 2.0
 
 
 //
@@ -1495,7 +1496,7 @@ typedef struct
 	gitem_t  *holsteredweapon;
 
 	// JOSEPH 3-FEB-99
-	int			currentcash;
+	//int			currentcash; //TF: moved below
 	// END JOSEPH
 
 	int			power_cubes;	// used for tracking the cubes in coop games
@@ -1546,6 +1547,10 @@ typedef struct
 	int			noantilag;	// MH: is antilag disabled
 
 	int         player_dead;      //FREDZ is the player in the game or dead //used in scoreboard
+	qboolean	player_died;	//TF: store player death untill wave end. dont give loosers extra cash...
+	int			currentcash;	//TF: store cash between respawns
+	gitem_t		*weaponStore;	//TF: store pointer to wep b4 death
+
 	// MH: textbuf removed (not needed now with kpded2)
 
 } client_persistant_t;
