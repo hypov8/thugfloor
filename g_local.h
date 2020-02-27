@@ -109,6 +109,7 @@
 #define	SPECTATORS			5
 #define SCORE_REJOIN		6
 #define SCORE_MAP_VOTE		7
+#define SCORE_TF_HUD		8
 
 // spectating types
 #define LOCKED_CHASE		0
@@ -579,8 +580,8 @@ typedef struct
 
     int		waveReady;
 	int     waveNum;
-	int		waveEnemyCount;		//totaly enemys to kill in wave
-	int		currWave_castCount; //total enemys in level
+	int		waveEnemyCount_total;	//total enemys to kill in wave
+	int		waveEnemyCount_cur;		//current enemys in level
 
 	int		dmSpawnPointCount; //get dm spawns. guid to level size
 	int		spSpawnPointCount; //get sp spawns. atleast 1 required.
@@ -1276,6 +1277,7 @@ void MoveClientToIntermission (edict_t *client);
 void G_SetStats (edict_t *ent);
 void ValidateSelectedItem (edict_t *ent);
 void DeathmatchScoreboard (edict_t *client);
+void TF_setScoreboard(gclient_t *client);
 
 void MoveClientToCutScene (edict_t *camera);
 // JOSEPH 22-FEB-99
@@ -2132,7 +2134,9 @@ struct edict_s
 	edict_t      *homing_target;   //FREDZ rocket lock
 
 	//hypov8 only route on first player
-	int nav_TF_isFirstPayer; //nav first player
+	int			nav_TF_isFirstPayer; //nav first player
+
+	edict_t		*pawnGuyID; // TF: store pawn guy. used to talk to him
 
 	antilag_t antilag;
 };

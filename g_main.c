@@ -541,6 +541,23 @@ done:
 	BeginIntermission (ent, changenext);
 }
 
+//force mini hud
+void TF_ScoreBoard(edict_t *ent)
+{
+	//hypo dont include spectators
+	if (ent->client->pers.spectator != PLAYING)
+		return;
+
+	if (ent->client->showscores != NO_SCOREBOARD)
+		return;
+
+	if (ent->client->resp.scoreboard_frame > level.framenum)
+		return;
+
+	//set scoreboard
+	ent->client->showscores = SCORE_TF_HUD;
+}
+
 /*
 =================
 CheckDMRules
@@ -561,6 +578,13 @@ void CheckDMRules (void)
 
 	if (!deathmatch->value)
 		return;
+
+	if (level.framenum - level.lastactive == 600)
+	{
+		// the server has been idle for a minute, reset to default settings if needed
+		if (ResetServer(true)) 
+			return;
+	}
 
 	if (CheckEndWave())
 		return;
@@ -593,6 +617,8 @@ void CheckDMRules (void)
 		//this will end wave if everyone died
 		if (doot->client->pers.spectator == PLAYING)
 			count_players++;
+
+		TF_ScoreBoard(doot); //TF: update mini hud
 	}
 
 	if (respawn) //clients entered wave

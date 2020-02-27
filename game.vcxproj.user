@@ -13,7 +13,7 @@
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='h_dBugDed|Win32'">
-    <LocalDebuggerCommandArguments> +set port 31515 +set game thugfloor +set developer 1 +set cheats 1 +set deathmatch 1 +verbose 0 +logfile 0 +exec server.cfg</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments> +set port 31510 +set game thugfloor +set developer 1 +set cheats 1 +set deathmatch 1 +verbose 0 +logfile 0 +exec server.cfg</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommand>$(OutDir)..\kpded2_.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>

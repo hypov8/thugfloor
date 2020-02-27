@@ -1172,8 +1172,8 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
-#if 0 // HYPODEBUG
-	level.waveNum = 7; //10 //test end boss
+#if HYPODEBUG //test level.waveNum 
+	level.waveNum = 5; //10 test end boss
 #endif
 
 // parse ents

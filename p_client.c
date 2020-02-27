@@ -963,7 +963,8 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 
 		if (meansOfDeath!=MOD_RESTART)
 			TossClientWeapon (self);
-		if (deathmatch->value && meansOfDeath!=MOD_RESTART && !self->client->showscores) // MH: only if not already showing scores
+		if (deathmatch->value && meansOfDeath!=MOD_RESTART && 
+			(!self->client->showscores || self->client->showscores == SCORE_TF_HUD)) // MH: only if not already showing scores
 			Cmd_Help_f (self, 0);		// show scores
 
 		// clear inventory
@@ -1117,34 +1118,34 @@ void InitClientPersistant (gclient_t *client)
 	// Ridah, start with Pistol in deathmatch
 	if (deathmatch->value)
 	{
-
 			item = FindItem("pistol");
 			client->pers.selected_item = ITEM_INDEX(item);
 			client->pers.inventory[client->pers.selected_item] = 1;
-
 			client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
 			client->pers.inventory[client->ammo_index] = 50;
-
 			client->pers.weapon = item;
 
 			// Ridah, start with the pistol loaded
 			ammo = FindItem (item->ammo);
-
-			AutoLoadWeapon( client, item, ammo );
 
 			//give weapon back to client. minimal ammo and no mods etc..
 			//should this be the first selected wep?
 			if (client->pers.weaponStore)
 			{
 				item = client->pers.weaponStore;
-				client->pers.inventory[ITEM_INDEX(item)] = 1;
-				if (item->ammo)
+				client->pers.selected_item = ITEM_INDEX(item);
+				client->pers.inventory[client->pers.selected_item] = 1;
+	
+					if (item->ammo)
 				{
+					client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
+					client->pers.inventory[client->ammo_index] = ammo->quantity;
 					ammo = FindItem (item->ammo);
-					client->pers.inventory[ITEM_INDEX(ammo)] = ammo->quantity;
 				}
-			}
+				client->pers.weapon = item;
 
+			}
+			AutoLoadWeapon( client, item, ammo );
 	}
 	else	// start holstered in single player
 	{
@@ -3368,6 +3369,7 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 #endif
 
 	ent->client->pers.lastpacket = curtime; // MH: set last packet time
+	level.lastactive = level.framenum;
 
 	return true;
 }
@@ -3532,6 +3534,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	vec3_t	bike_premove_vel;
 
+	level.lastactive = level.framenum;
 	ent->client->pers.lastpacket = Sys_Milliseconds(); // MH: get packet's time
 
 	// MH: skip this if they're gonna be kicked

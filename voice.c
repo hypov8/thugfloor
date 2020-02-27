@@ -160,7 +160,7 @@ again:
 
 			voice_table[ entry ].gameinc_soundindex = gameinc;
 
-			if (cl_captions->value && strlen(voice_table[entry].text) > 0)
+			if (cl_captions->value && strlen(voice_table[entry].text) > 0 && !deathmatch->value) //TF: disable console text
 			{
 				if (cl_parental_lock->value && !cl_parental_override->value)
 				{
@@ -179,7 +179,7 @@ again:
 			}
 		}
 	}
-	else
+	else if (!deathmatch->value) //TF: disable console text
 	{
 		if (cl_parental_lock->value && !cl_parental_override->value)
 			gi.dprintf("VOICE TODO: %s\n", voice_table[ entry ].text2);
@@ -262,7 +262,7 @@ void Voice_Specific( edict_t *self, edict_t *other, voice_table_t *voice_table, 
 
 			voice_table[ entry ].gameinc_soundindex = gameinc;
 
-			if (cl_captions->value && strlen(voice_table[entry].text) > 0)
+			if (cl_captions->value && strlen(voice_table[entry].text) > 0 && !deathmatch->value) //TF: disable console text
 			{
 				if (cl_parental_lock->value && !cl_parental_override->value)
 				{
@@ -282,12 +282,14 @@ void Voice_Specific( edict_t *self, edict_t *other, voice_table_t *voice_table, 
 
 		}
 	}
-	else
+	else if (!deathmatch->value) //TF: disable console text
 	{
+
 		if (cl_parental_lock->value && !cl_parental_override->value)
 			gi.dprintf("VOICE: %s\n", voice_table[ entry ].text2);
 		else
 			gi.dprintf("VOICE: %s\n", voice_table[ entry ].text);
+
 	}
 
 	if (self->client || (other && other->client))
@@ -632,7 +634,7 @@ again:
 
 			voice_table[ entry ].gameinc_soundindex = gameinc;
 
-			if (cl_captions->value && strlen(voice_table[entry].text) > 0)
+			if (cl_captions->value && strlen(voice_table[entry].text) > 0 && !deathmatch->value) //TF: disable console text
 			{
 				if (cl_parental_lock->value && !cl_parental_override->value)
 				{
@@ -651,7 +653,7 @@ again:
 			}
 		}
 	}
-	else
+	else if(!deathmatch->value) //TF: disable console text
 	{
 		if (cl_parental_lock->value && !cl_parental_override->value)
 			gi.dprintf("VOICE TODO: %s\n", voice_table[ entry ].text2);
@@ -814,7 +816,7 @@ void Voice_Specific_rc( edict_t *self, edict_t *other, voice_table_t *voice_tabl
 
 			voice_table[ entry ].gameinc_soundindex = gameinc;
 
-			if (cl_captions->value && strlen(voice_table[entry].text) > 0)
+			if (cl_captions->value && strlen(voice_table[entry].text) > 0 && !deathmatch->value) //TF: disable console text
 			{
 				if (cl_parental_lock->value && !cl_parental_override->value)
 				{
@@ -834,7 +836,7 @@ void Voice_Specific_rc( edict_t *self, edict_t *other, voice_table_t *voice_tabl
 
 		}
 	}
-	else
+	else if(!deathmatch->value) //TF: disable console text
 	{
 		if (cl_parental_lock->value && !cl_parental_override->value)
 			gi.dprintf("VOICE: %s\n", voice_table[ entry ].text2);

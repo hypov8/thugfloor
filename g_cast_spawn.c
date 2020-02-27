@@ -1,8 +1,6 @@
 #include "g_local.h"
 #include "g_cast_spawn.h"
 
-#define HYPODEBUG 1
-
 #define ARYSIZE(x) (sizeof(x) / sizeof(x[0])) //get dynamic size of array
 
 
@@ -10,7 +8,6 @@
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
 void cast_TF_spawn();
-//int currWave_castCount = 0; //enemy currently on map
 static int currWave_plysCount = 0; //players
 static int currWave_length = 0; //long, med, short
 static int currWave_castMax = 0; //max enemy allowed on map
@@ -32,8 +29,8 @@ void cast_pawn_o_matic_free()
 			G_FreeEdict(pawnGuy[i]);
 		}
 	}
-	level.currWave_castCount = 0;
-	level.waveEnemyCount = 0;
+	level.waveEnemyCount_cur = 0;
+	level.waveEnemyCount_total = 0;
 }
 void cast_pawn_o_matic_spawn ()//Randoms spawn testing
 {
@@ -91,7 +88,7 @@ void cast_pawn_o_matic_spawn ()//Randoms spawn testing
 
 		count++;
 		//add enemy to counter
-		level.currWave_castCount++;
+		level.waveEnemyCount_cur++;
 
 		//no more required
 		if (count == 1)
@@ -110,8 +107,8 @@ void cast_pawn_o_matic_free()
 			G_FreeEdict(pawnGuy[i]);
 		}
 	}
-	level.currWave_castCount = 0;
-	level.waveEnemyCount = 0;
+	level.waveEnemyCount_cur = 0;
+	level.waveEnemyCount_total = 0;
 }
 void cast_pawn_o_matic_spawn ()
 {
@@ -161,7 +158,7 @@ void cast_pawn_o_matic_spawn ()
 
 		count++;
 		//add enemy to counter
-		level.currWave_castCount++;
+		level.waveEnemyCount_cur++;
 
 		//no more required
 		if (count == BUYGUY_COUNT)
@@ -1086,7 +1083,6 @@ void cast_boss_sounds()
 void cast_TF_free(void)
 {
 	int i, count = 0;
-	level.currWave_castCount;
 
 	for (i = 0; i < MAX_CHARACTERS; i++)
 	{
@@ -1114,8 +1110,8 @@ void cast_TF_free(void)
 	//some times its sent in packet. some times its not.
 
 
-	if (level.currWave_castCount)
-		level.currWave_castCount = 0; //reset spawned cast count
+	if (level.waveEnemyCount_cur)
+		level.waveEnemyCount_cur = 0; //reset spawned cast count
 }
 
 //check if enemy has died. add if required
@@ -1139,17 +1135,17 @@ void cast_TF_checkEnemyState()
 					//check if boss died
 					if (level.waveNum == currWave_length && boss_entityID && level.characters[i] == boss_entityID)
 					{
-						level.currWave_castCount = 1;
+						level.waveEnemyCount_cur = 1;
 						level.num_characters = 1;
-						level.waveEnemyCount = 1;
+						level.waveEnemyCount_total = 1;
 					}
 
 					//free any dead cast
 					level.characters[i]->character_index = 0;
 					level.characters[i] = NULL;
 					level.num_characters--;
-					level.currWave_castCount--;
-					level.waveEnemyCount--;
+					level.waveEnemyCount_cur--;
+					level.waveEnemyCount_total--;
 				}
 				else
 					count++; //count current cast
@@ -1175,29 +1171,29 @@ void cast_TF_checkEnemyState()
 		if (boss_called_help == 0 && boss_entityID && boss_entityID->health < (boss_maxHP *.75))
 		{
 			boss_called_help = 1;
-			level.waveEnemyCount = level.currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
+			level.waveEnemyCount_total = level.waveEnemyCount_cur + 5 + (int)skill->value; //how many boss helpers to spawn??
 			cast_boss_sounds();
 		}
 		else if (boss_called_help == 1 && boss_entityID && boss_entityID->health < (boss_maxHP *.5))
 		{
 			boss_called_help = 2;
-			level.waveEnemyCount = level.currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
+			level.waveEnemyCount_total = level.waveEnemyCount_cur + 5 + (int)skill->value; //how many boss helpers to spawn??
 			cast_boss_sounds();
 		}
 		else if (boss_called_help == 2 && boss_entityID && boss_entityID->health < (boss_maxHP *.25))
 		{
 			boss_called_help = 3;
-			level.waveEnemyCount = level.currWave_castCount+ 5 + (int)skill->value; //how many boss helpers to spawn??
+			level.waveEnemyCount_total = level.waveEnemyCount_cur + 5 + (int)skill->value; //how many boss helpers to spawn??
 			cast_boss_sounds();
 		}
 	}
 
 	//free slot. add enemy
-	if (count < level.waveEnemyCount && count < currWave_castMax)
+	if (count < level.waveEnemyCount_total && count < currWave_castMax)
 		cast_TF_spawn();
 
 
-	//return level.currWave_castCount;
+	//return level.waveEnemyCount_cur;
 }
 
 // find the closest player to pick on
@@ -1248,7 +1244,7 @@ void cast_TF_spawnWave1(edict_t *spawn)//Skidrow no rats
 }
 void cast_TF_spawnWave2(edict_t *spawn)//Skidrow
 {
-	if (level.waveEnemyCount == currWave_castMax)
+	if (level.waveEnemyCount_total == currWave_castMax)
 		cast_TF_Skidrow_boss(spawn);//spawn boss when almost done
 	else
 	{
@@ -1284,7 +1280,7 @@ void cast_TF_spawnWave3(edict_t *spawn)//Poisonville
 }
 void cast_TF_spawnWave4(edict_t *spawn)//Poisonville
 {
-    if (level.waveEnemyCount == currWave_castMax)
+    if (level.waveEnemyCount_total == currWave_castMax)
 		cast_TF_Poisonville_boss(spawn);//spawn boss when almost done
 	else
 	{
@@ -1315,7 +1311,7 @@ void cast_TF_spawnWave5(edict_t *spawn)//Shipyard
 }
 void cast_TF_spawnWave6(edict_t *spawn)//Shipyard
 {
-    if (level.waveEnemyCount == currWave_castMax)
+    if (level.waveEnemyCount_total == currWave_castMax)
 		cast_TF_Shipyard_boss(spawn);//spawn boss when almost done
 	else
 	{
@@ -1334,7 +1330,7 @@ void cast_TF_spawnWave6(edict_t *spawn)//Shipyard
 }
 void cast_TF_spawnWave7(edict_t *spawn)//Steeltown
 {
-    if (level.waveEnemyCount == currWave_castMax)
+    if (level.waveEnemyCount_total == currWave_castMax)
 		cast_TF_Steeltown_boss(spawn);//spawn boss when almost done
 	else
 	{
@@ -1353,7 +1349,7 @@ void cast_TF_spawnWave7(edict_t *spawn)//Steeltown
 }
 void cast_TF_spawnWave8(edict_t *spawn)//Trainyard
 {
-    if (level.waveEnemyCount == currWave_castMax)
+    if (level.waveEnemyCount_total == currWave_castMax)
 		cast_TF_Trainyard_boss(spawn);//spawn boss when almost done
 	else
 	{
@@ -1385,7 +1381,7 @@ void cast_TF_spawnWave9(edict_t *spawn)//Radiocity
 }
 void cast_TF_spawnWave10(edict_t *spawn)//Radiocity
 {
-    if (level.waveEnemyCount == currWave_castMax)
+    if (level.waveEnemyCount_total == currWave_castMax)
 		cast_TF_Radio_City_boss(spawn);//spawn boss when almost done
 	else
 	{
@@ -1471,7 +1467,7 @@ void cast_TF_spawn(void)
 	edict_t *spawn, *spawnspot;
 
 	{
-		if (level.currWave_castCount >= MAX_CHARACTERS)
+		if (level.waveEnemyCount_cur >= MAX_CHARACTERS)
 			return;
 
 		spawn = G_Spawn();
@@ -1526,13 +1522,13 @@ void cast_TF_spawn(void)
 		cast_TF_setEnemyPlayer(spawn);
 
 		//add enemy to counter
-		level.currWave_castCount++;
+		level.waveEnemyCount_cur++;
 	}
 }
 
 //total enemy counts per wave.
 //this will be multiplied by player counts later
-#if HYPODEBUG
+#if 0 //HYPODEBUG
 static int wave_shortGame[5] = { 2, 2, 2, 2, 1 };
 static int wave_medGame[8] = { 2, 2, 2, 2, 2, 2, 2, 1 };
 static int wave_longGame[11] = { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
@@ -1606,17 +1602,17 @@ void cast_TF_setupEnemyCounters(void)
 	if ((int)wavetype->value == 0)
 	{
 		currWave_length = WAVELEN_SHORT - 1;//short wave
-		level.waveEnemyCount =(level.waveNum == currWave_length)? 1 :  wave_shortGame[level.waveNum] * playerCount; //force 1 boss
+		level.waveEnemyCount_total =(level.waveNum == currWave_length)? 1 :  wave_shortGame[level.waveNum] * playerCount; //force 1 boss
 	}
 	else if ((int)wavetype->value == 1)
 	{
 		currWave_length = WAVELEN_MED - 1;//med wave
-		level.waveEnemyCount =(level.waveNum == currWave_length)? 1 :  wave_medGame[level.waveNum] * playerCount; //force 1 boss
+		level.waveEnemyCount_total =(level.waveNum == currWave_length)? 1 :  wave_medGame[level.waveNum] * playerCount; //force 1 boss
 	}
 	else //wavetype >= 2
 	{
 		currWave_length = WAVELEN_LONG - 1;//long wave
-		level.waveEnemyCount = (level.waveNum == currWave_length)? 1 : wave_longGame[level.waveNum] * playerCount; //force 1 boss
+		level.waveEnemyCount_total = (level.waveNum == currWave_length)? 1 : wave_longGame[level.waveNum] * playerCount; //force 1 boss
 	}
 
 }

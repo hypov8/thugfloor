@@ -1,6 +1,11 @@
 #include "g_local.h"
 
 //FREDZ Scroll Menu Source Code
+extern void AutoLoadWeapon(gclient_t *client, gitem_t *weapon, gitem_t *ammo);
+extern void SP_cast_runt(edict_t *self);
+//extern void SP_coil_Skidrow(edict_t *self);
+extern voice_table_t pawnomatic_specific[];
+extern voice_table_t pawnomatic_funny[];
 
 #define MAX_MENU_ITEMS	8
 
@@ -64,10 +69,15 @@ void Cmd_InitMenu_f (edict_t *ent)
 	if (cl->showscrollmenu)
 	{
 		cl->showscrollmenu = false;
+		if (ent->pawnGuyID)
+			Voice_Specific(ent->pawnGuyID, ent, pawnomatic_specific, 6+(rand()%2));
+		//PawnSay(pawnomatic_specific, 6+(rand()%2));
 		return;
 	}
 	else
 	{
+		if (ent->pawnGuyID)
+			Voice_Specific(ent->pawnGuyID, ent, pawnomatic_funny, (rand()%5));
 		cl->showscrollmenu = true;
 	}
 
@@ -79,7 +89,7 @@ void ScrollMenuMessage (edict_t *ent)
 	char	entry[1024];
 	char	string[1400];
 	int		stringlength;
-	int		i, j, yofs=0;
+	int		i, j, yofs= 0; //y start from centre
 
 	char	leftname[32];
 	char	rightname[32];
@@ -131,7 +141,15 @@ void ScrollMenuMessage (edict_t *ent)
 				strcpy( rightname, "");
 			}
 
-			Com_sprintf(entry, sizeof(entry), "xl 410 yv %i dmstr %s \"%s\" xl 540 dmstr %s \"%s\" ", yofs+40, lefttag, leftname, righttag, rightname);
+			Com_sprintf(entry, sizeof(entry),
+				"yv %i "
+				"xm -150 dmstr %s \"%s\" "	//left menu
+				"xm -40 dmstr %s \"%s\" "	//right menu
+				, yofs
+				, lefttag, leftname
+				, righttag, rightname
+			);
+
 			j = strlen(entry);
 			strcpy (string + stringlength, entry);
 			stringlength += j;
@@ -258,7 +276,7 @@ qboolean Pickup_Armor_Scroll(char *name, edict_t *other)
 	return true;
 }
 
-extern void AutoLoadWeapon( gclient_t *client, gitem_t *weapon, gitem_t *ammo );
+
 void ScrollMenuBuy(edict_t *ent)
 {
 	gitem_t		*it;
@@ -723,9 +741,7 @@ cast_group 2+	enemy
 model="models\actors\runt\"
 
 */
-extern void SP_cast_runt (edict_t *self);
-extern void SP_coil_Skidrow (edict_t *self);
-extern voice_table_t pawnomatic_specific[];
+
 void SP_cast_pawn_o_matic( edict_t *self )
 {
 //	edict_t *other;

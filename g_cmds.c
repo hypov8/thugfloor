@@ -3396,11 +3396,13 @@ startyourtriggers:
 		//FREDZ we have a bot
 		if (!Q_stricmp(tr.ent->classname, "cast_pawn_o_matic"))
 		{
+			ent->pawnGuyID = tr.ent;
 			tr.ent->use( tr.ent, ent, ent);
 		}
 		//FREDZ we have a orginale pawn o matic
 		if (!Q_stricmp(tr.ent->classname, "pawn_o_matic"))
 		{
+			ent->pawnGuyID = tr.ent;
 			tr.ent->use( tr.ent, ent, ent);
 		}
 	}
@@ -3781,9 +3783,24 @@ Cmd_PutAway_f
 */
 void Cmd_PutAway_f (edict_t *ent)
 {
+	if (ent->client->showscores == SCORE_TF_HUD
+		|| (ent->client->pers.spectator == SPECTATING && level.modeset == WAVE_ACTIVE && ent->client->showscores == NO_SCOREBOARD))
+	{ 
+		//hypo no esc bugfixed
+		char* string = "menu_main";
+
+		gi.WriteByte(svc_stufftext);
+		gi.WriteString(va("%s\n", string));
+		gi.unicast(ent, true);
+		ent->client->resp.scoreboard_frame = level.framenum + 50 - 30;
+	}
+
 	ent->client->showscores = NO_SCOREBOARD;
 	ent->client->showhelp = false;
 	ent->client->showinventory = false;
+
+	TF_setScoreboard(ent->client);
+	DeathmatchScoreboard(ent);
 }
 
 int PlayerSort (void const *a, void const *b)

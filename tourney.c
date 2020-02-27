@@ -511,6 +511,9 @@ void WaveEnd () //hypov8 end of the match
 
 		//reset player died mid wave. deny cash
 		self->client->pers.player_died = 0;
+
+		if (self->client->showscores == SCORE_TF_HUD)
+			self->client->showscores = NO_SCOREBOARD;
 	}
 
 	if (!count_players)
@@ -527,6 +530,9 @@ void WaveEnd () //hypov8 end of the match
 
 void WaveBuy()  // start buy zone
 {
+	edict_t *self;
+	int     i;
+
 	level.modeset = WAVE_BUYZONE;
 	level.startframe = level.framenum;
 	gi.bprintf (PRINT_HIGH,"Buy zone for wave %i will end in 60 seconds.\n", level.waveNum+1);
@@ -684,10 +690,11 @@ void CheckBuyWave ()
 {
     edict_t *self;
     edict_t	*ent = NULL;
-	int      i;
+	int      i, j;
 	int      count_players = 0;
+	vec3_t spot1, spot2;
 
-#if HYPODEBUG
+#if 0 //HYPODEBUG
 	if (level.framenum >= level.startframe + 100)//10 seconds
 #else
 	if (level.framenum >= level.startframe + 595)//60 seconds
@@ -696,12 +703,48 @@ void CheckBuyWave ()
 		WaveStart_Countdown();
 		return;
 	}
+
 	//stop counter if nobody wants to play
 	for_each_player(self,i)
 	{
+		float  best = 9999;
+		int index = 0;
+
 		if (self->client->pers.spectator != SPECTATING)
 			count_players++;
+
+		//display line to pawn guy
+		if (self->client->pers.spectator == PLAYING)
+		{
+			for (j = 0; j < MAX_CHARACTERS; j++)
+			{
+				if (level.characters[j] && level.characters[j]->svflags & SVF_MONSTER) //cast
+				{
+					float dist = VectorDistance(self->s.origin, level.characters[j]->s.origin);
+					if (dist < best)
+					{
+						best = dist;
+						index = j;
+					}
+				}
+			}
+
+			if (index > 0)
+			{
+				VectorCopy(self->s.origin, spot1);
+				VectorCopy(level.characters[index]->s.origin, spot2);
+				spot1[2] += 24;
+				spot2[2] += 24;
+				//NAV_DrawLine(spot1, spot2); //sends to all players
+				gi.WriteByte(svc_temp_entity);
+				gi.WriteByte(TE_BFG_LASER);
+				gi.WritePosition(spot1);
+				gi.WritePosition(spot2);
+				gi.unicast(self, false);
+			}
+		}
 	}
+
 	if (!count_players)
 	{
         gi.bprintf(PRINT_HIGH,"Players not playing, other map.\n");
@@ -734,7 +777,7 @@ qboolean CheckEndWave() //add timelimit
 	//check for level cleared
 	cast_TF_checkEnemyState();
 
-	if ( level.currWave_castCount <= 0)
+	if ( level.waveEnemyCount_cur <= 0)
 	{
 		if (!CheckEndWave_GameType())
 		{
@@ -951,7 +994,7 @@ void UpdateTime()
 	}
 	else if ( level.modeset == WAVE_ACTIVE)
 	{
-		sprintf(buf, "%i enemy left", level.waveEnemyCount);
+		sprintf(buf, "%i enemy left", level.waveEnemyCount_total);
 	}
 	else if (level.intermissiontime)
 		strcpy(buf, "intermission");

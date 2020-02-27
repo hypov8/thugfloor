@@ -4,7 +4,6 @@
 
 extern edict_t *boss_entityID;
 extern int boss_maxHP;
-//extern int currWave_castCount;
 
 static const char *gameheader[] =
 {
@@ -836,6 +835,78 @@ void RejoinScoreboardMessage (edict_t *ent)
 
 /*
 ==================
+TF_Build_HudMessage
+
+constantly update players in match
+==================
+*/
+void TF_Build_HudMessage(edict_t *ent, char *string)
+{
+	char	entry[1024];
+	//char	string[1024];
+	int		stringlength;
+	int		i, j, count = 0, yoffs;
+	edict_t *dood;
+
+
+	string[0] = 0;
+	yoffs = -200;
+	strcpy(string, "xr -130 ");
+	stringlength = strlen(string);
+	entry[0] = 0;
+
+	for_each_player(dood, i)
+	{
+		if (dood->client->pers.spectator == PLAYING)
+		{
+			count++;
+			Com_sprintf(entry, sizeof(entry),
+				"%s yb %i dmstr 990 \"%s\" "
+				, entry, yoffs, dood->client->pers.netname
+			);
+			yoffs += 15;
+
+			j = strlen(entry); //make sure size ok
+			if (stringlength + j < 1024)
+			{
+				strcpy(string + stringlength, entry);
+				stringlength += j;
+			}
+		}
+	}
+
+	if (!count)
+		entry[0] = 0;
+}
+
+
+void TF_DeathmatchScoreboardMessage(edict_t *ent)
+{
+	char	entry[1024];
+	char	string[1400];
+	int		stringlength = 0, j;
+
+	entry[0] = 0;
+	strcpy(string, " ");
+
+	if (level.modeset == WAVE_ACTIVE && ent->client->pers.spectator == PLAYING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+	{
+		TF_Build_HudMessage(ent, entry);
+		j = strlen(entry);
+		if (stringlength + j < 1024)
+		{
+			strcpy(string + stringlength, entry);
+			stringlength += j;
+		}
+	}
+
+	gi.WriteByte(svc_layout);
+	gi.WriteString(string);
+}
+
+
+/*
+==================
 DeathmatchScoreboardMessage
 
 ==================
@@ -1084,6 +1155,16 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	}
 
 skipscores:
+	if (level.modeset == WAVE_ACTIVE && ent->client->pers.spectator == PLAYING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+	{
+		TF_Build_HudMessage(ent, entry);
+		j = strlen(entry);
+		if (stringlength + j < 1024)
+		{
+			strcpy(string + stringlength, entry);
+			stringlength += j;
+		}
+	}
 
 	if (ent->client->pers.spectator == SPECTATING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
 	{
@@ -1100,17 +1181,28 @@ skipscores:
 	gi.WriteString (string);
 }
 
+
+void TF_setScoreboard(gclient_t *client)
+{
+	//ent->client->resp.scoreboard_hide = false;
+	if (client->showscores == NO_SCOREBOARD
+		&& client->resp.scoreboard_frame < level.framenum
+		&& (level.modeset == WAVE_ACTIVE)
+		&& (client->pers.spectator != SPECTATING)) //chase scorebord
+	{
+		client->showscores = SCORE_TF_HUD;
+	}
+}
+
 /*
 ==================
 DeathmatchScoreboard
 
 Draw instead of help message.
 Note that it isn't that hard to overflow the 1400 byte message limit!
+Papa - Here is where i determine what scoreboard to display
 ==================
 */
-
-// Papa - Here is where i determine what scoreboard to display
-
 void DeathmatchScoreboard (edict_t *ent)
 {
 	if (ent->client->showscores == SCORE_MOTD)
@@ -1121,6 +1213,8 @@ void DeathmatchScoreboard (edict_t *ent)
 		SpectatorScoreboardMessage (ent);
 	else if (ent->client->showscores == SCORE_MAP_VOTE)
 		VoteMapScoreboardMessage(ent);
+	else if (ent->client->showscores == SCORE_TF_HUD) //constant hud shows names
+		TF_DeathmatchScoreboardMessage(ent);
 	else
     {
         DeathmatchScoreboardMessage (ent);
@@ -1278,10 +1372,12 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 	else
 		ent->client->showscores = SCOREBOARD;
 
+	TF_setScoreboard(ent->client); //TF: hud
+
     ent->client->resp.scoreboard_frame = 0; // MH: trigger scoreboard update instead of calling DeathmatchScoreboard
-//	DeathmatchScoreboard (ent);
+//	DeathmatchScoreboard (ent); //hypov8 do we need this enabled?
 }
-void Cmd_Motd_f (edict_t *ent)//FREDZ still broken
+void Cmd_Motd_f (edict_t *ent)//FREDZ todo: still broken
 {
 	ent->client->showinventory = false;
 	ent->client->showhelp = false;
@@ -1414,7 +1510,7 @@ void G_SetStats (edict_t *ent)
 
 		// MH: keep own score
 		ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
-		ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount; // ent->client->resp.deposited;
+		ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount_total; // ent->client->resp.deposited;
 
 		return;
 	}
@@ -1828,7 +1924,7 @@ void G_SetStats (edict_t *ent)
 
 	//hypov8 this should go somewhere else!!!
 	//show distance to pawnGuy an last 4 players
-	if (level.modeset == WAVE_BUYZONE || (level.modeset == WAVE_ACTIVE && level.currWave_castCount <=4))
+	if (level.modeset == WAVE_BUYZONE || (level.modeset == WAVE_ACTIVE && level.waveEnemyCount_cur <=4))
 	{
 		if (!(level.framenum % 5) || !ent->client->botRange) // is it updating fast enough?
 		{
@@ -1957,7 +2053,7 @@ void G_SetStats (edict_t *ent)
 	// frags
 	//
 	ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
-	ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount;// ent->client->resp.deposited;
+	ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount_total;// ent->client->resp.deposited;
 
 	// END
 
