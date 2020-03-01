@@ -1468,10 +1468,10 @@ void Weapon_Blackjack_Hit (edict_t *ent)
 {
 	int		damage;
 
-	if (deathmatch->value)
-		damage = 10;
+	if (deathmatch->value && ent->client)
+		damage = 15; //hypov8 upped from 10.. ok?
 	else
-		damage = 8;// - (int)(skill->value-1);
+		damage = 10;// - (int)(skill->value-1);
 
 	Blackjack_Hit (ent, vec3_origin, damage);
    	ent->client->ps.gunframe++;

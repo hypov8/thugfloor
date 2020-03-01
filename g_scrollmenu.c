@@ -541,7 +541,7 @@ void ScrollMenuBuy(edict_t *ent)
 			else if (ent->current_menu_right == 4)
 			{
 				it_weapon = FindItem ("HMG Cooling Mod");
-				if (ent->client->pers.hmg_shots = 30)
+				if (ent->client->pers.hmg_shots == 30)
 					haveIten = 1;
 				else
 					ent->client->pers.hmg_shots = 30;
@@ -569,6 +569,10 @@ void ScrollMenuBuy(edict_t *ent)
 				return;
 			}
 
+			//note: spistol is a gun. prob should be loaded..
+			ent->client->pers.inventory[index_weapon] = 1;
+
+			//hypov8 todo: this should prob be cleand up
 			it_ent = G_Spawn();
 			it_ent->classname = it_weapon->classname;
 			SpawnItem (it_ent, it_weapon);

@@ -851,7 +851,7 @@ void TF_Build_HudMessage(edict_t *ent, char *string)
 
 	string[0] = 0;
 	yoffs = -200;
-	strcpy(string, "xr -130 ");
+	strcpy(string, "xr -60 yb -215 string \"Players\" xr -130 ");
 	stringlength = strlen(string);
 	entry[0] = 0;
 
@@ -861,10 +861,10 @@ void TF_Build_HudMessage(edict_t *ent, char *string)
 		{
 			count++;
 			Com_sprintf(entry, sizeof(entry),
-				"%s yb %i dmstr 990 \"%s\" "
+				"%s yb %i dmstr 777 \"%s\" "
 				, entry, yoffs, dood->client->pers.netname
 			);
-			yoffs += 15;
+			yoffs += 16;
 
 			j = strlen(entry); //make sure size ok
 			if (stringlength + j < 1024)
@@ -925,7 +925,6 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	edict_t		*cl_ent;
 	char	*tag;
 	int		tmax;
-    float	pldist;
     char	nfill[64];
     char    status[10];
 
@@ -942,10 +941,6 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		cl_ent = g_edicts + 1 + i;
 		if (!cl_ent->inuse || (cl_ent->client->pers.spectator == SPECTATING))// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
 			continue;
-
-		pldist = VectorDistance(ent->s.origin, cl_ent->s.origin);
-		if (pldist > 9999.0f)
-           pldist = 0;
 
 /*		if (fph_scoreboard)
 			score = game.clients[i].resp.time ? game.clients[i].resp.score * 36000 / game.clients[i].resp.time : 0;
@@ -1094,17 +1089,26 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		}
         else if (ent->client->showscores==SCOREBOARD2) //FREDZ
 		{
+			edict_t *dood;
+			int idx;
+			float v = 999;
+			for_each_player(dood, idx)
+			{
+				if (cl_ent == dood)
+					v = VectorDistance(ent->s.origin, cl_ent->s.origin);
+			}
+
 			if (ent->client->pers.patched >= 3)
 			{
-					Com_sprintf (entry, sizeof(entry),
-						"ds %s %i %i %i %5.0f ",
-						tag, sorted[i], cl_ent->health, cl->pers.currentcash, pldist );
+				Com_sprintf (entry, sizeof(entry),
+					"ds %s %i %i %i %5.0f ",
+					tag, sorted[i], cl_ent->health, cl->pers.currentcash, v );
 			}
 			else
 			{
-					Com_sprintf (entry, sizeof(entry),
-						"yv %i ds %s %i %i %i %5.0f ",
-						-60+i*17, tag, sorted[i], cl_ent->health, cl->pers.currentcash, pldist );
+				Com_sprintf (entry, sizeof(entry),
+					"yv %i ds %s %i %i %i %5.0f ",
+					-60+i*17, tag, sorted[i], cl_ent->health, cl->pers.currentcash, v );
 			}
 		}
 		else//SCOREBOARD3
@@ -1510,7 +1514,11 @@ void G_SetStats (edict_t *ent)
 
 		// MH: keep own score
 		ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
-		ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount_total; // ent->client->resp.deposited;
+
+		if (level.modeset == WAVE_ACTIVE)
+			ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount_total; // ent->client->resp.deposited;
+		else
+			ent->client->ps.stats[STAT_ENEMYCOUNT] = 0;
 
 		return;
 	}
@@ -1903,20 +1911,20 @@ void G_SetStats (edict_t *ent)
 	*/
 
 	//show boss health
-	if (level.modeset == WAVE_ACTIVE)
+	if (level.modeset == WAVE_ACTIVE && boss_entityID !=NULL)
 	{
-		if (boss_entityID !=NULL &&(
+		/*if (boss_entityID !=NULL &&(
 			((int)wavetype->value == 0 && level.waveNum == WAVELEN_SHORT - 1) ||
 			((int)wavetype->value == 1 && level.waveNum == WAVELEN_MED - 1) ||
 			((int)wavetype->value >= 2 && level.waveNum == WAVELEN_LONG - 1)
 			))
-		{
+		{*/
 			ent->client->ps.stats[STAT_BOSS] = (int)(100.0f * boss_entityID->health / (float)boss_maxHP);
 			if (ent->client->ps.stats[STAT_BOSS] <= 0)
 				ent->client->ps.stats[STAT_BOSS] = 1; //zero dont display
-		}
+		/*}
 		else
-			ent->client->ps.stats[STAT_BOSS] = 0;
+			ent->client->ps.stats[STAT_BOSS] = 0;*/
 	}
 	else
 		ent->client->ps.stats[STAT_BOSS] = 0;
@@ -2053,7 +2061,11 @@ void G_SetStats (edict_t *ent)
 	// frags
 	//
 	ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
-	ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount_total;// ent->client->resp.deposited;
+
+	if (level.modeset == WAVE_ACTIVE)
+		ent->client->ps.stats[STAT_ENEMYCOUNT] = level.waveEnemyCount_total;// ent->client->resp.deposited;
+	else
+		ent->client->ps.stats[STAT_ENEMYCOUNT] = 0;
 
 	// END
 

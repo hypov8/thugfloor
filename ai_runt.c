@@ -1334,7 +1334,7 @@ void runt_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage,
 	vec3_t	end;
 	edict_t *playthud1, *playthud2;
 
-	self->takedamage = DAMAGE_YES;
+	self->takedamage = DAMAGE_YES; //hypov8 cant shoot cast behind them. causes rat issues. but its needed for location damage
 
     if (!self->deadflag)//FREDZ
 	{

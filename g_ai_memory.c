@@ -23,7 +23,7 @@ AddCharacterToGame
 */
 qboolean AddCharacterToGame(edict_t *self)
 {
-	int i;
+	int i, end;
 
 
 	if (level.num_characters == MAX_CHARACTERS)
@@ -65,9 +65,18 @@ qboolean AddCharacterToGame(edict_t *self)
 	return true;
 
 #else
+	//allow 16 humans
+	if (self->client){
+		i = 0;
+		end = 16;
+	}
+	else{
+		i = 16;
+		end = MAX_CHARACTERS;
+	}
 
 	// look for them already in the list
-	for (i = 0; i < MAX_CHARACTERS /*level.num_characters*/; i++)
+	for (; i < end /*level.num_characters*/; i++)
 	{
 		if (!level.characters[i])//hypov8 todo: test ok?
 			continue;
@@ -79,8 +88,18 @@ qboolean AddCharacterToGame(edict_t *self)
 		}
 	}
 
+	//allow 16 humans
+	if (self->client) {
+		i = 0;
+		end = 16;
+	}
+	else {
+		i = 16;
+		end = MAX_CHARACTERS;
+	}
+
 	// hypov8 add: empty spot?
-	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
+	for (; i< end /*level.num_characters*/; i++)
 	{
 		if (!level.characters[i]) //found free spot
 		{

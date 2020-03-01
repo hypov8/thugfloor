@@ -574,15 +574,9 @@ void Rat_GibEntity( edict_t *self, edict_t *inflictor, float damage )//FREDZ les
 	gi.WriteByte (6);
 	gi.multicast (self->s.origin, MULTICAST_PVS);
 
-
 	self->takedamage = DAMAGE_NO;
-
-	//hypov8 free. am i missing something. when will they be freed?
-	if (deathmatch->value && !Q_strncasecmp(self->classname, "cast_", 5))
-	{
-		self->think = G_FreeEdict;
-		self->nextthink = level.time + FRAMETIME*10;
-	}
+	self->think = G_FreeEdict;
+	self->nextthink = level.time + FRAMETIME;
 }
 void rat_die_gib (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point, int mdx_part, int mdx_subobject)
 {

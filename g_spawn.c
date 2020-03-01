@@ -2,6 +2,8 @@
 //#include "stdlog.h"	// Standard Logging
 //#include "gslog.h"	// Standard Logging
 
+extern int TF_castSkinIndex[6];
+
 typedef struct
 {
 	char	*name;
@@ -1166,7 +1168,7 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
-#if HYPODEBUG //test level.waveNum
+#if 0//HYPODEBUG //test level.waveNum 
 	level.waveNum = 5; //10 test end boss
 #endif
 
@@ -2100,5 +2102,40 @@ void SP_worldspawn (edict_t *ent)
 		}
 		//end tical
 	}
+
+	//hypov8 precache all sp models. get index so we can free skins later
+	TF_castSkinIndex[0] = gi.modelindex("models/actors/punk/head.mdx");
+	TF_castSkinIndex[1] = gi.modelindex("models/actors/punk/legs.mdx");
+	TF_castSkinIndex[2] = gi.modelindex("models/actors/punk/body.mdx");
+
+	TF_castSkinIndex[3] = gi.modelindex("models/actors/runt/head.mdx");
+	TF_castSkinIndex[4] = gi.modelindex("models/actors/runt/legs.mdx");
+	TF_castSkinIndex[5] = gi.modelindex("models/actors/runt/body.mdx");
+
+	TF_castSkinIndex[6] = gi.modelindex("models/actors/thug/head.mdx");
+	TF_castSkinIndex[7] = gi.modelindex("models/actors/thug/legs.mdx");
+	TF_castSkinIndex[8] = gi.modelindex("models/actors/thug/body.mdx");
+	//TF_castSkinIndex[] = gi.modelindex("");
+
+#if 1  // requires special kpded2 version
+	//reset skins
+	if (kpded2)
+	{
+		//shorty 011 011 005
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[0], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[1], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[2], "001");
+		//runt
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[3], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[4], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[5], "001");
+		//thug
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[6], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[7], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[8], "001");
+		//gi.configstring(CS_MODELSKINS + TF_castSkinIndex[], va("%03i", level.waveNum));
+	}
+#endif
+
 }
 

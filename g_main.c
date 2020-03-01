@@ -1081,7 +1081,7 @@ void G_RunFrame (void)
 				ent->healtimer = 0;
 
 				if (!ent->healspeed)
-				  	ent->health += 1;
+				  	ent->health += 1; //hypov8 note: this is increasing cast health!!!! add -1 to cast spawns
 				else
 					ent->health += ent->healspeed;
 

@@ -391,7 +391,11 @@ int giveCashOnKill(int type)
     int cashhmg=20;
     int cashgrenade=14;
     int cashbazooka=16;
-    int cashflamethrower=12;
+    int cashflamethrower=12; 
+	//hypov8 note these seem low while playing
+	//if 1 player frags and other does nothing. 
+	//the differnce at end round is not alot.
+	//my need to tweek waveGiveCash below
 
 	switch (type)
 	{
@@ -436,6 +440,8 @@ waveGiveCash
 
 setup giving cash to player
 dependent on the type of respawn
+
+type
 0= inital game spawn
 1= survived round
 2= died or just joined game
@@ -472,7 +478,7 @@ int waveGiveCash(int type)
 	{
 	case 1:		//survived the round
 		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));
-	case 2:		//dead, respawn with no existing cash.
+	case 2:		//dead, respawn with no existing cash. //note same as above
 		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));
 	}
 

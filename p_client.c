@@ -1124,9 +1124,31 @@ void InitClientPersistant (gclient_t *client)
 			client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
 			client->pers.inventory[client->ammo_index] = 50;
 			client->pers.weapon = item;
-
-			// Ridah, start with the pistol loaded
 			ammo = FindItem (item->ammo);
+
+			if (level.waveNum >= 2) //todo. players in wave dont get this!!!!
+			{
+				item = FindItem("Shotgun");
+				client->pers.selected_item = ITEM_INDEX(item);
+				client->pers.inventory[client->pers.selected_item] = 1;
+				client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
+				client->pers.inventory[client->ammo_index] = 50;
+				client->pers.weapon = item;
+				ammo = FindItem(item->ammo);
+			}
+
+			if (level.waveNum >= 4) //todo. players in wave dont get this!!!!
+			{
+				item = FindItem("Tommygun");
+				client->pers.selected_item = ITEM_INDEX(item);
+				client->pers.inventory[client->pers.selected_item] = 1;
+				client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
+				client->pers.inventory[client->ammo_index] = 50;
+				client->pers.weapon = item;
+				ammo = FindItem(item->ammo);
+			}
+
+
 
 			//give weapon back to client. minimal ammo and no mods etc..
 			//should this be the first selected wep?

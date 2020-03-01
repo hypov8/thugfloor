@@ -2007,7 +2007,7 @@ struct edict_s
 
 	edict_t		*moveout_ent;				// set to the target position when we have issued a "moveout" command
 
-	int			cast_group;					// index of group in which this cast member belongs (set by .map)
+	int			cast_group;					// index of group in which this cast member belongs (set by .map) 0=neutral 1=friendly 2+=enemy
 	int			character_index;			// our position in the global character array
 
 	float		last_talk_time;

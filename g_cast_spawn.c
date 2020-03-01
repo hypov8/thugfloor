@@ -4,6 +4,7 @@
 #define ARYSIZE(x) (sizeof(x) / sizeof(x[0])) //get dynamic size of array
 
 
+
 #define BUYGUY_COUNT 3 //3 pawnOmatic guys?
 edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
@@ -11,6 +12,7 @@ void cast_TF_spawn();
 static int currWave_plysCount = 0; //players
 static int currWave_length = 0; //long, med, short
 static int currWave_castMax = 0; //max enemy allowed on map
+int TF_castSkinIndex[9]; //store model index. free skins after each wave
 
 //boss info
 edict_t *boss_entityID = NULL;
@@ -38,13 +40,13 @@ void cast_pawn_o_matic_spawn ()//Randoms spawn testing
 	int count = 0, i;
 
 
-	for_each_player(player, i)
+	/*for_each_player(player, i)
 	{
 		if (player->client->pers.spectator != SPECTATING)
 		{
-			AddCharacterToGame(player); //add player to bot target list
+			AddCharacterToGame(player); //hypov8 not needed
 		}
-	}
+	}*/
 
 		spawn = G_Spawn();
 		spawnspot = cast_SelectRandomDeathmatchSpawnPoint(spawn);
@@ -152,21 +154,8 @@ void cast_pawn_o_matic_spawn ()
 #endif // 1
 
 //apply skins.. consider skill
-void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int skinCount)
+void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int idx)
 {
-#if TEST_NEWSKIN //only 2 waves can be tested. crashes on 3rd
-
-	//this split skins into 5 groups. low skill needs to be at top and high skill at bottom of list
-	//some overlap of skill settings will be generated. about 2 above/below actual skill.
-	int range = ceil(((float)skinCount / 3)); //3 instead of 5. adds some varance
-	int idxStart = range * ((int)skill->value *.6); //0-4
-	int ran = rand() % (range);
-	int idx = idxStart + ran;
-	if (idx >= skinCount)
-		idx = skinCount - 1; //just incase. ceil rounds up
-#else
-	int idx = skinCount;
-#endif
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].name);
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].skin);
 	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].classname);
@@ -175,85 +164,6 @@ void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int skinCoun
 	self->count = skins[idx].count;
 	self->head = skins[idx].head;
 }
-
-#if TEST_NEWSKIN //example skin method
-/*
-======================
-cast_TF_Wave1_Skidrow
-wave 1 skidrow
-
-combine every skin that should be in skidrow
-sort them from weakest to best
-todo: this is example. skins only sorted by weapon, not skill
-======================
-*/
-void cast_TF_Wave1_Skidrow(edict_t *self)
-{
-	static localteam_skins_s skins[] = {
-		//name,		//skin,			classname		flags	HP		count	head
-		"johnny",	"011 007 004",	"cast_thug",	64, 	80,	    0,      0,	//melee			//Skidrow_courtyard
-		"Leroy",	"010 010 003",	"cast_thug",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
-		"Brewster", "002 001 001",	"cast_thug",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
-		"Bubba",	"017 016 008",	"cast_runt",	64,	    100,	9,  	0,	//sr1 melee		//Skidrow_names
-		"Magicj",	"020 011 005",	"cast_runt",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
-		"buttmunch", "001 001 001",	"cast_runt",	64,	    100,	0,	    0,	//melee	//sr1 Sewer Rats
-		"",	        "010 004 002",  "cast_runt",	64,	    100,	0,	    0,  //melee		//Skidrow_street //sr3 street1
-		"Betty",	"008 006 003",	"cast_bitch",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
-		"Beth",		"009 007 004",	"cast_bitch",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
-
-		"punky",     "005 003 001",	"cast_runt",	0,	    50,	    0,	    0,	//pistol		//sr1 Sewer Rats
-		"Momo",		"020 011 003",	"cast_runt",	0,	    100,	0,  	0,	//sr2 //bouncer pistol //Skidrow_names
-		"Mona",		"014 012 003",	"cast_bitch",	0,	    100,	0,  	0,	//sr2 pistol			//Skidrow_names
-		"Sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	0,   //bar_sr pistol		//Skidrow_names
-		"Lenny",	"018 011 007",	"cast_runt",	0,	    100,	0,  	0,	//bar_sr pistol		//Skidrow_names
-		"Rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	//bar_sr pistol		//Skidrow_names
-		"",	        "006 006 002",	"cast_runt",	0,	    100,	0,	    0,  //pistol	//Skidrow_street //sr3 street1
-		"",	        "008 008 002",	"cast_runt",	0,	    100,	0,	    0,  //pistol	//Skidrow_street //sr3 street1
-		"bernie",   "011 012 004",  "cast_runt",	0,	    100,	1,	    0,	//pistol		//Skidrow_courtyard
-		"louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	0,	//pistol //Not really police, more person they try to secure
-	};
-
-	cast_TF_applyRandSkin(self, skins, ARYSIZE(skins));
-}
-void cast_TF_Wave2_Skidrow(edict_t *self)
-{
-	static localteam_skins_s skins[] = {
-		//name,		//skin,			classname		flags	HP		count	head
-
-		"Leroy",	"010 010 003",	"cast_thug",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
-		"Brewster", "002 001 001",	"cast_thug",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
-		"Bubba",	"017 016 008",	"cast_runt",	64,	    100,	9,  	0,	//sr1 melee		//Skidrow_names
-		"Beth",		"009 007 004",	"cast_bitch",	64,	    100,	0,  	0,	//sr1 melee		//Skidrow_names
-		"Lisa",		"012 015 012",	"cast_bitch",	64,	    120,	0,  	0,	//sr1 melee		//Skidrow_names
-
-		"",         "004 003 001",	"cast_runt",	0,	    100,	0,	    0,	//pistol		//sewer treehouse, ugly skins
-		"",         "003 003 001",	"cast_runt",	0,	    100,	0,	    0,	//pistol		//sr2 motards, ugly skins
-		"",         "002 001 001",	"cast_bitch",	0,	    100,	0,	    0,	//pistol		//sr2 motards, ugly skins
-		"",	        "005 001 001",  "cast_thug",	0,	    100,	0,	    0,	//pistol		//sr2 motards, ugly skins
-		"",	        "010 006 002",	"cast_runt",	0,	    100,	0,	    0,	//courtyard1 pistol
-		"",	        "006 005 002",	"cast_runt",	0,	    100,	0,	    0,	//courtyard2 pistol
-		"",     	"006 006 002",	"cast_runt",	0,	    100,	0,	    0,  //pistol		//sr3 hallway1
-		"",	        "009 007 002",	"cast_runt",    0,      100,	0,		0,    //postbattery2  pistol
-		"",	        "008 008 002",	"cast_runt",    0,      120,	0,		0,    //postbattery2  pistol
-		"igmo",      "003 002 001", "cast_thug",	0,	    200,	0,	    0,	//pistol		//sr1 Sewer Rats
-
-		"",	        "004 001 001",	"cast_punk",    0,      80,		0,		0,    //postbattery1  shotgun
-		"",         "004 001 007",	"cast_punk",	0,	    100,	0,	    0,	//shotgun	//sewer treehouse, ugly skins
-		"",	        "514 004 002",  "cast_punk",	0,	    100,	0,	    1,	//courtyard1 shotgun
-		"",	        "513 004 002",  "cast_punk",	0,	    100,	0,	    1,	//courtyard1 shotgun
-		"",	        "514 003 002",	"cast_punk",	0,	    100,	0,	    1,	//courtyard2 shotgun
-		"",	        "514 003 002",	"cast_punk",	0,	    100,	0,	    0,  //shotgun		//sr3 hallway1
-		"",	        "004 001 001",	"cast_punk",    0,      120,	0,		0,    //postbattery1  shotgun
-		"",     	"514 003 002",	"cast_punk",    0,      120,	0,		1,    //postbattery2  shotgun
-		"Momo",		"072 014 009",	"cast_shorty",	8192,   150,	0,  	0,	//sr1 shotgun		//Skidrow_names
-		"arnold",	"012 007 004",	"cast_punk",	0,	    200,	0,	    0,	//Shotgun		//Skidrow_courtyard
-	};
-
-	cast_TF_applyRandSkin(self, skins, ARYSIZE(skins));
-}
-
-#endif
-
 
 ///////////////////////
 // setup cast skins
@@ -548,8 +458,11 @@ void cast_TF_Skidrow_boss_lamont(edict_t *self)
 	self->classname = "cast_thug";
 	self->moral = 6;
 //	self->scale = 1.05;
-    self->cast_info.scale = 1.50;//Or will give problems?
+    self->cast_info.scale = 1.50;//Or will give problems? hypov8 note: this fails to increase hitbox
 	self->health = 300 * currWave_plysCount;
+
+	//store boss ID.
+	boss_entityID = self;
 }
 void cast_TF_Skidrow_boss_jesus(edict_t *self)//sr4
 {
@@ -562,6 +475,9 @@ void cast_TF_Skidrow_boss_jesus(edict_t *self)//sr4
 	self->cal = 20;
 	self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 400 * currWave_plysCount;
+
+	//store boss ID.
+	boss_entityID = self;
 }
 void cast_TF_Skidrow_boss(edict_t *spawn)
 {
@@ -625,6 +541,9 @@ void cast_TF_Poisonville_boss(edict_t *self)
 //	self->scale = 1.06;
     self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 450 * currWave_plysCount;
+
+	//store boss ID.
+	boss_entityID = self;
 }
 void cast_TF_Shipyard_deckmonkeys(edict_t *self)//sy1 deck_monkeys and 2, shotty and tommyguns, no names, heilman skins
 {
@@ -697,6 +616,9 @@ void cast_TF_Shipyard_boss(edict_t *self)
     self->acc = 4;
     self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 650 * currWave_plysCount;
+
+	//store boss ID.
+	boss_entityID = self;
 }
 
 void cast_TF_Steeltown_teamno(edict_t *self)//steel1,steel2,steel3,steel4 teamno1, 2, 3, 7 no names, Moker team skin
@@ -786,6 +708,9 @@ void cast_TF_Steeltown_boss(edict_t *self)
 	self->classname = "cast_punk";
 	self->cast_info.scale = 1.50;//Or will give problems?
     self->health = 800 * currWave_plysCount;
+
+	//store boss ID.
+	boss_entityID = self;
 }
 
 void cast_TF_Trainyard_trainwreck(edict_t *self)//ty1 trainwreck, no names, Tyrone bee skins
@@ -853,6 +778,9 @@ void cast_TF_Trainyard_boss(edict_t *self)
 	self->classname = "cast_punk";
 	self->cast_info.scale = 1.50;//Or will give problems?
     self->health = 500 * currWave_plysCount;
+
+	//store boss ID.
+	boss_entityID = self;
 }
 void cast_TF_Radio_City_dragon(edict_t *self)//rc2 dragon1 and 2, no names, dragon skins
 {
@@ -984,6 +912,9 @@ void cast_TF_Radio_City_boss(edict_t *self)
 	self->classname = "cast_punk";
 	self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 800 * currWave_plysCount;
+
+	//store boss ID.
+	boss_entityID = self;
 }
 
 
@@ -1018,8 +949,7 @@ void cast_TF_Crystal_Palace_boss(edict_t *spawn)
 	case 3:		cast_TF_Crystal_Palace_boss_blunt(spawn);break;
 	}
 
-	//store boss hp/ID.
-	boss_maxHP = spawn->health;
+	//store boss ID.
 	boss_entityID = spawn;
 }
 // end setup cast skins
@@ -1096,18 +1026,27 @@ void cast_TF_free(void)
 		}
 	}
 
-	//clear configstrings. overloaded with to many skins asigned to the same model index
-	/*for (i = CS_MODELSKINS; i < CS_MODELSKINS + MAX_MODELS; i++)
+#if 1 // requires special kpded2 version
+	//reset skins
+	if (kpded2)
 	{
-		//need a way to test if the exist
-		gi.configstring(i, "");		//hypov8 sending more then 1 of these in a row crash kp.
-									//its used in ClientDisconnect. posible bug if 2 clients leave at once
+		//shorty 011 011 005
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[0], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[1], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[2], "001");
+		//runt
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[3], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[4], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[5], "001");
+		//thug
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[6], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[7], "001");
+		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[8], "001");
 
-	}*/
-	//not sure yet why server will get skin data incorrect
-	//this causes svc_muzzleflash3 issues (3 is char "count" of skin "001")
-	//some times its sent in packet. some times its not.
+		//gi.configstring(CS_MODELSKINS + TF_castSkinIndex[], va("%03i", level.waveNum));
 
+	}
+#endif
 
 	if (level.waveEnemyCount_cur)
 		level.waveEnemyCount_cur = 0; //reset spawned cast count
@@ -1132,11 +1071,16 @@ void cast_TF_checkEnemyState()
 
 				{
 					//check if boss died
-					if (level.waveNum == currWave_length && boss_entityID && level.characters[i] == boss_entityID)
+					if (boss_entityID && level.characters[i] == boss_entityID)
 					{
-						level.waveEnemyCount_cur = 1;
-						level.num_characters = 1;
-						level.waveEnemyCount_total = 1;
+						if (level.waveNum == currWave_length) //final wave
+						{
+							level.waveEnemyCount_cur = 1;
+							level.num_characters = 1;
+							level.waveEnemyCount_total = 1;
+						}
+						else
+							boss_entityID = NULL; //any wave
 					}
 
 					//free any dead cast
@@ -1517,17 +1461,29 @@ void cast_TF_spawn(void)
 
 		spawn->max_health = spawn->health;
 
+		//add healt after skil
+		if (boss_entityID && spawn == boss_entityID)
+			boss_maxHP = spawn->health;
+
+		// stop cast health increasing slowly
+		spawn->healspeed = -1;
+
 		//set what player to attack
 		cast_TF_setEnemyPlayer(spawn);
 
 		//add enemy to counter
 		level.waveEnemyCount_cur++;
+
+#if 0 //HYPODEBUG
+		spawn->health = 10;
+#endif
+
 	}
 }
 
 //total enemy counts per wave.
 //this will be multiplied by player counts later
-#if 0 //HYPODEBUG
+#if 1 //HYPODEBUG
 static int wave_shortGame[5] = { 2, 2, 2, 2, 1 };
 static int wave_medGame[8] = { 2, 2, 2, 2, 2, 2, 2, 1 };
 static int wave_longGame[11] = { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
@@ -1576,7 +1532,7 @@ void cast_TF_setupEnemyCounters(void)
 		if (self->client->pers.spectator == PLAYING)
 		{
 			playerCount++;
-			AddCharacterToGame(self); //add player to level.characters
+			//AddCharacterToGame(self); //add player to level.characters
 			if (!firstPlayer)
 			{
 				firstPlayer = 1;
