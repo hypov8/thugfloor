@@ -17,7 +17,7 @@ edict_t *boss_entityID = NULL;
 int boss_maxHP;
 static int boss_called_help = 0; //1 = melee, 2= pistol, 3= shotty
 
-#if 0
+#if 1
 void cast_pawn_o_matic_free()
 {
 	int i;
@@ -46,16 +46,6 @@ void cast_pawn_o_matic_spawn ()//Randoms spawn testing
 		}
 	}
 
-//	for (i=0 ; i<globals.num_edicts ; i++)
-	{
-/*		spawnspot = g_edicts + i;
-		if (!spawnspot->inuse)
-			continue;
-		if (!spawnspot->classname)
-			continue;
-		if (Q_stricmp(spawnspot->classname, "info_player_deathmatch"))//todo Should add special one for new maps or spawn on cast_pawn_o_matic spot
-			continue;*/
-
 		spawn = G_Spawn();
 		spawnspot = cast_SelectRandomDeathmatchSpawnPoint(spawn);
 		VectorCopy(spawnspot->s.angles, spawn->s.angles);
@@ -74,12 +64,6 @@ void cast_pawn_o_matic_spawn ()//Randoms spawn testing
 			return ;
 		}
 
-/*		{//Todo
-		    spawn->s.modelindex = 255;
-		    VectorCopy(player->s.origin, spawn->s.origin );
-		    gi.linkentity(spawn);
-		}*/
-
 		ED_CallSpawn(spawn);
 
 
@@ -93,7 +77,7 @@ void cast_pawn_o_matic_spawn ()//Randoms spawn testing
 		//no more required
 		if (count == 1)
 			return;
-	}
+
 }
 #else
 void cast_pawn_o_matic_free()
@@ -273,7 +257,10 @@ void cast_TF_Wave2_Skidrow(edict_t *self)
 
 ///////////////////////
 // setup cast skins
-
+//any matching cast model part can only have 21 differnt skins
+//21 heads
+//21 legs
+//21 body
 void cast_TF_dog(edict_t *self)
 {
 	self->classname = "cast_dog";
@@ -545,8 +532,8 @@ void cast_TF_Skidrow_names_pistol(edict_t *self)
 	//name,		//skin,			classname		flags	HP		count	head
 	"Momo",		"020 011 003",	"cast_runt",	0,	    100,	0,  	0,	  //sr2 //bouncer pistol
     "Mona",		"014 012 003",	"cast_bitch",	0,	    100,	0,  	0,    //sr2 pistol
-	"Sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	0,    //bar_sr pistol rented guy
-    "Rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	  //bar_sr pistol rented guy
+//	"Sluggo",	"019 010 011",	"cast_runt",	0,	    100,	0,  	0,    //bar_sr pistol rented guy
+//    "Rocko",	"016 009 006",	"cast_thug",	0,	    100,	0,  	0,	  //bar_sr pistol rented guy
 	"Lenny",	"018 011 007",	"cast_runt",	0,	    100,	0,  	0,	  //bar_sr pistol
 	"Louie",    "011 011 005",	"cast_runt",	0,	    100,	3,  	0,    //sr1 pistol
 	};
@@ -561,6 +548,7 @@ void cast_TF_Skidrow_boss_lamont(edict_t *self)
 	self->classname = "cast_thug";
 	self->moral = 6;
 //	self->scale = 1.05;
+    self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 300 * currWave_plysCount;
 }
 void cast_TF_Skidrow_boss_jesus(edict_t *self)//sr4
@@ -572,14 +560,17 @@ void cast_TF_Skidrow_boss_jesus(edict_t *self)//sr4
 	self->moral = 5;
 	self->acc = 3;
 	self->cal = 20;
+	self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 400 * currWave_plysCount;
 }
 void cast_TF_Skidrow_boss(edict_t *spawn)
 {
-	switch (rand() % 2)
+	switch (rand() % 4)
 	{
 	case 0:		cast_TF_Skidrow_boss_lamont(spawn);break;
 	case 1:		cast_TF_Skidrow_boss_jesus(spawn);break;
+    case 2:		cast_TF_Skidrow_boss_lamont(spawn);break;
+	case 3:		cast_TF_Skidrow_boss_jesus(spawn);break;
 	}
 }
 void cast_TF_Poisonville_boob(edict_t *self)//pv_1 boob, all pistol, no names, Nikki skins
@@ -614,8 +605,8 @@ void cast_TF_Poisonville_names(edict_t *self)
     "Laurel",	"504 032 031",	"cast_punk",    0,      200,    0,      1,	//pv_h shotgun nikki cyclops
 	"Hardey",	"114 032 031",	"cast_punk",    0,      200,    0,      0,	//pv_h shotgun nikki
     "Momo",     "072 014 009",  "cast_shorty",  0,      100,    0,      0,	//pv_h shotgun
-    "Dubs",     "108 009 006",  "cast_punk",    64,     220,    0,      0,	//pv_h tommygun rented guy
-    "Fingers",	"025 009 009",	"cast_thug",    0,      150,    0,      0,	//bar_pv pistol rented guy
+//    "Dubs",     "108 009 006",  "cast_punk",    64,     220,    0,      0,	//pv_h tommygun rented guy
+//    "Fingers",	"025 009 009",	"cast_thug",    0,      150,    0,      0,	//bar_pv pistol rented guy
 	"Burt",	    "063 041 010",	"cast_thug",    0,      100,    0,      0,	//bar_pv pistol
     "Clarence", "047 013 003",  "cast_runt",    0,      100,    9,      0,	//bar_pv pistol
     "Candy",	"015 017 013",  "cast_bitch",   0,      100,    0,      0,	//bar_pv pistol
@@ -632,6 +623,7 @@ void cast_TF_Poisonville_boss(edict_t *self)
 	self->classname = "cast_punk";
 	self->moral = 5;
 //	self->scale = 1.06;
+    self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 450 * currWave_plysCount;
 }
 void cast_TF_Shipyard_deckmonkeys(edict_t *self)//sy1 deck_monkeys and 2, shotty and tommyguns, no names, heilman skins
@@ -703,6 +695,7 @@ void cast_TF_Shipyard_boss(edict_t *self)
 	self->classname = "cast_shorty";
 	self->moral = 5;
     self->acc = 4;
+    self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 650 * currWave_plysCount;
 }
 
@@ -772,12 +765,12 @@ void cast_TF_Steeltown_names(edict_t *self)
 	static localteam_skins_s skins[] = {
 	//name,		//skin,			classname		flags	HP		count	head
 	"Bambi",	"044 042 003",  "cast_bitch",	0,	    100,	0,		0,	//bar_st pistol
-    "Rochelle",	"601 009 012",  "cast_whore",	0,	    300,	0,		2,	//bar_st shotgun rented girl
+//    "Rochelle",	"601 009 012",  "cast_whore",	0,	    300,	0,		2,	//bar_st shotgun rented girl
     "Brittany",	"046 040 010",  "cast_bitch",	0,	    100,	0,		0,	//steel1 pistol
     "Kroker",	"023 020 020",  "cast_runt",	64,	    150,	1,		0,	//steel1 tommygun
     "Momo",		"013 045 006",  "cast_runt",	0,	    100,	0,		0,	//steel1 //bouncer pistol
     "Mathew",	"048 042 015",  "cast_runt",	0,	    100,	0,		0,	//steel1 pistol
-    "Oscar",	"044 012 006",  "cast_punk",	64,		250,	0,		0,  //steel2 tommygun rented guy
+//    "Oscar",	"044 012 006",  "cast_punk",	64,		250,	0,		0,  //steel2 tommygun rented guy
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
@@ -791,6 +784,7 @@ void cast_TF_Steeltown_boss(edict_t *self)
     self->acc = 5;
 //    self->localteam = teamno2;
 	self->classname = "cast_punk";
+	self->cast_info.scale = 1.50;//Or will give problems?
     self->health = 800 * currWave_plysCount;
 }
 
@@ -857,6 +851,7 @@ void cast_TF_Trainyard_boss(edict_t *self)
 //	self->scale = 1.05;
     self->head = 1;
 	self->classname = "cast_punk";
+	self->cast_info.scale = 1.50;//Or will give problems?
     self->health = 500 * currWave_plysCount;
 }
 void cast_TF_Radio_City_dragon(edict_t *self)//rc2 dragon1 and 2, no names, dragon skins
@@ -987,6 +982,7 @@ void cast_TF_Radio_City_boss(edict_t *self)
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "122 122 122");
 	self->spawnflags = 64;//Tommygun
 	self->classname = "cast_punk";
+	self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 800 * currWave_plysCount;
 }
 
@@ -999,6 +995,7 @@ void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
     self->acc = 5;
     self->cal = 5;
 //	self->scale = 1.15;
+    self->cast_info.scale = 1.50;//Or will give problems?
 	self->classname = "cast_runt";
 	self->health = 1500 * currWave_plysCount;
 }
@@ -1008,6 +1005,7 @@ void cast_TF_Crystal_Palace_boss_blunt(edict_t *self)
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "080 059 059");
 	self->spawnflags = 16;//hmg //18 =triger spawned (>>2)
 	self->classname = "cast_whore";
+	self->cast_info.scale = 1.50;//Or will give problems?
 	self->health = 1500 * currWave_plysCount;//150000 normally
 }
 void cast_TF_Crystal_Palace_boss(edict_t *spawn)
@@ -1027,14 +1025,14 @@ void cast_TF_Crystal_Palace_boss(edict_t *spawn)
 // end setup cast skins
 ///////////////////////
 
-extern voice_table_t nickiblanco[];
-extern voice_table_t ty_tyrone[];
-extern voice_table_t steeltown_moker[];
 extern voice_table_t sr_jesus[];
+extern voice_table_t lamont_random[];
+extern voice_table_t nickiblanco[];
+extern voice_table_t steeltown_moker[];
 extern voice_table_t heilman[];
+extern voice_table_t ty_tyrone[];
 extern voice_table_t blunt[];
 extern voice_table_t kingpin[];
-
 
 
 void cast_boss_sounds()
@@ -1047,11 +1045,12 @@ void cast_boss_sounds()
 	//set bot specific sound table and index
 	switch (boss_entityID->name_index)
 	{
-	case NAME_NICKIBLANCO: tmpVoice = nickiblanco;	break; //todo: more boss?
+    case NAME_JESUS: tmpVoice = sr_jesus;	break;
+    case NAME_LAMONT: tmpVoice = lamont_random;	break;//Maybe not really a boss?
+	case NAME_NICKIBLANCO: tmpVoice = nickiblanco;	break;
+    case NAME_HEILMAN: tmpVoice = heilman;	break;
+    case NAME_MOKER: tmpVoice = steeltown_moker;	break;
 	case NAME_TYRONE: tmpVoice = ty_tyrone;	break;
-	case NAME_MOKER: tmpVoice = steeltown_moker;	break;
-	case NAME_JESUS: tmpVoice = sr_jesus;	break;
-	case NAME_HEILMAN: tmpVoice = heilman;	break;
 	case NAME_BLUNT: tmpVoice = blunt;
 		index = 8; //I'm gonna unload in your fucking face!
 		if (boss_called_help == 2)

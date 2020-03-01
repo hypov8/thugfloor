@@ -1174,8 +1174,9 @@ typedef enum
 #define	DF_SPAWN_FARTHEST	512
 #define DF_FORCE_RESPAWN	1024
 #define DF_NO_ARMOR			2048
-#define DF_ALLOW_EXIT		4096
+//#define DF_ALLOW_EXIT		4096
 //#define DF_INFINITE_AMMO	8192//FREDZ disable
+#define DF_SELF_DAMAGE		8192
 
 // Ridah, 27-may-99, not used
 //#define DF_QUAD_DROP		16384

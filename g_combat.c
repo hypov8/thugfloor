@@ -733,7 +733,6 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		return;
 	}
 
-
 	if (level.modeset != WAVE_ACTIVE)
 		return;	//stop shooting pawnGuy
 
@@ -742,6 +741,9 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 
 	if (!targ->client && !attacker->client && targ != attacker)
 		return; //skip bots killing each other
+
+    if ((targ == attacker) && ((int)dmflags->value & DF_SELF_DAMAGE))
+		dmg = 0;
 
 	//hypov8 note: "Sharky" can still get damage from other cast damage at end wave. flamer..
 	//todo inflictor?

@@ -961,9 +961,9 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 		}*/
 //		sl_WriteStdLogDeath( &gi, level, self, inflictor, attacker);	// Standard Logging
 
-		if (meansOfDeath!=MOD_RESTART)
-			TossClientWeapon (self);
-		if (deathmatch->value && meansOfDeath!=MOD_RESTART && 
+//		if (meansOfDeath!=MOD_RESTART)//People keep weapon anyway
+//			TossClientWeapon (self);
+		if (deathmatch->value && meansOfDeath!=MOD_RESTART &&
 			(!self->client->showscores || self->client->showscores == SCORE_TF_HUD)) // MH: only if not already showing scores
 			Cmd_Help_f (self, 0);		// show scores
 
@@ -1135,7 +1135,7 @@ void InitClientPersistant (gclient_t *client)
 				item = client->pers.weaponStore;
 				client->pers.selected_item = ITEM_INDEX(item);
 				client->pers.inventory[client->pers.selected_item] = 1;
-	
+
 					if (item->ammo)
 				{
 					client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
@@ -1976,7 +1976,7 @@ void PutClientInServer (edict_t *ent)
 		if (ent->client->pers.spectator == PLAYING) //player died mid wave
 		{
 			ent->client->pers.player_dead = TRUE;//FREDZ
-			ent->client->pers.spectator = PLAYER_READY;		
+			ent->client->pers.spectator = PLAYER_READY;
 			ent->client->pers.player_died = true;//reset player died mid wave. deny cash
 		}
 //		ent->movetype = MOVETYPE_NOCLIP;
@@ -2523,7 +2523,7 @@ void ClientBegin (edict_t *ent)
 				}
 			}
 		}
-	} 
+	}
 	else
 		ent->client->pers.admin=NOT_ADMIN; // MH: moved here from above (fix)
 
@@ -2562,7 +2562,7 @@ void ClientBegin (edict_t *ent)
 		return;
 	}
 
-	
+
 #if 1 //hypov8 note: nothing below this will get used in DM. unreachable code
 	InitClientRespClear(ent->client); //hypov8 add
 

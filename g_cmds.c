@@ -3785,7 +3785,7 @@ void Cmd_PutAway_f (edict_t *ent)
 {
 	if (ent->client->showscores == SCORE_TF_HUD
 		|| (ent->client->pers.spectator == SPECTATING && level.modeset == WAVE_ACTIVE && ent->client->showscores == NO_SCOREBOARD))
-	{ 
+	{
 		//hypo no esc bugfixed
 		char* string = "menu_main";
 
@@ -4583,17 +4583,17 @@ void Cmd_DmflagsSettings_f (edict_t *ent)//FREDZ
 		gi.cprintf(ent, PRINT_HIGH,"DF_NO_ARMOR         :  2048\n");
 	else
 		gi.cprintf(ent, PRINT_HIGH,"DF_NO_ARMOR         :   Off\n");
-
+/*
 	if ((int)dmflags->value & DF_ALLOW_EXIT)
 		gi.cprintf(ent, PRINT_HIGH,"DF_ALLOW_EXIT       :  4096\n");
 	else
 		gi.cprintf(ent, PRINT_HIGH,"DF_ALLOW_EXIT       :   Off\n");
-/*
-	if ((int)dmflags->value & DF_INFINITE_AMMO)
-		gi.cprintf(ent, PRINT_HIGH,"DF_INFINITE_AMMO    :  8192\n");
-	else
-		gi.cprintf(ent, PRINT_HIGH,"DF_INFINITE_AMMO    :   Off\n");
 */
+	if ((int)dmflags->value & DF_SELF_DAMAGE)
+		gi.cprintf(ent, PRINT_HIGH,"DF_SELF_DAMAGE    :  8192\n");
+	else
+		gi.cprintf(ent, PRINT_HIGH,"DF_SELF_DAMAGE    :   Off\n");
+
 /*
 	if ((int)dmflags->value & DF_SELF_DAMAGE)
 		gi.cprintf(ent, PRINT_HIGH,"DF_SELF_DAMAGE      : 16384\n");
@@ -4656,7 +4656,7 @@ void Cmd_CommandList_f (edict_t *ent)
 	if (enable_password)
         gi.cprintf(ent, PRINT_HIGH,"setpassword removepassword\n");
 	if (!fixed_gametype) {
-		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, setmaxtype\n");
+		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, setwavetype\n");
 	}
     if (!fixed_skilltype)//FREDZ
 	{
@@ -5817,7 +5817,7 @@ void ClientCommand (edict_t *ent)
 	}
 
 
-	if (!strcmp(cmd,locktex)) 
+	if (!strcmp(cmd,locktex))
 	{
 #if 1 //hypov8 let clients disable this visual effect
         char *cmd2=gi.argv(2);
@@ -5834,7 +5834,7 @@ void ClientCommand (edict_t *ent)
 			KICKENT(ent,"%s is being kicked for using a texture cheat!\n");
 		}
 		// MH: check gl_polyblend separately
-		else if (atof(cmd3)==0.0f) 
+		else if (atof(cmd3)==0.0f)
 		{
             if (kick_flamehack->value || (ent->client->pers.spectator==SPECTATING))// && no_spec->value))  // MH: removed modeset check
             {

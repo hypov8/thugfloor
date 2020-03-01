@@ -1703,17 +1703,22 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 
 	//FREDZ better code probably
-        /*
-    if ((deathmatch->value) && (item->pickup == Pickup_Armor || item->pickup == Pickup_PowerArmor
- //      || item->pickup == Pickup_Health
-//	   || item->pickup == Pickup_Adrenaline || item->pickup == Pickup_Health_Large || item->pickup == Pickup_Health_Small
-	   || item->pickup == Pickup_Ammo || item->pickup == Pickup_Weapon
-	   || item->pickup == Pickup_Pack || (strcmp(ent->classname, "ammo_cylinder") == 0) || item->pickup == Pickup_Pistol_Mods))
-	{
-		G_FreeEdict (ent);
-		return;
-	}
-*/
+    if (deathmatch->value)
+    {
+        if (item->pickup == Pickup_Armor)
+            item = FindItem("Small Health");
+
+        if (item->pickup == Pickup_Weapon)
+            item = FindItem("Ammo Pack");
+
+        if ( (item->flags == IT_AMMO) || (strcmp(ent->classname, "ammo_cylinder") == 0) || item->pickup == Pickup_Pistol_Mods)
+        {
+            G_FreeEdict (ent);
+            return;
+        }
+
+    }
+
 
 	// some items will be prevented in deathmatch
 	if (deathmatch->value)

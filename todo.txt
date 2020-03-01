@@ -1,8 +1,7 @@
--fix sharky abit better?  //hypo.. should be fixed. stoped all damage having effect in buy time, maybe need new options for but need to be tested.
 
--add sound to some ai?
+-add sound to some ai? (seems almost fixed?)
 
--spawning of enemies need to be tweaked (need to be tested)
+-spawning of enemies need to be tweaked
 
 -scoreboard can be done better
 
@@ -14,35 +13,16 @@
 
 -add new votingboard
 
--pickup youre own weapon up only, if you died or keep last weapon with what you died.
-
--keep money if you died, saving up money? (need to look into kf)
-
--show new players, how long they need to wait
-
 -cl_parsemuzzleflash 3 error somethimes when connect
-
--somthimes 0 enemys to kill (fixed?)
 
 -nav data need to be off when it already got one
 
--fix flametrhower color (should be fixed)
+-message for buyzone
 
+-message how long you need to wait when you just join
 
-killa:
-1. if you elect admin the buy guy wont show and u get stuck on a wave (i don't find this bug)
-2. there is a 100% cpu that crashes the server
+-there is a 100% cpu that crashes the server
 
+-also show boss info for mini bosses?
 
-kila suggestions:
-1. a message informing u that you start game at next wave while in spec
-2.increase spawn rate of npc at first wave
-3. 2x killing enemy should result in cash being distributed percentage of damage given to enemy
-2x players
-3. boss need to be hightlighted more obvious
-4. radar disapears on occasions
-5.when a player dies, enemy reduce in size accordingly
-the first wave deff takes too long
-maybe half the enemy and give players 100 bucks at start?
-and later waves more enemy but less health for enemy
 

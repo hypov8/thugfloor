@@ -754,23 +754,17 @@ void ED_CallSpawn (edict_t *ent)
         ent->classname = "info_player_deathmatch";
     }*/
 
-	//FREDZ probably also check g_items.c void SpawnItem
-    if (!strncmp(ent->classname, "weapon_", 7))//FREDZ thugfloor ammo
-    {
-        ent->classname = "item_pack";
-    }
 
     //FREDZ item_adrenaline missing by item_armor_?
     //FREDZ thugfloor Remove all ammo and armor from the game.
-	if (!strncmp(ent->classname, "ammo_", 5)
-		|| !strncmp(ent->classname, "item_armor_", 11)
+/*	if (!strncmp(ent->classname, "ammo_", 5)//Moved to SpawnItem
+	//	|| !strncmp(ent->classname, "item_armor_", 11)
 		|| !strncmp(ent->classname, "pistol_mod_", 11)
-		//     || (!strncmp(ent->classname, "item_health_", 12)) //FREDZ maybe add in later version
 		)
 	{
 		G_FreeEdict(ent); //hypov8 free some entities
 		return;
-	}
+	}*/
 
 	//get level spawn counts
 	if (!Q_strcasecmp(ent->classname, "info_player_deathmatch"))
@@ -779,7 +773,7 @@ void ED_CallSpawn (edict_t *ent)
 		level.spSpawnPointCount += 1;
 
 
-  	if (!strcmp( ent->classname, "hmg_mod_cooling")  || !strcmp( ent->classname, "hmg_mod_colling" ))//FREDZ temp fix?
+  	if (!strcmp( ent->classname, "hmg_mod_cooling")  || !strcmp( ent->classname, "hmg_mod_colling" ))//FREDZ move aswell?
         ent->classname = "item_adrenaline";
 
 	if (!Q_stricmp( ent->classname, "weapon_barmachinegun" ))
@@ -1172,7 +1166,7 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
-#if HYPODEBUG //test level.waveNum 
+#if HYPODEBUG //test level.waveNum
 	level.waveNum = 5; //10 test end boss
 #endif
 

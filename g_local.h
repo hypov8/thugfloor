@@ -122,7 +122,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.24"
+#define	GAMEVERSION	"Thug Floor v0.26"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1

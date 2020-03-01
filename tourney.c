@@ -222,7 +222,7 @@ void SpawnPlayer () // Here I spawn players - 1 per server frame in hopes of red
                 team1 = true;
                 ClientBeginDeathmatch( self );
                 self->client->resp.is_spawn = true;
-                self->client->pers.player_dead = FALSE;//FREDZ												   
+                self->client->pers.player_dead = FALSE;//FREDZ
 				self->client->pers.player_died = 0;//reset player died mid wave. deny cash
                 break;
             }
@@ -292,7 +292,22 @@ void WaveStart () // Starts the match
 
 	for_each_player(self,i)
 	{
-		gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
+	    if (level.waveNum <2)
+            gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1);
+        else if (level.waveNum == 3 || 4)
+            gi.centerprintf(self,"The wave %i from Poisonville has begun.", level.waveNum + 1);
+        else if (level.waveNum == 5 || 6)
+            gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1);
+        else if (level.waveNum == 7)
+            gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1);
+        else if (level.waveNum == 8)
+            gi.centerprintf(self,"The wave %i from Trainyard has begun.", level.waveNum + 1);
+        else if (level.waveNum == 9 || 10)
+            gi.centerprintf(self,"The wave %i from Radiocity has begun.", level.waveNum + 1);
+        else if (level.waveNum == 11)
+            gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);
+        else
+            gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
 
 		//hypov8 end buy menu.
 		if (self->client->pers.spectator == PLAYING)
@@ -496,7 +511,7 @@ void WaveEnd () //hypov8 end of the match
 		//give cash to ppl that survived the wave
 		if (self->client->pers.spectator == PLAYING && !self->client->pers.player_died)
 			self->client->pers.currentcash += waveGiveCash(1);
-		
+
 
 
 		//spawn players into buying time
@@ -530,8 +545,8 @@ void WaveEnd () //hypov8 end of the match
 
 void WaveBuy()  // start buy zone
 {
-	edict_t *self;
-	int     i;
+//	edict_t *self;
+//	int     i;
 
 	level.modeset = WAVE_BUYZONE;
 	level.startframe = level.framenum;
