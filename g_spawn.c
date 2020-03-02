@@ -1168,7 +1168,7 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
-#if 0//HYPODEBUG //test level.waveNum 
+#if 0//HYPODEBUG //test level.waveNum
 	level.waveNum = 5; //10 test end boss
 #endif
 
@@ -2108,7 +2108,7 @@ void SP_worldspawn (edict_t *ent)
 	TF_castSkinIndex[1] = gi.modelindex("models/actors/punk/legs.mdx");
 	TF_castSkinIndex[2] = gi.modelindex("models/actors/punk/body.mdx");
 
-	TF_castSkinIndex[3] = gi.modelindex("models/actors/runt/head.mdx");
+	TF_castSkinIndex[3] = gi.modelindex("models/actors/runt/head.mdx");//Shorty misses? is same as runt
 	TF_castSkinIndex[4] = gi.modelindex("models/actors/runt/legs.mdx");
 	TF_castSkinIndex[5] = gi.modelindex("models/actors/runt/body.mdx");
 

@@ -307,6 +307,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	//hypov8 note: maybe these should fill clip to max_ and/or lower max_ values?
 	//something to try stop 1 person picking up all the packs
 	//or a timmer on player?
+	//FREDZ: yeah maybe limit to weapon that they already have some ammo need more pickups. Shell thakes longst but people also got fast shotgun :/
 
 	item = FindItem("Bullets");
 	if (item)
@@ -1713,7 +1714,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
         if (item->pickup == Pickup_Weapon)
             item = FindItem("Ammo Pack");
 
-        if ( (item->flags & IT_AMMO) || item->pickup == Pickup_Pistol_Mods) 
+        if ( (item->flags & IT_AMMO) || item->pickup == Pickup_Pistol_Mods)
         {
             G_FreeEdict (ent);
             return;

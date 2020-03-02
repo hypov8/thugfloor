@@ -5,7 +5,7 @@
 //#define		DEFAULT_TEAMPLAY_STRING	"default_teamplay"
 #define		DEFAULT_DMFLAGS_STRING	"default_dmflags"
 #define		DEFAULT_PASSWORD_STRING	"default_password"
-//#define		DEFAULT_TIME_STRING		"default_timelimit"
+#define		DEFAULT_TIME_STRING		"default_timelimit"
 //#define		DEFAULT_CASH_STRING		"default_cashlimit"
 //#define		DEFAULT_FRAG_STRING		"default_fraglimit"
 #define		DEFAULT_MOTD_STRING		"MOTD"
@@ -50,7 +50,7 @@
 #define		DEFAULT_DMFLAGS_KEYWORD		7
 #define		DEFAULT_PASSWORD_KEYWORD	8
 #define		DEFAULT_MOTD_KEYWORD		9
-//#define		DEFAULT_TIME_KEYWORD		10
+#define		DEFAULT_TIME_KEYWORD		10
 //#define		DEFAULT_CASH_KEYWORD		11
 //#define		DEFAULT_FRAG_KEYWORD		12
 #define		MAP_VOTING_KEYWORD			13

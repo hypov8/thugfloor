@@ -246,11 +246,11 @@ int proccess_ini_file()
 			sscanf(buffer, "%s %s", dummy, map);	// Quick ugly hack :)
 			strncpy(default_password, map, 16);
 			break;
-/*		case DEFAULT_TIME_KEYWORD:
+		case DEFAULT_TIME_KEYWORD:
 			sscanf(buffer, "%s %s", dummy, map);	// Quick ugly hack :)
 			strncpy(default_timelimit, map, 16);
 			break;
-		case DEFAULT_CASH_KEYWORD:
+/*		case DEFAULT_CASH_KEYWORD:
 			sscanf(buffer, "%s %s", dummy, map);	// Quick ugly hack :)
 			strncpy(default_cashlimit, map, 16);
 			break;

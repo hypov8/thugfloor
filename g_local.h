@@ -105,7 +105,7 @@
 #define SCORE_MOTD			1
 #define	SCOREBOARD			2
 #define	SCOREBOARD2			3
-#define	SCOREBOARD3			4
+//#define	SCOREBOARD3			4
 #define	SPECTATORS			5
 #define SCORE_REJOIN		6
 #define SCORE_MAP_VOTE		7
@@ -122,7 +122,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.26"
+#define	GAMEVERSION	"Thug Floor v0.27"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -2209,8 +2209,8 @@ extern char default_map[32];    // default settings
 //extern char default_teamplay[16];
 extern char default_dmflags[16];
 extern char default_password[16];
-/*extern char default_timelimit[16];
-extern char default_fraglimit[16];*/
+extern char default_timelimit[16];
+//extern char default_fraglimit[16];
 extern char default_dm_realmode[16];
 extern char default_wavetype[16];
 extern char custom_map_filename[32];  // stores where various files can be found

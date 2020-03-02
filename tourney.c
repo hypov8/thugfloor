@@ -13,8 +13,8 @@ char default_map[32];    // default settings
 //char default_teamplay[16];
 char default_dmflags[16];
 char default_password[16];
-/*
 char default_timelimit[16];
+/*
 char default_cashlimit[16];
 char default_fraglimit[16];*/
 char default_dm_realmode[16];
@@ -123,8 +123,8 @@ qboolean ResetServer(qboolean ifneeded) // completely resets the server includin
 	gi.cvar_set("dmflags",default_dmflags);
 //	gi.cvar_set("teamplay",default_teamplay);
 	gi.cvar_set("password",default_password);
-/*	gi.cvar_set("timelimit",default_timelimit);
-	gi.cvar_set("fraglimit",default_fraglimit);
+	gi.cvar_set("timelimit",default_timelimit);
+/*	gi.cvar_set("fraglimit",default_fraglimit);
 	gi.cvar_set("cashlimit",default_cashlimit);*/
 	gi.cvar_set("dm_realmode",default_dm_realmode);
 	if (default_wavetype[0])
@@ -305,7 +305,7 @@ void WaveStart () // Starts the match
         else if (level.waveNum == 9 || 10)
             gi.centerprintf(self,"The wave %i from Radiocity has begun.", level.waveNum + 1);
         else if (level.waveNum == 11)
-            gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);
+            gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
         else
             gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
 
@@ -384,25 +384,33 @@ int giveCashOnKill(int type)
 {
 	int cashOut = 0;
 
-	int cashmelee=6;
-	int cashpistol=8;
-    int cashshotgun=10;
-    int cashtommygun=10;
-    int cashhmg=20;
-    int cashgrenade=14;
-    int cashbazooka=16;
-    int cashflamethrower=12; 
+	int cashmelee=9;//was 6
+	int cashpistol=12;//was 8
+    int cashshotgun=15;//was 10
+    int cashtommygun=17;//was 10
+    int cashhmg=30;//was 20
+    int cashgrenade=21;//was 14
+    int cashbazooka=24;//was 16
+    int cashflamethrower=18;//was 12
+    int rat=15;//was 10
+    int dog=10;//was 6
+    int thug_sit=4;//Never used but use default pistol
+    int bum_sit=1;//Never used does not attack
 	//hypov8 note these seem low while playing
-	//if 1 player frags and other does nothing. 
+	//if 1 player frags and other does nothing.
 	//the differnce at end round is not alot.
 	//my need to tweek waveGiveCash below
+	//FREDZ i think spawn_cash need to be abit higher, but not sure. first wave they can shotgun, tommygun
+	//Problem is new players that join in wave cash is abit low maybe?
+	//But yeah need maybe more tweaking. added 50% more cash
+	//Tested abit looks better now for 1 player
 
 	switch (type)
 	{
-    case BOT_RAT:			cashOut = 10; break;		/*rat*/
-    case BOT_DOG:			cashOut = 6; break;		/*dog*/
-    case BOT_BUM:			cashOut = 1; break;		/*bum sit*/
-    case BOT_THUG_SIT:		cashOut = 4; break;		/*thug sit*/
+    case BOT_RAT:			cashOut = rat; break;		/*rat*/
+    case BOT_DOG:			cashOut = dog; break;		/*dog*/
+    case BOT_BUM:			cashOut = bum_sit; break;		/*bum sit*/
+    case BOT_THUG_SIT:		cashOut = thug_sit; break;		/*thug sit*/
 	case BOT_BITCH_ME:		cashOut = cashmelee; break;		    /*bitch melee*/
 	case BOT_BITCH:			cashOut = cashpistol; break;	    /*bitch*/
 	case BOT_PUNK_SG:		cashOut = cashshotgun; break;		/*punk SG*/

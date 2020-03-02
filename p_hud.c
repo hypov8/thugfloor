@@ -989,16 +989,16 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 				-36*10 - 10, -60+-21 );
 		else*/
 			Com_sprintf (entry, sizeof(entry),
-				"xr %i yv %i dmstr 663 \"Stat NAME           ping time  hits\" ",	//hypov8 note: "xr" is X aligned to Right.
+				"xr %i yv %i dmstr 663 \"stat NAME           ping time  hits\" ",	//hypov8 note: "xr" is X aligned to Right.
 				-56*10 - 10, -60+-21 );//56 was 36									//menu overlaps player display on low rez.
 	}																				//either move menu to right or use "xm" (X aligned Middle)
     else if (ent->client->showscores==SCOREBOARD2) //FREDZ							//or you can test client rez if patched and move accorodingly
     {
         Com_sprintf (entry, sizeof(entry),
-        "xr %i yv %i dmstr 663 \"NAME       health  cash  range\" ",
+        "xr %i yv %i dmstr 663 \"dead NAME        health cash range\" ",
             -56*10 - 10, -60+-21 );//56 was 36
 	}
-	else
+	else//SCOREBOARD3 disabled
 		Com_sprintf (entry, sizeof(entry),
 			"xr %i yv %i dmstr 663 \"NAME        deaths  acc  fav\" ",
 			-56*10 - 10, -60+-21 );//56 was 36
@@ -1098,7 +1098,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 					v = VectorDistance(ent->s.origin, cl_ent->s.origin);
 			}
 
-			if (ent->client->pers.patched >= 3)
+/*			if (ent->client->pers.patched >= 3)
 			{
 				Com_sprintf (entry, sizeof(entry),
 					"ds %s %i %i %i %5.0f ",
@@ -1109,9 +1109,14 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 				Com_sprintf (entry, sizeof(entry),
 					"yv %i ds %s %i %i %i %5.0f ",
 					-60+i*17, tag, sorted[i], cl_ent->health, cl->pers.currentcash, v );
+			}*/
+			{
+                Com_sprintf (entry, sizeof(entry),
+					"yv %i dmstr %s \"%4i %s %3i %5i %5.0f\"",
+					-60+i*17, tag, cl->resp.deposited, nfill, cl_ent->health, cl->pers.currentcash, v );
 			}
 		}
-		else//SCOREBOARD3
+		else//SCOREBOARD3 disabled
 		{
 			int fc = 0;
 			const char *fn = "-";
@@ -1331,8 +1336,8 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 //		else if (ent->client->showscores == BESTSCORES)
 			ent->client->showscores = SCOREBOARD;
 		else if (ent->client->showscores == SCOREBOARD2)
-			ent->client->showscores = SCOREBOARD3;
-		else if (ent->client->showscores == SCOREBOARD3)
+//			ent->client->showscores = SCOREBOARD3;
+//		else if (ent->client->showscores == SCOREBOARD3)
 		{
 			found = false;
             // MH: also check for connecting players, which are included in spectators list
@@ -1352,8 +1357,8 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 			ent->client->showscores = SCORE_MAP_VOTE;
 	}
 	else if (ent->client->showscores == SCOREBOARD2)
-		ent->client->showscores = SCOREBOARD3;
-	else if (ent->client->showscores == SCOREBOARD3)
+//		ent->client->showscores = SCOREBOARD3;
+//	else if (ent->client->showscores == SCOREBOARD3)
 	{
 		found = false;
 		for_each_player(dood,i)

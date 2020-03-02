@@ -4488,13 +4488,14 @@ void Cmd_PrintSettings_f (edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH,"Map                : %s\n", level.mapname);//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"Skill mode         : %s\n", sk);//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"Anti-Spawn Camp    : %d\n", (int)anti_spawncamp->value); //FREDZ
-/*	gi.cprintf(ent, PRINT_HIGH,"Time limit         : %d\n", (int)timelimit->value);
-	gi.cprintf(ent, PRINT_HIGH,"Frag limit         : %d\n", (int)fraglimit->value);
+	gi.cprintf(ent, PRINT_HIGH,"Time limit         : %d\n", (int)timelimit->value);
+/*	gi.cprintf(ent, PRINT_HIGH,"Frag limit         : %d\n", (int)fraglimit->value);
 	gi.cprintf(ent, PRINT_HIGH,"Cash limit         : %d\n", (int)cashlimit->value);*/
 	gi.cprintf(ent, PRINT_HIGH,"dmflags            : %d\n", (int)dmflags->value);
 	gi.cprintf(ent, PRINT_HIGH,"dm_realmode        : %d\n", (int)dm_realmode->value);
     gi.cprintf(ent, PRINT_HIGH,"Maximum Waves      : %d\n", (int)numWaves);
 	gi.cprintf(ent, PRINT_HIGH,"Server password    : %s\n", password->string);
+	gi.cprintf(ent, PRINT_HIGH,"Cheats             : %d\n", (int)sv_cheats->value);
 //	gi.cprintf(ent, PRINT_HIGH,"Teamplay mode      : %d\n",(int)teamplay->value);
 	if (admincode[0] || !disable_admin_voting) {
 		int			i,found;
@@ -4656,7 +4657,7 @@ void Cmd_CommandList_f (edict_t *ent)
 	if (enable_password)
         gi.cprintf(ent, PRINT_HIGH,"setpassword removepassword\n");
 	if (!fixed_gametype) {
-		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, setwavetype\n");
+		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, setwavetype, settimelimit\n");
 	}
     if (!fixed_skilltype)//FREDZ
 	{
@@ -5043,25 +5044,30 @@ void Cmd_MatchScore_f (edict_t *ent)
 //===================================================================================
 //===================================================================================
 
-/*
 void Cmd_SetTimeLimit_f (edict_t *ent, char *value)
 {
 	int		i = atoi (value);
 
 	if (ent->client->pers.admin > NOT_ADMIN )
-		if ((i < 0 ) || (i > 60 )) {
-			gi.cprintf(ent,PRINT_HIGH,"Please choose a timelimit between 0 and 60\n");
-			return;
-		} else {
-			gi.cvar_set("timelimit",value);
-			gi.bprintf(PRINT_HIGH,"The Timelimit has been changed to %d.\n",i);
-			gi.cvar_set(TIMENAME,"");
-		}
-
+    {
+        if (fixed_gametype)
+			gi.cprintf(ent,PRINT_HIGH,"This server's game type may not be changed\n");
+        else
+        {
+            if ((i < 2 ) || (i > 10 )) {
+                gi.cprintf(ent,PRINT_HIGH,"Please choose a timelimit between 2 and 10\n");
+                return;
+            } else {
+                gi.cvar_set("timelimit",value);
+                gi.bprintf(PRINT_HIGH,"The Timelimit has been changed to %d.\n",i);
+                gi.cvar_set(TIMENAME,"");
+            }
+        }
+    }
 	else
 		gi.cprintf(ent,PRINT_HIGH,"You do not have admin\n");
 }
-*/
+
 void Cmd_SetClientIdle_f (edict_t *ent, char *value)
 {
 	int		i = atoi (value);
@@ -6225,8 +6231,8 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp (cmd, "resetserver") == 0)
 		Cmd_ResetServer_f(ent);
 
-//	else if (Q_stricmp (cmd, "settimelimit") == 0)
-//		Cmd_SetTimeLimit_f (ent, gi.argv (1));
+	else if (Q_stricmp (cmd, "settimelimit") == 0)
+		Cmd_SetTimeLimit_f (ent, gi.argv (1));
     else if (Q_stricmp (cmd, "setidletime") == 0)
         Cmd_SetClientIdle_f (ent, gi.argv (1));
 //	else if (Q_stricmp (cmd, "setfraglimit") == 0)

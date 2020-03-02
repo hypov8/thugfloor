@@ -3,7 +3,7 @@
 
 -spawning of enemies need to be tweaked
 
--scoreboard can be done better
+-scoreboard can be done better?
 
 -Does spec need fix? solid/noclip  (should be fixed?)
 
@@ -11,9 +11,7 @@
 
 -if people join and wait to long they go to idle modus :/ (should be fixed, need testing) //hypov8 added 1 more fix`(fixed extra)
 
--add new votingboard
-
--cl_parsemuzzleflash 3 error somethimes when connect
+-cl_parsemuzzleflash 3 error somethimes when connect (fixed?)
 
 -nav data need to be off when it already got one
 
@@ -21,8 +19,6 @@
 
 -message how long you need to wait when you just join
 
--there is a 100% cpu that crashes the server
-
--also show boss info for mini bosses?
+-there is a 100% cpu that crashes the server (almost fixed?)
 
 

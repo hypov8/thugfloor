@@ -127,6 +127,10 @@ char *ep_names[] =
 	"Dude",//FREDZ rc3 and sy_h as script?
 	"Walter",//bar_rc
 	"Donny",//rc4
+
+	"Thug",
+	"Runt",
+	"Bitch",
 	NULL
 	//FREDZ: follow maps got no Character Names:
 	//bike, kpcut1, kpcut3, kpcut4, kpcut7,

@@ -1126,7 +1126,7 @@ void InitClientPersistant (gclient_t *client)
 			client->pers.weapon = item;
 			ammo = FindItem (item->ammo);
 
-			if (level.waveNum >= 2) //todo. players in wave dont get this!!!!
+			if ((level.waveNum >= 2) && (timelimit->value)) //todo. players in wave dont get this!!!!
 			{
 				item = FindItem("Shotgun");
 				client->pers.selected_item = ITEM_INDEX(item);
@@ -1137,7 +1137,7 @@ void InitClientPersistant (gclient_t *client)
 				ammo = FindItem(item->ammo);
 			}
 
-			if (level.waveNum >= 4) //todo. players in wave dont get this!!!!
+			if ((level.waveNum >= 4) && (timelimit->value)) //todo. players in wave dont get this!!!!
 			{
 				item = FindItem("Tommygun");
 				client->pers.selected_item = ITEM_INDEX(item);
@@ -1147,7 +1147,6 @@ void InitClientPersistant (gclient_t *client)
 				client->pers.weapon = item;
 				ammo = FindItem(item->ammo);
 			}
-
 
 
 			//give weapon back to client. minimal ammo and no mods etc..

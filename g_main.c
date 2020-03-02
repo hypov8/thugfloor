@@ -582,7 +582,7 @@ void CheckDMRules (void)
 	if (level.framenum - level.lastactive == 600)
 	{
 		// the server has been idle for a minute, reset to default settings if needed
-		if (ResetServer(true)) 
+		if (ResetServer(true))
 			return;
 	}
 
@@ -1069,7 +1069,8 @@ void G_RunFrame (void)
 										trace.ent, trace.endpos, trace.plane.normal);
 				}
 			}
-
+#if 0
+//FREDZ better to disable this probably?
 			// Heal thy self (healspeed -1 = no heal, healspeed 0 = 1, healspeed >1 = value)
 			if ((!ent->deadflag) && (ent->health < ent->max_health) && (ent->healspeed >= 0)
 					&&	(!ent->leader || ent->cast_group != 1 || (((int)timescale->value) == 1))	// Ridah, added this or they can set timescale = 100 and followers will restore full health in second
@@ -1111,6 +1112,7 @@ void G_RunFrame (void)
 					}
 				}
 			}
+#endif // 0
 		}
 		// END JOSEPH
 
