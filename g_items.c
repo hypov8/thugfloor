@@ -557,7 +557,7 @@ qboolean Pickup_Key (edict_t *ent, edict_t *other)
 		other->client->pers.inventory[ITEM_INDEX(ent->item)])
 		return false;
 	else
-		other->client->pers.inventory[ITEM_INDEX(ent->item)]++;
+		other->client->pers.inventory[ITEM_INDEX(ent->item)]=1;
 
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->value))
 		SetRespawn (ent, 30);
@@ -802,9 +802,9 @@ qboolean Pickup_Pistol_Mods (edict_t *ent, edict_t *other)
 	}
 	else if (ent->count == 4)
 	{
-		if ((other->client->pers.inventory[ITEM_INDEX(FindItem("HMG Cooling Mod"))])) //FREDZ fix
+		if ((other->client->pers.inventory[ITEM_INDEX(FindItem("HMG Cooling Mod"))]))
 			return false;
-		other->client->pers.inventory[ITEM_INDEX(FindItem("HMG Cooling Mod"))]++; //FREDZ coop code
+		other->client->pers.inventory[ITEM_INDEX(FindItem("HMG Cooling Mod"))]++;
 		other->client->pers.hmg_shots = 30;
 	}
 	else
@@ -815,11 +815,11 @@ qboolean Pickup_Pistol_Mods (edict_t *ent, edict_t *other)
 
 	if (ent->count <= 3)
 	{
-	if (other->client->pers.weapon == FindItem ("Pistol Silencer") || other->client->pers.weapon == FindItem("Pistol"))
-	{
-		other->client->newweapon = other->client->pers.weapon;
-		ChangeWeapon (other);
-	}
+        if (other->client->pers.weapon == FindItem ("Pistol Silencer") || other->client->pers.weapon == FindItem("Pistol"))
+        {
+            other->client->newweapon = other->client->pers.weapon;
+            ChangeWeapon (other);
+        }
 	}
 	else if (ent->count == 4)
 	{
@@ -1704,6 +1704,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			gi.dprintf("%s at %s has invalid spawnflags set\n", ent->classname, vtos(ent->s.origin));
 		}
 	}
+
 
 	//FREDZ better code probably
     if (deathmatch->value)

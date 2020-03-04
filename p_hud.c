@@ -679,39 +679,85 @@ void MOTDScoreboardMessage (edict_t *ent)
 //===================================================================
 //===================================================================
 
-void NewPlayerMessageBoard (edict_t *ent)//Todo
+void InfoNewPlayerMessageBoard (edict_t *ent)
 {
 	char	entry[1024];
 	char	string[1400];
 	int		stringlength;
-	int		i, j;
+	int     j;
+//	int		i;
+//    edict_t	*player;
 	int		yofs=0;
-	char	*selectheader[] =
-		{
-			"You wait until next round",
-			NULL
-		};
+//    char	*seperator = "==================================";//Motd size
+    char	*seperator = "===========================================================";
 
-	string[0] = 0;
+    string[0] = 0;
 	stringlength = 0;
 
-	for (i=0; selectheader[i]; i++)
-	{
-		Com_sprintf (entry, sizeof(entry),
-			"xm %i yv %i dmstr 953 \"%s\" ",
-			-5*strlen(selectheader[i]), yofs + (int)(-60.0+-3.5*14), selectheader[i] );
 
-		j = strlen(entry);
+    Com_sprintf (entry, sizeof(entry),
+        "xm %i yv %i dmstr 999 \"Welcome\" "//Add Player name?
+        "xm %i yv %i dmstr 772 \"%s\" ",
+        -5*7, yofs + -60-49,
+        -5*strlen(seperator), yofs + (int)(-60.0+-3.5*14+20), seperator );
+    j = strlen(entry);
+	if (stringlength + j < 1024)
+	{
 		strcpy (string + stringlength, entry);
 		stringlength += j;
-
-		yofs += 20;
 	}
+	yofs += 40;
+
+	if (timelimit->value)
+    {
+        Com_sprintf (entry, sizeof(entry),
+            "xm %i yv %i dmstr 953 \"You are set to play\" "
+            "xm %i yv %i dmstr 953 \"But you need to wait until next round, enemies left: %3i\" "
+            "xm %i yv %i dmstr 953 \"or until timelimit hits: %2i\" ",
+            -5*19, yofs + -60-49,
+            -5*55, yofs + -60-49+20, level.waveEnemyCount_total,
+            -5*25, yofs + -60-49+40, ((((int)timelimit->value * 600) + level.startframe - level.framenum) / 600) );
+        j = strlen(entry);
+        if (stringlength + j < 1024)
+        {
+            strcpy (string + stringlength, entry);
+            stringlength += j;
+        }
+        yofs += 20;
+    }
+    else
+    {
+        Com_sprintf (entry, sizeof(entry),
+            "xm %i yv %i dmstr 953 \"You are set to play\" "
+            "xm %i yv %i dmstr 953 \"But you need to wait until next round, enemies left: %3i\" ",
+            -5*19, yofs + -60-49,
+            -5*55, yofs + -60-49+20, level.waveEnemyCount_total);
+        j = strlen(entry);
+        if (stringlength + j < 1024)
+        {
+            strcpy (string + stringlength, entry);
+            stringlength += j;
+        }
+    }
+
+    yofs += 40;
+    Com_sprintf (entry, sizeof(entry),
+		"xm %i yv %i dmstr 772 \"%s\" ",
+		-5*strlen(seperator), yofs + (int)(-60.0+-3.5*14), seperator );
+
+    j = strlen(entry);
+    if (stringlength + j < 1024)
+    {
+		strcpy (string + stringlength, entry);
+		stringlength += j;
+    }
+
+
 
 	gi.WriteByte (svc_layout);
 	gi.WriteString (string);
 }
-void PlayerWinMessageBoard (edict_t *ent)//Todo
+void InfoWinGameMessageBoard (edict_t *ent)//Todo
 {
 	char	entry[1024];
 	char	string[1400];
@@ -746,7 +792,66 @@ void PlayerWinMessageBoard (edict_t *ent)//Todo
 	gi.WriteByte (svc_layout);
 	gi.WriteString (string);
 }
+void InfoBuyMessageBoard (edict_t *ent)
+{
+	char	entry[1024];
+	char	string[1400];
+	int		stringlength;
+	int     j;
+//	int		i;
+//    edict_t	*player;
+	int		yofs=0;
+//    char	*seperator = "==================================";//Motd size
+    char	*seperator = "===========================================================";
 
+    string[0] = 0;
+	stringlength = 0;
+
+
+    Com_sprintf (entry, sizeof(entry),
+        "xm %i yv %i dmstr 070 \"Buy Zone\" "//Green
+        "xm %i yv %i dmstr 772 \"%s\" ",
+        -5*7, yofs + -60-49,
+        -5*strlen(seperator), yofs + (int)(-60.0+-3.5*14+20), seperator );
+    j = strlen(entry);
+	if (stringlength + j < 1024)
+	{
+		strcpy (string + stringlength, entry);
+		stringlength += j;
+	}
+	yofs += 40;
+
+    Com_sprintf (entry, sizeof(entry),
+        "xm %i yv %i dmstr 953 \"Move as fast as possible to the Pawn O Matic (Sharky),\" "
+        "xm %i yv %i dmstr 953 \"To buy your weapons and items there.\" "
+        "xm %i yv %i dmstr 953 \"Follow the red laser for the destination: %4i\" ",
+        -5*54, yofs + -60-49,
+        -5*36, yofs + -60-49+20,
+        -5*45, yofs + -60-49+40, ent->client->botRange);
+    j = strlen(entry);
+    if (stringlength + j < 1024)
+    {
+        strcpy (string + stringlength, entry);
+        stringlength += j;
+    }
+
+    yofs += 60;
+    Com_sprintf (entry, sizeof(entry),
+		"xm %i yv %i dmstr 772 \"%s\" ",
+		-5*strlen(seperator), yofs + (int)(-60.0+-3.5*14), seperator );
+
+    j = strlen(entry);
+    if (stringlength + j < 1024)
+    {
+		strcpy (string + stringlength, entry);
+		stringlength += j;
+    }
+
+
+
+	gi.WriteByte (svc_layout);
+	gi.WriteString (string);
+}
 //===================================================================
 //===================================================================
 //===================================================================
@@ -1222,6 +1327,12 @@ void DeathmatchScoreboard (edict_t *ent)
 		SpectatorScoreboardMessage (ent);
 	else if (ent->client->showscores == SCORE_MAP_VOTE)
 		VoteMapScoreboardMessage(ent);
+    else if (ent->client->showscores == INFO_NEW_PLAYER)
+		InfoNewPlayerMessageBoard(ent);
+    else if (ent->client->showscores == INFO_WIN_GAME)
+		InfoWinGameMessageBoard(ent);
+    else if (ent->client->showscores == INFO_BUYZONE)
+		InfoBuyMessageBoard(ent);
 	else if (ent->client->showscores == SCORE_TF_HUD) //constant hud shows names
 		TF_DeathmatchScoreboardMessage(ent);
 	else
@@ -1371,6 +1482,17 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 		else
 			ent->client->showscores = NO_SCOREBOARD;
 	}
+    else if (ent->client->pers.spectator == PLAYER_READY)//Maybe need better fix? or move
+    {
+        if (ent->client->showscores == INFO_NEW_PLAYER)
+            ent->client->showscores = SCOREBOARD;
+    	else if (ent->client->showscores == SCOREBOARD)
+            ent->client->showscores = SCOREBOARD2;
+        else if (ent->client->showscores == SPECTATORS)
+            ent->client->showscores = NO_SCOREBOARD;
+        else
+            ent->client->showscores = INFO_NEW_PLAYER;
+    }
 	else if (ent->client->showscores == SPECTATORS)
 	{
 		if (level.intermissiontime)
@@ -1385,14 +1507,6 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 
     ent->client->resp.scoreboard_frame = 0; // MH: trigger scoreboard update instead of calling DeathmatchScoreboard
 //	DeathmatchScoreboard (ent); //hypov8 do we need this enabled?
-}
-void Cmd_Motd_f (edict_t *ent)//FREDZ todo: still broken
-{
-	ent->client->showinventory = false;
-	ent->client->showhelp = false;
-	ent->client->showscrollmenu = false;//FREDZ For menu code
-
-	MOTDScoreboardMessage (ent);
 }
 
 /*

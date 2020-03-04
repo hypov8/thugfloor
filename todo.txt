@@ -1,7 +1,7 @@
 
 -add sound to some ai? (seems almost fixed?)
 
--spawning of enemies need to be tweaked
+-spawning of enemies need to be tweaked (almost fixed)
 
 -scoreboard can be done better?
 
@@ -15,10 +15,15 @@
 
 -nav data need to be off when it already got one
 
--message for buyzone
+-message for buyzone (done)
 
--message how long you need to wait when you just join
+-message how long you need to wait when you just join (done)
+
+-new vote map and end messages defeat boss.
 
 -there is a 100% cpu that crashes the server (almost fixed?)
+
+
+
 
 

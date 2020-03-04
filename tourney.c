@@ -292,22 +292,29 @@ void WaveStart () // Starts the match
 
 	for_each_player(self,i)
 	{
-	    if (level.waveNum <2)
-            gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1);
-        else if (level.waveNum == 3 || 4)
-            gi.centerprintf(self,"The wave %i from Poisonville has begun.", level.waveNum + 1);
-        else if (level.waveNum == 5 || 6)
-            gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1);
-        else if (level.waveNum == 7)
-            gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1);
-        else if (level.waveNum == 8)
-            gi.centerprintf(self,"The wave %i from Trainyard has begun.", level.waveNum + 1);
-        else if (level.waveNum == 9 || 10)
-            gi.centerprintf(self,"The wave %i from Radiocity has begun.", level.waveNum + 1);
-        else if (level.waveNum == 11)
-            gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
-        else
-            gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
+        switch (level.waveNum)
+        {
+            case 1:
+            case 2:
+                gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1);
+            case 3:
+            case 4:
+                gi.centerprintf(self,"The wave %i from Poisonville has begun.", level.waveNum + 1);
+            case 5:
+            case 6:
+                gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1);
+            case 7:
+                gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1);
+            case 8:
+                gi.centerprintf(self,"The wave %i from Trainyard has begun.", level.waveNum + 1);
+            case 9:
+            case 10:
+                gi.centerprintf(self,"The wave %i from Radio City has begun.", level.waveNum + 1);
+            case 11:
+                gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
+            default:
+                gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
+        }
 
 		//hypov8 end buy menu.
 		if (self->client->pers.spectator == PLAYING)
@@ -404,6 +411,12 @@ int giveCashOnKill(int type)
 	//Problem is new players that join in wave cash is abit low maybe?
 	//But yeah need maybe more tweaking. added 50% more cash
 	//Tested abit looks better now for 1 player
+    //Wave 4 already hmg after shotgun bought in wave 2 with new cash
+    //Wave 8 endless money
+    //Wave 10 full cash 1000 and all weapons`153 kills
+    //wave 11 cash 1814 kills 175
+    //End 179 kills 1859 cash.
+
 
 	switch (type)
 	{
@@ -559,8 +572,8 @@ void WaveEnd () //hypov8 end of the match
 
 void WaveBuy()  // start buy zone
 {
-//	edict_t *self;
-//	int     i;
+	edict_t *self;
+	int     i;
 
 	level.modeset = WAVE_BUYZONE;
 	level.startframe = level.framenum;
@@ -568,6 +581,15 @@ void WaveBuy()  // start buy zone
     G_ClearUp (NULL, FOFS(classname));
 
     level.buyzone = true;//FREDZ stop shooting
+
+    //Show msgs
+    for_each_player(self,i)
+	{
+        if (self->client->showscores == INFO_BUYZONE)
+            continue;
+        self->client->showscores = INFO_BUYZONE;
+        self->client->resp.scoreboard_frame = 0;
+	}
 
 	gi.WriteByte( svc_stufftext );
 	gi.WriteString( va("play world/cypress%i.wav", 2+(rand()%4)) );
@@ -766,7 +788,8 @@ void CheckBuyWave ()
 				spot2[2] += 24;
 				//NAV_DrawLine(spot1, spot2); //sends to all players
 				gi.WriteByte(svc_temp_entity);
-				gi.WriteByte(TE_BFG_LASER);
+//				gi.WriteByte(TE_BUBBLETRAIL);//Testing but to confusing
+                gi.WriteByte(TE_BFG_LASER);
 				gi.WritePosition(spot1);
 				gi.WritePosition(spot2);
 				gi.unicast(self, false);

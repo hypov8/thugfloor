@@ -1157,7 +1157,7 @@ void InitClientPersistant (gclient_t *client)
 				client->pers.selected_item = ITEM_INDEX(item);
 				client->pers.inventory[client->pers.selected_item] = 1;
 
-					if (item->ammo)
+                if (item->ammo)
 				{
 					client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
 					client->pers.inventory[client->ammo_index] = ammo->quantity;

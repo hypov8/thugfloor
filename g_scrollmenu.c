@@ -77,7 +77,20 @@ void Cmd_InitMenu_f (edict_t *ent)
 	else
 	{
 		if (ent->pawnGuyID)
-			Voice_Specific(ent->pawnGuyID, ent, pawnomatic_funny, (rand()%5));
+		{
+            if (ent->health < 5)
+                Voice_Specific(ent->pawnGuyID, ent, pawnomatic_funny, 3);
+            else if (ent->health < 25)
+                Voice_Specific(ent->pawnGuyID, ent, pawnomatic_funny, 1);
+            else if (ent->health < 50)
+                Voice_Specific(ent->pawnGuyID, ent, pawnomatic_funny, 0);
+            else if (ent->health < 75)
+                Voice_Specific(ent->pawnGuyID, ent, pawnomatic_funny, 2);
+            else
+                Voice_Specific(ent->pawnGuyID, ent, pawnomatic_funny, 4);
+			//Voice_Specific(ent->pawnGuyID, ent, pawnomatic_funny, (rand()%5));
+		}
+
 		cl->showscrollmenu = true;
 	}
 
@@ -577,6 +590,7 @@ void ScrollMenuBuy(edict_t *ent)
 			it_ent->classname = it_weapon->classname;
 			SpawnItem (it_ent, it_weapon);
 			Touch_Item (it_ent, ent, NULL, NULL);
+			//hypov8 todo: this should prob be cleand up
 			if (it_ent->inuse)
 					G_FreeEdict(it_ent);
 

@@ -110,6 +110,9 @@
 #define SCORE_REJOIN		6
 #define SCORE_MAP_VOTE		7
 #define SCORE_TF_HUD		8
+#define INFO_NEW_PLAYER		9
+#define INFO_WIN_GAME  		10
+#define INFO_BUYZONE  		11
 
 // spectating types
 #define LOCKED_CHASE		0
@@ -1003,7 +1006,6 @@ extern	gitem_t	itemlist[];
 //
 void Cmd_Help_f (edict_t *ent, int page);
 void Cmd_Score_f (edict_t *ent);
-void Cmd_Motd_f (edict_t *ent);//FREDZ
 void Cmd_BanDicks_f(edict_t *ent, int type);
 //void InitMaps (void);
 

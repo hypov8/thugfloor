@@ -3912,6 +3912,36 @@ void Cmd_Castrange_f(edict_t *ent)//FREDZ maybe better to make it help screen??
 	}
 	gi.cprintf(ent, PRINT_HIGH, "%s", stats);
 }
+void Cmd_Castskins_f(edict_t *ent)
+{
+	int		i, j;
+	char	stats[500];
+	edict_t			*icast;
+
+	j = sprintf(stats, "       Name   Classname Health Skin\n====================================\n");
+
+	for (i=0; i< MAX_CHARACTERS; i++)
+	{
+		if (!level.characters[i])
+			continue;
+
+		icast = level.characters[i];
+
+		if (icast->health <= 0 || !icast->inuse)
+			continue;
+
+        if (!strcmp(icast->classname, "player"))
+            continue;
+
+		if (icast->name)
+            j += sprintf(stats + j, "%11s %11s %6d %i\n", icast->name, icast->classname, icast->health, icast->art_skins);
+        else
+            j += sprintf(stats + j, "            %11s %i\n", icast->classname, icast->health, icast->art_skins);
+		if (j > 450)
+			break;
+	}
+	gi.cprintf(ent, PRINT_HIGH, "%s", stats);
+}
 /*
 =================
 Cmd_Wave_f
@@ -5764,15 +5794,27 @@ void ErrorMSGBox(edict_t *ent, char *msg)
     gi.WriteString(errmsg);
     gi.unicast(ent, true);
 }
-/*
-void Cmd_Motd_f (edict_t *ent)//FREDZ broken
+
+void Cmd_Motd_f (edict_t *ent)
 {
 	if (ent->client->showscores == SCORE_MOTD)
 		return;
 
 	ent->client->showscores = SCORE_MOTD;
 	ent->client->resp.scoreboard_frame = 0; // MH: trigger scoreboard update instead of calling DeathmatchScoreboard
-}*/
+}
+
+void Cmd_Testboard_f (edict_t *ent)//Temp
+{
+//	if (ent->client->showscores == INFO_WIN_GAME)
+    if (ent->client->showscores == INFO_BUYZONE)
+		return;
+
+	ent->client->showscores = INFO_BUYZONE;
+//	ent->client->showscores = INFO_WIN_GAME;
+
+	ent->client->resp.scoreboard_frame = 0;
+}
 
 /*
 =================
@@ -5923,7 +5965,11 @@ void ClientCommand (edict_t *ent)
 		Cmd_Castrange_f (ent);
 		return;
 	}
-
+    if (Q_stricmp (cmd, "castskins") == 0)
+	{
+		Cmd_Castskins_f (ent);
+		return;
+	}
 	if (Q_stricmp (cmd, "say") == 0)
 	{
 		Cmd_Say_f (ent, false, false);
@@ -5944,6 +5990,11 @@ void ClientCommand (edict_t *ent)
 	if (Q_stricmp (cmd, "motd") == 0)//FREDZ
 	{
 		Cmd_Motd_f (ent);
+		return;
+	}
+    if (Q_stricmp (cmd, "testboard") == 0)//FREDZ TEMP
+	{
+		Cmd_Testboard_f (ent);
 		return;
 	}
 	if (Q_stricmp (cmd, "help") == 0)
