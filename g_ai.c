@@ -1237,7 +1237,7 @@ qboolean AI_ForceTakeCover( edict_t *self, edict_t *enemy, qboolean ignorehealth
 		hidepos_type = HIDEPOS_FURTHER;
 	else
 		hidepos_type = HIDEPOS_ANY;
-
+	//hypov8 todo: fix crash
 	if (pos = NAV_GetHidePos( self, enemy, hidepos_type ))
 	{
 		edict_t *combatent;
@@ -4186,7 +4186,7 @@ got_goal:
 	}
 	else
 	{
-
+		//hypov8 todo: fix crash
 		rval = NAV_Route_EntityToEntity(self, goal_node, (*goal), VIS_PARTIAL, false, &route);
 
 		// update current node

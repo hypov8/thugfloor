@@ -1168,8 +1168,8 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
-#if 0//HYPODEBUG //test level.waveNum
-	level.waveNum = 5; //10 test end boss
+#if  0//HYPODEBUG //test level.waveNum 
+	level.waveNum = 3; //10 test end boss
 #endif
 
 // parse ents
@@ -2103,39 +2103,38 @@ void SP_worldspawn (edict_t *ent)
 		//end tical
 	}
 
-	//hypov8 precache all sp models. get index so we can free skins later
-	TF_castSkinIndex[0] = gi.modelindex("models/actors/punk/head.mdx");
-	TF_castSkinIndex[1] = gi.modelindex("models/actors/punk/legs.mdx");
-	TF_castSkinIndex[2] = gi.modelindex("models/actors/punk/body.mdx");
-
-	TF_castSkinIndex[3] = gi.modelindex("models/actors/runt/head.mdx");//Shorty misses? is same as runt
-	TF_castSkinIndex[4] = gi.modelindex("models/actors/runt/legs.mdx");
-	TF_castSkinIndex[5] = gi.modelindex("models/actors/runt/body.mdx");
-
-	TF_castSkinIndex[6] = gi.modelindex("models/actors/thug/head.mdx");
-	TF_castSkinIndex[7] = gi.modelindex("models/actors/thug/legs.mdx");
-	TF_castSkinIndex[8] = gi.modelindex("models/actors/thug/body.mdx");
-	//TF_castSkinIndex[] = gi.modelindex("");
-
-#if 1  // requires special kpded2 version
-	//reset skins
-	if (kpded2)
-	{
-		//shorty 011 011 005
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[0], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[1], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[2], "001");
-		//runt
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[3], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[4], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[5], "001");
-		//thug
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[6], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[7], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[8], "001");
-		//gi.configstring(CS_MODELSKINS + TF_castSkinIndex[], va("%03i", level.waveNum));
-	}
-#endif
+	//hypov8 precache all sp models.
+	//punk
+	gi.modelindex("models/actors/punk/head.mdx");
+	gi.modelindex("models/actors/punk/body.mdx");
+	gi.modelindex("models/actors/punk/legs.mdx");
+	//runt
+	gi.modelindex("models/actors/runt/head.mdx");
+	gi.modelindex("models/actors/runt/body.mdx");
+	gi.modelindex("models/actors/runt/legs.mdx");
+	//thug
+	gi.modelindex("models/actors/thug/head.mdx");
+	gi.modelindex("models/actors/thug/body.mdx");
+	gi.modelindex("models/actors/thug/legs.mdx");
+	//shorty
+	gi.modelindex("models/actors/shorty/head.mdx");
+	gi.modelindex("models/actors/shorty/body.mdx");
+	gi.modelindex("models/actors/shorty/legs.mdx");
+	//bitch
+	gi.modelindex("models/actors/bitch/head.mdx");
+	gi.modelindex("models/actors/bitch/body.mdx");
+	gi.modelindex("models/actors/bitch/legs.mdx");
+	//whore
+	gi.modelindex("models/actors/whore/head.mdx");
+	gi.modelindex("models/actors/whore/body.mdx");
+	gi.modelindex("models/actors/whore/legs.mdx");
+	//misc heads
+	gi.modelindex("models/actors/whore/pony_head.mdx");
+	gi.modelindex("models/actors/bitch/pony_head.mdx");
+	gi.modelindex("models/actors/punk/bald_head.mdx");
+	gi.modelindex("models/actors/punk/weld_head.mdx");
+	gi.modelindex("models/actors/thug/bald_head.mdx");
+	gi.modelindex("models/actors/thug/weld_head.mdx");
 
 }
 

@@ -206,7 +206,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		targ->leader = NULL;
 		*/
 		// END JOSEPH
-
+#if 0 //hypov8 not needed
 		{
 			edict_t *player;
 			cast_memory_t *cast_memory;
@@ -219,7 +219,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 				player->client->pers.friends--;
 
 		}
-
+#endif
 		targ->leader = NULL;
 
 

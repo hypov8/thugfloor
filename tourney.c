@@ -745,12 +745,18 @@ void CheckBuyWave ()
 	int      count_players = 0;
 	vec3_t spot1, spot2;
 
-#if 0 //HYPODEBUG
-	if (level.framenum >= level.startframe + 100)//10 seconds
+#if HYPODEBUG
+	if (level.framenum >= level.startframe + 30)//3 seconds
 #else
 	if (level.framenum >= level.startframe + 595)//60 seconds
 #endif
-	{
+	{	//remove scoreboard
+		for_each_player(self, i)
+		{
+			if (self->client->showscores == INFO_BUYZONE)
+				self->client->showscores = NO_SCOREBOARD;
+		}
+
 		WaveStart_Countdown();
 		return;
 	}

@@ -12,7 +12,6 @@ void cast_TF_spawn();
 static int currWave_plysCount = 0; //players
 static int currWave_length = 0; //long, med, short
 static int currWave_castMax = 0; //max enemy allowed on map
-int TF_castSkinIndex[9]; //store model index. free skins after each wave
 
 //boss info
 edict_t *boss_entityID = NULL;
@@ -471,7 +470,7 @@ void cast_TF_Skidrow_boss_lamont(edict_t *self)
 void cast_TF_Skidrow_boss_jesus(edict_t *self)//sr4
 {
 	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Jesus");
-	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "21 017 010");
+	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "021 017 010");
 	self->spawnflags = 0;//pistol
 	self->classname = "cast_runt";
 	self->moral = 5;
@@ -1141,28 +1140,6 @@ void cast_TF_free(void)
 		}
 	}
 
-#if 1 // requires special kpded2 version
-	//reset skins
-	if (kpded2)
-	{
-		//shorty 011 011 005
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[0], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[1], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[2], "001");
-		//runt
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[3], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[4], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[5], "001");
-		//thug
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[6], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[7], "001");
-		gi.configstring(CS_MODELSKINS + TF_castSkinIndex[8], "001");
-
-		//gi.configstring(CS_MODELSKINS + TF_castSkinIndex[], va("%03i", level.waveNum));
-
-	}
-#endif
-
 	if (level.waveEnemyCount_cur)
 		level.waveEnemyCount_cur = 0; //reset spawned cast count
 }
@@ -1647,7 +1624,10 @@ void cast_TF_spawn(void)
 
 		//add healt after skil
 		if (boss_entityID && spawn == boss_entityID)
+		{
+			spawn->maxs[2] = 62; //increase head height on boss
 			boss_maxHP = spawn->health;
+		}
 
 		// stop cast health increasing slowly
 		spawn->healspeed = -1;
@@ -1657,11 +1637,6 @@ void cast_TF_spawn(void)
 
 		//add enemy to counter
 		level.waveEnemyCount_cur++;
-
-#if 0 //HYPODEBUG
-		spawn->health = 10;
-#endif
-
 	}
 }
 
