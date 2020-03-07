@@ -5806,12 +5806,10 @@ void Cmd_Motd_f (edict_t *ent)
 
 void Cmd_Testboard_f (edict_t *ent)//Temp
 {
-//	if (ent->client->showscores == INFO_WIN_GAME)
-    if (ent->client->showscores == INFO_BUYZONE)
+    if (ent->client->showscores == INFO_WIN_GAME)
 		return;
 
-	ent->client->showscores = INFO_BUYZONE;
-//	ent->client->showscores = INFO_WIN_GAME;
+	ent->client->showscores = INFO_WIN_GAME;
 
 	ent->client->resp.scoreboard_frame = 0;
 }

@@ -3,7 +3,7 @@
 
 //#ifdef BETADEBUG
 //hypov8 this should be "project" build dependent release/dev
-#define DIRECTSTART 1//FREDZ put on 0 for normal game
+#define DIRECTSTART 0//FREDZ put on 0 for normal game
 //#endif
 
 int	 vote_set[9];        // stores votes for next map
@@ -292,7 +292,7 @@ void WaveStart () // Starts the match
 
 	for_each_player(self,i)
 	{
-        switch (level.waveNum)
+        switch (level.waveNum)//Not working
         {
             case 1:
             case 2:
@@ -301,8 +301,8 @@ void WaveStart () // Starts the match
             case 4:
                 gi.centerprintf(self,"The wave %i from Poisonville has begun.", level.waveNum + 1);
             case 5:
-            case 6:
                 gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1);
+            case 6:
             case 7:
                 gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1);
             case 8:
@@ -389,6 +389,21 @@ void MatchEnd () // end of the match
 //give cash to killer. moved here for easy update
 int giveCashOnKill(int type)
 {
+    //kf:
+    //cyst 7$
+    //clot 7$
+    //rioter 7$
+    //slasher 7$
+    //crawler 7 or  10$ same as rat
+    //bloat 17$
+    //gorefast 12$
+    //hust 17$
+    //stalker 15$
+    //siren 25$
+    //scrake 75$
+    //fleshpound 200$ //mini boss
+    //edar 17$
+
 	int cashOut = 0;
 
 	int cashmelee=9;//was 6
@@ -667,7 +682,10 @@ void CheckStartWave ()  // 15 countdown before matches
 	int      i;
 	int      count_players = 0;
 
-	if (level.framenum >= level.startframe + 145)
+    int framenum = level.framenum - level.startframe;
+
+	if (framenum >= 150)
+//	if (level.framenum >= level.startframe + 145)
 	{
 		WaveStart ();
 		return;
@@ -691,8 +709,16 @@ void CheckStartWave ()  // 15 countdown before matches
         #endif
 	}
 
-	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 105)) //150-45
-		gi.bprintf(PRINT_HIGH,"Wave %i will start in %d seconds!\n", level.waveNum + 1, (150 - (level.framenum - level.startframe)) / 10);
+//	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 105)) //150-45
+//		gi.bprintf(PRINT_HIGH,"Wave %i will start in %d seconds!\n", level.waveNum + 1, (150 - (level.framenum - level.startframe)) / 10);
+
+    if ((framenum % 10 == 0 ) && (framenum > 99))
+	{
+        gi.bprintf(PRINT_HIGH,"Wave %i will start in %d seconds!\n", level.waveNum + 1, (150 - framenum) / 10);
+		gi.WriteByte(svc_stufftext);
+		gi.WriteString("play world/pawnomatic/menubuzz.wav\n");
+		gi.multicast(vec3_origin, MULTICAST_ALL);
+	}
 }
 
 

@@ -313,7 +313,8 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	if (item)
 	{
 		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;
+//		other->client->pers.inventory[index] += item->quantity;
+        other->client->pers.inventory[index] += 40;//Max is 200 so 4 times pickup
 		if (other->client->pers.inventory[index] > other->client->pers.max_bullets)
 			other->client->pers.inventory[index] = other->client->pers.max_bullets;
 	}
@@ -322,7 +323,8 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	if (item)
 	{
 		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;
+//		other->client->pers.inventory[index] += item->quantity;
+        other->client->pers.inventory[index] += 25;//Max is 100 so 4 times pickup
 		if (other->client->pers.inventory[index] > other->client->pers.max_shells)
 			other->client->pers.inventory[index] = other->client->pers.max_shells;
 	}
@@ -331,7 +333,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	if (item)
 	{
 		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;
+		other->client->pers.inventory[index] += item->quantity;//Max is 200 maybe makes 25? is 50
 		if (other->client->pers.inventory[index] > other->client->pers.max_gas)
 			other->client->pers.inventory[index] = other->client->pers.max_gas;
 	}
@@ -340,7 +342,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	if (item)
 	{
 		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;
+		other->client->pers.inventory[index] += item->quantity;//Max is 12 is already 3
 		if (other->client->pers.inventory[index] > other->client->pers.max_grenades)
 			other->client->pers.inventory[index] = other->client->pers.max_grenades;
 	}
@@ -349,7 +351,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	if (item)
 	{
 		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;
+		other->client->pers.inventory[index] += item->quantity;//Max is 25 maybe makes 6? is 5
 		if (other->client->pers.inventory[index] > other->client->pers.max_rockets)
 			other->client->pers.inventory[index] = other->client->pers.max_rockets;
 	}
@@ -359,7 +361,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	if (item)
 	{
 		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;
+		other->client->pers.inventory[index] += item->quantity;//Max is 90 is 30
 		if (other->client->pers.inventory[index] > other->client->pers.max_308cal)
 			other->client->pers.inventory[index] = other->client->pers.max_308cal;
 	}

@@ -2038,7 +2038,7 @@ void G_SetStats (edict_t *ent)
 			((int)wavetype->value >= 2 && level.waveNum == WAVELEN_LONG - 1)
 			))
 		{*/
-			ent->client->ps.stats[STAT_BOSS] = (int)(100.0f * boss_entityID->health / (float)boss_maxHP);
+			ent->client->ps.stats[STAT_BOSS] = boss_entityID->health;//(int)(100.0f * boss_entityID->health / (float)boss_maxHP);//testing maybe bester just show normal health
 			if (ent->client->ps.stats[STAT_BOSS] <= 0)
 				ent->client->ps.stats[STAT_BOSS] = 1; //zero dont display
 		/*}
