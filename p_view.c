@@ -478,7 +478,7 @@ void P_FallingDamage (edict_t *ent)
 //	if (ent->s.modelindex != 255)
 //		return;		// not in the player model
 
-	if (ent->movetype == MOVETYPE_NOCLIP)
+	if (ent->movetype == MOVETYPE_NOCLIP || ent->movetype == MOVETYPE_SPECTATOR)
 		return;
 
 	if ((ent->client->oldvelocity[2] < 0) && (ent->velocity[2] > ent->client->oldvelocity[2]) && (!ent->groundentity))
@@ -570,7 +570,7 @@ void P_WorldEffects (void)
 	qboolean	envirosuit;
 	int			waterlevel, old_waterlevel;
 
-	if (current_player->movetype == MOVETYPE_NOCLIP)
+	if (current_player->movetype == MOVETYPE_NOCLIP|| current_player->movetype == MOVETYPE_SPECTATOR)
 	{
 		current_player->air_finished = level.time + 12;	// don't need air
 		return;

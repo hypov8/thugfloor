@@ -1,10 +1,10 @@
 #include "g_local.h"
 #include "g_cast_spawn.h"
 
-//#ifdef BETADEBUG
+#ifdef BETADEBUG
 //hypov8 this should be "project" build dependent release/dev
-#define DIRECTSTART 0//FREDZ put on 0 for normal game
-//#endif
+#define DIRECTSTART 1//FREDZ put on 0 for normal game
+#endif
 
 int	 vote_set[9];        // stores votes for next map
 
@@ -292,28 +292,29 @@ void WaveStart () // Starts the match
 
 	for_each_player(self,i)
 	{
-        switch (level.waveNum)//Not working
+        switch (level.waveNum)//working
         {
-            case 1:
-            case 2:
-                gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1);
-            case 3:
-            case 4:
-                gi.centerprintf(self,"The wave %i from Poisonville has begun.", level.waveNum + 1);
-            case 5:
-                gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1);
-            case 6:
-            case 7:
-                gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1);
-            case 8:
-                gi.centerprintf(self,"The wave %i from Trainyard has begun.", level.waveNum + 1);
-            case 9:
-            case 10:
-                gi.centerprintf(self,"The wave %i from Radio City has begun.", level.waveNum + 1);
-            case 11:
-                gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
-            default:
-                gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
+		case 0:
+		case 1:  gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1); 
+			break;
+		case 2:
+		case 3:  gi.centerprintf(self, "The wave %i from Poisonville has begun.", level.waveNum + 1); 
+			break;
+		case 4:  gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1); 
+			break;
+		case 5:
+		case 6:  gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1); 
+			break;
+		case 7:  gi.centerprintf(self,"The wave %i from Trainyard has begun.", level.waveNum + 1); 
+			break;
+		case 8:
+		case 9:  gi.centerprintf(self,"The wave %i from Radio City has begun.", level.waveNum + 1); 
+			break;
+		case 10: gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
+			break;
+
+		default: //should never happen
+				gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
         }
 
 		//hypov8 end buy menu.
@@ -330,7 +331,7 @@ void WaveStart () // Starts the match
 
 			//give cash to ppl entering a new game
 			if (level.waveNum == 0)
-				self->client->pers.currentcash = 150; //waveGiveCash(1);
+				self->client->pers.currentcash = waveGiveCash(0);
 		}
 	}
 
@@ -519,7 +520,7 @@ int waveGiveCash(int type)
 	}
 
 	//first round. give standard cash
-	return 50;
+	return 150;
 }
 
 void GameEND ()//FREDZ

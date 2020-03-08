@@ -486,9 +486,10 @@ qboolean SV_Push (edict_t *pusher, vec3_t move, vec3_t amove)
 		if (!check->inuse)
 			continue;
 		if (check->movetype == MOVETYPE_PUSH
-		|| check->movetype == MOVETYPE_STOP
-		|| check->movetype == MOVETYPE_NONE
-		|| check->movetype == MOVETYPE_NOCLIP)
+			|| check->movetype == MOVETYPE_STOP
+			|| check->movetype == MOVETYPE_NONE
+			|| check->movetype == MOVETYPE_NOCLIP
+			|| check->movetype == MOVETYPE_SPECTATOR)
 			continue;
 
 		if (!check->area.prev)

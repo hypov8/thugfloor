@@ -1748,7 +1748,6 @@ void cast_TF_setupEnemyCounters(void)
 	edict_t *self;
 	int playerCount = 0;//Maxplayers
 	int i, sk;
-	int firstPlayer = 0;
 
 
 	if (skill->value == 0)			sk = 0;//novice
@@ -1764,11 +1763,6 @@ void cast_TF_setupEnemyCounters(void)
 		{
 			playerCount++;
 			//AddCharacterToGame(self); //add player to level.characters
-			if (!firstPlayer)
-			{
-				firstPlayer = 1;
-				self->nav_TF_isFirstPayer = 1; //hypov8 nav. todo: if player dies
-			}
 			self->cast_group = 1;
 		}
 	}

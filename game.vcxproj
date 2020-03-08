@@ -29,8 +29,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5CCD2D4E-440C-4040-B1F5-3992013E34A1}</ProjectGuid>
     <RootNamespace>game</RootNamespace>
-    <WindowsTargetPlatformVersion>
-    </WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='h_Release|Win32'" Label="Configuration">
@@ -189,6 +188,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>true</PreprocessKeepComments>
     </ClCompile>
     <Link>
       <AdditionalDependencies>navlib\navlib.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>

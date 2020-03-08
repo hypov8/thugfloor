@@ -374,12 +374,13 @@ edict_t	*showpath_ent;
 
 void Cmd_NavDebugDest_f (edict_t *ent)
 {
+#if HYPODEBUG
 	if (deathmatch->value)
 	{
 		gi.cprintf(ent, PRINT_HIGH, "This command only available when deathmatch = 0\n");
 		return;
 	}
-
+#endif
 	if (!showpath_ent)
 	{	// spawn it
 		showpath_ent = G_Spawn();
@@ -392,11 +393,13 @@ void Cmd_NavDebugDest_f (edict_t *ent)
 
 void Cmd_NavDebugShowPath_f (edict_t *ent)
 {
+#if HYPODEBUG
 	if (deathmatch->value)
 	{
 		gi.cprintf(ent, PRINT_HIGH, "This command only available when deathmatch = 0\n");
 		return;
 	}
+#endif
 /*
 	if (!ent->nav_build_data)
 	{
@@ -429,12 +432,13 @@ void Cmd_NavDebugShowPath_f (edict_t *ent)
 // Clears the nav_data for the current level
 void Cmd_NavClear_f ( edict_t *self )
 {
+#if HYPODEBUG
 	if (deathmatch->value)
 	{
 		gi.cprintf(self, PRINT_HIGH, "This command only available when deathmatch = 0\n");
 		return;
 	}
-
+#endif
 	// clear the current nodes
 	level.node_data->modified = false;
 	NAV_PurgeActiveNodes ( level.node_data );
@@ -3918,7 +3922,7 @@ void Cmd_Castskins_f(edict_t *ent)
 	char	stats[500];
 	edict_t			*icast;
 
-	j = sprintf(stats, "       Name   Classname Health Skin\n====================================\n");
+	j = sprintf(stats, "Name        Classname   Health Skin\n==========================================\n");
 
 	for (i=0; i< MAX_CHARACTERS; i++)
 	{
@@ -3933,10 +3937,11 @@ void Cmd_Castskins_f(edict_t *ent)
         if (!strcmp(icast->classname, "player"))
             continue;
 
-		if (icast->name)
-            j += sprintf(stats + j, "%11s %11s %6d %i\n", icast->name, icast->classname, icast->health, icast->art_skins);
-        else
-            j += sprintf(stats + j, "            %11s %i\n", icast->classname, icast->health, icast->art_skins);
+        j += sprintf(stats + j, "%-11s %-11s %6d %s\n", 
+								icast->name? icast->name : "", 
+								icast->classname, 
+								icast->health, 
+								icast->art_skins ? icast->art_skins : "");
 		if (j > 450)
 			break;
 	}
@@ -5836,7 +5841,7 @@ void ClientCommand (edict_t *ent)
 	if ((ModCommands (ent)) && (CHECKFORCLIENT))
 		return;
 
-	cmd = gi.argv(0);
+	cmd = gi.argv(0); //caps?
 
 	// MH: removed DOUBLECHECK stuff
    	if (!strcmp(cmd,lockpvs)) {

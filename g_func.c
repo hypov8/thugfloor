@@ -58,7 +58,7 @@ void Move_Done (edict_t *self)
 	//VectorCopy (self->moveinfo.end_origin, self->s.origin);
 
 	// spawn some nodes, if this entity hasn't been routed
-	if ((!ent || (!ent->nav_data.goal_index && (ent->wait < 0 || ent->wait > 0.1))) && nav_dynamic->value && (level.node_data->node_count < (MAX_NODES-2)))
+	if ((!ent || (!ent->nav_data.goal_index && (ent->wait < 0 || ent->wait > 0.1))) && nav_dynamic->value && level.modeset == WAVE_ACTIVE && (level.node_data->node_count < (MAX_NODES-2)))
 	{
 		edict_t	*trav=NULL;
 		node_t	*top_node;
@@ -896,12 +896,10 @@ void button_fire (edict_t *self)
 {
 	if (self->moveinfo.state == STATE_UP || self->moveinfo.state == STATE_TOP)
 		return;
-//	if (level.modeset != WAVE_ACTIVE || !self->nav_TF_isFirstPayer) //hypov8 nav //FREDZ gives problems with button kpdm2
-//		return;
 
 // BEGIN:	Xatrix/Ridah/Navigator/07-apr-1998
 	// if this button hasn't been pressed yet, spawn a node here
-	if (!self->deadflag && nav_dynamic->value && self->activator->client)
+	if (!self->deadflag && nav_dynamic->value && level.modeset == WAVE_ACTIVE && self->activator->client)
 	{
 		NAV_CreateNode( self->activator, self->activator->s.origin, vec3_origin, (short) (NODE_BUTTON + (NODE_DUCKING*(self->activator->maxs[2] == 4))), -1, self->activator->waterlevel);
 

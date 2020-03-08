@@ -578,14 +578,14 @@ void CheckDMRules (void)
 
 	if (!deathmatch->value)
 		return;
-
+#ifndef HYPODEBUG
 	if (level.framenum - level.lastactive == 600)
 	{
 		// the server has been idle for a minute, reset to default settings if needed
 		if (ResetServer(true))
 			return;
 	}
-
+#endif
 	if (CheckEndWave())
 		return;
 
@@ -623,7 +623,7 @@ void CheckDMRules (void)
 
 	if (respawn) //clients entered wave
 		level.startframe = level.framenum;
-
+#ifndef HYPODEBUG
 	if (!count_players)
 	{
 		gi.bprintf(PRINT_HIGH, "No players currently playing.\n");
@@ -636,7 +636,7 @@ void CheckDMRules (void)
 		if (ResetServer(true))
 			return;
 	}
-
+#endif
     #if 0 //FREDZ for testing rounds
 	if (timelimit->value)
 	{

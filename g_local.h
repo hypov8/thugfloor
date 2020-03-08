@@ -2135,9 +2135,6 @@ struct edict_s
 	int			launch_delay; // MH: missile launch delay
 	edict_t      *homing_target;   //FREDZ rocket lock
 
-	//hypov8 only route on first player
-	int			nav_TF_isFirstPayer; //nav first player
-
 	edict_t		*pawnGuyID; // TF: store pawn guy. used to talk to him
 
 	antilag_t antilag;

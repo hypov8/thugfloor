@@ -2407,7 +2407,7 @@ void ClientBeginDeathmatch (edict_t *ent)
 	}
 	else
 	{
-		ent->movetype = MOVETYPE_NOCLIP;
+		ent->movetype = MOVETYPE_SPECTATOR; //MOVETYPE_NOCLIP; //
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
 		gi.linkentity(ent);
@@ -3510,9 +3510,9 @@ trace_t	__attribute__((callee_pop_aggregate_return(0))) PM_trace (vec3_t start, 
 trace_t	PM_trace (vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end)
 #endif
 {
-	if (pm_passent->health > 0 && level.modeset == WAVE_ACTIVE) //hypov8 nav. allow players to walk through each other and ai
+	if (pm_passent->health > 0 ) //hypov8 nav. allow players to walk through each other and ai
 	{
-		if (nav_dynamic->value)	// if dynamic on, get blocked by MONSTERCLIP brushes as the AI will be
+		if (nav_dynamic->value&& level.modeset == WAVE_ACTIVE)	// if dynamic on, get blocked by MONSTERCLIP brushes as the AI will be
 			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_MONSTERCLIP| CONTENTS_PLAYERCLIP) /*MASK_PLAYERSOLID | CONTENTS_MONSTER*/);
 		else
 			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_PLAYERCLIP) ); //MASK_PLAYERSOLID
@@ -4173,11 +4173,10 @@ car_resume:
 	Think_FlashLight (ent);
 
 	// BEGIN:	Xatrix/Ridah/Navigator/18-mar-1998
-	if (/*!deathmatch->value &&*/ nav_dynamic->value && !(ent->flags & (FL_HOVERCAR_GROUND | FL_HOVERCAR | FL_BIKE | FL_CAR))
-		&& level.modeset == WAVE_ACTIVE && ent->nav_TF_isFirstPayer == 1) //hypov8 nav
+	if (/*!deathmatch->value &&*/ nav_dynamic->value && !(ent->flags & (FL_HOVERCAR_GROUND | FL_HOVERCAR | FL_BIKE | FL_CAR | FL_JETPACK))
+		&& level.modeset == WAVE_ACTIVE	&& ent->client && ent->client->pers.spectator == PLAYING && ent->solid == SOLID_BBOX &&!ent->deadflag) //hypov8 nav?
 	{
 		static float alpha;
-
 
 		// check for nodes
 		NAV_EvaluateMove( ent );
