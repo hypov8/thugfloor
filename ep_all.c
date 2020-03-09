@@ -162,8 +162,8 @@ void EP_SetNameIndex ( edict_t *self )
 	}
 
 	// no match found!
-//	if (developer->value)//FREDZ anoying
-//       gi.dprintf( "EP_SetNameIndex: Un-matched \"name\" (%s)\n", self->name );
+	if (developer->value)//FREDZ anoying, but should have all names now?
+        gi.dprintf( "EP_SetNameIndex: Un-matched \"name\" (%s)\n", self->name );
 
 	self->name_index = -1;
 }

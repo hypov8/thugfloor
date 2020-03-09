@@ -2849,7 +2849,7 @@ The game can override any of the settings in place
 */
 void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 {
-	char	*s;
+	char	*s, *s2;
 //	char	*fog;
 	//int		playernum;
 	char	*extras;
@@ -2880,7 +2880,7 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 	s[13] = 0; // MH: only 13 chars are shown in scoreboard
     if (strchr(s,'%'))
     {
-		char *s2;
+        s2 = s;
 		while (s2=strchr(s,'%')) *s2=' ';
 		Info_SetValueForKey (userinfo, "name", s);
 	}
@@ -3215,7 +3215,46 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 
 	// handedness
 	s = Info_ValueForKey (userinfo, "hand");
-	if (s[0]) ent->client->pers.hand = atoi(s);
+	if (s[0])
+        ent->client->pers.hand = atoi(s);
+
+    // screen width
+	s = Info_ValueForKey(userinfo, "gl_mode");
+	s2 = strchr(s, '(');
+	if (s2)
+	{
+		// resolution set by patch
+		float scale;
+		ent->client->pers.screenwidth = atoi(s2 + 1);
+		scale = atof(Info_ValueForKey(userinfo, "scale"));
+        if (scale > 0)
+                ent->client->pers.screenwidth *= scale;
+	}
+	else
+	{
+		switch (atoi(s))
+		{
+			case 0:
+				ent->client->pers.screenwidth = 640;
+				break;
+			case 1:
+				ent->client->pers.screenwidth = 800;
+				break;
+			case 2:
+				ent->client->pers.screenwidth = 960;
+				break;
+			case 3:
+				ent->client->pers.screenwidth = 1024;
+				break;
+			case 4:
+				ent->client->pers.screenwidth = 1152;
+				break;
+			default:
+				// assuming anything else is at least 1280
+				ent->client->pers.screenwidth = 1280;
+				break;
+		}
+	}
 
 	// save off the userinfo in case we want to check something later
 	strncpy (ent->client->pers.userinfo, userinfo, MAX_INFO_STRING-1);

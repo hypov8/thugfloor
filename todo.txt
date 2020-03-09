@@ -1,11 +1,7 @@
 
 -add sound to some ai? (seems almost fixed?)
 
--spawning of enemies need to be tweaked (test fixed?)
-
--scoreboard can be done better? (fixed?)
-
--Does spec need fix? solid/noclip  (should be fixed?)
+-spawning of enemies need to be tweaked (fixed?)
 
 -max players allowed to enter a wave (need testing)
 
@@ -15,9 +11,9 @@
 
 -nav data need to be off when it already got one
 
--new vote map and end messages defeat boss.
+-new vote map and end messages defeat boss (added fixed but need better fix)
 
--there is a 100% cpu that crashes the server (almost fixed?)
+-there is a 100% cpu that crashes the server (nav loop)
 
 -check sp maps
 

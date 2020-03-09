@@ -292,29 +292,72 @@ void WaveStart () // Starts the match
 
 	for_each_player(self,i)
 	{
-        switch (level.waveNum)//working
+	    if ((int)wavetype->value == 0)//Short
         {
-		case 0:
-		case 1:  gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1); 
-			break;
-		case 2:
-		case 3:  gi.centerprintf(self, "The wave %i from Poisonville has begun.", level.waveNum + 1); 
-			break;
-		case 4:  gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1); 
-			break;
-		case 5:
-		case 6:  gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1); 
-			break;
-		case 7:  gi.centerprintf(self,"The wave %i from Trainyard has begun.", level.waveNum + 1); 
-			break;
-		case 8:
-		case 9:  gi.centerprintf(self,"The wave %i from Radio City has begun.", level.waveNum + 1); 
-			break;
-		case 10: gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
-			break;
+            switch (level.waveNum)
+            {
+            case 0:  gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1);
+                break;
+            case 1:  gi.centerprintf(self, "The wave %i from Poisonville has begun.", level.waveNum + 1);
+                break;
+            case 2:  gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1);
+                break;
+            case 3:  gi.centerprintf(self,"The wave %i from Radio City has begun.", level.waveNum + 1);
+                break;
+            case 4: gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
+                break;
+            default: //should never happen
+                    gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
+            }
 
-		default: //should never happen
-				gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
+        }
+        else if ((int)wavetype->value == 1)//Medium
+        {
+            switch (level.waveNum)
+            {
+            case 0:
+            case 1:  gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1);
+                break;
+            case 2:  gi.centerprintf(self, "The wave %i from Poisonville has begun.", level.waveNum + 1);
+                break;
+            case 3:
+            case 4:  gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1);
+                break;
+            case 5:  gi.centerprintf(self,"The wave %i from Trainyard has begun.", level.waveNum + 1);
+                break;
+            case 6:  gi.centerprintf(self,"The wave %i from Radio City has begun.", level.waveNum + 1);
+                break;
+            case 7: gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
+                break;
+            default: //should never happen
+                    gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
+            }
+        }
+        else//Long
+        {
+            switch (level.waveNum)
+            {
+            case 0:
+            case 1:  gi.centerprintf(self,"The wave %i from Skidrow has begun.", level.waveNum + 1);
+                break;
+            case 2:
+            case 3:  gi.centerprintf(self, "The wave %i from Poisonville has begun.", level.waveNum + 1);
+                break;
+            case 4:  gi.centerprintf(self,"The wave %i from Shipyard has begun.", level.waveNum + 1);
+                break;
+            case 5:
+            case 6:  gi.centerprintf(self,"The wave %i from Steeltown has begun.", level.waveNum + 1);
+                break;
+            case 7:  gi.centerprintf(self,"The wave %i from Trainyard has begun.", level.waveNum + 1);
+                break;
+            case 8:
+            case 9:  gi.centerprintf(self,"The wave %i from Radio City has begun.", level.waveNum + 1);
+                break;
+            case 10: gi.centerprintf(self,"The wave %i from Boss has begun.", level.waveNum + 1);//Crystal Palace?
+                break;
+            default: //should never happen
+                    gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
+            }
         }
 
 		//hypov8 end buy menu.
@@ -516,7 +559,7 @@ int waveGiveCash(int type)
 	case 1:		//survived the round
 		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));
 	case 2:		//dead, respawn with no existing cash. //note same as above
-		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));
+		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));//Todo need to check how much money it gives on wave 4 when normal people buy hmg
 	}
 
 	//first round. give standard cash
@@ -877,11 +920,10 @@ qboolean CheckEndWave() //add timelimit
 
 			for_each_player(self, i)
 			{
-				gi.cprintf(self, PRINT_HIGH,
-					"===========================================================\n"
-					"The Boss is now dead.. It's time for a new Kingpin..\n"
-					"                       YOU!!!!\n"
-					"===========================================================\n"); //todo: better name then players? cutsceen..
+                if (self->client->showscores == INFO_WIN_GAME)
+                    continue;
+                self->client->showscores = INFO_WIN_GAME;
+                self->client->resp.scoreboard_frame = 0;
 			}
 
 			//print only this to ded console
