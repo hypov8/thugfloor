@@ -1883,7 +1883,7 @@ if (ent->flags & (FL_HOVERCAR | FL_HOVERCAR_GROUND | FL_BIKE))
 
 updatescore:
 	// MH: auto-switch to map vote scoreboard
-	if (level.modeset == ENDGAMEVOTE && ent->client->showscores == SCOREBOARD && level.framenum == (level.startframe + 150) && !ent->vote)
+	if (level.modeset == ENDGAMEVOTE && (ent->client->showscores == SCOREBOARD || ent->client->showscores == INFO_WIN_GAME) && level.framenum == (level.startframe + 150) && !ent->vote)
 	{
 		ent->client->showscores = SCORE_MAP_VOTE;
 		ent->client->resp.scoreboard_frame = 0;

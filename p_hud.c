@@ -134,7 +134,7 @@ void MoveClientToIntermission (edict_t *ent)
 #endif
 
 	if (deathmatch->value || coop->value)
-		ent->client->showscores = SCOREBOARD;
+		ent->client->showscores = INFO_WIN_GAME; // SCOREBOARD;
 	VectorCopy (level.intermission_origin, ent->s.origin);
 	ent->client->ps.pmove.origin[0] = level.intermission_origin[0]*8;
 	ent->client->ps.pmove.origin[1] = level.intermission_origin[1]*8;
@@ -537,12 +537,12 @@ void VoteMapScoreboardMessage (edict_t *ent)//crashes needs level.
 				if (count[n])
 					Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%d. %s\" yv %i dmstr %s \"%d %s\" ",
 //						yofs + (i & 1 ? 190 : 0), col, n, maplist[level.vote_set[n]],
-                        yofs + (i & 1 ? 190 : 0), col, n, custom_list[vote_set[n]],
+                        yofs + (i & 1 ? 190 : 0), col, n, custom_list[vote_set[n]].custom_map,
 						yofs + (i & 1 ? 190 : 0) + 19, col, count[n], count[n] == 1 ? "vote" : "votes");
                 else
 					Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%d. %s\" ",
 //                        yofs + (i & 1 ? 190 : 0), col, n, maplist[level.vote_set[n]]);
-						yofs + (i & 1 ? 190 : 0), col, n, custom_list[vote_set[n]]);
+						yofs + (i & 1 ? 190 : 0), col, n, custom_list[vote_set[n]].custom_map);
 			}
 			else
 			{
@@ -551,16 +551,16 @@ void VoteMapScoreboardMessage (edict_t *ent)//crashes needs level.
 				if (count[n])
 					Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%d. %s\" yv %i dmstr %s \"%d %s\" yv %i picn %s ",
 //						yofs + (i & 1 ? 190 : 0), col, n, maplist[level.vote_set[n]],
-                        yofs + (i & 1 ? 190 : 0), col, n, custom_list[vote_set[n]],
+                        yofs + (i & 1 ? 190 : 0), col, n, custom_list[vote_set[n]].custom_map,
 						yofs + (i & 1 ? 190 : 0) + 19, col, count[n], count[n] == 1 ? "vote" : "votes",
 //						yofs + (i & 1 ? 190 : 0) + 39, level.vote_nopic[n] ? "mm/nopic" : maplist[level.vote_set[n]]);
-						yofs + (i & 1 ? 190 : 0) + 39, custom_list[vote_set[n]]);
+						yofs + (i & 1 ? 190 : 0) + 39, custom_list[vote_set[n]].custom_map);
 				else
 					Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%d. %s\" yv %i picn %s ",
 //						yofs + (i & 1 ? 190 : 0), col, n, maplist[level.vote_set[n]],
-                        yofs + (i & 1 ? 190 : 0), col, n, custom_list[vote_set[n]],
+                        yofs + (i & 1 ? 190 : 0), col, n, custom_list[vote_set[n]].custom_map,
 //						yofs + (i & 1 ? 190 : 0) + 39, level.vote_nopic[n] ? "mm/nopic" : maplist[level.vote_set[n]]);
-						yofs + (i & 1 ? 190 : 0) + 39, custom_list[vote_set[n]]);
+						yofs + (i & 1 ? 190 : 0) + 39, custom_list[vote_set[n]].custom_map);
 			}
 			j = strlen(entry);
 			strcpy (string + stringlength, entry);
@@ -614,11 +614,11 @@ void VoteMapScoreboardMessage (edict_t *ent)//crashes needs level.
             if (player->vote == i)
 					Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"--> %s %d %s - %s\" ",
 	//					yofs, level.vote_winner && i != level.vote_winner ? "770" : "990", basechoice[i-1], count[i], count[i] == 1 ? "vote " : "votes", maplist[level.vote_set[i]]);
-                        yofs, vote_winner && i != vote_winner ? "770" : "990", basechoice[i-1], count[i], count[i] == 1 ? "vote " : "votes", custom_list[vote_set[i]]);
+                        yofs, vote_winner && i != vote_winner ? "770" : "990", basechoice[i-1], count[i], count[i] == 1 ? "vote " : "votes", custom_list[vote_set[i]].custom_map);
 			else
 					Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"    %s %d %s - %s\" ",
 	//					yofs, level.vote_winner && i != level.vote_winner ? "777" : "999", basechoice[i-1], count[i], count[i] == 1 ? "vote " : "votes", maplist[level.vote_set[i]]);
-						yofs, vote_winner && i != vote_winner ? "777" : "999", basechoice[i-1], count[i], count[i] == 1 ? "vote " : "votes", custom_list[vote_set[i]]);
+						yofs, vote_winner && i != vote_winner ? "777" : "999", basechoice[i-1], count[i], count[i] == 1 ? "vote " : "votes", custom_list[vote_set[i]].custom_map);
 			j = strlen(entry);
 			if (stringlength + j < 1024)
 			{
@@ -638,7 +638,7 @@ void VoteMapScoreboardMessage (edict_t *ent)//crashes needs level.
 			Com_sprintf (entry, sizeof(entry),
 				"xm %i yv %i picn %s ",
 //					-5*20, yofs, maplist[level.vote_set[ent->client->mapvote]]);
-                    -5*20, yofs, custom_list[vote_set[player->vote]]);
+                    -5*20, yofs, custom_list[vote_set[player->vote]].custom_map);
 			j = strlen(entry);
 			if (stringlength + j < 1024)
 			{
@@ -967,17 +967,17 @@ void InfoWinGameMessageBoard (edict_t *ent)//Todo
 		stringlength += j;
 	}
 
-    Com_sprintf (entry, sizeof(entry),
-        "xm %i yv %i dmstr 953 \"The Boss is now dead...\" "
-        "xm %i yv %i dmstr 953 \"It's time for a new Kingpin...\" "
-        "xm %i yv %i dmstr 999 \"Level name: %s\" "
-        "xm %i yv %i dmstr 999 \"Skill map: %s\" "
-        "xm %i yv %i dmstr 999 \"Total kills: %i\" "
-        "xm %i yv %i dmstr 953 \"Player with most frags: %s\" "
-        "xm %i yv %i dmstr 953 \"Player with most dead: %s\" ",
-        -5*23, yofs*2,
-        -5*30, yofs*3,
-        -5*(strlen(level.level_name)+12), yofs*4, level.level_name,
+	Com_sprintf(entry, sizeof(entry),
+		"xm %i yv %i dmstr 953 \"The Boss is now dead...\" "
+		"xm %i yv %i dmstr 953 \"It's time for a new Kingpin...\" "
+		"xm %i yv %i dmstr 999 \"Level name: %s\" "
+		"xm %i yv %i dmstr 999 \"Skill map: %s\" "
+		"xm %i yv %i dmstr 999 \"Total kills: %i\" "
+		"xm %i yv %i dmstr 953 \"Player with most frags: %s\" "
+		"xm %i yv %i dmstr 953 \"Player with most dead: %s\" ",
+		-5 * 23, yofs * 2,
+		-5 * 30, yofs * 3,
+		-5 * (strlen(level.mapname) + 12), yofs * 4, level.mapname, // level_name (map description)
         -5*(strlen(sk)+11), yofs*5, sk,
         -5*16, yofs*6, level.killed_monsters,
         -5*(strlen(cl_score->client->pers.netname)+24), yofs*7, cl_score->client->pers.netname,

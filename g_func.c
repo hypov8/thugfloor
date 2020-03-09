@@ -900,8 +900,8 @@ void button_fire (edict_t *self)
 // BEGIN:	Xatrix/Ridah/Navigator/07-apr-1998
 	// if this button hasn't been pressed yet, spawn a node here
 	if (!self->deadflag && nav_dynamic->value && level.modeset == WAVE_ACTIVE && self->activator->client)
-	{
-		NAV_CreateNode( self->activator, self->activator->s.origin, vec3_origin, (short) (NODE_BUTTON + (NODE_DUCKING*(self->activator->maxs[2] == 4))), -1, self->activator->waterlevel);
+	{																						//hypov8 crouch height = 24
+		NAV_CreateNode( self->activator, self->activator->s.origin, vec3_origin, (short) (NODE_BUTTON + (NODE_DUCKING*(self->activator->maxs[2] == DUCKING_MAX_Z))), -1, self->activator->waterlevel);
 
 		self->deadflag = true;
 		self->nav_data.cache_node = (int)(self->activator->nav_build_data->current_node->index);

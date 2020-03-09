@@ -1168,8 +1168,8 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
-#if  0//HYPODEBUG //test level.waveNum 
-	level.waveNum = 3; //10 test end boss
+#if HYPODEBUG //test level.waveNum 
+	level.waveNum = 10; //10 test end boss
 #endif
 
 // parse ents
@@ -1615,7 +1615,7 @@ char *thugfloor_statusbar =
 "string \"BOSS HP\""
 "	yt 225"
 "	xl 5"
-"	num 3 27 "		// STAT_BOSS 27
+"	num 4 27 "		// STAT_BOSS 27
 "endif "
 
 

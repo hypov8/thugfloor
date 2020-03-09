@@ -918,13 +918,13 @@ qboolean CheckEndWave() //add timelimit
 			edict_t *self;
 			int		i;
 
-			for_each_player(self, i)
+			/*for_each_player(self, i)
 			{
                 if (self->client->showscores == INFO_WIN_GAME)
                     continue;
                 self->client->showscores = INFO_WIN_GAME;
                 self->client->resp.scoreboard_frame = 0;
-			}
+			}*/
 
 			//print only this to ded console
 			gi.dprintf("Wave Limit hit\n");
