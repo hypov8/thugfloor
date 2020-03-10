@@ -487,6 +487,8 @@ void Cmd_Spec_f (edict_t *self)
 	self->client->pers.team = 0;
 	self->client->pers.spectator = SPECTATING;
 
+	self->client->showscores = SPECTATORS;
+
 	self->flags &= ~FL_GODMODE;
 	self->health = 0;
 

@@ -192,9 +192,12 @@ void AI_AvoidDangerousEntity( edict_t *ent )
 	ent->s.origin[2] += 4;
 	old_time = level.time;
 
-	for (i=1; i< MAX_CHARACTERS /*level.num_characters*/; i++)
+	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++) //hypov8 todo: was 1?
 	{
-		if (!level.characters[i] || level.characters[i]->health <= 0)
+		if (!level.characters[i] || level.characters[i]->health <= 0 )
+			continue;
+
+		if (level.characters[i]->client && level.characters[i]->client->pers.spectator != PLAYING)
 			continue;
 
 		if (level.characters[i] == ent)
@@ -515,7 +518,7 @@ void AI_ProcessCombat (void)
 	int i;
 	edict_t *ent;
 
-	for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
+	for (i=16; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
 		ent = level.characters[i];
 
@@ -529,6 +532,9 @@ void AI_ProcessCombat (void)
 			continue;
 
 		if (ent->enemy->health <= 0)
+			continue;
+
+		if (ent->enemy->client && ent->enemy->client->pers.spectator != PLAYING) //TF:
 			continue;
 
 		if (AI_ClearSight( ent, ent->enemy, false ))

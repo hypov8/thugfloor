@@ -4253,7 +4253,7 @@ got_goal:
 			gi.dprintf( "%s", self->classname );
 			if (self->name)
 				gi.dprintf( " (%s)", self->name );
-			gi.dprintf( " has no route to %s\n", self->classname, (*goal)->classname );
+			gi.dprintf( " has no route to %s\n", /*self->classname,*/ (*goal)->classname );
 		}
 
 		if (gi.inPVS( g_edicts[1].s.origin, self->s.origin ))

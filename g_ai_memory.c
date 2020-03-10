@@ -1069,6 +1069,9 @@ void AI_CheckRecordMemory( edict_t *src, edict_t *dest )
 	if (dest->flags & FL_NOTARGET)
 		return;
 
+	if (dest->client && dest->client->pers.spectator != PLAYING)
+		return;
+
 	memory = NULL;
 
 	// check for sight by noise
@@ -1172,13 +1175,13 @@ void AI_UpdateCharacterMemories( int max_iterations )
 		return;
 
 	// first check client sightings
-	for (plyr = 0; plyr < maxclients->value; plyr++)
+	for (plyr = 0; plyr < 16; plyr++) //human
 	{
-		dest = level.characters[plyr]; //hypov8 todo: not just client 1?
+		dest = level.characters[plyr];
 
-		if (dest && !(dest->flags & FL_NOTARGET))
+		if (dest && !(dest->flags & FL_NOTARGET) && dest->client && dest->client->pers.spectator == PLAYING)
 		{
-			for (i = 1; i < MAX_CHARACTERS /*level.num_characters*/; i++)
+			for (i = 16; i < MAX_CHARACTERS /*level.num_characters*/; i++) //cast
 			{
 				src = level.characters[i];
 
@@ -1198,8 +1201,11 @@ void AI_UpdateCharacterMemories( int max_iterations )
 			}
 		}
 	}
+	//hypov8 note: i dont think below is used/needed. above should cover everyone
+	// looks like its for friendly cast, hired guys?
+
 	if (src_index >= MAX_CHARACTERS /*level.num_characters*/)
-		src_index = 0;
+		src_index = 16;
 
 	for ( ; src_index < MAX_CHARACTERS /*level.num_characters*/; src_index++)
 	{
@@ -1214,7 +1220,7 @@ void AI_UpdateCharacterMemories( int max_iterations )
 		if (src->client)
 			continue;
 
-		for ( ; dest_index < MAX_CHARACTERS /*level.num_characters*/; dest_index++ ) //hypov8 todo: should this loop through all?
+		for ( ; dest_index < 16 /*level.num_characters*/; dest_index++ )
 		{
 			if (!level.characters[dest_index])
 				continue;
@@ -1233,10 +1239,10 @@ void AI_UpdateCharacterMemories( int max_iterations )
 			AI_CheckRecordMemory( src, dest );
 		}
 
-		dest_index = 0;
+		dest_index = 0; //human 0-15
 	}
 
-	src_index = 0;
+	src_index = 16; //cast 16-64
 }
 
 

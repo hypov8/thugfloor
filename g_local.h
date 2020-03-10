@@ -109,10 +109,10 @@
 #define	SPECTATORS			5
 #define SCORE_REJOIN		6
 #define SCORE_MAP_VOTE		7
-#define SCORE_TF_HUD		8
-#define INFO_NEW_PLAYER		9
+#define SCORE_TF_HUD		8 //show active player names
+#define INFO_NEW_PLAYER		9 //player ready to join but in spec
 #define INFO_WIN_GAME  		10
-#define INFO_BUYZONE  		11
+#define INFO_BUYZONE  		11 //info about buying
 
 // spectating types
 #define LOCKED_CHASE		0

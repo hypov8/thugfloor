@@ -134,7 +134,10 @@ void MoveClientToIntermission (edict_t *ent)
 #endif
 
 	if (deathmatch->value || coop->value)
-		ent->client->showscores = INFO_WIN_GAME; // SCOREBOARD;
+	{
+		if (ent->client->showscores != INFO_WIN_GAME)
+			ent->client->showscores = SCOREBOARD; //did not win
+	}
 	VectorCopy (level.intermission_origin, ent->s.origin);
 	ent->client->ps.pmove.origin[0] = level.intermission_origin[0]*8;
 	ent->client->ps.pmove.origin[1] = level.intermission_origin[1]*8;

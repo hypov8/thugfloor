@@ -85,7 +85,7 @@ void Move_Done (edict_t *self)
 
 				if (!top_node)
 					goto drop_node;
-
+//hypov8 todo: this seems to be wrong on func_plat. droping nodes every time. not testing what close node is.
 					// temporarily move the platform to the bottom position
 					VectorCopy(self->cast_info.last_sighting, self->s.origin);
 					gi.linkentity(self);
