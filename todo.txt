@@ -9,18 +9,16 @@
 
 -cl_parsemuzzleflash 3 error somethimes when connect (fixed?)
 
--nav data need to be off when it already got one
+-nav data need to be off when it already got one  (fixed?)
 
--new vote map and end messages defeat boss (added fixed but need better fix)
+-new vote map and end messages defeat boss (added fixed but need better fix?)
 
 -there is a 100% cpu that crashes the server (nav loop)
 
 -check sp maps
 
--add count down sound (fixed)
-
--sound at boss spawn? (fixed)
-
 -spec weapon lost? same as dead now
 
 -boss animations?
+
+-kill rat after 2 min's? it doesn't get killed

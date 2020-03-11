@@ -29,12 +29,53 @@ static void playerskin(int playernum, char *s)
 }
 #endif
 
+extern void DrawPreviewLaserBBox(edict_t *ent, int laser_color, int laser_size);
+void SP_info_player_show(edict_t *self)//FREDZ
+{
+	int i;
+//	char	*head_skin, *body_skin, *legs_skin;
+//	int	skin;
+
+	self->solid = SOLID_NOT;
+	self->movetype = MOVETYPE_NONE;
+	VectorSet (self->mins, -16, -16, -24);
+	VectorSet (self->maxs, 16, 16, 48);
+	self->s.skinnum = (self->skin-1) * 3;
+//	self->art_skins = "009 019 017";
+	memset(&(self->s.model_parts[0]), 0, sizeof(model_part_t) * MAX_MODEL_PARTS);
+
+	self->s.num_parts++;
+	self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug/head.mdx");
+//	skin = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "009" );//FREDZ fix fox linux
+	for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+		self->s.model_parts[PART_HEAD].baseskin = self->s.model_parts[PART_HEAD].skinnum[i] = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "009" );
+	gi.GetObjectBounds( "models/actors/thug/head.mdx", &self->s.model_parts[PART_HEAD] );
+
+	self->s.num_parts++;
+	self->s.model_parts[PART_LEGS].modelindex = gi.modelindex("models/actors/thug/legs.mdx");
+//	skin = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "017" );//FREDZ fix fox linux
+	for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+		self->s.model_parts[PART_LEGS].baseskin = self->s.model_parts[PART_LEGS].skinnum[i] = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "017" );
+	gi.GetObjectBounds( "models/actors/thug/legs.mdx", &self->s.model_parts[PART_LEGS] );
+
+	self->s.num_parts++;
+	self->s.model_parts[PART_BODY].modelindex = gi.modelindex("models/actors/thug/body.mdx");
+//	skin = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "019" );//FREDZ fix fox linux
+	for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+		self->s.model_parts[PART_BODY].baseskin = self->s.model_parts[PART_BODY].skinnum[i] = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "019" );
+	gi.GetObjectBounds( "models/actors/thug/body.mdx", &self->s.model_parts[PART_BODY] );
+
+	gi.linkentity (self);
+	self->cast_info.scale = MODEL_SCALE;
+	self->s.scale = self->cast_info.scale - 1.0;
+	self->s.renderfx2 |= RF2_NOSHADOW;
+}
+
 /*QUAKED info_player_start (1 0 0) (-16 -16 -24) (16 16 48)
 The normal starting point for a level.
 */
 void SP_info_player_start(edict_t *self)
 {
-
 	extern void Show_Help (void);
 
 	if (!(deathmatch->value))
@@ -48,8 +89,10 @@ void SP_info_player_start(edict_t *self)
 		Show_Help ();
 	}
 
-	if (!coop->value)
-		return;
+    #ifdef BETADEBUG
+    self->s.renderfx = RF_SHELL_RED;
+    SP_info_player_show(self);
+    #endif
 }
 
 /*QUAKED info_player_deathmatch (1 0 1) (-16 -16 -24) (16 16 48)
@@ -64,14 +107,34 @@ void SP_info_player_deathmatch(edict_t *self)
 		G_FreeEdict (self);
 		return;
 	}
+    #ifdef BETADEBUG
+    self->s.renderfx = RF_SHELL_BLUE;
+    SP_info_player_show(self);
+    #endif
 }
 
 /*QUAKED info_player_coop (1 0 1) (-16 -16 -24) (16 16 48)
 potential spawning position for coop games
 */
-
 void SP_info_player_coop(edict_t *self)
 {
+
+    #ifdef BETADEBUG
+    self->s.renderfx = RF_SHELL_GREEN;
+    SP_info_player_show(self);
+/*//Not working :/
+    int		i;
+    for (i = 0; i < 3; i++)
+	{
+		self->mins[i] -= 1;
+		self->maxs[i] += 1;
+	}
+
+    DrawPreviewLaserBBox (self, 0xf2f2f0f0, 2);
+    gi.linkentity(self);*/
+    #endif
+
+
 /*
 	if (!coop->value)
 	{

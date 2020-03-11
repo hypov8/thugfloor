@@ -746,14 +746,18 @@ void ED_CallSpawn (edict_t *ent)
 		gi.dprintf ("ED_CallSpawn: NULL classname\n");
 		return;
 	}
-
- /*   if (!strncmp(ent->classname, "cast_", 9))//thugfloor singleplayer maps
+/*
+//	if (ent->count && deathmatch->value)//FREDZ Todo
     {
-        ent->classname = "info_player_deathmatch";
-    }*/
- /*   if (!strcmp( ent->classname, "info_player_coop"))//thugfloor singleplayer maps
-    {
-        ent->classname = "info_player_deathmatch";
+        //thugfloor singleplayer maps
+        if (!strcmp(ent->classname, "cast_bitch")  || !strcmp(ent->classname, "cast_bum_sit") ||
+            !strcmp(ent->classname, "cast_dog")  || !strcmp(ent->classname, "cast_punk") ||
+            !strcmp(ent->classname, "cast_shorty")  || !strcmp(ent->classname, "cast_thug_sit") ||
+            !strcmp(ent->classname, "cast_runt")  || !strcmp(ent->classname, "cast_thug") ||
+            !strcmp(ent->classname, "cast_whore"))
+        {
+            ent->classname = "info_player_deathmatch";
+        }
     }*/
 
 
@@ -1093,6 +1097,29 @@ parsing textual entity definitions out of an ent file.
 char	last_changelevel[64];
 extern void LightConfigstrings ();
 
+int GetNavFilename()
+{
+    FILE*	navfile;
+	char	filename[256];
+	cvar_t	*game_dir;
+
+	game_dir = gi.cvar("game", "", 0);
+
+    if (game_dir->string[0]==0)
+		strcpy(filename, "main");
+	else
+		strcpy(filename, game_dir->string);
+	strcat(filename,"/navdata/");
+	strcat(filename,level.mapname);
+	strcat(filename,".nav");
+
+	navfile = fopen(filename, "r");
+	if (!navfile)
+        return FILE_OPEN_ERROR;
+
+    return OK;
+}
+
 vec3_t spawnvecs[]={
 	{992,1088,-40},{480,-1824,24},{-688,-1104,32},
 	{2536,408,584},{-224,-544,-40},{-1960,24,24},
@@ -1103,7 +1130,7 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	edict_t		*ent;
 	int			inhibit;
 	char		*com_token;
-	int			i;
+	int			i, nav;
 	float		skill_level;
     static int fStarted = 0;            // Standard Logging
 
@@ -1168,7 +1195,7 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	ent = NULL;
 	inhibit = 0;
 
-#if HYPODEBUG //test level.waveNum 
+#if HYPODEBUG //test level.waveNum
 	level.waveNum = 9; //10 test end boss
 #endif
 
@@ -1382,6 +1409,13 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	MDX_Bbox_Init ();
 
 //    sl_GameStart( &gi, level );	// Standard Logging
+
+    nav = GetNavFilename();
+	if (nav != OK)
+	{
+		gi.dprintf ("Was not able to open %s.nav file. nav_dynamic will be 1\n", level.mapname);//mapname not working in InitGame
+		gi.cvar_set("nav_dynamic","1");
+	}
 
 }
 

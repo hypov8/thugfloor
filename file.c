@@ -203,7 +203,8 @@ int proccess_ini_file()
 
 	Com_sprintf (filename, sizeof(filename), "%s"DIR_SLASH"thugfloor.ini",dir);
 	infile = fopen(filename, "r");
-	if (infile == NULL)	return FILE_OPEN_ERROR;
+	if (infile == NULL)
+        return FILE_OPEN_ERROR;
 
 	// Read first line of the file
 	fgetline(infile, buffer);
@@ -477,7 +478,8 @@ int read_map_file()
 	if (custom_map_filename[0]) {
 	Com_sprintf (filename, sizeof(filename), "%s"DIR_SLASH"%s",dir, custom_map_filename);
 	infile = fopen(filename, "r");
-	if (infile == NULL)	return FILE_OPEN_ERROR;
+	if (infile == NULL)
+        return FILE_OPEN_ERROR;
 
 	num_custom_maps = 0;
 

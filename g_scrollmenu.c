@@ -47,7 +47,7 @@ struct MENU_ITEM_NAMES
 	{ {"Small Health", "Large Health"}, {25, 50} },
 	//Armor
 //	{ {"Helmet Armor", "Jacket Armor", "Legs Armor", "Helmet Armor Heavy", "Jacket Armor Heavy", "Legs Armor Heavy"}, {100, 150, 100, 200, 300, 200} }//Originale pawn o matic
-	{ {"Helmet Armor", "Jacket Armor", "Legs Armor", "Helmet Armor Heavy", "Jacket Armor Heavy", "Legs Armor Heavy"}, {50, 75, 100, 100, 150, 100} }//Prices where to high
+	{ {"Helmet Armor", "Jacket Armor", "Legs Armor", "Helmet Armor Heavy", "Jacket Armor Heavy", "Legs Armor Heavy"}, {50, 75, 50, 100, 150, 100} }//Prices where to high
 };
 
 //FREDZ For scroll menu init

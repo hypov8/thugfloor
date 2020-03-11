@@ -205,8 +205,8 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 		t->activate_flags = ent->activate_flags;
 		return;
 	}
-	
-	
+
+
 //
 // print the message
 //
@@ -247,7 +247,7 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 				gi.dprintf("entity was removed (target2 type) while using killtargets\n");
 				return;
 			}
-		}	
+		}
 	}
 	// END JOSEPH
 //
@@ -259,7 +259,7 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 		while ((t = G_Find (t, FOFS(targetname), ent->target)))
 		{
 			// Rafael: hack to fix Entity used itself message
-			// this was showing up when you leave a pawnomatic 
+			// this was showing up when you leave a pawnomatic
 			// exit button is probably tagged wrong
 			if (t == ent)
 				continue;
@@ -271,14 +271,14 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 			//else if (!Q_stricmp (ent->classname, "trigger_once") && !Q_stricmp (t->classname, "func_door_rotating"))
 			//	t->activate_flags |= ACTIVATE_AND_OPEN;
 			//else if (!Q_stricmp (ent->classname, "func_door_rotating") && !Q_stricmp (t->classname, "func_door_rotating"))
-			//	t->activate_flags |= ACTIVATE_AND_OPEN;			
+			//	t->activate_flags |= ACTIVATE_AND_OPEN;
 			else if (!Q_stricmp (t->classname, "func_door_rotating"))
 				t->activate_flags |= ACTIVATE_AND_OPEN;
 			// JOSEPH 23-APR-99
 			else if (!Q_stricmp (t->classname, "func_door"))
 				t->activate_flags |= ACTIVATE_AND_OPEN;
-			// END JOSEPH			
-			// END JOSEPH			
+			// END JOSEPH
+			// END JOSEPH
 			// doors fire area portals in a specific way
 			if (!Q_stricmp(t->classname, "func_areaportal") &&
 				(!Q_stricmp(ent->classname, "func_door") || !Q_stricmp(ent->classname, "func_door_rotating")))
@@ -295,7 +295,7 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 			}
 			if (!ent->inuse)
 			{
-				// note to self: why is is happening 
+				// note to self: why is is happening
 				// it may be possible that actors are getting removed
 				// before they use thier targets
 
@@ -385,7 +385,7 @@ void G_SetMovedir (vec3_t angles, vec3_t movedir)
 float vectoyaw (vec3_t vec)
 {
 	float	yaw;
-	
+
 	if (vec[YAW] == 0 && vec[PITCH] == 0)
 		yaw = 0;
 	else
@@ -413,7 +413,7 @@ float	entyaw( edict_t *self, edict_t *other )
 char *G_CopyString (char *in)
 {
 	char	*out;
-	
+
 	out = gi.TagMalloc (strlen(in)+1, TAG_LEVEL);
 	strcpy (out, in);
 	return out;
@@ -461,10 +461,10 @@ edict_t *G_Spawn (void)
 			return e;
 		}
 	}
-	
+
 	if (i == game.maxentities)
 		gi.error ("ED_Alloc: no free edicts");
-		
+
 	globals.num_edicts++;
 	G_InitEdict (e);
 	return e;
@@ -758,4 +758,99 @@ qboolean	SurfaceSpriteEffectRipple(	byte surf_sfx, byte width, byte height,
 		gi.multicast (center_pos, MULTICAST_ALL);
 
 	return true;
+}
+//FREDZ
+//Copied from Q2Infighter https://github.com/decino/Q2Infighter
+void PreviewLaserThink (edict_t *self)
+{
+	if (!self->owner || !self->owner->inuse)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+	VectorCopy(self->pos2, self->s.origin);
+	VectorCopy(self->pos1, self->s.old_origin);
+
+	self->nextthink = level.time + FRAMETIME;
+	self->owner = NULL;
+}
+void DrawPreviewLaser(edict_t *ent, vec3_t v1, vec3_t v2, int laser_color, int laser_size)
+{
+    /*
+    laser_color:
+    0xf2f2f0f0; // red
+    0xdcdddedf; // yellow
+    0xd0d1d2d3; // green
+    0xf3f3f1f1; // blue
+    */
+
+	edict_t *laser;
+
+	laser = G_Spawn();
+	laser->movetype	= MOVETYPE_NONE;
+	laser->solid = SOLID_NOT;
+	laser->s.renderfx = RF_BEAM|RF_TRANSLUCENT;
+	laser->s.modelindex = 1;
+	laser->classname = "cast_bbox_laser";
+	laser->s.frame = laser_size;
+    laser->owner = ent;
+	laser->s.skinnum = laser_color;
+
+    laser->think = PreviewLaserThink;
+	VectorCopy(v2, laser->s.origin);
+	VectorCopy(v1, laser->s.old_origin);
+	VectorCopy(v2, laser->pos2);
+	VectorCopy(v1, laser->pos1);
+	gi.linkentity(laser);
+	laser->nextthink = level.time + 0;
+
+	VectorCopy(laser->pos2, laser->s.origin);
+	VectorCopy(laser->pos1, laser->s.old_origin);
+}
+
+void DrawPreviewLaserBBox(edict_t *ent, int laser_color, int laser_size)
+{
+	vec3_t origin, p1, p2;
+
+	VectorCopy(ent->s.origin, origin);
+
+	VectorSet(p1,origin[0]+ent->mins[0],origin[1]+ent->mins[1],origin[2]+ent->mins[2]);
+	VectorSet(p2,origin[0]+ent->mins[0],origin[1]+ent->mins[1],origin[2]+ent->maxs[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p2,origin[0]+ent->mins[0],origin[1]+ent->maxs[1],origin[2]+ent->mins[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p2,origin[0]+ent->maxs[0],origin[1]+ent->mins[1],origin[2]+ent->mins[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p1,origin[0]+ent->maxs[0],origin[1]+ent->maxs[1],origin[2]+ent->mins[2]);
+	VectorSet(p2,origin[0]+ent->maxs[0],origin[1]+ent->maxs[1],origin[2]+ent->maxs[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p2,origin[0]+ent->maxs[0],origin[1]+ent->mins[1],origin[2]+ent->mins[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p2,origin[0]+ent->mins[0],origin[1]+ent->maxs[1],origin[2]+ent->mins[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p1,origin[0]+ent->maxs[0],origin[1]+ent->mins[1],origin[2]+ent->maxs[2]);
+	VectorSet(p2,origin[0]+ent->maxs[0],origin[1]+ent->mins[1],origin[2]+ent->mins[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p2,origin[0]+ent->maxs[0],origin[1]+ent->maxs[1],origin[2]+ent->maxs[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p2,origin[0]+ent->mins[0],origin[1]+ent->mins[1],origin[2]+ent->maxs[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p1,origin[0]+ent->mins[0],origin[1]+ent->maxs[1],origin[2]+ent->maxs[2]);
+	VectorSet(p2,origin[0]+ent->mins[0],origin[1]+ent->maxs[1],origin[2]+ent->mins[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p2,origin[0]+ent->mins[0],origin[1]+ent->mins[1],origin[2]+ent->maxs[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
+
+	VectorSet(p2,origin[0]+ent->maxs[0],origin[1]+ent->maxs[1],origin[2]+ent->maxs[2]);
+	DrawPreviewLaser(ent, p1, p2, laser_color, laser_size);
 }

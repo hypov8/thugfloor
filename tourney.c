@@ -644,7 +644,7 @@ void WaveBuy()  // start buy zone
     //Show msgs
     for_each_player(self,i)
 	{
-        if (self->client->pers.spectator != PLAYING)
+        if (self->client->showscores == INFO_BUYZONE)
             continue;
         self->client->showscores = INFO_BUYZONE;
         self->client->resp.scoreboard_frame = 0;
@@ -787,6 +787,7 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 
 		level.modeset = WAVE_SPAWN_PLYR; //spawn players straight away
 
+		#if !DIRECTSTART
 		//make sure we have enough spawns
         if (!level.spSpawnPointCount)
 		{
@@ -803,6 +804,7 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 			gi.bprintf(PRINT_HIGH, "WARNING: Not enough deathmatch spawn points in map.\n");
 			//GameEND(); //hypov8 this is not 'required'. bots can spawn ontop of each other
 		}
+		#endif
 
 		return;
 	}
@@ -863,6 +865,7 @@ void CheckBuyWave ()
 				spot1[2] += 24;
 				spot2[2] += 24;
 				//NAV_DrawLine(spot1, spot2); //sends to all players
+
 				gi.WriteByte(svc_temp_entity);
 //				gi.WriteByte(TE_BUBBLETRAIL);//Testing but to confusing
                 gi.WriteByte(TE_BFG_LASER);
@@ -870,6 +873,7 @@ void CheckBuyWave ()
 				gi.WritePosition(spot2);
 				gi.unicast(self, false);
 			}
+
 		}
 	}
 

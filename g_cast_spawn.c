@@ -1115,8 +1115,28 @@ void cast_TF_spawn(void)
 			spawn->maxs[2] = 62; //increase head height on boss
 			boss_maxHP = spawn->health;
 
+			//Sound
             gi.WriteByte(svc_stufftext);
-            gi.WriteString("play world/alarm.wav\n");
+            if (spawn->name_index == NAME_KINGPIN)
+                gi.WriteString("play actors/male/kingpin/funny3.wav\n");
+            else if (spawn->name_index == NAME_BLUNT)
+                gi.WriteString("play actors/female/blunt/funny1.wav\n");
+            else if (spawn->name_index == NAME_POPEYE)
+                gi.WriteString("play actors/male/popeye/whistle.wav\n");
+            else if (spawn->name_index == NAME_JESUS)
+                gi.WriteString("play actors/male/jesus/funny1.wav\n");
+            else if (spawn->name_index == NAME_LAMONT)
+                gi.WriteString("play actors/male/lamont/fuckyou.wav\n");
+            else if (spawn->name_index == NAME_NICKIBLANCO)
+                gi.WriteString("play actors/male/nicki/funny6.wav\n");
+            else if (spawn->name_index == NAME_HEILMAN)
+                gi.WriteString("play actors/male/heilman/taunt1.wav\n");
+            else if (spawn->name_index == NAME_MOKER)
+                gi.WriteString("play actors/male/moker/fight4.wav\n");
+            else if (spawn->name_index == NAME_TYRONE)
+                gi.WriteString("play actors/male/tyrone/funny3.wav\n");
+            else
+                gi.WriteString("play world/alarm.wav\n");
             gi.multicast(vec3_origin, MULTICAST_ALL);
 		}
 

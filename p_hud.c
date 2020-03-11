@@ -446,7 +446,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 //===================================================================
 //===================================================================
 
-void VoteMapScoreboardMessage (edict_t *ent)//crashes needs level.
+void VoteMapScoreboardMessage (edict_t *ent)//todo needs maybe fix... level.
 {
 	char	entry[1024];
 	char	string[1400];
@@ -875,6 +875,8 @@ void InfoWinGameMessageBoard (edict_t *ent)//Todo
 //    char	*seperator = "==================================";//Motd size
     char	*seperator = "===========================================================";
     char	*sk;
+    int		found;
+	edict_t	*dood;
 
     int		sortedscore[MAX_CLIENTS];
 	int		sortedscores[MAX_CLIENTS];
@@ -957,35 +959,79 @@ void InfoWinGameMessageBoard (edict_t *ent)//Todo
 
     yofs = 24;
 
-    //Todo also use it for lose?
-    Com_sprintf (entry, sizeof(entry),
-        "xm %i yv %i dmstr 599 \"You Win!\" "
-        "xm %i yv %i dmstr 772 \"%s\" ",
-        -5*8, 0,
-        -5*strlen(seperator), yofs, seperator );
-    j = strlen(entry);
-	if (stringlength + j < 1024)
+
+	found = false;
+    for_each_player(dood, i)
 	{
-		strcpy (string + stringlength, entry);
-		stringlength += j;
+		if (dood->client->pers.spectator == PLAYING)//Todo not sure if this always works?
+			found = true;
 	}
 
-	Com_sprintf(entry, sizeof(entry),
-		"xm %i yv %i dmstr 953 \"The Boss is now dead...\" "
-		"xm %i yv %i dmstr 953 \"It's time for a new Kingpin...\" "
-		"xm %i yv %i dmstr 999 \"Level name: %s\" "
-		"xm %i yv %i dmstr 999 \"Skill map: %s\" "
-		"xm %i yv %i dmstr 999 \"Total kills: %i\" "
-		"xm %i yv %i dmstr 953 \"Player with most frags: %s\" "
-		"xm %i yv %i dmstr 953 \"Player with most dead: %s\" ",
-		-5 * 23, yofs * 2,
-		-5 * 30, yofs * 3,
-		-5 * (strlen(level.mapname) + 12), yofs * 4, level.mapname, // level_name (map description)
-        -5*(strlen(sk)+11), yofs*5, sk,
-        -5*16, yofs*6, level.killed_monsters,
-        -5*(strlen(cl_score->client->pers.netname)+24), yofs*7, cl_score->client->pers.netname,
-        -5*(strlen(cl_score->client->pers.netname)+23), yofs*8, cl_death->client->pers.netname
-                 );
+	if (found)
+    {
+        //Todo also use it for lose?
+        Com_sprintf (entry, sizeof(entry),
+            "xm %i yv %i dmstr 077 \"You Win!\" "
+            "xm %i yv %i dmstr 772 \"%s\" ",
+            -5*8, 0,
+            -5*strlen(seperator), yofs, seperator );
+        j = strlen(entry);
+        if (stringlength + j < 1024)
+        {
+            strcpy (string + stringlength, entry);
+            stringlength += j;
+        }
+
+        Com_sprintf(entry, sizeof(entry),
+            "xm %i yv %i dmstr 953 \"The Boss is now dead...\" "
+            "xm %i yv %i dmstr 953 \"It's time for a new Kingpin...\" "
+            "xm %i yv %i dmstr 999 \"Level name: %s\" "
+            "xm %i yv %i dmstr 999 \"Skill map: %s\" "
+            "xm %i yv %i dmstr 999 \"Total kills: %i\" "
+            "xm %i yv %i dmstr 953 \"Player with most frags: %s\" "
+            "xm %i yv %i dmstr 953 \"Player with most dead: %s\" ",
+            -5 * 23, yofs * 2,
+            -5 * 30, yofs * 3,
+            -5 * (strlen(level.mapname) + 12), yofs * 4, level.mapname, // level_name (map description)
+            -5*(strlen(sk)+11), yofs*5, sk,
+            -5*16, yofs*6, level.killed_monsters,
+            -5*(strlen(cl_score->client->pers.netname)+24), yofs*7, cl_score->client->pers.netname,
+            -5*(strlen(cl_score->client->pers.netname)+23), yofs*8, cl_death->client->pers.netname
+                     );
+    }
+    else
+    {
+        //Todo also use it for lose?
+        Com_sprintf (entry, sizeof(entry),
+            "xm %i yv %i dmstr 700 \"You Lose!\" "
+            "xm %i yv %i dmstr 772 \"%s\" ",
+            -5*9, 0,
+            -5*strlen(seperator), yofs, seperator );
+        j = strlen(entry);
+        if (stringlength + j < 1024)
+        {
+            strcpy (string + stringlength, entry);
+            stringlength += j;
+        }
+
+        Com_sprintf(entry, sizeof(entry),
+            "xm %i yv %i dmstr 953 \"The Boss survived.\" "
+            "xm %i yv %i dmstr 953 \"It's time for a new game.\" "
+            "xm %i yv %i dmstr 999 \"Level name: %s\" "
+            "xm %i yv %i dmstr 999 \"Skill map: %s\" "
+            "xm %i yv %i dmstr 999 \"Total kills: %i\" "
+            "xm %i yv %i dmstr 953 \"Player with most frags: %s\" "
+            "xm %i yv %i dmstr 953 \"Player with most dead: %s\" ",
+            -5 * 18, yofs * 2,
+            -5 * 25, yofs * 3,
+            -5 * (strlen(level.mapname) + 12), yofs * 4, level.mapname, // level_name (map description)
+            -5*(strlen(sk)+11), yofs*5, sk,
+            -5*16, yofs*6, level.killed_monsters,
+            -5*(strlen(cl_score->client->pers.netname)+24), yofs*7, cl_score->client->pers.netname,
+            -5*(strlen(cl_score->client->pers.netname)+23), yofs*8, cl_death->client->pers.netname
+                     );
+    }
+
     j = strlen(entry);
     if (stringlength + j < 1024)
     {
@@ -1039,7 +1085,7 @@ void InfoBuyMessageBoard (edict_t *ent)
     Com_sprintf (entry, sizeof(entry),
         "xm %i yv %i dmstr 953 \"Move as fast as possible to the Pawn O Matic (Sharky),\" "
         "xm %i yv %i dmstr 953 \"To buy your weapons and items there.\" "
-        "xm %i yv %i dmstr 953 \"Follow the red laser for the destination: %4i\" ",
+        "xm %i yv %i dmstr 953 \"Follow the orange laser for the destination: %4i\" ",
         -5*54, yofs + -60-49,
         -5*36, yofs + -60-49+20,
         -5*45, yofs + -60-49+40, ent->client->botRange);

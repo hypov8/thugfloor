@@ -291,7 +291,6 @@ field_t		castmemoryfields[] =
 	{NULL, 0, F_INT}
 };
 
-
 char lockpvs[8],scaletime[8],locktex[8],lockfoot[8],lockmouse[8];
 
 /*
@@ -437,7 +436,8 @@ void InitGame (void)
 	timescale		= gi.cvar("timescale", "1.0", 0);
 
 	wavetype = gi.cvar("wavetype", "2", CVAR_LATCH|CVAR_SERVERINFO); //default long
-	nav_dynamic = gi.cvar("nav_dynamic", "1", 0); //hypov8 nav. set to on default
+
+//	nav_dynamic = gi.cvar("nav_dynamic", "1", 0); //hypov8 nav. set to on default
 
     // speed hack fix
 	gi.cvar_set("sv_enforcetime","1");
@@ -492,7 +492,8 @@ void InitGame (void)
 	i = proccess_ini_file();
 	if (i != OK)
 	{
-		if (i == FILE_OPEN_ERROR)	gi.dprintf("thugfloor.ini file not opened!\n");
+		if (i == FILE_OPEN_ERROR)
+            gi.dprintf("thugfloor.ini file not opened!\n");
 		else
 			gi.dprintf("Error opening thugfloor.ini file!\n");
 	}
@@ -502,7 +503,8 @@ void InitGame (void)
 	i = read_map_file();
 	if (i != OK)
 	{
-		if (i == FILE_OPEN_ERROR)	gi.dprintf("Custom Maps file not opened!\n");
+		if (i == FILE_OPEN_ERROR)
+            gi.dprintf("Custom Maps file not opened!\n");
 		else
 			gi.dprintf("Error opening Custom Maps file!\n");
 

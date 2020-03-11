@@ -23,7 +23,7 @@
 					<Add option="/DNDEBUG" />
 				</Compiler>
 			</Target>
-			<Target title="Fredz_test">
+			<Target title="Fredz_debug">
 				<Option output="bin/Release/gamex86" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="D:/Kingpin" />
 				<Option object_output="obj/Release/" />

@@ -3924,7 +3924,7 @@ void Cmd_Castskins_f(edict_t *ent)
 	char	stats[500];
 	edict_t			*icast;
 
-	j = sprintf(stats, "Name        Classname   Health Skin\n==========================================\n");
+	j = sprintf(stats, "Name        Classname   Head   Skin         Extras\n===================================================\n");
 
 	for (i=0; i< MAX_CHARACTERS; i++)
 	{
@@ -3939,11 +3939,12 @@ void Cmd_Castskins_f(edict_t *ent)
         if (!strcmp(icast->classname, "player"))
             continue;
 
-        j += sprintf(stats + j, "%-11s %-11s %6d %s\n", 
-								icast->name? icast->name : "", 
-								icast->classname, 
-								icast->health, 
-								icast->art_skins ? icast->art_skins : "");
+        j += sprintf(stats + j, "%-11s %-11s %6d %s\n",
+								icast->name? icast->name : "",
+								icast->classname,
+								icast->head,
+								icast->art_skins ? icast->art_skins : "",
+								icast->count);
 		if (j > 450)
 			break;
 	}

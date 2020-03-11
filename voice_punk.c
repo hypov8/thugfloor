@@ -14,7 +14,7 @@ voice_table_t neutral_talk[] =
 	{neutral_talk_player, "What can I do you for?",						"What can I do you for?",							"actors/male/neutral/talk3.wav",	1, {3,0,0,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "Hey sport, lookin' for some action?",		"Hey sport, lookin' for some action?",				"actors/male/neutral/talk4.wav",	3, {0,1,2,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "Fo'gettaboutit",								"Fo'gettaboutit",									"actors/male/neutral/talk5.wav",	3, {7,8,9,0,0},0, true, TT_NONE},
-																															
+
 	{neutral_talk_player, "What time you got?",							"What time you got?",								"actors/male/neutral/talk6.wav",	3, {7,8,9,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "What the fuck's up with you?",				"What the @*%$#!'s up with you?",					"actors/male/neutral/talk7.wav",	3, {7,8,9,0,0},0, true, TT_NONE},
 	{neutral_talk_player, "Another freekin night and no pussy",			"Another freekin night and no @*%$#!",				"actors/male/neutral/talk8.wav",	0, {0,0,0,0,0},0, true, TT_NONE},
@@ -27,11 +27,11 @@ voice_table_t neutral_talk[] =
 	{neutral_talk_player, "You gotta match?",							"You gotta match?",									"actors/male/neutral/talk14.wav",	4, {4,7,8,9,0},0, 0, TT_NONE},
 	/*
 	{neutral_talk_player, "It was a hit alright... Big time!",			"It was a hit alright... Big time!",				"actors/male/ambient/conv15.wav",	5, {11,18,19,11,9},0, 0, TT_NONE},
-																															
+
 	{neutral_talk_player, "It's a damn shame I tell ya",				"It's a damn shame I tell ya",						"actors/male/ambient/conv19.wav",	3, {18,0,6,0,0},0, 0, TT_NONE}
 	*/
 	{neutral_talk_player, "It was a hit alright... Big time!",			"It was a hit alright... Big time!",				"actors/male/ambient/conv15.wav",	5, {0,0,0,0,0},0, 0, TT_NONE},
-																															
+
 	{neutral_talk_player, "It's a damn shame I tell ya",				"It's a damn shame I tell ya",						"actors/male/ambient/conv19.wav",	3, {0,0,0,0,0},0, 0, TT_NONE}
 };
 
@@ -69,30 +69,30 @@ voice_table_t neutral_talk_player[] =
 	{neutral_talk, "So what's up?",						"So what's up?",						"actors/player/male/neutral/play3.wav", 3, {11,6,4,0,0},0, true, TT_NONE},
 	{neutral_talk, "Got any information?",				"Got any information?",					"actors/player/male/neutral/play9.wav", 3, {11,6,4,0,0},0, true, TT_NONE},
 	{neutral_talk, "Know anything good?",				"Know anything good?",					"actors/player/male/neutral/play10.wav", 3, {11,6,4,0,0},0, true, TT_NONE}
-}; 
+};
 
 // Neutrals converse among themselves
 
-voice_table_t neutral_converse[] = 
+voice_table_t neutral_converse[] =
 {
 	{neutral_converse, "Fo'gettaboutit",												"Fo'gettaboutit",												"actors/male/ambient/conv0.wav", 5, {7,8,3,18,19},0, true, TT_NEUTRAL},
 	{neutral_converse, "Two points over the vig?... You gotta be crazy!",				"Two points over the vig?... You gotta be crazy!",				"actors/male/ambient/conv1.wav", 1, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "She had a setta knockers on her like out to here!",				"She had a setta knockers on her like out to here!",			"actors/male/ambient/conv2.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "Listen to me, will ya?",										"Listen to me, will ya?",										"actors/male/ambient/conv3.wav", 5, {5,7,18,4,2},0, true, TT_NEUTRAL},
 	{neutral_converse, "What can I do?... He's my wife's brother",						"What can I do?... He's my wife's brother",						"actors/male/ambient/conv4.wav", 3, {0,5,13,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "He's gonna get clipped if he don't watch himself",				"He's gonna get clipped if he don't watch himself",				"actors/male/ambient/conv5.wav", 1, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "Yeah, let's put twenty on Blueboy to show in the third",		"Yeah, let's put twenty on Blueboy to show in the third",		"actors/male/ambient/conv6.wav", 1, {3,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "Let's get started already",										"Let's get started already",									"actors/male/ambient/conv7.wav", 3, {8,13,16,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "What time you got?",											"What time you got?",											"actors/male/ambient/conv8.wav", 4, {0,3,12,18,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "He's doin' a three to five stretch up at Big Rock",				"He's doin' a three to five stretch up at Big Rock",			"actors/male/ambient/conv9.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "The Feds shut that down weeks ago",								"The Feds shut that down weeks ago",							"actors/male/ambient/conv10.wav", 1, {11,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "No kiddin'?",													"No kiddin'?",													"actors/male/ambient/conv11.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "What's it to ya?",												"What's it to ya?",												"actors/male/ambient/conv12.wav", 3, {0,3,18,0,0},0, true, TT_NEUTRAL},
 	{neutral_converse, "He better pay up... or else",									"He better pay up... or else",									"actors/male/ambient/conv13.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "If I gotta show up in person, someone ain't gonna like it",		"If I gotta show up in person, someone ain't gonna like it",	"actors/male/ambient/conv14.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "It was a hit alright... Big time!",								"It was a hit alright... Big time!",							"actors/male/ambient/conv15.wav", 5, {11,18,19,11,9},0, 0, TT_NEUTRAL},
 	{neutral_converse, "A hundred cases of the real stuff comin' in from up North",		"A hundred cases of the real stuff comin' in from up North",	"actors/male/ambient/conv16.wav", 2, {11,13,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "They got him... but good!",										"They got him... but good!",									"actors/male/ambient/conv17.wav", 4, {9,19,15,11,0},0, 0, TT_NEUTRAL},
@@ -113,7 +113,7 @@ voice_table_t neutral_converse_to_female[] =
 	{neutral_converse, "hell yeah",																			"@*%$#! yeah",																					"actors/skidrow/leroy/conv8.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 	{neutral_converse, "hey man, don't be getting' yourself all fucked up over it",							"hey man, don't be getting' yourself all @*%$#!ed up over it",							"actors/skidrow/leroy/conv9.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 	{neutral_converse, "Yo bitch, don't be getting' all like that with me.  fuck wrong wit' you?",			"Yo @*%$#!, don't be getting' all like that with me.  @*%$#! wrong wit' you?",									"actors/skidrow/leroy/conv10.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
-																																																	
+
 	{neutral_converse, "shit...",																			"@*%$#!...",																			"actors/skidrow/leroy/conv11.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 };
 
@@ -144,19 +144,19 @@ voice_table_t profanity_level2[] =
 	{NULL, "You wanna throw me motherfucker?",			"You wanna throw me @*%$#!?",					"actors/male/profanity/level2/cuss2-3.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You gonna fuckin' stand there all day?",	"You gonna @*%$#! stand there all day?",		"actors/male/profanity/level2/cuss2-4.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You want some of me asshole?",				"You want some of me @*%$#!?",					"actors/male/profanity/level2/cuss2-5.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "I will fuckin' bury you",					"I will @*%$#! bury you",						"actors/male/profanity/level2/cuss2-6.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Fuck me? Fuck you you piece of shit",		"@*%$#! me? @*%$#! you you piece of @*%$#!",	"actors/male/profanity/level2/cuss2-7.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You gonna fuck with my boys?",				"You gonna @*%$#! with my boys?",				"actors/male/profanity/level2/cuss2-8.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "What are you doin' on my fuckin' street",	"What are you doin' on my @*%$#! street",		"actors/male/profanity/level2/cuss2-9.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Turn around shit for brains",				"Turn around @*%$#! for brains",				"actors/male/profanity/level2/cuss2-10.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "I will fuckin' end you",					"I will end you",								"actors/male/profanity/level2/cuss2-11.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You piece of shit",							"You piece of @*%$#!",							"actors/male/profanity/level2/cuss2-12.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You fuckin' piece of shit",					"You @*%$#!",									"actors/male/profanity/level2/cuss2-13.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "What did you say motherfucker",				"What did you say @*%$#!",						"actors/male/profanity/level2/cuss2-14.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Fuck you, you fuckin' piece of shit",		"@*%$#! you, you @*%$#! piece of @*%$#!",		"actors/male/profanity/level2/cuss2-15.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "You fuckin' whore",							"You @*%$#!",									"actors/male/profanity/level2/cuss2-16.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Kiss my ass you piece of shit",				"Kiss my @*%$#! you piece of @*%$#!",			"actors/male/profanity/level2/cuss2-17.wav", 0, {0,0,0,0,0},0, 0},
 };
@@ -169,7 +169,7 @@ voice_table_t profanity_level3[] =
 
 
 voice_table_t player_profanity_level1[] =
-{														
+{
 	{neutral_asshole_talk, "What the fuck are you lookin' at?",		"What the @*%$#! are you lookin' at?",		"actors/player/male/profanity/level1/cuss1-1.wav", 0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
 	{neutral_asshole_talk, "You're not talkin to me are you?",		"You're not talkin to me are you?",			"actors/player/male/profanity/level1/cuss1-2.wav", 0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
 	{neutral_asshole_talk, "Hey you fuckin' want some of this?",	"Hey you @*%$#! want some of this?",		"actors/player/male/profanity/level1/cuss1-3.wav", 0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
@@ -192,19 +192,19 @@ voice_table_t player_profanity_level2[] =
 	{NULL, "Hey you wanna fuckin' throw me motherfucker?",			"Hey you wanna @*%$#! throw me @*%$#!?",				"actors/player/male/profanity/level2/cuss2-3.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "So what are you gonna fuckin' stand there all day?",	"So what are you gonna @*%$#! stand there all day?",	"actors/player/male/profanity/level2/cuss2-4.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Hey you fuckin' want some of me asshole?",				"Want some of me @*%$#!?",								"actors/player/male/profanity/level2/cuss2-5.wav", 0, {0,0,0,0,0},0, 0},
-															
+
 	{NULL, "I will fucking bury you",								"I will @*%$#! bury you",								"actors/player/male/profanity/level2/cuss2-6.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Fuck me?  Fuck you, you piece of shit",					"@*%$#! me?  @*%$#! you, you piece of @*%$#!",			"actors/player/male/profanity/level2/cuss2-7.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Are you fuckin' talkin to me?",							"Are you @*%$#! talkin to me?",							"actors/player/male/profanity/level2/cuss2-8.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Hey fuckin' turn around",								"Hey @*%$#! turn around",								"actors/player/male/profanity/level2/cuss2-9.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Turn the fuck around",									"Turn the @*%$#! around",								"actors/player/male/profanity/level2/cuss2-10.wav", 0, {0,0,0,0,0},0, 0},
-																
+
 	{NULL, "I will fucking end you",								"I will @*%$#! end you",								"actors/player/male/profanity/level2/cuss2-11.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You fuckin' piece of shit",								"You @*%$#! piece of @*%$#!",							"actors/player/male/profanity/level2/cuss2-12.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You fuckin' piece of shit",								"You @*%$#! piece of @*%$#!",							"actors/player/male/profanity/level2/cuss2-13.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "What the fuck did you say motherfucker?",				"What the @*%$#! did you say @*%$#!?",					"actors/player/male/profanity/level2/cuss2-14.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Fuck you, you piece of shit",							"@*%$#! you, you piece of @*%$#!",						"actors/player/male/profanity/level2/cuss2-15.wav", 0, {0,0,0,0,0},0, 0},
-																
+
 	{NULL, "You fuckin' whore",										"You @*%$#!",											"actors/player/male/profanity/level2/cuss2-16.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Fuckin' kiss my ass you piece of shit",					"@*%$#! kiss my @*%$#! you piece of @*%$#!",			"actors/player/male/profanity/level2/cuss2-17.wav", 0, {0,0,0,0,0},0, 0},
 };
@@ -217,7 +217,7 @@ voice_table_t player_profanity_level3[] =
 
 //===================================================================================
 
-voice_table_t followme[] = 
+voice_table_t followme[] =
 {
 	{NULL, "Let's go",						"Let's go",						"actors/player/male/followme/follow1.wav", 0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 	{NULL, "Come on",						"Come on",						"actors/player/male/followme/follow2.wav", 0, {0,0,0,0,0},0, 0, TT_POSITIVE},
@@ -226,7 +226,7 @@ voice_table_t followme[] =
 	{NULL, "Let's blow",					"Let's blow",					"actors/player/male/followme/follow5.wav", 0, {0,0,0,0,0},0, 0, TT_POSITIVE}
 };
 
-voice_table_t moveout[] = 
+voice_table_t moveout[] =
 {
 	{NULL, "Alright, let's move out",			"Alright, let's move out",				"actors/player/male/moveout/moveout1.wav", 0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 	{NULL, "Alright, move it",					"Alright, move it",						"actors/player/male/moveout/moveout2.wav", 0, {0,0,0,0,0},0, 0, TT_POSITIVE},
@@ -270,10 +270,10 @@ voice_table_t friendlypain[] =
 {
 	{NULL, "done shootin' me?",					"done shootin' me?",		"actors/male/hiredguy/wounded/friendlyfire1.wav", 0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
 	{NULL, "Hey quit shootin' me",				"Hey quit shootin' me",		"actors/male/hiredguy/wounded/friendlyfire2.wav", 0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
-};												
-												
-voice_table_t friendlyhurt[] =					
-{												
+};
+
+voice_table_t friendlyhurt[] =
+{
 	{NULL, "boss I'm all fucked up here",		"boss I'm all @*%$#!ed up here",	"actors/male/hiredguy/wounded/fuckedup.wav",	0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 	{NULL, "boss I'm hurt bad",					"boss I'm hurt bad",				"actors/male/hiredguy/wounded/hurtbad.wav",		0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 };
@@ -302,7 +302,7 @@ voice_table_t hiredguy_ask[] =
 	// finger lines
 	{NULL, "Name's Fingers.  200 bucks, I'll open any safe for ya",			"Name's Fingers.  200 bucks, I'll open any safe for ya",		"actors/male/hiredguy/fingers1.wav",	0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 	{NULL, "Voila... Easy money",											"Voila... Easy money",											"actors/male/hiredguy/fingers2.wav",	0, {0,0,0,0,0},0, 0, TT_POSITIVE},
-	
+
 	{NULL, "Hey, Sorry I work alone",										"Hey, Sorry I work alone ",										"actors/male/hiredguy/workalone.wav",	0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 };
 
@@ -323,7 +323,7 @@ voice_table_t hiredguy_specific[] =
 	{NULL, "hey, come back to me when you got the money",		"hey, come back to me when you got the money",		"actors/male/hiredguy/comeback.wav",	0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 	{NULL, "hey, I'll be waitin' for you man",					"hey, I'll be waitin' for you man",					"actors/male/hiredguy/waiting1.wav",	0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 	{NULL, "hey buddy, I'll be waitin' for you",				"hey buddy, I'll be waitin' for you",				"actors/male/hiredguy/waiting2.wav",	0, {0,0,0,0,0},0, 0, TT_POSITIVE},
-	
+
 	{NULL, "I can't run with you, your crew's full",			"I can't run with you, your crew's full",			"actors/male/hiredguy/full1.wav",		0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
 	{NULL, "I can't run with you unless you make room for me",	"I can't run with you unless you make room for me",	"actors/male/hiredguy/full2.wav",		0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
 
@@ -368,7 +368,7 @@ voice_table_t specific[] =
 	{NULL, "Yo man you got a dollar?",						"Yo man you got a dollar?",								"actors/skidrow/magicj/holdbuck.wav",	0, {0,0,0,0,0},0,0, TT_QUESTION},
 	{NULL, "Here's your fuckin' dollar",					"Here's your @*%$#! dollar",							"actors/player/male/p_heresdollar.wav",	0, {0,0,0,0,0},0,0, TT_NONE},
 	{NULL, "Nah I ain't got a dollar",						"Nah I ain't got a dollar",								"actors/player/male/p_nodollar.wav",	0, {0,0,0,0,0},0,0 , TT_NONE},
-		
+
 	{NULL, "A'right cool, here's your crowbar",				"A'right cool, here's your crowbar",					"actors/skidrow/magicj/crowbar.wav",	0, {0,0,0,0,0},0,0, TT_POSITIVE},
 	{NULL, "get back to me when you got a dollar",			"get back to me when you got a dollar",					"actors/skidrow/magicj/getbacktome.wav",0, {0,0,0,0,0},0,0, TT_POSITIVE},
 	{NULL, "I'll give you a crowbar for a dollar...",		"I'll give you a crowbar for a dollar...",				"actors/skidrow/magicj/gotdollar.wav",	0, {0,0,0,0,0},0,0, TT_QUESTION},
@@ -377,7 +377,7 @@ voice_table_t specific[] =
 // 10
 	{NULL, "What the fuck's up?",							"What the @*%$#!'s up?",								"actors/skidrow/leroy/whatsup.wav",		0, {0,0,0,0,0},0,0 , TT_NEUTRAL},	// 11
 	{NULL, "Yo Fuck you man",								"Yo @*%$#! you man",									"actors/skidrow/leroy/fuckyou.wav",		0, {0,0,0,0,0},0,0 , TT_NEUTRAL},	// 12
-	{NULL, "Man don't be lookin' at my bitch motherfucker",	"Man don't be lookin' at my @*%$#! @*%$#!",				"actors/skidrow/leroy/mybitch1.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},	// 13	
+	{NULL, "Man don't be lookin' at my bitch motherfucker",	"Man don't be lookin' at my @*%$#! @*%$#!",				"actors/skidrow/leroy/mybitch1.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},	// 13
 	{NULL, "Hey motherfucker don't be talkin' to my bitch",	"Hey @*%$#! don't be talkin' to my @*%$#!",				"actors/skidrow/leroy/mybitch2.wav",	0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 14
 	{NULL, "better step the fuck off man",					"better step the @*%$#! off man",						"actors/skidrow/leroy/stepoff.wav",		0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 15
 	{NULL, "Man I warned your punk ass bitch, motherfucker","Man I warned your punk @*%$#! @*%$#! @*%$#!",			"actors/skidrow/leroy/warned.wav",		0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 16
@@ -397,7 +397,7 @@ voice_table_t specific[] =
 	{NULL, "don't fuck with us punk",						"don't @*%$#! with us punk",							NULL,									0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 	{NULL, "those fuckin' punks are gonna pay",				"those @*%$#! punks are gonna pay",						NULL,									0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 	{NULL, "this pipe should come in handy",				"this pipe should come in handy",						NULL,									0, {0,0,0,0,0},0,0, TT_NEUTRAL},
-	
+
 	{NULL, "Fuck this shit",								"@*%$#! this @*%$#!",									"actors/skidrow/magicj/fuckshit.wav",	0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 };
 
@@ -411,7 +411,7 @@ voice_table_t m_backoff[] =
 voice_table_t momo_specific [] =
 {
 	{NULL, "Hey welcome to jax... how ya doin'?",									"Hey welcome to jax... how ya doin'?",										"actors/male/momo/welcome.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																						
+
 //1
 	{NULL, "10 dollar cover charge gets you right in",								"10 dollar cover charge gets you right in",									"actors/male/momo/cover1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_QUESTION},
 	{NULL, "You got the ten bucks?",												"You got the ten bucks?",													"actors/male/momo/cover2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_QUESTION},
@@ -460,7 +460,7 @@ voice_table_t mj_random [] =
 
 
 // JOSEPH 29-MAY-99
-voice_table_t male_specific[] = 
+voice_table_t male_specific[] =
 {
 	// pain
 	{NULL,	"",		"",		"actors/male/pain100_1.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
@@ -471,10 +471,10 @@ voice_table_t male_specific[] =
 	{NULL,	"",		"",		"actors/male/pain50_2.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL,	"",		"",		"actors/male/pain25_1.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL,	"",		"",		"actors/male/pain25_2.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
-	// death						
+	// death
 	{NULL,	"",		"",		"actors/male/death1.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL,	"",		"",		"actors/male/death2.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
-	// fire death					
+	// fire death
 	{NULL,	"",		"",		"actors/male/flamedeath1.wav",	0, {0,0,0,0,0},0,0 , TT_NONE},
 	{NULL,	"",		"",		"actors/male/flamedeath2.wav",	0, {0,0,0,0,0},0,0 , TT_NONE},
 	{NULL,	"",		"",		"actors/male/flamedeath3.wav",	0, {0,0,0,0,0},0,0 , TT_NONE},
@@ -487,12 +487,12 @@ voice_table_t player_answer[] =
 	{NULL, "yes",			"yes",			"actors/player/male/yes.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 };
 
-voice_table_t lamont_random[] = 
+voice_table_t lamont_random[] =
 {
 	{NULL, "why you come around lookin' ...",											"why you come around lookin' ...",										"actors/male/lamont/babble1.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "motherfucker is gonna be dead...",											"@*%$#! is gonna be dead...",											"actors/male/lamont/babble2.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "motherfucker's gonna come out...",											"@*%$#!s gonna come out...",											"actors/male/lamont/mfcomeout.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
-//3																					
+//3
 	{NULL, "I swear I'm gonna kill him...",												"I swear I'm gonna kill him...",										"actors/male/lamont/killem.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "lenny gonna get my shit out there",											"lenny gonna get my @*%$#! out there",									"actors/male/lamont/lenny1.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "I tell you lenny ain't gonna do that shit to me",							"I tell you lenny ain't gonna do that @*%$#! to me",					"actors/male/lamont/lenny2.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
@@ -500,10 +500,10 @@ voice_table_t lamont_random[] =
 	{NULL, "motherfuckin' get me in that bar I'm gonna get that Lenny...",				"goin get me in that bar... I'm gonna get that Lenny...",				"actors/male/lamont/lenny3.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "kill that motherfucker I swear to god... What the Fuck you lookin' at?",	"kill that @*%$#! I swear to god... What the @*%$#! you lookin' at?",	"actors/male/lamont/lookin'at2.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "fuck you motherfuckers",													"@*%$#! you @*%$#!",													"actors/male/lamont/fuckyou.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
-//9																					
+//9
 	{NULL, "you think you're gonna get somma dat out there...",							"you think you're gonna get somma dat out there...",					"actors/male/lamont/getsome.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "what the fuck you lookin' at?",												"what the @*%$#! you lookin' at?",										"actors/male/lamont/lookin'at1.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
-//11																				
+//11
 	{NULL, "you got a fuckin' problem?",												"you got a @*%$#! problem?",											"actors/male/lamont/fuckinprob.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "man get the fuck off my street",											"man get the @*%$#! off my street",										"actors/male/lamont/offstreet1.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL, "you better get the fuck off my street",										"you better get the @*%$#! off my street",								"actors/male/lamont/offstreet2.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
@@ -541,8 +541,8 @@ voice_table_t lenny_table[] =
 //14
 	{NULL, "thanks again, you're jake man",																"thanks again, you're jake man",											"actors/male/lenny/thanks1.wav", 0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 	{NULL, "thanks again, that's jake what ya did for me",												"thanks again, that's jake what ya did for me",								"actors/male/lenny/thanks2.wav", 0, {0,0,0,0,0},0,0 , TT_POSITIVE},
-																																									
-	// Note to self: cloned this line for now need to remove the safe line from the code																			
+
+	// Note to self: cloned this line for now need to remove the safe line from the code
 	{NULL, "thanks again, you're jake man",																"thanks again, you're jake man",											"actors/male/lenny/thanks1.wav", 0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 	// {NULL, "they don't know I know, but they got a safe up there behind one of their pictures",		"actors/male/lenny/wallsafe.wav", 0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 
@@ -573,8 +573,8 @@ voice_table_t grunting[] =
 };
 
 
-voice_table_t nick[] = 
-{																			
+voice_table_t nick[] =
+{
 	{NULL, "better keep your ass out of there if you know what's good for you",	"better keep your @*%$#! out of there if you know what's good for you",	"actors/male/joseph/keepout.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 	{NULL, "hey them scorps will rip you a new asshole",						"hey them scorps will rip you a new @*%$#!",							"actors/male/joseph/ripass.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 	{NULL, "you go in there they will bring you out in a body bag",				"you go in there they will bring you out in a body bag",				"actors/male/joseph/bodybag.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE},
@@ -586,7 +586,7 @@ voice_table_t nick[] =
 };
 
 
-voice_table_t rummy [] = 
+voice_table_t rummy [] =
 {
 	// 0
 	{NULL, "swat",			"swat",			"actors/bum/swat.wav",		0, {0,0,0,0,0},0,0 , TT_POSITIVE},
@@ -596,7 +596,7 @@ voice_table_t rummy [] =
 
 	// 4
 	{NULL, "the combination to the safe is 36 26 36.  left right left",			"the combination to the safe is 36 26 36.  left right left",				"actors/male/rummy/combo1.wav",		0, {0,0,0,0,0},0,0 , TT_POSITIVE},
-	{NULL, "Here's the combination to the safe",								"Here's the combination to the safe",										"actors/male/rummy/combo2.wav",		0, {0,0,0,0,0},0,0 , TT_POSITIVE},	
+	{NULL, "Here's the combination to the safe",								"Here's the combination to the safe",										"actors/male/rummy/combo2.wav",		0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 
 	// 6
 	{NULL, "hey fuck y'all over there motherfuckers",							"hey @*%$#! y'all over there @*%$#!s",										"actors/male/rummy/fuckthem1.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE},
@@ -605,19 +605,19 @@ voice_table_t rummy [] =
 	// 8
 	{NULL, "get me something to drink and I'll tell you somethin'",				"get me something to drink and I'll tell you somethin'",					"actors/male/rummy/getme1.wav",		0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 	{NULL, "you find me something to drink I might tell you somethin' good",	"you find me something to drink I might tell you somethin' good",		"actors/male/rummy/getme2.wav",		0, {0,0,0,0,0},0,0 , TT_POSITIVE},
-																			
-	// 10																	
+
+	// 10
 	{NULL, "I thought you were gonna get me somethin to drink motherfucker",	"I thought you were gonna get me somethin to drink",						"actors/male/rummy/nogot1.wav",		0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 	{NULL, "hey fuck you man, where's my drink at?",							"hey @*%$#! you man, where's my drink at?",									"actors/male/rummy/nogot2.wav",		0, {0,0,0,0,0},0,0 , TT_POSITIVE},
-																			
-	// 12																	
+
+	// 12
 	{NULL, "I used to work in the warehouse over there...",						"I used to work in the warehouse over there...",							"actors/male/rummy/worked1.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 	{NULL, "I used to work in the warehouse over there...",						"I used to work in the warehouse over there...",							"actors/male/rummy/worked2.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE},
-																			
-	// 14																	
+
+	// 14
 	{NULL, "aww that's good man.  much obliged to ya",							"aww that's good man.  much obliged to ya",									"actors/male/rummy/yesgot1.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE},
 	{NULL, "aw yeah man, that's right!",										"aw yeah man, that's right!",												"actors/male/rummy/yesgot2.wav",	0, {0,0,0,0,0},0,0 , TT_POSITIVE}
-		
+
 };
 
 
@@ -634,37 +634,37 @@ voice_table_t player_money_no[] =
 	{NULL, "I ain't got that much",				"I ain't got that much",				"actors/player/male/nomoney2.wav", 0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 };
 
-voice_table_t sr_jesus[] = 
+voice_table_t sr_jesus[] =
 {
 	{NULL, "",											"",												"actors/male/jesus/death1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",											"",												"actors/male/jesus/death1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
-																										
+
 	{NULL, "Ahh!  God dammit!",							"Ahh!  Dammit!",								"actors/male/jesus/pain1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",											"",												"actors/male/jesus/pain2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "Ow!  mutha fucka!",							"Ow!  @*%$#!",									"actors/male/jesus/pain3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",											"",												"actors/male/jesus/pain4.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
-																										
+
 	{NULL, "Let's go motherfucker!",					"Let's go @*%$#!",								"actors/male/jesus/fight1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Is that what you got pendejo?",				"Is that what you got @*%$#!?",					"actors/male/jesus/fight2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Fuckin' eat shit motherfucker!",			"@*%$#! eat @*%$#! @*%$#!!",					"actors/male/jesus/fight3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I'll fuck you in the ass man!",				"I'l @*%$#! you in the @*%$#! man",				"actors/male/jesus/fight4.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
-															
+
 	{NULL, "Are you ready to be fucked man?",			"Are you ready to be @*%$#! man?",				"actors/male/jesus/funny1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "You don't Fuck with the Jesus, man",		"You don't @*%$#! with the Jesus, man",			"actors/male/jesus/funny2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I will Fuck you in the ass motherfucker",	"I will @*%$#! you in the @*%$#! @*%$#!",		"actors/male/jesus/funny3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Nobody fucks with the Jesus",				"Nobody @*%$#! with the Jesus",					"actors/male/jesus/funny4.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Whooo!",									"Whooo!",										"actors/male/jesus/funny5.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I'll stick that thing up your ass and pull the fucking trigger till it goes click",			"I'll stick that thing up your @*%$#! and pull the @*%$#! trigger till it goes click",	"actors/male/jesus/funny6.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
-	
+
 	{NULL, "Leave that battery alone muthafucka",		"Leave that battery alone @*%$#!",				"actors/male/jesus/battery.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 };
 
 
-voice_table_t ty_mo[] = 
+voice_table_t ty_mo[] =
 {
 	// 0
 	{NULL, "Hey this is our turf asshole... turn around",	"Hey this is our turf @*%$#!... turn around",		"actors/male/moe/moe1.wav",			0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
-	
+
 	// 1
 	{NULL, "get the fuck outta here",						"get the @*%$#! outta here",						"actors/male/moe/aggressive1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I said beat it",								"I said beat it",									"actors/male/moe/aggressive2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
@@ -674,12 +674,12 @@ voice_table_t ty_mo[] =
 	{NULL, "yeah... well fuck you too",						"yeah... well @*%$#! you too",						"actors/male/moe/cowar1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "man... you better get the fuck outta here",		"man... you better get the @*%$#! outta here",		"actors/male/moe/cowar2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I... it's cool man, it's cool!",				"I... it's cool man, it's cool!",					"actors/male/moe/cowar3.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
-	// 8												
+	// 8
 	{NULL, "kill that fucker",								"kill that @*%$#!er",								"actors/male/moe/killhim.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE}
 };
 
 
-voice_table_t ty_larry[] = 
+voice_table_t ty_larry[] =
 {
 	// 0
 	{NULL, "You fuckin' looser",							"You @*%$#! looser",								"actors/male/hiredguy/larry.wav", 0, {0,0,0,0,0}, 0, 0 , TT_NONE},
@@ -690,10 +690,10 @@ voice_table_t sy_popeye[] =
 {
 
 	{NULL, "Heilman's boys just dragged some dame into that warehouse... she was screamin' er head off a minute ago",	"Heilman's boys just dragged some dame into that warehouse... she was screamin' er head off a minute ago",	"actors/male/popeye/dragged.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-	
+
 	{NULL, "don't try to tackle those goons yourself... you won't stand a chance",			"don't try to tackle those goons yourself... you won't stand a chance",			"actors/male/popeye/tackle.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "you ought to go down to the salty dog saloon and get a little help",			"you ought to go down to the salty dog saloon and get a little help",			"actors/male/popeye/saltydog.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-	
+
 	{NULL, "ahh, that Heilman's a piece of work, isn't he",									"ahh, that Heilman's a piece of work, isn't he",								"actors/male/popeye/prefind1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "son of a bitch has got these docks sewn up tight",								"son of a @*%$#! has got these docks sewn up tight",							"actors/male/popeye/prefind2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "you want to work steady, you gotta kick back half your dough",					"you want to work steady, you gotta kick back half your dough",					"actors/male/popeye/prefind3.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NONE},
@@ -711,8 +711,8 @@ voice_table_t sy_popeye[] =
 
 	{NULL, "Don't talk to me like that ya young punk!",										"Don't talk to me like that ya young punk!",									"actors/male/popeye/hostile1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Whattaya barking at me for?  I didn't do nothin'",								"Whattaya barking at me for?  I didn't do nothin'",								"actors/male/popeye/hostile2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
-	{NULL, "Ah so go fuck yourself, I was just tryin' ta help",								"Ah so go @*%$#! yourself, I was just tryin' ta help",					"actors/male/popeye/hostile3.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
-	
+	{NULL, "Ah so go fuck yourself, I was just tryin' ta help",								"Ah so go @*%$#! yourself, I was just tryin' ta help",					        "actors/male/popeye/hostile3.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
+
 	{NULL, "arrrrh",																		"arrrrh",																		"actors/male/popeye/argh1.wav",			0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "nnaarrahh",																		"nnaarrahh",																	"actors/male/popeye/argh2.wav",			0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "nahrrnn",																		"nahrrnn",																		"actors/male/popeye/argh3.wav",			0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
@@ -728,11 +728,11 @@ voice_table_t sy_barney[] =
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																		
+
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
-																																
+
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "FIXME",														"FIXME",			"actors/male/barney/wav1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
@@ -750,7 +750,7 @@ voice_table_t sy_sal[] =
 };
 
 
-voice_table_t sy_bigwillie[] = 
+voice_table_t sy_bigwillie[] =
 {
 	{NULL,	"ughhhh, my achin' head",									"ughhhh, my achin' head",											"actors/male/willy/onfloor1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL,	"what fell on me?",											"what fell on me?",													"actors/male/willy/onfloor2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
@@ -760,7 +760,7 @@ voice_table_t sy_bigwillie[] =
 
 	{NULL,	"Lizzy... I'm gonna take it outta their fuckin' hides!",	"Lizzy... I'm gonna take it outta their @*%$#! hides!",				"actors/male/willy/lizzy1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL,	"I got the key with me... let's go",						"I got the key with me... let's go",								"actors/male/willy/lizzy2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-	
+
 	{NULL,	"Payback time motherfuckers!",								"Payback time @*%$#!!",												"actors/male/willy/fight1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL,	"This is for you Lizzy!",									"This is for you Lizzy!",											"actors/male/willy/fight2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL,	"You murderin' bastards!",									"You murderin' @*%$#!!",											"actors/male/willy/fight3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
@@ -769,7 +769,7 @@ voice_table_t sy_bigwillie[] =
 };
 
 
-voice_table_t sy_dogg[] = 
+voice_table_t sy_dogg[] =
 {
 	{NULL,	"man, Heilman's boys sure fucked this joint up",									"man, Heilman's boys sure @*%$#! this joint up",								"actors/male/dogg/dogg1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL,	"What the hell is up with you, stupid?",											"What the @*%$#! is up with you, stupid?",										"actors/male/dogg/dogg2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
@@ -777,11 +777,11 @@ voice_table_t sy_dogg[] =
 	{NULL,	"ahh, little wreckage that's all, no problem, just watch the broken glass eh?",		"ahh, little wreckage that's all, no problem, just watch the broken glass eh?",	"actors/male/dogg/dogg4.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL,	"one grain alcohol and rain water, comin' up",										"one grain alcohol and rain water, comin' up",									"actors/male/dogg/dogg5.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 
-	
+
 };
 
 
-voice_table_t sy_lefty[] = 
+voice_table_t sy_lefty[] =
 {
 	{NULL,	"what we standin' around for?  time's a wastin'",			"what we standin' around for?  time's a wastin'",		"actors/male/lefty/random1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL,	"get a move on will ya?",									"get a move on will ya?",								"actors/male/lefty/random2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
@@ -818,7 +818,7 @@ voice_table_t pv_louie[] =
 };
 
 
-voice_table_t ty_tyrone[] = 
+voice_table_t ty_tyrone[] =
 {
 	{NULL, "",		"",		"actors/male/tyrone/death1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",		"",		"actors/male/tyrone/death1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
@@ -839,11 +839,11 @@ voice_table_t ty_tyrone[] =
 	{NULL, "I'm superfly TNT!",											"I'm superfly TNT!",							"actors/male/tyrone/funny4.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I'm a mushroom cloud layin' motherfucker, motherfucker!",	"I'm a mushroom cloud layin' @*%$#!, @*%$#!!",	"actors/male/tyrone/funny5.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I will lay my vengeance down upon thee!",					"I will lay my vengeance down upon thee!",		"actors/male/tyrone/funny6.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE}
-	
+
 };
 
 
-voice_table_t ty_luke[] = 
+voice_table_t ty_luke[] =
 {
 	{NULL, "If you wanna get to Radio City, you should, like, go in the sewers",			"If you wanna get to Radio City, you should, like, go in the sewers",				"actors/male/luke/clue1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "I dunno how to get the door open, but you can",									"I dunno how to get the door open, but you can",									"actors/male/luke/clue2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
@@ -859,7 +859,7 @@ voice_table_t ty_luke[] =
 
 };
 
-voice_table_t ty_hann[] = 
+voice_table_t ty_hann[] =
 {
 	{NULL, "Now that the tunnels are blocked off you'll have to use the sewers",							"Now that the tunnels are blocked off you'll have to use the sewers",							"actors/male/hann/clue1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "Somebody busted the valve handle right off the access panel.  Can't get out without that...",	"Somebody busted the valve handle right off the access panel.  Can't get out without that...",	"actors/male/hann/clue2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
@@ -875,7 +875,7 @@ voice_table_t ty_hann[] =
 };
 
 
-voice_table_t steeltown_moker[] = 
+voice_table_t steeltown_moker[] =
 {
 	{NULL, "",								"",					"actors/male/moker/death1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",								"",					"actors/male/moker/death1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NONE},
@@ -1023,17 +1023,17 @@ voice_table_t rc_scalper[]=
 	// 0
 	{NULL, "I'll sell you a Sky Tram ticket for $50",														"I'll sell you a Sky Tram ticket for $50",													"actors/male/scalper/buyticket1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "Want to take the Sky Tram to Central Tower? It'll cost you $50",								"Want to take the Sky Tram to Central Tower? It'll cost you $50",							"actors/male/scalper/buyticket2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-	// 2	
+	// 2
 	{NULL, "There you go my man",																			"There you go my man",																		"actors/male/scalper/yes1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "Have a good trip",																				"Have a good trip",																			"actors/male/scalper/yes2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-	// 4																																																			
+	// 4
 	{NULL, "Sorry, you need $50",																			"Sorry, you need $50",																		"actors/male/scalper/no1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "Like I said, the price is $50",																	"Like I said, the price is $50",															"actors/male/scalper/no2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 
 	{NULL, "The Sky Tram's the only way to get to the tower",												"The Sky Tram's the only way to get to the tower",											"actors/male/scalper/amb1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "The gang violence in RC is gettin' way out of hand",											"The gang violence in RC is gettin' way out of hand",										"actors/male/scalper/amb2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "With them Jokers and Dragons goin' at it, it ain't safe to walk the streetsno more",			"With them Jokers and Dragons goin' at it, it ain't safe to walk the streets no more",		"actors/male/scalper/amb3.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																																					
+
 	{NULL, "I don't care what you say... It's still gonna cost you $50",									"I don't care what you say... It's still gonna cost you $50",								"actors/male/scalper/curse1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Go flap your wings and fly to Central Tower, cause you ain't gettin' there any other way",		"Go flap your wings and fly to Central Tower, cause you ain't gettin' there any other way",	"actors/male/scalper/curse2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Fine. Be that way. I'll just sell it to somebody else...",										"Fine. Be that way. I'll just sell it to somebody else...",									"actors/male/scalper/curse3.wav",		0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
@@ -1043,7 +1043,7 @@ voice_table_t rc_scalper[]=
 
 //////////////////////////////////////////////////////////////////////////////////////
 // radio city
-//////////////////////// 
+////////////////////////
 
 voice_table_t rc_neutral_talk[] =
 {
@@ -1052,7 +1052,7 @@ voice_table_t rc_neutral_talk[] =
 	{neutral_talk_player, "What can I do you for?",						"What can I do you for?",							"rc/actors/male/neutral/talk3.wav",	1, {3,0,0,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "Hey sport, lookin' for some action?",		"Hey sport, lookin' for some action?",				"rc/actors/male/neutral/talk4.wav",	3, {0,1,2,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "Fo'gettaboutit",								"Fo'gettaboutit",									"rc/actors/male/neutral/talk5.wav",	3, {7,8,9,0,0},0, true, TT_NONE},
-																															
+
 	{neutral_talk_player, "What time you got?",							"What time you got?",								"rc/actors/male/neutral/talk6.wav",	3, {7,8,9,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "What the fuck's up with you?",				"What the @*%$#!'s up with you?",					"rc/actors/male/neutral/talk7.wav",	3, {7,8,9,0,0},0, true, TT_NONE},
 	{neutral_talk_player, "Another freekin night and no pussy",			"Another freekin night and no @*%$#!",				"rc/actors/male/neutral/talk8.wav",	0, {0,0,0,0,0},0, true, TT_NONE},
@@ -1065,7 +1065,7 @@ voice_table_t rc_neutral_talk[] =
 	{neutral_talk_player, "You gotta match?",							"You gotta match?",									"rc/actors/male/neutral/talk14.wav",	4, {4,7,8,9,0},0, 0, TT_NONE},
 
 	{neutral_talk_player, "It was a hit alright... Big time!",			"It was a hit alright... Big time!",				"rc/actors/male/ambient/conv15.wav",	5, {0,0,0,0,0},0, 0, TT_NONE},
-																														
+
 	{neutral_talk_player, "It's a damn shame I tell ya",				"It's a damn shame I tell ya",						"rc/actors/male/ambient/conv19.wav",	3, {0,0,0,0,0},0, 0, TT_NONE}
 /*
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk1.wav",	3, {2,1,0,0,0},0, 0, TT_NONE},
@@ -1073,7 +1073,7 @@ voice_table_t rc_neutral_talk[] =
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk3.wav",	1, {3,0,0,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk4.wav",	3, {0,1,2,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk5.wav",	3, {7,8,9,0,0},0, true, TT_NONE},
-																															
+
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk6.wav",	3, {7,8,9,0,0},0, 0, TT_NONE},
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk7.wav",	3, {7,8,9,0,0},0, true, TT_NONE},
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk8.wav",	0, {0,0,0,0,0},0, true, TT_NONE},
@@ -1085,7 +1085,7 @@ voice_table_t rc_neutral_talk[] =
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk13.wav",	4, {4,7,8,9,0},0, 0, TT_NONE},
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/neutral/talk14.wav",	4, {4,7,8,9,0},0, 0, TT_NONE},
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/ambient/conv15.wav",	5, {11,18,19,11,9},0, 0, TT_NONE},
-																															
+
 	{neutral_talk_player, "FIXME",			"FIXME",		"rc/actors/male/ambient/conv19.wav",	3, {18,0,6,0,0},0, 0, TT_NONE}
 */
 };
@@ -1126,28 +1126,28 @@ voice_table_t rc_neutral_talk_player[] =
 	{neutral_talk, "FIXME",			"FIXME",				"rc/actors/player/male/neutral/play9.wav", 3, {11,6,4,0,0},0, false, TT_NONE},
 	{neutral_talk, "FIXME",			"FIXME",				"rc/actors/player/male/neutral/play10.wav", 3, {11,6,4,0,0},0, false, TT_NONE}
 */
-}; 
+};
 
-voice_table_t rc_neutral_converse[] = 
+voice_table_t rc_neutral_converse[] =
 {
 	{neutral_converse, "Fo'gettaboutit",												"Fo'gettaboutit",												"rc/actors/male/ambient/conv0.wav", 5, {7,8,3,18,19},0, true, TT_NEUTRAL},
 	{neutral_converse, "Two points over the vig?... You gotta be crazy!",				"Two points over the vig?... You gotta be crazy!",				"rc/actors/male/ambient/conv1.wav", 1, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "She had a setta knockers on her like out to here!",				"She had a setta knockers on her like out to here!",			"rc/actors/male/ambient/conv2.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "Listen to me, will ya?",										"Listen to me, will ya?",										"rc/actors/male/ambient/conv3.wav", 5, {5,7,18,4,2},0, true, TT_NEUTRAL},
 	{neutral_converse, "What can I do?... He's my wife's brother",						"What can I do?... He's my wife's brother",						"rc/actors/male/ambient/conv4.wav", 3, {0,5,13,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "He's gonna get clipped if he don't watch himself",				"He's gonna get clipped if he don't watch himself",				"rc/actors/male/ambient/conv5.wav", 1, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "Yeah, let's put twenty on Blueboy to show in the third",		"Yeah, let's put twenty on Blueboy to show in the third",		"rc/actors/male/ambient/conv6.wav", 1, {3,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "Let's get started already",										"Let's get started already",									"rc/actors/male/ambient/conv7.wav", 3, {8,13,16,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "What time you got?",											"What time you got?",											"rc/actors/male/ambient/conv8.wav", 4, {0,3,12,18,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "He's doin' a three to five stretch up at Big Rock",				"He's doin' a three to five stretch up at Big Rock",			"rc/actors/male/ambient/conv9.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "The Feds shut that down weeks ago",								"The Feds shut that down weeks ago",							"rc/actors/male/ambient/conv10.wav", 1, {11,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "No kiddin'?",													"No kiddin'?",													"rc/actors/male/ambient/conv11.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "What's it to ya?",												"What's it to ya?",												"rc/actors/male/ambient/conv12.wav", 3, {0,3,18,0,0},0, true, TT_NEUTRAL},
 	{neutral_converse, "He better pay up... or else",									"He better pay up... or else",									"rc/actors/male/ambient/conv13.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "If I gotta show up in person, someone ain't gonna like it",		"If I gotta show up in person, someone ain't gonna like it",	"rc/actors/male/ambient/conv14.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "It was a hit alright... Big time!",								"It was a hit alright... Big time!",							"rc/actors/male/ambient/conv15.wav", 5, {11,18,19,11,9},0, 0, TT_NEUTRAL},
 	{neutral_converse, "A hundred cases of the real stuff comin' in from up North",		"A hundred cases of the real stuff comin' in from up North",	"rc/actors/male/ambient/conv16.wav", 2, {11,13,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "They got him... but good!",										"They got him... but good!",									"rc/actors/male/ambient/conv17.wav", 4, {9,19,15,11,0},0, 0, TT_NEUTRAL},
@@ -1159,19 +1159,19 @@ voice_table_t rc_neutral_converse[] =
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv2.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv3.wav", 5, {5,7,18,4,2},0, true, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv4.wav", 3, {0,5,13,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv5.wav", 1, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv6.wav", 1, {3,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv7.wav", 3, {8,13,16,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv8.wav", 4, {0,3,12,18,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv9.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv10.wav", 1, {11,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv11.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv12.wav", 3, {0,3,18,0,0},0, true, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv13.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv14.wav", 0, {0,0,0,0,0},0, 0, TT_NEUTRAL},
-																						
+
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv15.wav", 5, {11,18,19,11,9},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv16.wav", 2, {11,13,0,0,0},0, 0, TT_NEUTRAL},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/male/ambient/conv17.wav", 4, {9,19,15,11,0},0, 0, TT_NEUTRAL},
@@ -1193,7 +1193,7 @@ voice_table_t rc_neutral_converse_to_female[] =
 	{neutral_converse, "hell yeah",																			"@*%$#! yeah",																			"rc/actors/skidrow/leroy/conv8.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 	{neutral_converse, "hey man, don't be getting' yourself all fucked up over it",							"hey man, don't be getting' yourself all @*%$#!ed up over it",							"rc/actors/skidrow/leroy/conv9.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 	{neutral_converse, "Yo bitch, don't be getting' all like that with me.  fuck wrong wit' you?",			"Yo @*%$#!, don't be getting' all like that with me.  @*%$#! wrong wit' you?",			"rc/actors/skidrow/leroy/conv10.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
-																																																	
+
 	{neutral_converse, "shit...",																			"@*%$#!...",																			"rc/actors/skidrow/leroy/conv11.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 /*
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/skidrow/leroy/conv1.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
@@ -1207,7 +1207,7 @@ voice_table_t rc_neutral_converse_to_female[] =
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/skidrow/leroy/conv8.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/skidrow/leroy/conv9.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/skidrow/leroy/conv10.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
-																																																	
+
 	{neutral_converse, "FIXME",			"FIXME",			"rc/actors/skidrow/leroy/conv11.wav", 3, {18,0,6,0,0},0, 0, TT_NONE},
 */
 };
@@ -1251,19 +1251,19 @@ voice_table_t rc_profanity_level2[] =
 	{NULL, "You wanna throw me motherfucker?",			"You wanna throw me @*%$#!?",					"rc/actors/male/profanity/level2/cuss2-3.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You gonna fuckin' stand there all day?",	"You gonna @*%$#! stand there all day?",		"rc/actors/male/profanity/level2/cuss2-4.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You want some of me asshole?",				"You want some of me @*%$#!?",					"rc/actors/male/profanity/level2/cuss2-5.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "I will fuckin' bury you",					"I will @*%$#! bury you",						"rc/actors/male/profanity/level2/cuss2-6.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Fuck me? Fuck you you piece of shit",		"@*%$#! me? @*%$#! you you piece of @*%$#!",	"rc/actors/male/profanity/level2/cuss2-7.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You gonna fuck with my boys?",				"You gonna @*%$#! with my boys?",				"rc/actors/male/profanity/level2/cuss2-8.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "What are you doin' on my fuckin' street",	"What are you doin' on my @*%$#! street",		"rc/actors/male/profanity/level2/cuss2-9.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Turn around shit for brains",				"Turn around @*%$#! for brains",				"rc/actors/male/profanity/level2/cuss2-10.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "I will fuckin' end you",					"I will end you",								"rc/actors/male/profanity/level2/cuss2-11.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You piece of shit",							"You piece of @*%$#!",							"rc/actors/male/profanity/level2/cuss2-12.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "You fuckin' piece of shit",					"You @*%$#!",									"rc/actors/male/profanity/level2/cuss2-13.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "What did you say motherfucker",				"What did you say @*%$#!",						"rc/actors/male/profanity/level2/cuss2-14.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Fuck you, you fuckin' piece of shit",		"@*%$#! you, you @*%$#! piece of @*%$#!",		"rc/actors/male/profanity/level2/cuss2-15.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "You fuckin' whore",							"You @*%$#!",									"rc/actors/male/profanity/level2/cuss2-16.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "Kiss my ass you piece of shit",				"Kiss my @*%$#! you piece of @*%$#!",			"rc/actors/male/profanity/level2/cuss2-17.wav", 0, {0,0,0,0,0},0, 0},
 /*
@@ -1272,19 +1272,19 @@ voice_table_t rc_profanity_level2[] =
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-3.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-4.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-5.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-6.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-7.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-8.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-9.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-10.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-11.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-12.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-13.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-14.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-15.wav", 0, {0,0,0,0,0},0, 0},
-														
+
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-16.wav", 0, {0,0,0,0,0},0, 0},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/profanity/level2/cuss2-17.wav", 0, {0,0,0,0,0},0, 0},
 */
@@ -1324,10 +1324,10 @@ voice_table_t rc_friendlypain[] =
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/hiredguy/wounded/friendlyfire1.wav", 0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/hiredguy/wounded/friendlyfire2.wav", 0, {0,0,0,0,0},0, 0, TT_NEGATIVE},
 */
-};												
-												
-voice_table_t rc_friendlyhurt[] =					
-{												
+};
+
+voice_table_t rc_friendlyhurt[] =
+{
 	{NULL, "boss I'm all fucked up here",		"boss I'm all @*%$#!ed up here",	"rc/actors/male/hiredguy/wounded/fuckedup.wav",	0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 	{NULL, "boss I'm hurt bad",					"boss I'm hurt bad",				"rc/actors/male/hiredguy/wounded/hurtbad.wav",		0, {0,0,0,0,0},0, 0, TT_POSITIVE},
 /*
@@ -1371,7 +1371,7 @@ voice_table_t rc_specific[] =
 	{NULL, "Yo man you got a dollar?",						"Yo man you got a dollar?",								"rc/actors/skidrow/magicj/holdbuck.wav",	0, {0,0,0,0,0},0,0, TT_QUESTION},
 	{NULL, "Here's your fuckin' dollar",					"Here's your @*%$#! dollar",							"rc/actors/player/male/p_heresdollar.wav",	0, {0,0,0,0,0},0,0, TT_NONE},
 	{NULL, "Nah I ain't got a dollar",						"Nah I ain't got a dollar",								"rc/actors/player/male/p_nodollar.wav",		0, {0,0,0,0,0},0,0 , TT_NONE},
-		
+
 	{NULL, "A'right cool, here's your crowbar",				"A'right cool, here's your crowbar",					"rc/actors/skidrow/magicj/crowbar.wav",		0, {0,0,0,0,0},0,0, TT_POSITIVE},
 	{NULL, "get back to me when you got a dollar",			"get back to me when you got a dollar",					"rc/actors/skidrow/magicj/getbacktome.wav",	0, {0,0,0,0,0},0,0, TT_POSITIVE},
 	{NULL, "I'll give you a crowbar for a dollar...",		"I'll give you a crowbar for a dollar...",				"rc/actors/skidrow/magicj/gotdollar.wav",	0, {0,0,0,0,0},0,0, TT_QUESTION},
@@ -1380,7 +1380,7 @@ voice_table_t rc_specific[] =
 // 10
 	{NULL, "What the fuck's up?",							"What the @*%$#!'s up?",								"rc/actors/skidrow/leroy/whatsup.wav",		0, {0,0,0,0,0},0,0 , TT_NEUTRAL},	// 11
 	{NULL, "Yo Fuck you man",								"Yo @*%$#! you man",									"rc/actors/skidrow/leroy/fuckyou.wav",		0, {0,0,0,0,0},0,0 , TT_NEUTRAL},	// 12
-	{NULL, "Man don't be lookin' at my bitch motherfucker",	"Man don't be lookin' at my @*%$#! @*%$#!",				"rc/actors/skidrow/leroy/mybitch1.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},	// 13	
+	{NULL, "Man don't be lookin' at my bitch motherfucker",	"Man don't be lookin' at my @*%$#! @*%$#!",				"rc/actors/skidrow/leroy/mybitch1.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},	// 13
 	{NULL, "Hey motherfucker don't be talkin' to my bitch",	"Hey @*%$#! don't be talkin' to my @*%$#!",				"rc/actors/skidrow/leroy/mybitch2.wav",		0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 14
 	{NULL, "better step the fuck off man",					"better step the @*%$#! off man",						"rc/actors/skidrow/leroy/stepoff.wav",		0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 15
 	{NULL, "Man I warned your punk ass bitch, motherfucker","Man I warned your punk @*%$#! @*%$#! @*%$#!",			"rc/actors/skidrow/leroy/warned.wav",		0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 16
@@ -1400,7 +1400,7 @@ voice_table_t rc_specific[] =
 	{NULL, "don't fuck with us punk",						"don't @*%$#! with us punk",							NULL,										0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 	{NULL, "those fuckin' punks are gonna pay",				"those @*%$#! punks are gonna pay",						NULL,										0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 	{NULL, "this pipe should come in handy",				"this pipe should come in handy",						NULL,										0, {0,0,0,0,0},0,0, TT_NEUTRAL},
-	
+
 	{NULL, "Fuck this shit",								"@*%$#! this @*%$#!",									"rc/actors/skidrow/magicj/fuckshit.wav",	0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 /*
 	{NULL, "FIXME",			"FIXME",						"rc/actors/male/specific/spec1.wav",		0, {0,0,0,0,0},0, 0, TT_NEGATIVE}, // first time they see you
@@ -1410,7 +1410,7 @@ voice_table_t rc_specific[] =
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/magicj/holdbuck.wav",	0, {0,0,0,0,0},0,0, TT_QUESTION},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/player/male/p_heresdollar.wav",	0, {0,0,0,0,0},0,0, TT_NONE},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/player/male/p_nodollar.wav",	0, {0,0,0,0,0},0,0 , TT_NONE},
-		
+
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/magicj/crowbar.wav",	0, {0,0,0,0,0},0,0, TT_POSITIVE},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/magicj/getbacktome.wav",0, {0,0,0,0,0},0,0, TT_POSITIVE},
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/magicj/gotdollar.wav",	0, {0,0,0,0,0},0,0, TT_QUESTION},
@@ -1419,7 +1419,7 @@ voice_table_t rc_specific[] =
 // 10
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/leroy/whatsup.wav",		0, {0,0,0,0,0},0,0 , TT_NEUTRAL},	// 11
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/leroy/fuckyou.wav",		0, {0,0,0,0,0},0,0 , TT_NEUTRAL},	// 12
-	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/leroy/mybitch1.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},	// 13	
+	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/leroy/mybitch1.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},	// 13
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/leroy/mybitch2.wav",	0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 14
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/leroy/stepoff.wav",		0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 15
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/leroy/warned.wav",		0, {0,0,0,0,0},0,0, TT_NEGATIVE},	// 16
@@ -1439,7 +1439,7 @@ voice_table_t rc_specific[] =
 	{NULL, "FIXME",			"FIXME",						NULL,									0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 	{NULL, "FIXME",			"FIXME",						NULL,									0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 	{NULL, "FIXME",			"FIXME",						NULL,									0, {0,0,0,0,0},0,0, TT_NEUTRAL},
-	
+
 	{NULL, "FIXME",			"FIXME",						"rc/actors/skidrow/magicj/fuckshit.wav",	0, {0,0,0,0,0},0,0, TT_NEGATIVE},
 */
 };
@@ -1461,19 +1461,19 @@ voice_table_t rc_butch[] =
 	{NULL, "You must be the badass we've been hearin' about",																	"You must be the @*%$#! we've been hearin' about",																	"rc/actors/male/butch/badass1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "Hey, word on you is all over the street",																			"Hey, word on you is all over the street",																			"rc/actors/male/butch/badass2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "You've put yourself up quite a wrap",																				"You've put yourself up quite a wrap",																				"rc/actors/male/butch/badass3.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																																																									
+
 	{NULL, "There's three freaks in that tunnel... you wanna join us you gotta take them out with a crowbar",					"There's three freaks in that tunnel... you wanna join us you gotta take them out with a crowbar",					"rc/actors/male/butch/tunnel1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "You ready to take on some tunnel freaks?  Let's see you trash all three of those sick fucks with just a crowbar",	"You ready to take on some tunnel freaks?  Let's see you trash all three of those sick @*%$#! with just a crowbar",	"rc/actors/male/butch/tunnel2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																																																									
+
 	{NULL, "Hey, I told you what you got to do... get hot",																		"Hey, I told you what you got to do... get hot",																	"rc/actors/male/butch/go1.wav",			0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "So get goin already",																								"So get goin already",																								"rc/actors/male/butch/go2.wav",			0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																																																									
+
 	{NULL, "You don't listen too well do ya asshole?  I said use a fuckin' crowbar",											"You don't listen too well do ya @*%$#!?  I said use a @*%$#! crowbar",											"rc/actors/male/butch/gun1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "You's supposed to use a crowbar... usin' a gun don't mean shit",													"You's supposed to use a crowbar... usin' a gun don't mean @*%$#!",													"rc/actors/male/butch/gun2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																																																									
+
 	{NULL, "Nice work... a little messy, but nice.  Alright, you can run with us",												"Nice work... a little messy, but nice.  Alright, you can run with us",											"rc/actors/male/butch/nice1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "You're one tough motherfucker man, you can definately join the jokers",												"You're one tough @*%$#! man, you can definately join the jokers",											"rc/actors/male/butch/nice2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																
+
 	{NULL, "We're at fuckin' war with the dragons... we ain't got time for your shit",											"We're at @*%$#! war with the dragons... we ain't got time for your @*%$#!",										"rc/actors/male/butch/special1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "You wanna join our gang?   It's gonna cost you five hundred",														"You wanna join our gang?   It's gonna cost you five hundred",														"rc/actors/male/butch/special2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "That was fuckin' awesome man.  And with nothin' but a crowbar.  Alright, you one of us now",						"That was @*%$#! awesome man.  And with nothin' but a crowbar.  Alright, you one of us now",						"rc/actors/male/butch/special3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
@@ -1487,16 +1487,16 @@ voice_table_t rc_patrick[]=
 
 	{NULL, "Lesse... clear out all three of those tunnel freaks with nothin' but a crowbar",									"Lesse... clear out all three of those tunnel freaks with nothin' but a crowbar",					"rc/actors/male/patrick/tunnel1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "If you can waste all three of those fuckers with nothin' but a crowbar you can definitely join in with the jokers",	"If you can waste all three of those @*%$#! with nothin' but a crowbar you can definitely join in with the jokers",		"rc/actors/male/patrick/tunnel2.wav", 0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																				
+
 	{NULL, "You ain't showin' us shit just standin' there",																		"You ain't showin' us @*%$#! just standin' there",													"rc/actors/male/patrick/go1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "You scared of somethin'?",																							"You scared of somethin'?",																			"rc/actors/male/patrick/go2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																																											
+
 	{NULL, "You used a fuckin' piece man, that's bullshit",																		"You used a @*%$#! piece man, that's @*%$#!",														"rc/actors/male/patrick/gun1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "I told you no shootin' motherfucker",																				"I told you no shootin' @*%$#!",																	"rc/actors/male/patrick/gun2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																																											
+
 	{NULL, "FIXSOUND: I guess everything we heard about you is true... c'mon, let's go",										"FIXSOUND: I guess everything we heard about you is true... c'mon, let's go",						"rc/actors/male/patrick/nice1.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "Man, you the fuckin' real deal... let's get movin'",																"Man, you the @*%$#! real deal... let's get movin'",												"rc/actors/male/patrick/nice2.wav",		0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																																											
+
 	{NULL, "Hey, we're in the middle of a gang war man, don't bother me now",													"Hey, we're in the middle of a gang war man, don't bother me now",									"rc/actors/male/patrick/special1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "500 bucks, you can join up with us",																				"500 bucks, you can join up with us",																"rc/actors/male/patrick/special2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "You wasted their asses with a fuckin' crowbar man... we could use a guy like you",									"You wasted their asses with a @*%$#! crowbar man... we could use a guy like you",					"rc/actors/male/patrick/special3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
@@ -1508,7 +1508,7 @@ voice_table_t rc_joker[]=
 	{NULL, "Okay, where are we goin'?",								"Okay, where are we goin'?",								"rc/actors/male/joker/hire2.wav", 0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "I got your back bro",									"I got your back bro",										"rc/actors/male/joker/hire3.wav", 0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "Always there for a brother joker",						"Always there for a brother joker",							"rc/actors/male/joker/hire4.wav", 0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
-																																		
+
 	{NULL, "I don't run with anyone who ain't in a gang",			"I don't run with anyone who ain't in a gang",				"rc/actors/male/joker/nohire1.wav", 0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "No way man, you ain't one of us",						"No way man, you ain't one of us",							"rc/actors/male/joker/nohire2.wav", 0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 	{NULL, "Go see Butch and Patrick",								"Go see Butch and Patrick",									"rc/actors/male/joker/nohire3.wav", 0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
@@ -1517,7 +1517,7 @@ voice_table_t rc_joker[]=
 	{NULL, "You gotta be a part of the gang first",					"You gotta be a part of the gang first",					"rc/actors/male/joker/nohire6.wav", 0, {0,0,0,0,0}, 0, 0 , TT_POSITIVE},
 };
 
-voice_table_t rc_male_specific[] = 
+voice_table_t rc_male_specific[] =
 {
 	// pain
 	{NULL,	"",		"",		"rc/actors/male/pain100_1.wav",	0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
@@ -1528,10 +1528,10 @@ voice_table_t rc_male_specific[] =
 	{NULL,	"",		"",		"rc/actors/male/pain50_2.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL,	"",		"",		"rc/actors/male/pain25_1.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL,	"",		"",		"rc/actors/male/pain25_2.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
-	// death						
+	// death
 	{NULL,	"",		"",		"rc/actors/male/death1.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
 	{NULL,	"",		"",		"rc/actors/male/death2.wav",		0, {0,0,0,0,0},0,0 , TT_NEGATIVE},
-	// fire death					
+	// fire death
 	{NULL,	"",		"",		"rc/actors/male/flamedeath1.wav",	0, {0,0,0,0,0},0,0 , TT_NONE},
 	{NULL,	"",		"",		"rc/actors/male/flamedeath2.wav",	0, {0,0,0,0,0},0,0 , TT_NONE},
 	{NULL,	"",		"",		"rc/actors/male/flamedeath3.wav",	0, {0,0,0,0,0},0,0 , TT_NONE},
@@ -1566,23 +1566,23 @@ voice_table_t kingpin[]=
 {
 	{NULL, "",							"",								"actors/male/kingpin/death1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",							"",								"actors/male/kingpin/death2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
-																										
+
 	{NULL, "",							"",								"actors/male/kingpin/pain1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",							"",								"actors/male/kingpin/pain2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",							"",								"actors/male/kingpin/pain3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
 	{NULL, "",							"",								"actors/male/kingpin/pain4.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NONE},
-																										
+
 	{NULL, "I ain't through with you by a damned site",								"I ain't through with you by a @*%$#! site",						"actors/male/kingpin/fight1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Your ass is goin' down",												"Your @*%$#! is goin' down",										"actors/male/kingpin/fight2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I'm a sick the dogs on your ass",										"I'm a sick the dogs on your @*%$#!",								"actors/male/kingpin/fight3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I'm a get medieval on your ass",										"I'm a get medieval on your @*%$#!",								"actors/male/kingpin/fight4.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
-															
+
 	{NULL, "You come close, but you never made it",									"You come close, but you never made it",							"actors/male/kingpin/funny1.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "This business is filled to the brim with unrealistic motherfuckers",	"This business is filled to the brim with unrealistic @*%$#!",		"actors/male/kingpin/funny2.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "Your days are just about numbered motherfucker",						"Your days are just about numbered @*%$#!",							"actors/male/kingpin/funny3.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "You stay gone or you be gone",											"You stay gone or you be gone",										"actors/male/kingpin/funny4.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "You lost all your RC priviledges!",										"You lost all your RC priviledges!",								"actors/male/kingpin/funny5.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
 	{NULL, "I'm prepared to scour the earth for you, motherfucker!",				"I'm prepared to scour the earth for you, @*%$#!!",					"actors/male/kingpin/funny6.wav",	0, {0,0,0,0,0}, 0, 0 , TT_NEGATIVE},
-	
+
 };
 
