@@ -644,7 +644,8 @@ void WaveBuy()  // start buy zone
     //Show msgs
     for_each_player(self,i)
 	{
-        if (self->client->showscores == INFO_BUYZONE)
+		//if (self->client->pers.spectator != PLAYING) //hypov8 note. i added this because spec players would show the buyzone scoreboard
+        if (self->client->showscores == INFO_BUYZONE) //did you want to OR it? 
             continue;
         self->client->showscores = INFO_BUYZONE;
         self->client->resp.scoreboard_frame = 0;

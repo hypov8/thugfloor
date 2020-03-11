@@ -40,6 +40,11 @@ void cast_pawn_o_matic_spawn ()//Randoms spawn testing
 
 		spawn = G_Spawn();
 		spawnspot = cast_SelectRandomDeathmatchSpawnPoint(spawn);
+		if (!spawnspot) {
+			gi.dprintf("\nNo spawn points for cast.\n\n");
+			G_FreeEdict(spawn);
+			return;
+		}
 		VectorCopy(spawnspot->s.angles, spawn->s.angles);
 		VectorCopy(spawnspot->s.origin, spawn->s.origin);
 		spawn->s.origin[2] += 1;
@@ -1063,6 +1068,12 @@ void cast_TF_spawn(void)
 
 		spawn = G_Spawn();
 		spawnspot = cast_SelectRandomDeathmatchSpawnPoint(spawn);
+		if (!spawnspot)	{
+			//debug
+			gi.dprintf("\nNo spawn points for cast.\n\n");
+			G_FreeEdict(spawn);
+			return;
+		}
 		VectorCopy(spawnspot->s.angles, spawn->s.angles);
 		VectorCopy(spawnspot->s.origin, spawn->s.origin);
 		spawn->s.origin[2] += 1;

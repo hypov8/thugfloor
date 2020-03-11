@@ -58,7 +58,9 @@ void Move_Done (edict_t *self)
 	//VectorCopy (self->moveinfo.end_origin, self->s.origin);
 
 	// spawn some nodes, if this entity hasn't been routed
-	if ((!ent || (!ent->nav_data.goal_index && (ent->wait < 0 || ent->wait > 0.1))) && nav_dynamic->value && level.modeset == WAVE_ACTIVE && (level.node_data->node_count < (MAX_NODES-2)))
+	if ((!ent || (!ent->nav_data.goal_index && (ent->wait < 0 || ent->wait > 0.1)))
+		&& nav_dynamic->value && (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START)
+		&& (level.node_data->node_count < (MAX_NODES-2)))
 	{
 		edict_t	*trav=NULL;
 		node_t	*top_node;
@@ -899,7 +901,7 @@ void button_fire (edict_t *self)
 
 // BEGIN:	Xatrix/Ridah/Navigator/07-apr-1998
 	// if this button hasn't been pressed yet, spawn a node here
-	if (!self->deadflag && nav_dynamic->value && level.modeset == WAVE_ACTIVE && self->activator->client)
+	if (!self->deadflag && nav_dynamic->value && (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START) && self->activator->client)
 	{																						//hypov8 crouch height = 24
 		NAV_CreateNode( self->activator, self->activator->s.origin, vec3_origin, (short) (NODE_BUTTON + (NODE_DUCKING*(self->activator->maxs[2] == DUCKING_MAX_Z))), -1, self->activator->waterlevel);
 

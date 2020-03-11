@@ -30,7 +30,7 @@ static void playerskin(int playernum, char *s)
 #endif
 
 extern void DrawPreviewLaserBBox(edict_t *ent, int laser_color, int laser_size);
-void SP_info_player_show(edict_t *self)//FREDZ
+void SP_info_player_show(edict_t *self, int skin)//FREDZ
 {
 	int i;
 //	char	*head_skin, *body_skin, *legs_skin;
@@ -40,6 +40,7 @@ void SP_info_player_show(edict_t *self)//FREDZ
 	self->movetype = MOVETYPE_NONE;
 	VectorSet (self->mins, -16, -16, -24);
 	VectorSet (self->maxs, 16, 16, 48);
+#if 0
 	self->s.skinnum = (self->skin-1) * 3;
 //	self->art_skins = "009 019 017";
 	memset(&(self->s.model_parts[0]), 0, sizeof(model_part_t) * MAX_MODEL_PARTS);
@@ -69,6 +70,16 @@ void SP_info_player_show(edict_t *self)//FREDZ
 	self->cast_info.scale = MODEL_SCALE;
 	self->s.scale = self->cast_info.scale - 1.0;
 	self->s.renderfx2 |= RF2_NOSHADOW;
+#else
+	self->s.skinnum = skin;
+	self->model = "models/bot/spawn.md2";
+	self->s.modelindex = gi.modelindex(self->model);
+	self->s.scale = 4;
+	self->s.renderfx2 |= RF2_NOSHADOW;
+	self->s.renderfx = RF_FULLBRIGHT;
+	gi.linkentity (self);
+#endif
+
 }
 
 /*QUAKED info_player_start (1 0 0) (-16 -16 -24) (16 16 48)
@@ -90,8 +101,8 @@ void SP_info_player_start(edict_t *self)
 	}
 
     #ifdef BETADEBUG
-    self->s.renderfx = RF_SHELL_RED;
-    SP_info_player_show(self);
+    //self->s.renderfx = RF_SHELL_RED;
+    SP_info_player_show(self, 0);
     #endif
 }
 
@@ -108,8 +119,8 @@ void SP_info_player_deathmatch(edict_t *self)
 		return;
 	}
     #ifdef BETADEBUG
-    self->s.renderfx = RF_SHELL_BLUE;
-    SP_info_player_show(self);
+    //self->s.renderfx = RF_SHELL_BLUE;
+    SP_info_player_show(self, 1);
     #endif
 }
 
@@ -120,8 +131,8 @@ void SP_info_player_coop(edict_t *self)
 {
 
     #ifdef BETADEBUG
-    self->s.renderfx = RF_SHELL_GREEN;
-    SP_info_player_show(self);
+    //self->s.renderfx = RF_SHELL_GREEN;
+    SP_info_player_show(self, 2);
 /*//Not working :/
     int		i;
     for (i = 0; i < 3; i++)
@@ -2043,6 +2054,7 @@ void PutClientInServer (edict_t *ent)
 		if (self != ent && self->client->pers.spectator != SPECTATING)
 			count_players++; //todo: test
 	}
+	ent->dontRoutePlayer = 1; //TF:
 
 	// clear entity values
 	ent->groundentity = NULL;
@@ -3614,7 +3626,7 @@ trace_t	PM_trace (vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end)
 {
 	if (pm_passent->health > 0 ) //hypov8 nav. allow players to walk through each other and ai
 	{
-		if (nav_dynamic->value&& level.modeset == WAVE_ACTIVE)	// if dynamic on, get blocked by MONSTERCLIP brushes as the AI will be
+		if (nav_dynamic->value&& (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START))	// if dynamic on, get blocked by MONSTERCLIP brushes as the AI will be
 			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_MONSTERCLIP| CONTENTS_PLAYERCLIP) /*MASK_PLAYERSOLID | CONTENTS_MONSTER*/);
 		else
 			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_PLAYERCLIP) ); //MASK_PLAYERSOLID
@@ -4274,9 +4286,15 @@ car_resume:
 
 	Think_FlashLight (ent);
 
+	//only route player once they hit the ground
+	if (ent->dontRoutePlayer && ent->groundentity)
+		ent->dontRoutePlayer= 0; //TF:
+
+
 	// BEGIN:	Xatrix/Ridah/Navigator/18-mar-1998
 	if (/*!deathmatch->value &&*/ nav_dynamic->value && !(ent->flags & (FL_HOVERCAR_GROUND | FL_HOVERCAR | FL_BIKE | FL_CAR | FL_JETPACK))
-		&& level.modeset == WAVE_ACTIVE	&& ent->client && ent->client->pers.spectator == PLAYING && ent->solid == SOLID_BBOX &&!ent->deadflag) //hypov8 nav?
+		&& (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START) && !ent->dontRoutePlayer
+		&& ent->client && ent->client->pers.spectator == PLAYING && ent->solid == SOLID_BBOX &&!ent->deadflag) //hypov8 nav?
 	{
 		static float alpha;
 

@@ -374,7 +374,7 @@ edict_t	*showpath_ent;
 
 void Cmd_NavDebugDest_f (edict_t *ent)
 {
-#if HYPODEBUG
+#ifndef HYPODEBUG
 	if (deathmatch->value)
 	{
 		gi.cprintf(ent, PRINT_HIGH, "This command only available when deathmatch = 0\n");
@@ -393,7 +393,7 @@ void Cmd_NavDebugDest_f (edict_t *ent)
 
 void Cmd_NavDebugShowPath_f (edict_t *ent)
 {
-#if HYPODEBUG
+#ifndef HYPODEBUG
 	if (deathmatch->value)
 	{
 		gi.cprintf(ent, PRINT_HIGH, "This command only available when deathmatch = 0\n");
@@ -432,7 +432,7 @@ void Cmd_NavDebugShowPath_f (edict_t *ent)
 // Clears the nav_data for the current level
 void Cmd_NavClear_f ( edict_t *self )
 {
-#if HYPODEBUG
+#ifndef HYPODEBUG
 	if (deathmatch->value)
 	{
 		gi.cprintf(self, PRINT_HIGH, "This command only available when deathmatch = 0\n");
@@ -2439,8 +2439,10 @@ void Cmd_Noclip_f (edict_t *ent)
 
 	if (ent->movetype == MOVETYPE_NOCLIP)
 	{
-		ent->movetype = MOVETYPE_WALK;
+		ent->movetype = MOVETYPE_WALK; //todo spec
 		msg = "noclip OFF\n";
+
+		ent->dontRoutePlayer = 1; //TF:
 	}
 	else
 	{
@@ -6176,7 +6178,7 @@ void ClientCommand (edict_t *ent)
 		Cmd_PutAway_f (ent);
 	//FREDZ only usefull in sp
 	// BEGIN:	Xatrix/Ridah/Navigator/23-mar-1998
-#if HYPODEBUG //allow debug localy
+#if HYPODEBUG || FREDZDEBUG //allow debug localy
 	else if (Q_stricmp (cmd, "nav_debug_dest") == 0)
 		Cmd_NavDebugDest_f (ent);
 	else if (Q_stricmp (cmd, "nav_debug_showpath") == 0)
@@ -6189,6 +6191,16 @@ void ClientCommand (edict_t *ent)
 		Cmd_NavClear_f ( ent );
 	else if (Q_stricmp (cmd, "nav_rebuild") == 0)
 		NAV_RebuildRoutes( level.node_data );
+	else if (Q_stricmp(cmd, "nav_shownode") == 0)
+	{
+		if (level.nav_debug_mode)
+			level.nav_debug_mode = 0;
+		else
+			level.nav_debug_mode = 1;
+		gi.cprintf(ent, PRINT_HIGH, "NAV: shownode %s\n", level.nav_debug_mode? "ON": "OFF");
+
+	}
+
 // END:		Xatrix/Ridah/Navigator/23-mar-1998
 #endif
 //	else if (Q_stricmp (cmd, "spawn") == 0)//FREDZ

@@ -589,6 +589,7 @@ typedef struct
 	int		dmSpawnPointCount; //get dm spawns. guid to level size
 	int		spSpawnPointCount; //get sp spawns. atleast 1 required.
 	qboolean	buyzone;       //FREDZ disable shooting weapons in buyzone
+	int		nav_debug_mode; //hypov8 show local nodes
 } level_locals_t;
 
 
@@ -2137,6 +2138,7 @@ struct edict_s
 	edict_t      *homing_target;   //FREDZ rocket lock
 
 	edict_t		*pawnGuyID; // TF: store pawn guy. used to talk to him
+	int			dontRoutePlayer; //stop nodes in mid air. when spawning or noclip
 
 	antilag_t antilag;
 };

@@ -824,6 +824,145 @@ void ExitLevel (void)
 
 }
 
+///////////////////////////////////////////////////////////////////////
+// Show the node for debugging (utility function)
+///////////////////////////////////////////////////////////////////////
+void ACEND_ShowNode(int type , vec3_t origin)
+{
+	edict_t *ent;
+	int isCrouch = (type&NODE_DUCKING);
+
+	//show crouch on normal nodes
+	if (isCrouch&& type != NODE_DUCKING)
+		type &= ~NODE_DUCKING;
+
+	ent = G_Spawn();
+	ent->movetype = MOVETYPE_NONE;
+	ent->solid = SOLID_NOT;
+	ent->s.effects = (EF_COLOR_SHELL || EF_ROTATE);
+	ent->s.renderfx2 = RF2_NOSHADOW;
+	ent->s.renderfx = RF_FULLBRIGHT;
+
+	if (type== NODE_NORMAL)			// walk nodes
+		ent->s.skinnum = 0; 
+	else if (type == NODE_JUMP)		// jump from this node
+		ent->s.skinnum = 1;
+	else if (type == NODE_LANDING)	// landing from a jump node
+		ent->s.skinnum = 2; 
+	else if (type == NODE_PLAT)		// start riding a platform
+		ent->s.skinnum = 3; 
+	else if (type == NODE_TELEPORT)	// move into a teleporter
+		ent->s.skinnum = 4; 
+	else if (type == NODE_BUTTON)	// func_button
+		ent->s.skinnum = 5; 
+	else //if (type & NODE_DUCKING)
+		ent->s.skinnum = 6;
+
+	ent->model = "models/bot/tris.md2"; //hypov8 custom model
+	ent->s.modelindex = gi.modelindex(ent->model);
+
+	ent->owner = ent;
+	ent->nextthink = level.time + 0.1;//localnode
+
+	ent->think = G_FreeEdict;
+	ent->dmg = 0;
+
+	VectorCopy(origin, ent->s.origin);
+	gi.linkentity(ent);
+
+}
+
+
+
+void NAV_Debug_Nodes(void)
+{
+#define NODECOUNT 20
+#define  INVALID -1
+#define  NODE0 0
+	float distToTarget;
+	edict_t *firstPlayer;
+	int j, k = NODE0, i, m = NODE0, iPlyr;
+	int current_node, next_node, i2, n;
+	static int count[NODECOUNT];
+	static int exceded = 0;
+	if (exceded == 2)	exceded = 1;
+
+	if (level.nav_debug_mode) //"nav_shownode"
+	{
+		memset(count, INVALID, sizeof(count));
+		//only used first player
+		for_each_player(firstPlayer, iPlyr)
+		{
+			if (firstPlayer->client->pers.spectator != PLAYING)
+				continue;
+
+			//hypov8 show all close nodes
+			for (j = NODE0; j < level.node_data->node_count ; j++)
+			{
+				distToTarget = VectorDistance(firstPlayer->s.origin,level.node_data->nodes[j]->origin);
+				if (distToTarget < 160)
+				{
+					ACEND_ShowNode(level.node_data->nodes[j]->node_type,level.node_data->nodes[j]->origin); //hypov8 show closest node
+					k++;
+					if (k >= NODECOUNT) //only do 20 nodes
+					{
+						if (!exceded)
+							gi.cprintf(firstPlayer, PRINT_MEDIUM, "*ERROR* more than 20 nodes in your area\n");
+						exceded = 2;
+						break;
+					}
+				}
+			}
+#if 0
+			//hypov8 get closest node
+			current_node = ACEND_FindClosestNode(firstPlayer, 64, BOTNODE_ALL);
+			if (current_node != INVALID)
+			{
+				m = NODE0;
+				n = NODE0;
+				//loop through nodes and display any paths connecting from closest node
+				for (i = NODE0; i < 1000; i++)
+				{
+					if (path_table[current_node][i] != -1)
+					{
+						next_node = path_table[current_node][i];
+						if (next_node <= -2)
+							break;
+						for (i2 = NODE0; i2 < NODECOUNT; i2++)
+						{
+							if (count[i2] == next_node)
+								break;
+						}
+						if (i2 >= NODECOUNT)
+						{
+							count[n] = next_node;
+							gi.WriteByte(svc_temp_entity);
+							gi.WriteByte(TE_BFG_LASER);
+							gi.WritePosition(nodes[current_node].origin);
+							gi.WritePosition(nodes[next_node].origin);
+							gi.multicast(nodes[current_node].origin, MULTICAST_PVS);
+							//current_node = next_node;
+							//next_node = path_table[current_node][goal_node];
+							m++;
+							n++;
+							if (m > NODECOUNT) //add hypov8 draw short paths
+								break;
+						}
+					}
+				}
+			}
+#endif
+			break; //found first valid player
+		}
+	}
+
+	if (exceded == 1) //reset print if we didnt excede it this frame
+		exceded = 0;
+}
+
+
+
+
 /*
 ================
 G_RunFrame
@@ -883,6 +1022,8 @@ void G_RunFrame (void)
 
 	// Process Generic Combat AI layer
 	AI_ProcessCombat ();
+
+	NAV_Debug_Nodes();
 
 
 	//
