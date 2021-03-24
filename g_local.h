@@ -125,7 +125,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.30"
+#define	GAMEVERSION	"Thug Floor v0.31"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -589,7 +589,8 @@ typedef struct
 	int		dmSpawnPointCount; //get dm spawns. guid to level size
 	int		spSpawnPointCount; //get sp spawns. atleast 1 required.
 	qboolean	buyzone;       //FREDZ disable shooting weapons in buyzone
-	int		nav_debug_mode; //hypov8 show local nodes
+	int		nav_debug_mode; //hypov8 debug nodes. "sv nav_debug". also stops bots moving
+	int		nav_shownode;	//hypov8 show nodes "nav_shownode"
 } level_locals_t;
 
 
@@ -1197,6 +1198,11 @@ qboolean visible (edict_t *self, edict_t *other);
 qboolean FacingIdeal(edict_t *self);
 // RAFAEL
 void SpawnBloodPool (edict_t *self);
+
+//
+// g_func.c
+//
+void SP_func_plat(edict_t *ent);
 
 //
 // g_spawn.c
@@ -2138,7 +2144,9 @@ struct edict_s
 	edict_t      *homing_target;   //FREDZ rocket lock
 
 	edict_t		*pawnGuyID; // TF: store pawn guy. used to talk to him
-	int			dontRoutePlayer; //stop nodes in mid air. when spawning or noclip
+	int			nav_dontRoutePlayer; //stop nodes in mid air. when spawning or noclip
+	int			nav_jumpNodeId; //store last jump node to link to land node
+	qboolean	isOnTrigPush; //stop bots moving in air
 
 	antilag_t antilag;
 };

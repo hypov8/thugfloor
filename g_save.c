@@ -307,6 +307,102 @@ is loaded.
 #include <crtdbg.h>
 #endif
 
+
+//Captin Deaths patch
+#if 0
+void Patch_Nav_Error(void)
+{
+       static unsigned long Proc_Start_Address, Loop_Start_Address, Loop_End_Address;
+       static char* Loop_Error_Message = "WARNING: Infinite loop aborted\n";
+       static char* Loop_Error_Format = "%s";
+       DWORD Old_Permissions, Old_Permissions_2;
+       BOOL Result;
+#define MAX_SAME_NODE_COUNT MAX_VIS_NODES
+//#define MAX_SAME_NODE_COUNT MAX_NODES
+/*
+       3b30   - start of proc
+       +0x644 - start of loop
+       +0x656 - end of loop
+*/
+       _asm
+       {
+              push eax
+              push ebx
+              lea eax, dword ptr NAV_GetHidePos
+              mov Proc_Start_Address, eax
+              mov ebx, eax
+              add eax, 0x644
+              mov Loop_Start_Address, eax
+              mov eax, ebx
+              add eax, 0x656
+              mov Loop_End_Address, eax
+              pop ebx
+              pop eax
+       }
+       Result = VirtualProtect(Loop_Start_Address, 8, PAGE_EXECUTE_READWRITE, &Old_Permissions);
+       _asm
+       {
+//Set the patch
+              push eax
+              push ebx
+              lea eax, Patch
+              sub eax, 0x05 //Remove the bytes for the long jump command
+              mov ebx, Loop_Start_Address
+              sub eax, ebx
+              mov dword ptr[ebx], 0xe9
+              mov dword ptr[ebx + 1], eax
+              pop ebx
+              pop eax
+              jmp Patch_Exit
+       Patch:
+//Use bx to store the id of the last node retrieved. If the next node is the same as the last node, then its in an infinite loop
+              push ebx
+              push esi
+              mov bx, 0x8000       //Start at 0x8000. End of path is -1 (0xffff)
+              mov esi, MAX_SAME_NODE_COUNT       //Do not need this here
+       Loop_Start :  //4174
+              movsx       eax, ax
+              inc         edx
+              mov         eax, dword ptr[edi + eax * 4 + 8]
+              mov         ax, word ptr[eax + ecx + 8Ah]
+//Check if this node is the same as the last node
+              cmp ax, bx
+              jne Not_Same
+//Same
+              dec esi
+              test esi, esi
+              jz Loop_Abort
+              jmp Next
+       Not_Same:     //Not the same. Update bx and reset esi
+              mov esi, MAX_SAME_NODE_COUNT
+              mov bx, ax
+       Next:
+              test        ax, ax
+              jge         Loop_Start
+              pop esi
+              pop ebx
+              jmp Loop_End_Address
+       Loop_Abort:
+              pop esi
+              pop ebx
+              push eax
+              push dword ptr Loop_Error_Message
+              push dword ptr Loop_Error_Format
+              push PRINT_CHAT
+              mov eax, dword ptr gi.bprintf
+              call eax
+//Clean up the stack
+              add esp, 12
+              pop eax
+              jmp Loop_End_Address
+       Patch_Exit:
+       }
+//Restore the original memory permissions
+       Result = VirtualProtect(Loop_Start_Address, 8, Old_Permissions, &Old_Permissions_2);
+
+} 
+#endif
+
 void InitGame (void)
 {
 	int i;
@@ -437,7 +533,7 @@ void InitGame (void)
 
 	wavetype = gi.cvar("wavetype", "2", CVAR_LATCH|CVAR_SERVERINFO); //default long
 
-//	nav_dynamic = gi.cvar("nav_dynamic", "1", 0); //hypov8 nav. set to on default
+	nav_dynamic = gi.cvar("nav_dynamic", "0", 0); //hypov8 nav. set to off default
 
     // speed hack fix
 	gi.cvar_set("sv_enforcetime","1");

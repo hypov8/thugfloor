@@ -1040,7 +1040,7 @@ qboolean AI_CheckTakeCover( edict_t *self )
 			goto done;
 		}
 	}
-#if 1 //hypov8 nav: enemy with malee stand still until your close
+	//hypov8 nav: enemy with malee stand still until your close
 	if (	(self->cast_info.aiflags & AI_MELEE)
 		&&	(	(self->enemy->client)
 			 &&	(self->enemy->client->pers.weapon)
@@ -1054,9 +1054,7 @@ qboolean AI_CheckTakeCover( edict_t *self )
 		}
 
 	}
-	else 
-#endif
-		if (infront( self->enemy, self ))
+	else if (infront( self->enemy, self ))
 	{
 		if (directly_infront( self->enemy, self ))
 		{
@@ -1232,6 +1230,8 @@ qboolean AI_ForceTakeCover( edict_t *self, edict_t *enemy, qboolean ignorehealth
 	// Note to Ryan: take a look at this. nasty hack because of crash bug
 	if (!(enemy))
 		return false;
+	if (!(enemy)->inuse)
+		return false; //hypov8 add: posible bug?
 
 	if (enemy->svflags & SVF_MONSTER)
 		hidepos_type = HIDEPOS_FURTHER;
@@ -3603,9 +3603,22 @@ void ai_run ( edict_t *self, float dist )
 	
 	if (self->groundentity && self->groundentity->use && !VectorCompare(self->groundentity->velocity, vec3_origin))
 	{	// standing on a plat that's moving
-		self->cast_info.pausetime = level.time + 0.5;
-		self->cast_info.currentmove = self->cast_info.move_stand;
-
+//TF hypov8 add: move to centre
+		vec3_t v1, v2, botNode;
+		float dist;
+		VectorCopy(self->groundentity->maxs, v1);
+		VectorCopy(self->groundentity->mins, v2);
+		botNode[0] = (v1[0] - v2[0]) / 2 + v2[0];
+		botNode[1] = (v1[1] - v2[1]) / 2 + v2[1];
+		botNode[2] = self->groundentity->maxs[2] + self->groundentity->pos2[2] + 24;
+		dist = VectorDistance(botNode, self->s.origin);
+		//stop moving if we are in centre
+		if (dist < 42) 
+//END TF
+		{
+			self->cast_info.pausetime = level.time + 0.5;
+			self->cast_info.currentmove = self->cast_info.move_stand;
+		}
 	}
 
 	// see if we should wait for a lift or door
@@ -3746,6 +3759,7 @@ enemy_again:
 				if ((VectorDistance(self->s.origin, (*goal)->s.origin) < 128) && AI_ClearSight( self, (*goal), false ))
 				{
 					(*enemy) = NULL;
+					( *goal ) = NULL; //hypov8 add: was this missing?
 					goto enemy_again;
 				}
 
@@ -3824,7 +3838,14 @@ gonetolouie:
 			{	// look for a good combat position
 				float	*pos;
 
-				if (pos = NAV_GetCombatPos( self, (*goal), self->cast_info.aiflags & AI_MELEE ))
+				//hypov8 add: bugfix
+				if (!( *goal ) || !(*goal)->inuse)	// it's been cleared somewhere
+				{
+					self->cast_info.currentmove = self->cast_info.move_stand;
+					return;
+				}
+
+				if (pos = NAV_GetCombatPos( self, (*goal), self->cast_info.aiflags & AI_MELEE )) //hypov8 todo: fix crash
 				{
 					edict_t *combatent;
 
@@ -3926,7 +3947,8 @@ got_goal:
 	// move towards this "goal"
 
 	// always run to our attacker if on fire
-	if ((self->onfiretime > 0) && (self->onfireent))
+	if ((self->onfiretime > 0) && (self->onfireent) 
+		&& (self->onfireent->inuse)) //hypov8 add: bugfix for free'd entity
 	{
 		goal = &self->onfireent;
 		ideal_dist = 64;
@@ -3934,13 +3956,10 @@ got_goal:
 
 	self->last_goal = *goal;
 
-	if (!(*goal))
+	if (!(*goal) || !(*goal)->inuse )//hypov8 add: bugfix for free'd entity
 	{	// we don't have a goal, time for a beer
-
 		self->cast_info.currentmove = self->cast_info.move_stand;
-
 		return;
-
 	}
 	else	// we have a "goal"
 	{
@@ -4185,7 +4204,13 @@ got_goal:
 		rval = ROUTE_INDIRECT;
 	}
 	else
-	{
+	{	//hypov8 add: bug fix
+		if (!( *goal ) || !(*goal)->inuse)	// it's been cleared somewhere
+		{
+			self->cast_info.currentmove = self->cast_info.move_stand;
+			return;
+		}
+
 		//hypov8 todo: fix crash
 		rval = NAV_Route_EntityToEntity(self, goal_node, (*goal), VIS_PARTIAL, false, &route);
 
@@ -4666,9 +4691,13 @@ done:
 		{	// it's been cleared
 			return;
 		}
-		
-		if (!goal_node) //catch NAV_Route_EntityToEntity issue?
-		{		int hypodebugger = 0;	}
+#ifdef BETADEBUG		
+		if (!(*goal) || !(*goal)->inuse) //catch NAV_Route_EntityToEntity issue?
+		{
+			self->cast_info.currentmove = self->cast_info.move_stand;
+			return;
+		}
+#endif
 		// find the next waypoint
 		rval = NAV_Route_EntityToEntity( self, goal_node, (*goal), VIS_PARTIAL, false, &route);  //hypov8 posible this caused crash in nav.lib
 

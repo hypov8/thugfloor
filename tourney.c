@@ -141,7 +141,7 @@ qboolean ResetServer(qboolean ifneeded) // completely resets the server includin
 		gi.cvar_set("teamplay", default_teamplay);*/
 	if (default_dm_realmode[0])
 		gi.cvar_set("dm_realmode", default_dm_realmode);
-#ifndef HYPODEBUG
+#ifndef BETADEBUG
 	gi.cvar_set("cheats","0");
 #endif
 	if (default_random_map && num_custom_maps)
@@ -818,7 +818,7 @@ void CheckBuyWave ()
 	int      count_players = 0;
 	vec3_t spot1, spot2;
 
-#if HYPODEBUG
+#if BETADEBUG
 	if (level.framenum >= level.startframe + 30)//3 seconds
 #else
 	if (level.framenum >= level.startframe + 595)//60 seconds

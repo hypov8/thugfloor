@@ -2348,7 +2348,7 @@ void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_
 						}
 						// END JOSEPH
 
-						ent->onfiretime = 50;
+						ent->onfiretime = 25; //hypov8 was 50
 
 						if (ent->client)
 						{
@@ -2362,11 +2362,19 @@ void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_
 							}
 						}
 
+
 						if (ent->cast_info.catch_fire)
 						{
 							ent->cast_info.catch_fire( ent, attacker );
 						}
 
+						//TF enable "hit" damage on flammer
+						if (!ent->client)
+						{
+							T_Damage (ent, inflictor, attacker, dir, inflictor->s.origin, vec3_origin, (int)points, (int)points, DAMAGE_RADIUS | DAMAGE_NO_KNOCKBACK, mod); // MH: no knockback
+						} 
+						//END TF
+						
 						if (!ent->client)
 							ent->s.renderfx2 &= ~RF2_DIR_LIGHTS;
 					}

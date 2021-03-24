@@ -23,8 +23,8 @@ Global
 		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.f_Release|Win32.Build.0 = f_Release|Win32
 		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.h_DbugDed|Win32.ActiveCfg = h_dBugDed|Win32
 		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.h_DbugDed|Win32.Build.0 = h_dBugDed|Win32
-		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.h_DbugLan|Win32.ActiveCfg = h_dBubLan|Win32
-		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.h_DbugLan|Win32.Build.0 = h_dBubLan|Win32
+		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.h_DbugLan|Win32.ActiveCfg = h_dBugLan|Win32
+		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.h_DbugLan|Win32.Build.0 = h_dBugLan|Win32
 		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.h_Release|Win32.ActiveCfg = h_Release|Win32
 		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.h_Release|Win32.Build.0 = h_Release|Win32
 	EndGlobalSection

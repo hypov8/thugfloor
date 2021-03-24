@@ -1175,7 +1175,9 @@ typedef enum
 #define DF_FORCE_RESPAWN	1024
 #define DF_NO_ARMOR			2048
 //#define DF_ALLOW_EXIT		4096
-//#define DF_INFINITE_AMMO	8192//FREDZ disable
+#ifdef BETADEBUG
+#define DF_INFINITE_AMMO	8192//FREDZ disable
+#endif
 #define DF_SELF_DAMAGE		8192
 
 // Ridah, 27-may-99, not used

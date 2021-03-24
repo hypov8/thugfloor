@@ -129,9 +129,11 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 	{
 		// give them some ammo with it
 		ammo = FindItem (ent->item->ammo);
-/*		if ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value )//FREDZ disable
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
 			Add_Ammo (other, ammo, 1000);
-		else*/
+		else
+#endif
 			Add_Ammo (other, ammo, ammo->quantity);
 
 		if (auto_reload)
@@ -1202,7 +1204,9 @@ void weapon_grenade_fire (edict_t *ent, qboolean held)
 	speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
 	fire_grenade2 (ent, start, forward, damage, speed, timer, radius, held);
 
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 		ent->client->pers.inventory[ent->client->ammo_index]--;
 
 	ent->client->grenade_time = level.time + 1.0;
@@ -1721,8 +1725,9 @@ void Pistol_Fire (edict_t *ent, vec3_t vorigin, int damage)
 	}
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
-
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 	{
 		ent->client->pers.weapon_clip[ent->client->clip_index]--;
 	}
@@ -1936,7 +1941,9 @@ void SPistol_Fire (edict_t *ent, vec3_t vorigin, int damage)
 	gi.WriteByte (MZ_SPISTOL | is_silenced);
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 		ent->client->pers.weapon_clip[ent->client->clip_index]--;
 
 	if (!ent->client->pers.weapon_clip[ent->client->clip_index] && !ent->client->pers.inventory[ ent->client->ammo_index])
@@ -2244,8 +2251,9 @@ void Tommygun_Fire (edict_t *ent)
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-	// Disable for unlimited ammo
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 	{
 		ent->client->pers.weapon_clip [ent->client->clip_index]--;
 
@@ -2437,8 +2445,9 @@ void FlameThrower_Fire (edict_t *ent)
 	else
 		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/flame_thrower/flame1.wav"), 1, ATTN_NORM, 0);
 
-
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 	{
 		if ((ent->client->pers.inventory[ent->client->ammo_index] -= 2) < 0)
 			ent->client->pers.inventory[ent->client->ammo_index] = 0;
@@ -2512,7 +2521,9 @@ void shotgun_fire (edict_t *ent)
 	ent->client->ps.gunframe++;
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 		ent->client->pers.weapon_clip[ent->client->clip_index]--;
 
 	Eject_Shotgun_Shell(ent);
@@ -2728,7 +2739,9 @@ void weapon_barmachinegun_fire (edict_t *ent)
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 	{
 		ent->client->pers.weapon_clip [ent->client->clip_index]--;
 
@@ -2971,7 +2984,9 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 	{
 		ent->client->pers.weapon_clip[ent->client->clip_index]--;
 
@@ -3136,7 +3151,9 @@ void weapon_rocketlauncher_fire (edict_t *ent)
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-//	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch->value ) )
+#ifdef BETADEBUG //FREDZ TF disable
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+#endif
 	{
 		ent->client->pers.weapon_clip[ent->client->clip_index]--;
 

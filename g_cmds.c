@@ -374,13 +374,9 @@ edict_t	*showpath_ent;
 
 void Cmd_NavDebugDest_f (edict_t *ent)
 {
-#ifndef HYPODEBUG
-	if (deathmatch->value)
-	{
-		gi.cprintf(ent, PRINT_HIGH, "This command only available when deathmatch = 0\n");
+	if (!level.nav_debug_mode)
 		return;
-	}
-#endif
+
 	if (!showpath_ent)
 	{	// spawn it
 		showpath_ent = G_Spawn();
@@ -393,13 +389,8 @@ void Cmd_NavDebugDest_f (edict_t *ent)
 
 void Cmd_NavDebugShowPath_f (edict_t *ent)
 {
-#ifndef HYPODEBUG
-	if (deathmatch->value)
-	{
-		gi.cprintf(ent, PRINT_HIGH, "This command only available when deathmatch = 0\n");
+	if (!level.nav_debug_mode)
 		return;
-	}
-#endif
 /*
 	if (!ent->nav_build_data)
 	{
@@ -429,16 +420,19 @@ void Cmd_NavDebugShowPath_f (edict_t *ent)
 	}
 }
 
+void Cmd_NAVWriteActiveNodes_f(edict_t *ent)
+{
+	if (!level.nav_debug_mode)
+		return;
+
+	NAV_WriteActiveNodes(ent->active_node_data, level.mapname);
+}
 // Clears the nav_data for the current level
 void Cmd_NavClear_f ( edict_t *self )
 {
-#ifndef HYPODEBUG
-	if (deathmatch->value)
-	{
-		gi.cprintf(self, PRINT_HIGH, "This command only available when deathmatch = 0\n");
+	if (!level.nav_debug_mode)
 		return;
-	}
-#endif
+
 	// clear the current nodes
 	level.node_data->modified = false;
 	NAV_PurgeActiveNodes ( level.node_data );
@@ -449,6 +443,179 @@ void Cmd_NavClear_f ( edict_t *self )
 	NAV_WriteActiveNodes ( level.node_data, level.mapname );
 
 	gi.AddCommandString( "echo \necho Cleared Navigational Data, closing down server.\necho \ndisconnect\n" );
+}
+
+void Cmd_NAVRebuildRoutes_f(void)
+{
+	if (!level.nav_debug_mode)
+		return;
+
+	NAV_RebuildRoutes(level.node_data);
+}
+
+
+void Cmd_NavShowNode_f(edict_t *ent) 
+{
+	if (!level.nav_debug_mode || level.nav_shownode)
+		return;
+
+	if (level.nav_shownode)
+		level.nav_shownode = 0;
+	else
+		level.nav_shownode = 1;
+	gi.cprintf(ent, PRINT_HIGH, "NAV: shownode %s\n", level.nav_shownode ? "ON" : "OFF");
+}
+
+void Cmd_NavAddNode_f(edict_t *ent)
+{
+	short index = -1;
+	short type = atoi(gi.argv(1));
+	node_t *newNode;
+
+	if (!level.nav_debug_mode)
+		return;
+
+	if (level.node_data->node_count >= MAX_NODES - 5)
+	{
+		gi.cprintf(ent, PRINT_LOW, "ERROR: MAX_NODES reached\n");
+		return;
+	}
+
+
+	switch (type)
+	{
+	default: 
+	case 0: type = NODE_NORMAL; break;
+	case 1: type = NODE_JUMP; break;
+	case 2: type = NODE_LANDING; break;
+	case 3: type = NODE_DUCKING; break;
+	//case 4: type = NODE_PLAT; break;
+	//case 5: type = NODE_TELEPORT; break;
+	//case 6: type = NODE_BUTTON; break;
+	}
+
+	if (ent->client == NULL
+		|| ent->client->pers.spectator != PLAYING
+		|| ent->solid == SOLID_NOT
+		|| ent->movetype == MOVETYPE_NOCLIP
+		|| !ent->nav_build_data)
+	{
+		gi.cprintf(ent, PRINT_LOW, "Cant use addnode in current state\n");
+		return;
+	}
+
+	newNode = NAV_CreateNode(ent, ent->s.origin, vec3_origin, type, index, ent->waterlevel);
+
+	//set previous node link to new node
+	if (type == NODE_LANDING)
+	{
+		//route_t	route;
+		//int rval = NAV_Route_EntityToNode(ent, level.node_data->nodes[ent->nav_jumpNodeId], newNode, VIS_LINE, true, false, &route);
+		level.node_data->nodes[ent->nav_jumpNodeId]->goal_index = newNode->index;
+		if (newNode->origin[2] > level.node_data->nodes[ent->nav_jumpNodeId]->origin[2]+60)
+			level.node_data->nodes[ent->nav_jumpNodeId]->jump_vel[2] = 320; //jump node
+		else
+			level.node_data->nodes[ent->nav_jumpNodeId]->jump_vel[2] = 80; //ladder
+
+		NAV_CalculateVisible(level.node_data, level.node_data->nodes[ent->nav_jumpNodeId]);
+		NAV_CalculateRoutes(level.node_data, level.node_data->nodes[ent->nav_jumpNodeId]);
+		NAV_AddNodeToCells(ent->active_node_data, level.node_data->nodes[ent->nav_jumpNodeId]);
+	}
+
+	//store jump node index
+	if (type == NODE_JUMP)
+		ent->nav_jumpNodeId = newNode->index;
+	
+	//NAV_CalculateVisible(level.node_data, newNode);
+	//NAV_CalculateRoutes(level.node_data, newNode);
+
+	//NAV_AddNodeToCells(level.node_data, newNode);
+	//NAV_AddNodeToCells(ent->active_node_data, newNode);
+
+	// resume checking from the player's current position
+	ent->nav_build_data->current_node = newNode;
+
+}
+
+void Cmd_NavFindNode_f(edict_t *ent)
+{
+	char strWrite[MAX_INFO_STRING];
+	node_t * node; 
+
+	if (!level.nav_debug_mode)
+		return;
+
+	//hypov8 note this fails on jump nodes
+	node = NAV_GetClosestNode(ent, VIS_FULL, true, false); // VIS_LINE VIS_PARTIAL VIS_FULL
+
+	if (node) 
+	{
+		if (dedicated->value)
+			gi.dprintf("node: %d type: %d x: %f y: %f z %f\n", node->index, node->node_type,node->origin[0], node->origin[1], node->origin[2]);
+		gi.cprintf(ent, PRINT_MEDIUM, "node: %d type: %d x: %f y: %f z %f\n", node->index, node->node_type, node->origin[0], node->origin[1], node->origin[2]);
+
+		sprintf(strWrite, "bind 9 \"nav_movenode %d\"\n$Bound key 9 to %d\n", node->index, node->index);
+
+	}
+	else
+	{
+		gi.cprintf(ent, PRINT_MEDIUM, "findnode: failed\n");
+
+		sprintf(strWrite, "bind 9 \"nav_movenode 999\"\n");
+	}
+	gi.WriteByte(13);
+	gi.WriteString(strWrite);
+	gi.unicast(ent, true);
+}
+
+void Cmd_NavMoveNode_f(edict_t *ent)
+{
+	float x, y, z;
+	char* nodeStr = gi.argv(1);
+	int node;
+	node_t **nodes = level.node_data->nodes;
+
+
+	if (!level.nav_debug_mode)
+		return;
+
+	if (Q_stricmp(nodeStr, "") == 0) //hypov8 test for null
+		return;
+	node = atoi(nodeStr);
+
+	//todo error msg?
+	if (node > level.node_data->node_count)
+		return;
+	if (nodes[node]->index == -1)
+		return;
+	if (nodes[node]->node_type == NODE_PLAT ||
+		nodes[node]->node_type == NODE_BUTTON)
+		return;
+
+	x = atof(gi.argv(2));
+	y = atof(gi.argv(3));
+	z = atof(gi.argv(4));
+
+
+	//hypov8 no node location specified, will use current player location
+	if (!x && !y && !z)
+	{
+		VectorCopy(ent->s.origin, nodes[node]->origin);
+
+		if (dedicated->value) //hypov8 todo: dont use debug in dedicated?
+			gi.dprintf("node: %d moved to x: %f y: %f z %f\n",
+				node, nodes[node]->origin[0], nodes[node]->origin[1], nodes[node]->origin[2]);
+		gi.cprintf(ent, PRINT_MEDIUM, "node: %d moved to x: %f y: %f z %f\n",
+			node, nodes[node]->origin[0], nodes[node]->origin[1], nodes[node]->origin[2]);
+	}
+	else
+	{
+		nodes[node]->origin[0] = x;
+		nodes[node]->origin[1] = y;
+		nodes[node]->origin[2] = z;
+		gi.dprintf("node: %d moved to x: %f y: %f z %f\n", node, x, y, z);
+		gi.cprintf(ent, PRINT_MEDIUM, "node: %d moved to x: %f y: %f z %f\n", node, x, y, z);
+	}
 }
 
 // END:		Xatrix/Ridah/Navigator/23-mar-1998
@@ -2441,14 +2608,13 @@ void Cmd_Noclip_f (edict_t *ent)
 	{
 		ent->movetype = MOVETYPE_WALK; //todo spec
 		msg = "noclip OFF\n";
-
-		ent->dontRoutePlayer = 1; //TF:
 	}
 	else
 	{
 		ent->movetype = MOVETYPE_NOCLIP;
 		msg = "noclip ON\n";
 	}
+	ent->nav_dontRoutePlayer = 1; //TF:
 
 	gi.cprintf (ent, PRINT_HIGH, msg);
 }
@@ -3945,8 +4111,8 @@ void Cmd_Castskins_f(edict_t *ent)
 								icast->name? icast->name : "",
 								icast->classname,
 								icast->head,
-								icast->art_skins ? icast->art_skins : "",
-								icast->count);
+								icast->art_skins ? icast->art_skins : ""/*,
+								icast->count*/);
 		if (j > 450)
 			break;
 	}
@@ -6176,33 +6342,33 @@ void ClientCommand (edict_t *ent)
 		Cmd_Kill_f (ent);
 	else if (Q_stricmp (cmd, "putaway") == 0)
 		Cmd_PutAway_f (ent);
-	//FREDZ only usefull in sp
+
 	// BEGIN:	Xatrix/Ridah/Navigator/23-mar-1998
-#if HYPODEBUG || FREDZDEBUG //allow debug localy
-	else if (Q_stricmp (cmd, "nav_debug_dest") == 0)
-		Cmd_NavDebugDest_f (ent);
-	else if (Q_stricmp (cmd, "nav_debug_showpath") == 0)
-		Cmd_NavDebugShowPath_f (ent);
-	else if (Q_stricmp (cmd, "nav_showpath") == 0)
-		Cmd_NavDebugShowPath_f (ent);
-	else if (Q_stricmp (cmd, "nav_save") == 0)
-		NAV_WriteActiveNodes ( ent->active_node_data, level.mapname );
-	else if (Q_stricmp (cmd, "nav_clear") == 0)
-		Cmd_NavClear_f ( ent );
-	else if (Q_stricmp (cmd, "nav_rebuild") == 0)
-		NAV_RebuildRoutes( level.node_data );
+	//hypov8 only avalible if "sv nav_debug" was used on server
+	else if (Q_stricmp(cmd, "nav_debug_dest") == 0)
+		Cmd_NavDebugDest_f(ent);
+	else if (Q_stricmp(cmd, "nav_debug_showpath") == 0)
+		Cmd_NavDebugShowPath_f(ent);
+	else if (Q_stricmp(cmd, "nav_showpath") == 0)
+		Cmd_NavDebugShowPath_f(ent);
+	else if (Q_stricmp(cmd, "nav_save") == 0)
+		Cmd_NAVWriteActiveNodes_f(ent);
+	else if (Q_stricmp(cmd, "nav_clear") == 0)
+		Cmd_NavClear_f(ent);
+	else if (Q_stricmp(cmd, "nav_rebuild") == 0)
+		Cmd_NAVRebuildRoutes_f();
+	//hypov8 dev commands
 	else if (Q_stricmp(cmd, "nav_shownode") == 0)
-	{
-		if (level.nav_debug_mode)
-			level.nav_debug_mode = 0;
-		else
-			level.nav_debug_mode = 1;
-		gi.cprintf(ent, PRINT_HIGH, "NAV: shownode %s\n", level.nav_debug_mode? "ON": "OFF");
+		Cmd_NavShowNode_f(ent);
+	else if (Q_stricmp(cmd, "nav_addnode") == 0)
+		Cmd_NavAddNode_f(ent);
+	else if (Q_stricmp(cmd, "nav_findnode") == 0)
+		Cmd_NavFindNode_f(ent);
+	else if (Q_stricmp(cmd, "nav_movenode") == 0)
+		Cmd_NavMoveNode_f(ent);
+	// END:		Xatrix/Ridah/Navigator/23-mar-1998
 
-	}
 
-// END:		Xatrix/Ridah/Navigator/23-mar-1998
-#endif
 //	else if (Q_stricmp (cmd, "spawn") == 0)//FREDZ
 //		Cmd_Spawn_f (ent);
 

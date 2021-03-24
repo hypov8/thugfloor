@@ -74,6 +74,12 @@ void cast_fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, 
 
 void cast_fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int flashtype)
 {
+//TF vary RL damage by skill
+	int damageSkill; 
+	damage = (int) ( damage / 2 ); //hypov8 100 damage is way to strong
+	damageSkill = damage + ( ( skill->value / 4 ) * damage );
+//END TF
+
 	fire_rocket (self, start, dir, damage, speed, damage+20, damage);
 
 	gi.WriteByte (svc_muzzleflash2);
@@ -969,6 +975,10 @@ void cast_death_use (edict_t *self)
 		Drop_Item (self, self->item);
 		self->item = NULL;
 	}
+
+   //hypov8 add: stop shooting corps
+	if (!dm_realmode->value)
+		self->solid = SOLID_NOT;
 
 	if (self->deathtarget)
 	{

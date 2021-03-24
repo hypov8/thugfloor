@@ -494,6 +494,11 @@ void trigger_push_touch (edict_t *self, edict_t *other, cplane_t *plane, csurfac
 			if (self->spawnflags & 2)
 				other->client->nomove = true;
 		}
+		//TF
+		else if (other->flags & SVF_MONSTER)
+		{
+			other->isOnTrigPush = true;
+		} //END TF
 	}
 	if (self->spawnflags & PUSH_ONCE)
 		G_FreeEdict (self);

@@ -827,10 +827,11 @@ void ExitLevel (void)
 ///////////////////////////////////////////////////////////////////////
 // Show the node for debugging (utility function)
 ///////////////////////////////////////////////////////////////////////
-void ACEND_ShowNode(int type , vec3_t origin)
+void NAV_TF_ShowNode(int type , vec3_t origin)
 {
 	edict_t *ent;
 	int isCrouch = (type&NODE_DUCKING);
+	//static float ang = 0.0;
 
 	//show crouch on normal nodes
 	if (isCrouch&& type != NODE_DUCKING)
@@ -839,9 +840,12 @@ void ACEND_ShowNode(int type , vec3_t origin)
 	ent = G_Spawn();
 	ent->movetype = MOVETYPE_NONE;
 	ent->solid = SOLID_NOT;
-	ent->s.effects = (EF_COLOR_SHELL || EF_ROTATE);
+	ent->s.effects = EF_ROTATE;
 	ent->s.renderfx2 = RF2_NOSHADOW;
 	ent->s.renderfx = RF_FULLBRIGHT;
+	//ent->s.angles[YAW] = ang;
+	//ang += 4.5;
+	//if (ang > 20) ang = 0;
 
 	if (type== NODE_NORMAL)			// walk nodes
 		ent->s.skinnum = 0; 
@@ -872,24 +876,71 @@ void ACEND_ShowNode(int type , vec3_t origin)
 
 }
 
-
-
-void NAV_Debug_Nodes(void)
+void NAV_TF_Check_NodeData(void)
 {
-#define NODECOUNT 20
-#define  INVALID -1
-#define  NODE0 0
+	int j, k, l;
+	//hypov8 only in nav dynamic. 
+	if (nav_dynamic->value)
+	{
+		for (j = 0; j < CELL_AXIS_SUBDIVISION; j++)
+		{
+			for (k = 0; k < CELL_AXIS_SUBDIVISION; k++)
+			{
+				if (level.node_data->cells[j][k] != NULL)
+				{
+					cell_node_t *cell = level.node_data->cells[j][k]->next, **nCell;
+					if (cell == NULL)
+						break;
+
+					for (l = 0; l < CELL_AXIS_SUBDIVISION; l++)
+					{
+						int lastNode = cell->node->index;
+						nCell = &cell->next;
+						cell = cell->next;
+						if (cell == NULL) {
+							break;
+						}
+						//hypov8 todo: checkl previous used nodes. stop loops
+						if (l >= level.node_data->node_count
+							|| cell->node->index >= level.node_data->node_count
+							|| cell->node->index < 0
+							|| lastNode == cell->node->index)
+						{
+							*nCell = NULL;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	//test for invalid nodes
+	for (j = 0; j < level.node_data->node_count; j++)
+	{
+		for (k = 0; k < level.node_data->nodes[j]->num_visible; k++)
+		{
+			if (level.node_data->nodes[j]->visible_nodes[k] == j)
+				return;
+		}
+	}
+
+}
+
+void NAV_TF_Debug_Nodes(void)
+{
 	float distToTarget;
 	edict_t *firstPlayer;
-	int j, k = NODE0, i, m = NODE0, iPlyr;
-	int current_node, next_node, i2, n;
-	static int count[NODECOUNT];
+	int j, k, iPlyr;
 	static int exceded = 0;
-	if (exceded == 2)	exceded = 1;
 
-	if (level.nav_debug_mode) //"nav_shownode"
+	NAV_TF_Check_NodeData();
+
+	if (exceded == 2)	
+		exceded = 1;
+
+	k = 0;
+	if (level.nav_shownode) //cmd "nav_shownode"
 	{
-		memset(count, INVALID, sizeof(count));
 		//only used first player
 		for_each_player(firstPlayer, iPlyr)
 		{
@@ -897,14 +948,14 @@ void NAV_Debug_Nodes(void)
 				continue;
 
 			//hypov8 show all close nodes
-			for (j = NODE0; j < level.node_data->node_count ; j++)
+			for (j = 0; j < level.node_data->node_count ; j++)
 			{
 				distToTarget = VectorDistance(firstPlayer->s.origin,level.node_data->nodes[j]->origin);
 				if (distToTarget < 160)
 				{
-					ACEND_ShowNode(level.node_data->nodes[j]->node_type,level.node_data->nodes[j]->origin); //hypov8 show closest node
+					NAV_TF_ShowNode(level.node_data->nodes[j]->node_type,level.node_data->nodes[j]->origin); //hypov8 show closest node
 					k++;
-					if (k >= NODECOUNT) //only do 20 nodes
+					if (k >= 20) //only do 20 nodes
 					{
 						if (!exceded)
 							gi.cprintf(firstPlayer, PRINT_MEDIUM, "*ERROR* more than 20 nodes in your area\n");
@@ -913,45 +964,6 @@ void NAV_Debug_Nodes(void)
 					}
 				}
 			}
-#if 0
-			//hypov8 get closest node
-			current_node = ACEND_FindClosestNode(firstPlayer, 64, BOTNODE_ALL);
-			if (current_node != INVALID)
-			{
-				m = NODE0;
-				n = NODE0;
-				//loop through nodes and display any paths connecting from closest node
-				for (i = NODE0; i < 1000; i++)
-				{
-					if (path_table[current_node][i] != -1)
-					{
-						next_node = path_table[current_node][i];
-						if (next_node <= -2)
-							break;
-						for (i2 = NODE0; i2 < NODECOUNT; i2++)
-						{
-							if (count[i2] == next_node)
-								break;
-						}
-						if (i2 >= NODECOUNT)
-						{
-							count[n] = next_node;
-							gi.WriteByte(svc_temp_entity);
-							gi.WriteByte(TE_BFG_LASER);
-							gi.WritePosition(nodes[current_node].origin);
-							gi.WritePosition(nodes[next_node].origin);
-							gi.multicast(nodes[current_node].origin, MULTICAST_PVS);
-							//current_node = next_node;
-							//next_node = path_table[current_node][goal_node];
-							m++;
-							n++;
-							if (m > NODECOUNT) //add hypov8 draw short paths
-								break;
-						}
-					}
-				}
-			}
-#endif
 			break; //found first valid player
 		}
 	}
@@ -1011,19 +1023,17 @@ void G_RunFrame (void)
 
 
 	// do character sighting/memory stuff
-	if ((maxclients->value > 1))// && !(deathmatch->value))//FREDZ any
+	if (1 /*(maxclients->value == 1 && !deathmatch->value)*/)//FREDZ any
 	{	// coop server, do more checking here
-
-//		if (dedicated->value)//FREDZ solve allot bugs :)
-			AI_UpdateCharacterMemories( 256 );
-
+		//FREDZ solve allot bugs :)
+		AI_UpdateCharacterMemories( 256 );
 	}
-
 
 	// Process Generic Combat AI layer
 	AI_ProcessCombat ();
 
-	NAV_Debug_Nodes();
+	//debug navigation nodes
+	NAV_TF_Debug_Nodes();
 
 
 	//
@@ -1055,6 +1065,38 @@ void G_RunFrame (void)
 			}
 			else if (ent->onfiretime > 0)
 			{
+#if 1 // new flame sfx on AI.. less network intensive then below
+				if (!ent->client)
+				{
+					vec3_t	point;
+
+					ent->s.effects |= EF_FLAMETHROWER;
+
+					if (ent->health <= 0)
+					{
+						ent->onfiretime -= 1; //burn out flame faster
+						// do one smoke cloud
+						if (ent->onfiretime == 1)
+						{
+							int fCount;
+							for (fCount = 0; fCount < 3; fCount++)
+							{
+								int h[3] = {-16, -8, -12};
+								point[2] = ( ent->s.origin[2] + h[fCount]);
+								point[1] = ( ent->s.origin[1] + ((rand()%14) - 7));
+								point[0] = ( ent->s.origin[0] + ((rand()%14) - 7));
+
+								gi.WriteByte(svc_temp_entity);
+								gi.WriteByte(TE_SFXSMOKE);
+								gi.WritePosition(point);
+								gi.WriteByte(16 + ( rand() % 24 ));
+								gi.WriteByte(0);
+								gi.multicast(point, MULTICAST_PVS);
+							}
+						}
+					}
+				}
+#else //hypov8 note: disabled. use above 4 AI.
 				vec3_t	point, org, dir;
 				int		i,j;
 				float	dist;
@@ -1118,33 +1160,30 @@ void G_RunFrame (void)
 						}
 					}
 				}
-
-			    if (!ent->deadflag)
+#endif
+			    if (!ent->deadflag && ent->onfireent->inuse )//hypov8 add: bugfix for free'd entity)
 				{
 					edict_t *trav=NULL;
-/*					float	damage=1;//FREDZ remove damage of flamethrower
+					float	damage = 1;
 
-					if (!deathmatch->value)
-						damage;// *= 3;
-					else
-						damage;// *= 2;
-
-					T_Damage( ent, ent->onfireent, ent->onfireent, vec3_origin, ent->s.origin, vec3_origin, damage, 0, DAMAGE_NO_KNOCKBACK, MOD_FLAMETHROWER );
-*/
+					if (/*ent->onfiretime == 25 ||*/ random() < 0.3f) //hypov8 add. to much damage inflicted while "just" burning
+						T_Damage( ent, ent->onfireent, ent->onfireent, vec3_origin, ent->s.origin, vec3_origin, damage, 0, DAMAGE_NO_KNOCKBACK, MOD_FLAMETHROWER );
+#if 1 //TF disable non attack event?
 					// make sure they are in the "catch_fire" motion
-					if (!deathmatch->value && (ent->health > 0) && ent->cast_info.catch_fire)
+					if (/*deathmatch->value && */(ent->health > 0) && ent->cast_info.catch_fire)
 					{
 						ent->cast_info.catch_fire( ent, ent->onfireent );
 					}
-
+#endif
 				}
 
 				ent->onfiretime--;
 
-				if (ent->onfiretime <= 0)
+				if (ent->onfiretime <= 0 || !ent->onfireent->inuse )//hypov8 add: bugfix for free's entity
 				{
 					ent->onfireent = NULL;
 					ent->onfiretime = 0;
+					ent->s.effects &= ~EF_FLAMETHROWER; //hypov8 add: remove effect for AI
 				}
 
 				// JOSEPH 3-JUN-99

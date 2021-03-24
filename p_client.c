@@ -32,53 +32,19 @@ static void playerskin(int playernum, char *s)
 extern void DrawPreviewLaserBBox(edict_t *ent, int laser_color, int laser_size);
 void SP_info_player_show(edict_t *self, int skin)//FREDZ
 {
-	int i;
-//	char	*head_skin, *body_skin, *legs_skin;
-//	int	skin;
-
 	self->solid = SOLID_NOT;
 	self->movetype = MOVETYPE_NONE;
 	VectorSet (self->mins, -16, -16, -24);
 	VectorSet (self->maxs, 16, 16, 48);
-#if 0
-	self->s.skinnum = (self->skin-1) * 3;
-//	self->art_skins = "009 019 017";
-	memset(&(self->s.model_parts[0]), 0, sizeof(model_part_t) * MAX_MODEL_PARTS);
 
-	self->s.num_parts++;
-	self->s.model_parts[PART_HEAD].modelindex = gi.modelindex("models/actors/thug/head.mdx");
-//	skin = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "009" );//FREDZ fix fox linux
-	for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-		self->s.model_parts[PART_HEAD].baseskin = self->s.model_parts[PART_HEAD].skinnum[i] = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "009" );
-	gi.GetObjectBounds( "models/actors/thug/head.mdx", &self->s.model_parts[PART_HEAD] );
-
-	self->s.num_parts++;
-	self->s.model_parts[PART_LEGS].modelindex = gi.modelindex("models/actors/thug/legs.mdx");
-//	skin = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "017" );//FREDZ fix fox linux
-	for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-		self->s.model_parts[PART_LEGS].baseskin = self->s.model_parts[PART_LEGS].skinnum[i] = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "017" );
-	gi.GetObjectBounds( "models/actors/thug/legs.mdx", &self->s.model_parts[PART_LEGS] );
-
-	self->s.num_parts++;
-	self->s.model_parts[PART_BODY].modelindex = gi.modelindex("models/actors/thug/body.mdx");
-//	skin = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "019" );//FREDZ fix fox linux
-	for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-		self->s.model_parts[PART_BODY].baseskin = self->s.model_parts[PART_BODY].skinnum[i] = gi.skinindex( self->s.model_parts[PART_HEAD].modelindex, "019" );
-	gi.GetObjectBounds( "models/actors/thug/body.mdx", &self->s.model_parts[PART_BODY] );
-
-	gi.linkentity (self);
-	self->cast_info.scale = MODEL_SCALE;
-	self->s.scale = self->cast_info.scale - 1.0;
-	self->s.renderfx2 |= RF2_NOSHADOW;
-#else
 	self->s.skinnum = skin;
 	self->model = "models/bot/spawn.md2";
 	self->s.modelindex = gi.modelindex(self->model);
-	self->s.scale = 4;
-	self->s.renderfx2 |= RF2_NOSHADOW;
-	self->s.renderfx = RF_FULLBRIGHT;
+	self->s.scale = 0;
+	self->s.renderfx2 = RF2_NOSHADOW;
+	self->s.renderfx2 |= RF2_SURF_ALPHA;
+	self->s.renderfx = RF_FULLBRIGHT; // || RF_TRANSLUCENT;
 	gi.linkentity (self);
-#endif
 
 }
 
@@ -100,10 +66,10 @@ void SP_info_player_start(edict_t *self)
 		Show_Help ();
 	}
 
-    #ifdef BETADEBUG
+#ifdef BETADEBUG
     //self->s.renderfx = RF_SHELL_RED;
     SP_info_player_show(self, 0);
-    #endif
+#endif
 }
 
 /*QUAKED info_player_deathmatch (1 0 1) (-16 -16 -24) (16 16 48)
@@ -118,10 +84,9 @@ void SP_info_player_deathmatch(edict_t *self)
 		G_FreeEdict (self);
 		return;
 	}
-    #ifdef BETADEBUG
-    //self->s.renderfx = RF_SHELL_BLUE;
+#ifdef BETADEBUG
     SP_info_player_show(self, 1);
-    #endif
+#endif
 }
 
 /*QUAKED info_player_coop (1 0 1) (-16 -16 -24) (16 16 48)
@@ -130,21 +95,9 @@ potential spawning position for coop games
 void SP_info_player_coop(edict_t *self)
 {
 
-    #ifdef BETADEBUG
-    //self->s.renderfx = RF_SHELL_GREEN;
+#ifdef BETADEBUG
     SP_info_player_show(self, 2);
-/*//Not working :/
-    int		i;
-    for (i = 0; i < 3; i++)
-	{
-		self->mins[i] -= 1;
-		self->maxs[i] += 1;
-	}
-
-    DrawPreviewLaserBBox (self, 0xf2f2f0f0, 2);
-    gi.linkentity(self);*/
-    #endif
-
+#endif
 
 /*
 	if (!coop->value)
@@ -2054,7 +2007,7 @@ void PutClientInServer (edict_t *ent)
 		if (self != ent && self->client->pers.spectator != SPECTATING)
 			count_players++; //todo: test
 	}
-	ent->dontRoutePlayer = 1; //TF:
+	ent->nav_dontRoutePlayer = 1; //TF:
 
 	// clear entity values
 	ent->groundentity = NULL;
@@ -3629,7 +3582,7 @@ trace_t	PM_trace (vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end)
 		if (nav_dynamic->value&& (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START))	// if dynamic on, get blocked by MONSTERCLIP brushes as the AI will be
 			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_MONSTERCLIP| CONTENTS_PLAYERCLIP) /*MASK_PLAYERSOLID | CONTENTS_MONSTER*/);
 		else
-			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_PLAYERCLIP) ); //MASK_PLAYERSOLID
+			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_PLAYERCLIP) ); //MASK_PLAYERSOLID (+CONTENTS_MONSTER)
 	}
 	else
 		return gi.trace (start, mins, maxs, end, pm_passent, MASK_DEADSOLID);
@@ -3651,6 +3604,8 @@ void PrintPmove (pmove_t *pm)
 	c2 = CheckBlock (&pm->cmd, sizeof(pm->cmd));
 	Com_Printf ("sv %3i:%i %i\n", pm->cmd.impulse, c1, c2);
 }
+
+
 
 /*
 ==============
@@ -4287,22 +4242,34 @@ car_resume:
 	Think_FlashLight (ent);
 
 	//only route player once they hit the ground
-	if (ent->dontRoutePlayer && ent->groundentity)
-		ent->dontRoutePlayer= 0; //TF:
+	if (nav_dynamic->value == 1 && ent->groundentity)
+	{
+		/*if (ent->groundentity->use && !Q_stricmp(ent->groundentity->classname, "func_plat"))
+			ent->nav_dontRoutePlayer = 1; //TF:
+		else */
+			if (ent->nav_dontRoutePlayer == 1)
+			ent->nav_dontRoutePlayer = 0; //TF:
+	}
 
 
 	// BEGIN:	Xatrix/Ridah/Navigator/18-mar-1998
 	if (/*!deathmatch->value &&*/ nav_dynamic->value && !(ent->flags & (FL_HOVERCAR_GROUND | FL_HOVERCAR | FL_BIKE | FL_CAR | FL_JETPACK))
-		&& (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START) && !ent->dontRoutePlayer
+		&& (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START) && !ent->nav_dontRoutePlayer
 		&& ent->client && ent->client->pers.spectator == PLAYING && ent->solid == SOLID_BBOX &&!ent->deadflag) //hypov8 nav?
 	{
 		static float alpha;
+		int routCount;
 
 		// check for nodes
 		NAV_EvaluateMove( ent );
 
 		// optimize routes (flash screen if lots of optimizations
-		if (NAV_OptimizeRoutes( ent->active_node_data ) > 50)
+		routCount = NAV_OptimizeRoutes(ent->active_node_data);
+#ifdef BETADEBUG
+		if (routCount > 1)
+			routCount = routCount;
+#endif 
+		if (routCount > 50)
 		{
 			alpha += 0.05;
 			if (alpha > 1)
@@ -4319,7 +4286,7 @@ car_resume:
 	// END:		Xatrix/Ridah/Navigator/18-mar-1998
 
 	// Ridah, new AI
-	if (maxclients->value == 1)
+	if (1 /*maxclients->value == 1 */) //hypov8 note: this was disabled...
 	{
 		AI_UpdateCharacterMemories( 16 );
 	}
@@ -4437,7 +4404,7 @@ void ClientBeginServerFrame (edict_t *ent)
 */
 
 	client = ent->client;
-#ifndef HYPODEBUG //allow debug builds to not kick you
+#ifndef BETADEBUG //allow debug builds to not kick you
 
 	// MH: check if they're lagged-out
 	if (client->pers.spectator != SPECTATING && curtime-client->pers.lastpacket >= 5000)
@@ -4447,31 +4414,18 @@ void ClientBeginServerFrame (edict_t *ent)
 		// make them a spectator
 		Cmd_Spec_f(ent);
 	}
-
-
-	//hypov8 todo: this needs some thought...
-	//
-	// MH: moved idle checks here from ClientThink
-     //check if idle
-    if (ent->client->pers.spectator == PLAYING && ((level.modeset==WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE)))
+	else if (ent->client->pers.spectator == PLAYING && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE)))
     {
-       /* if(((level.framenum - ent->check_idle)>(idle_client->value*10))) // MH: check_talk/shoot removed (included in check_idle)
+        if(((level.framenum - ent->check_idle)>(idle_client->value*10))) // MH: check_talk/shoot removed (included in check_idle)
         {
 			gi.bprintf (PRINT_HIGH, "%s has been idle for over %d seconds\n", client->pers.netname, (int)idle_client->value); // MH: let everyone know they've idled-out
             //make them spectators
             Cmd_Spec_f(ent);
         }
-        else*/ if (((level.framenum - ent->check_idle)>450) && (level.modeset == WAVE_BUYZONE))//45 secs in buyzone
-        {
-			gi.bprintf (PRINT_HIGH, "%s has been idle for over %d seconds\n", client->pers.netname, 45);
-            //make them spectators
-            Cmd_Spec_f(ent);
-        }
+        else
+			ent->client->resp.time++;
     }
 
-	// MH: count play time
-	if (ent->client->pers.spectator == PLAYING && ((level.modeset==WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE)))
-		ent->client->resp.time++;
 
 #endif
 	// Ridah, hack, make sure we duplicate the episode flags
@@ -4523,7 +4477,7 @@ void ClientBeginServerFrame (edict_t *ent)
 	}
 
 // BEGIN: Xatrix/Ridah/Navigator/16-apr-1998
-	if (/*!deathmatch->value &&*/ !ent->nav_build_data && nav_dynamic->value) //hypov8 nav init
+	if (/*!deathmatch->value &&*/ !ent->nav_build_data && (nav_dynamic->value || level.nav_debug_mode)) //hypov8 nav init
 	{
 		// create the nav_build_data structure, so we can begin dropping nodes
 		ent->nav_build_data = gi.TagMalloc(sizeof(nav_build_data_t), TAG_LEVEL);

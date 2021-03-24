@@ -59,11 +59,12 @@ void Move_Done (edict_t *self)
 
 	// spawn some nodes, if this entity hasn't been routed
 	if ((!ent || (!ent->nav_data.goal_index && (ent->wait < 0 || ent->wait > 0.1)))
-		&& nav_dynamic->value && (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START)
+		&& (nav_dynamic->value || level.nav_debug_mode) //also auto create lift nodes when debging
+		&& (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START)
 		&& (level.node_data->node_count < (MAX_NODES-2)))
 	{
 		edict_t	*trav=NULL;
-		node_t	*top_node;
+		node_t	*top_node, *bottom_node;
 		vec3_t	move_vec, start_org;
 		int		rval;
 		route_t	route;
@@ -76,64 +77,143 @@ void Move_Done (edict_t *self)
 		{
 			if (trav->groundentity == self)
 			{	// this player is standing on us, so drop a node
+//TF hypov8add: change node droping
+				if (!Q_stricmp(self->classname, "func_plat"))
+				{
+					if (self->moveinfo.state == STATE_UP)
+					{
+						vec3_t player_start;
+						vec3_t v1, v2, topNode, botNode;
 
-				// find the players position at the plat's previous position
-				VectorSubtract(self->cast_info.saved_goal, self->cast_info.last_sighting, move_vec);
+						//store original position
+						VectorCopy(trav->s.origin, player_start);
+						VectorCopy(self->maxs, v1);
+						VectorCopy(self->mins, v2);
 
-				// see if we can get to here from the start position
+						topNode[0] = (v1[0] - v2[0]) / 2 + v2[0];
+						topNode[1] = (v1[1] - v2[1]) / 2 + v2[1];
+						topNode[2] = trav->s.origin[2];
 
-				// find a node close to us to use for destination checking
-				top_node = NAV_GetClosestNode( trav, VIS_PARTIAL, true, false );
+						botNode[0] = topNode[0];
+						botNode[1] = topNode[1];
+						botNode[2] = trav->s.origin[2] + self->pos2[2];
 
-				if (!top_node)
-					goto drop_node;
-//hypov8 todo: this seems to be wrong on func_plat. droping nodes every time. not testing what close node is.
+						//move player to centre of lift
+						VectorCopy(topNode, trav->s.origin);
+						gi.linkentity(trav);
+
+						// find closest node
+						top_node = NAV_GetClosestNode(trav, VIS_PARTIAL, true, false);
+
+						if (top_node && top_node->node_type == NODE_LANDING &&
+							//found node inside plat area
+							((top_node->origin[0] < (self->maxs[0] - 16) || top_node->origin[0] > (self->mins[0] + 16)) &&
+							(top_node->origin[1] < (self->maxs[1] - 16) || top_node->origin[1] > (self->mins[1]+16))))
+						{
+							//found node. move player back to original pos
+							VectorCopy(player_start, trav->s.origin);
+							gi.linkentity(trav);
+							break;		// already a route here					
+						}
+						else //drop_node:
+						{
+							vec3_t plat_orig;
+							//copy plat orig position
+							VectorCopy(self->s.origin, plat_orig);
+
+							///////////////////////////////////////////////////
+							//move player/plate to bottom position, drop a node
+							self->s.origin[2] += self->pos2[2];
+							gi.linkentity(self);
+							VectorCopy(botNode, trav->s.origin);
+							gi.linkentity(trav);
+							bottom_node = NAV_CreateNode(trav, botNode, vec3_origin, NODE_PLAT, -1, trav->waterlevel);
+
+							///////////////////////////////////////////////
+							//move player/plat to top position, drop a node
+							VectorCopy(plat_orig, self->s.origin);
+							gi.linkentity(self);
+							VectorCopy(topNode, trav->s.origin);	
+							gi.linkentity(trav);					//(NODE_LANDING so other nodes don't see us, but we can see them)
+							top_node = NAV_CreateNode(trav, topNode, vec3_origin, NODE_LANDING, -1, trav->waterlevel);
+							top_node->goal_ent = self;
+							self->nav_data.cache_node = (int)(top_node->index);
+
+							bottom_node->goal_index = top_node->index;
+
+							if (ent)
+								ent->nav_data.goal_index = true;	// tell this path_corner to ignore future NAV tests for new nodes
+							trav->nav_build_data->current_node->goal_ent = self;
+						}
+
+						//move player back to orig pos
+						VectorCopy(player_start, trav->s.origin);
+						gi.linkentity(trav);
+						break;
+					}
+				}
+				else
+//END TF
+				{
+					// find the players position at the plat's previous position
+					VectorSubtract(self->cast_info.saved_goal, self->cast_info.last_sighting, move_vec);
+
+					// see if we can get to here from the start position
+
+					// find a node close to us to use for destination checking
+					top_node = NAV_GetClosestNode(trav, VIS_PARTIAL, true, false);
+
+					if (!top_node)
+						goto drop_node;
+					//hypov8 todo: this seems to be wrong on func_plat. droping nodes every time. not testing what close node is.
+					
 					// temporarily move the platform to the bottom position
 					VectorCopy(self->cast_info.last_sighting, self->s.origin);
 					gi.linkentity(self);
 
-				VectorSubtract( trav->s.origin, move_vec, trav->s.origin );
-				gi.linkentity(trav);
+					VectorSubtract(trav->s.origin, move_vec, trav->s.origin);
+					gi.linkentity(trav);
 
-				rval = NAV_Route_EntityToNode( trav, NULL, top_node, VIS_PARTIAL, true, false, &route );
+					rval = NAV_Route_EntityToNode(trav, NULL, top_node, VIS_PARTIAL, true, false, &route);
 
-				VectorAdd( trav->s.origin, move_vec, trav->s.origin );
-				gi.linkentity(trav);
+					VectorAdd(trav->s.origin, move_vec, trav->s.origin);
+					gi.linkentity(trav);
 
 					// move the platform back
 					VectorCopy(self->cast_info.saved_goal, self->s.origin);
 					gi.linkentity(self);
 
-				if (rval)
-					break;		// already a route here
+					if (rval)
+						break;		// already a route here
 
 drop_node:
 
-				VectorSubtract(trav->s.origin, move_vec, start_org);
+					VectorSubtract(trav->s.origin, move_vec, start_org);
 
-				// drop the end position                          (LANDING so other nodes don't see us, but we can see them)
-				NAV_CreateNode( trav, trav->s.origin, vec3_origin, NODE_LANDING, -1, trav->waterlevel);
-				top_node = trav->active_node_data->nodes[trav->active_node_data->node_count - 1];
+					// drop the end position                          (LANDING so other nodes don't see us, but we can see them)
+					NAV_CreateNode(trav, trav->s.origin, vec3_origin, NODE_LANDING, -1, trav->waterlevel);
+					top_node = trav->active_node_data->nodes[trav->active_node_data->node_count - 1];
 
 					// temporarily move the platform to the bottom position
 					VectorCopy(self->cast_info.last_sighting, self->s.origin);
 					gi.linkentity(self);
 
-				NAV_CreateNode( trav, start_org, vec3_origin, NODE_PLAT, top_node->index, trav->waterlevel);
+					NAV_CreateNode(trav, start_org, vec3_origin, NODE_PLAT, top_node->index, trav->waterlevel);
 
 					// move the platform back
 					VectorCopy(self->cast_info.saved_goal, self->s.origin);
 					gi.linkentity(self);
 
-				if (ent)
-					ent->nav_data.goal_index = true;	// tell this path_corner to ignore future NAV tests for new nodes
-				trav->nav_build_data->current_node->goal_ent = self;
-				self->nav_data.cache_node = (int)(top_node->index);
+					if (ent)
+						ent->nav_data.goal_index = true;	// tell this path_corner to ignore future NAV tests for new nodes
+					trav->nav_build_data->current_node->goal_ent = self;
+					self->nav_data.cache_node = (int)(top_node->index);
 
-				// resume checking from the player's current position
-				trav->nav_build_data->current_node = top_node;
+					// resume checking from the player's current position
+					trav->nav_build_data->current_node = top_node;
 
-				break;
+					break;
+				}
 			}
 		}
 	}

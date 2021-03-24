@@ -5,15 +5,12 @@
 
 -max players allowed to enter a wave (need testing)
 
--if people join and wait to long they go to idle modus :/ (should be fixed, need testing) //hypov8 added 1 more fix`(fixed extra)
-
 -cl_parsemuzzleflash 3 error somethimes when connect (fixed?)
 
--nav data need to be off when it already got one  (fixed?)
 
 -new vote map and end messages defeat boss (added fixed but need better fix?)
 
--there is a 100% cpu that crashes the server (nav loop)
+-there is a 100% cpu that crashes the server (nav loop) (added fix. invalid entity checks)
 
 -check sp maps
 
@@ -22,3 +19,24 @@
 -boss animations?
 
 -kill rat after 2 min's? it doesn't get killed
+
+hypov8
+=========
+-buy friendly cast?
+
+-buy instakill grenades..
+
+-buy bigger flametank
+
+-ai shoot nade to fast
+
+
+killa notes
+===========
+moker RL to powerfull (fixed? set acording to skinn)
+
+what would be cool for mappers - can a mapper force a new map for each level?
+like a Sp or coop mod map
+
+   
+   

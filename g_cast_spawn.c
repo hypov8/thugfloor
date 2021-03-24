@@ -151,9 +151,9 @@ void cast_pawn_o_matic_spawn ()
 //apply skins.. consider skill
 void cast_TF_applyRandSkin(edict_t *self, localteam_skins_s *skins, int idx)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].name);
+	self->name = skins[idx].name;
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].skin);
-	self->classname = strcpy(gi.TagMalloc(12, TAG_LEVEL), skins[idx].classname);
+	self->classname = skins[idx].classname;
 	self->spawnflags = skins[idx].spawnflags;
 	self->health = skins[idx].health;
 	self->count = skins[idx].count;
@@ -223,7 +223,7 @@ void cast_TF_Skidrow_courtyard(edict_t *self)//sr1 Police/Security
 }
 void cast_TF_Skidrow_boss_lamont(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Lamont");
+	self->name = "Lamont";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "024 017 010");
 	self->spawnflags = 0;//pistol
 	self->classname = "cast_thug";
@@ -237,7 +237,7 @@ void cast_TF_Skidrow_boss_lamont(edict_t *self)
 }
 void cast_TF_Skidrow_boss_jesus(edict_t *self)//sr4
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Jesus");
+	self->name = "Jesus";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "021 017 010");
 	self->spawnflags = 0;//pistol
 	self->classname = "cast_runt";
@@ -297,7 +297,7 @@ void cast_TF_Poisonville_skins2(edict_t *self)//New skins
 }
 void cast_TF_Poisonville_boss_nikkiblanco(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Nikkiblanco");
+	self->name = "Nikkiblanco";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "122 122 122");
 	self->spawnflags = 4;//Flamethrower
 	self->classname = "cast_punk";
@@ -340,9 +340,9 @@ void cast_TF_Shipyard_skins2(edict_t *self)//New skins
 }
 void cast_TF_Shipyard_boss_popeye(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Popeye");
+	self->name = "Popeye";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "040 019 048");
-	self->spawnflags = 64;//Melee
+	self->spawnflags = 64; //Melee
 	self->classname = "cast_runt";
 	self->moral = 4;
     self->acc = 2;
@@ -356,7 +356,7 @@ void cast_TF_Shipyard_boss_popeye(edict_t *self)
 }
 void cast_TF_Shipyard_boss_heilman(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Heilman");
+	self->name = "Heilman";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "121 121 121");
 //	self->spawnflags = 64;//Tommygun originale
     self->spawnflags = 0;//shogun
@@ -394,7 +394,7 @@ void cast_TF_Steeltown_skins(edict_t *self)//New skins, maybe higher health?
 }
 void cast_TF_Steeltown_boss_moker(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Moker");//steel4
+	self->name = "Moker"; //steel4
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "111 027 023");
 	self->spawnflags = 8;//bazooka
     self->moral = 5;
@@ -433,7 +433,7 @@ void cast_TF_Trainyard_skins(edict_t *self)//New skins mix of localteam trainyar
 }
 void cast_TF_Trainyard_boss_tyrone(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Tyrone");//ty4
+	self->name = "Tyrone"; //ty4
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "507 082 054");
 	self->spawnflags = 64;//Tommygun
     self->moral = 5;
@@ -508,7 +508,7 @@ void cast_TF_Radio_City_skins2(edict_t *self)//New skins
 }
 void cast_TF_Radio_City_boss_nikkiblanco(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "nikkiblanco");//rcboss1
+	self->name = "nikkiblanco"; //rcboss1
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "122 122 122");
 //	self->spawnflags = 64;//Tommygun
 	self->spawnflags = 8;//bazooka
@@ -522,7 +522,7 @@ void cast_TF_Radio_City_boss_nikkiblanco(edict_t *self)
 
 void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Kingpin");
+	self->name = "Kingpin";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "120 120 120");
 	//Normal but not really fair? spawn also with hmg
 /*	self->spawnflags = 0;//pistol
@@ -536,7 +536,7 @@ void cast_TF_Crystal_Palace_boss_kingpin(edict_t *self)
 }
 void cast_TF_Crystal_Palace_boss_blunt(edict_t *self)
 {
-	self->name = strcpy(gi.TagMalloc(12, TAG_LEVEL), "Blunt");
+	self->name = "Blunt";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "080 059 059");
 	self->spawnflags = 16;//hmg //18 =triger spawned (>>2)
 	self->classname = "cast_whore";
@@ -676,7 +676,15 @@ void cast_TF_checkEnemyState()
 					level.waveEnemyCount_total--;
 				}
 				else
+				{
+					if (level.characters[i]->isOnTrigPush && level.characters[i]->groundentity)
+						level.characters[i]->isOnTrigPush = false;
+
+					if (level.nav_debug_mode || level.characters[i]->isOnTrigPush) //stop bots moving while debuging
+						level.characters[i]->nextthink = level.time + (FRAMETIME * 2);
 					count++; //count current cast
+				}
+
 
 			}
 			else //human
@@ -1164,15 +1172,10 @@ void cast_TF_spawn(void)
 
 //total enemy counts per wave.
 //this will be multiplied by player counts later
-#if 0 //HYPODEBUG
-static int wave_shortGame[5] = { 2, 2, 2, 2, 1 };
-static int wave_medGame[8] = { 2, 2, 2, 2, 2, 2, 2, 1 };
-static int wave_longGame[11] = { 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
-#else
 static int wave_shortGame[5] = { 13, 16, 17, 21, 1 };
 static int wave_medGame[8] = { 13, 14, 16, 17, 17, 20, 21, 1 };
 static int wave_longGame[11] = { 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 1 };
-#endif
+
 
 //max number of active enemy's spawned into a level.
 //the more players the more active enemy

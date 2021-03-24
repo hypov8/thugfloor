@@ -4,6 +4,7 @@
 
 extern edict_t *boss_entityID;
 extern int boss_maxHP;
+static int topOfs = -45; //hypov8 was 60
 
 static const char *gameheader[] =
 {
@@ -312,6 +313,7 @@ void BeginIntermission (edict_t *targ, char *changenext)
 //
 //===================================================================
 //===================================================================
+void TF_Build_HudMessage(edict_t *ent, char *string);
 
 void SpectatorScoreboardMessage (edict_t *ent)
 {
@@ -322,23 +324,37 @@ void SpectatorScoreboardMessage (edict_t *ent)
 	edict_t	*player;
 	char	*tag;
     char    status[10];
+	char	nfill[64];
 
 	string[0] = 0;
 	stringlength = 0;
 
+	//TF active players
+	if (level.modeset == WAVE_ACTIVE && ent->client->pers.spectator == PLAYING)
+	{
+		TF_Build_HudMessage(ent, entry);
+		j = strlen(entry);
+		if (stringlength + j < 1024)
+		{
+			strcpy(string + stringlength, entry);
+			stringlength += j;
+		}
+	}
+
 	Com_sprintf (entry, sizeof(entry),
-		"xm %i yv %i dmstr 999 \"Spectators\" ",
-		-5*10, -60-49);
+		"xr %i yv %i dmstr 999 \"Spectators\" ",
+		-56*10-10, topOfs-49);
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
 
 	Com_sprintf (entry, sizeof(entry),
-		"xm %i yv %i dmstr 663 \"Status  NAME           ping  watching\" ",
-		-5*28, -60-21);
+		"xr %i yv %i dmstr 663 \"State NAME          ping watching\" ",
+		-56*10-10, topOfs-21);
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
+
 
 	for (k=i=0 ; i<maxclients->value ; i++)
 	{
@@ -349,7 +365,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 		if (curtime - player->client->pers.lastpacket >= 5000)
         {
             tag = "666";
-            strcpy(status,"connect");//CNCT shorter?
+            strcpy(status,"CNCT ");//CNCT shorter?
         }
 		else if (player->client->pers.rconx[0])
         {
@@ -364,29 +380,40 @@ void SpectatorScoreboardMessage (edict_t *ent)
 		else if (player == ent)
         {
  			tag = "990";
- 			strcpy(status,"");//you
+ 			strcpy(status,"spec ");//you
         }
 		else
         {
             tag = "999";	// fullbright
-            strcpy(status,"");
+            strcpy(status,"spec ");
         }
 
         /*
         		if (player->client->chase_target)
 			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%-13s %4i  %s\" ",
-			-60+k*17, tag, player->client->pers.netname, player->client->ping, player->client->chase_target->client->pers.netname);
+			topOfs+k*17, tag, player->client->pers.netname, player->client->ping, player->client->chase_target->client->pers.netname);
 		else
 			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%-13s %4i\" ",
-				-60+k*17, tag, player->client->pers.netname, player->client->ping);
+				topOfs+k*17, tag, player->client->pers.netname, player->client->ping);
             */
+		//shorten names to 13 chars for scoreboad
+        strcpy( nfill, player->client->pers.netname );
+		if (strlen(nfill) > 13)
+			nfill[13] = '\0';
+
+		if (strlen(player->client->pers.netname) < 13)
+		{
+			int l;
+			for (l=0; l<13-strlen(player->client->pers.netname); l++)
+				strcat( nfill, " " );
+		}
 
 		if (player->client->chase_target)
-			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%-7s %-13s %4i %-13s\"",
-			-60+k*17, tag, status, player->client->pers.netname, player->client->ping, player->client->chase_target->client->pers.netname);
+			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%s %s %4i %-13s\" ",
+			topOfs+k*17, tag, status, nfill, player->client->ping, player->client->chase_target->client->pers.netname);
 		else
-			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%-7s %-13s %4i\"",
-				-60+k*17, tag, status, player->client->pers.netname, player->client->ping);
+			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%s %s %4i\" ",
+				topOfs+k*17, tag, status, nfill, player->client->ping);
 		j = strlen(entry);
 		if (stringlength + j >= 1024)
 			break;
@@ -407,7 +434,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 		tag = "666";
 
 		Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%-13s CNCT\" ",
-			-60+k*17, tag, player->client->pers.netname);
+			topOfs+k*17, tag, player->client->pers.netname);
 		j = strlen(entry);
 		if (stringlength + j >= 1024)
 			break;
@@ -1196,6 +1223,30 @@ void RejoinScoreboardMessage (edict_t *ent)
 
 // MH: MatchSetupScoreboardMessage removed (merged with GrabDaLootScoreboardMessage)
 
+void TF_NAV_HudMessage(char *string)
+{
+	static const char *nav_debug_help = " xr -170"
+		" yv 100 string \"  *KEYS REBOUND*\""
+		" yv 110 string \" KEY 0 = ADD MOVE\""		//0: NODE_NORMAL
+		" yv 120 string \" KEY 5 = ADD JUMP\""		//1: NODE_JUMP
+		" yv 130 string \" KEY 6 = ADD LAND\""		//2: NODE_LANDING
+		" yv 140 string \" KEY 7 = ADD DUCK\""		//3: NODE_DUCKING
+		" yv 150 string \" KEY 8 = findnode\""
+		" yv 160 string \" KEY 9 = movenode\""
+		" xr -130"
+		" yv 190 string \"  *OTHER CMD*\""
+		" yv 200 string \"nav_shownode\""
+		" yv 210 string \"nav_showpath\""
+		" yv 220 string \"nav_clear\""
+		" yv 230 string \"nav_rebuild\""
+		" yv 240 string \"nav_save\" ";
+	//0: NODE_NORMAL
+	//1: NODE_JUMP;
+	//2: NODE_LANDING
+	//3: NODE_DUCKING
+
+	strcpy(string, nav_debug_help);
+}
 
 /*
 ==================
@@ -1212,10 +1263,15 @@ void TF_Build_HudMessage(edict_t *ent, char *string)
 	int		i, j, count = 0, yoffs;
 	edict_t *dood;
 
+	if (level.nav_debug_mode)
+	{
+		TF_NAV_HudMessage(string);
+		return;
+	}
 
 	string[0] = 0;
 	yoffs = -200;
-	strcpy(string, "xr -60 yb -215 string \"Players\" xr -130 ");
+	strcpy(string, "xr -60 yb -215 string \"Players\" xr -170 ");
 	stringlength = strlen(string);
 	entry[0] = 0;
 
@@ -1225,7 +1281,7 @@ void TF_Build_HudMessage(edict_t *ent, char *string)
 		{
 			count++;
 			Com_sprintf(entry, sizeof(entry),
-				"%s yb %i dmstr 777 \"%s\" "
+				"%s yb %i dmstr 777 \"%16s\" "
 				, entry, yoffs, dood->client->pers.netname
 			);
 			yoffs += 16;
@@ -1303,7 +1359,8 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	for (i=0 ; i<game.maxclients ; i++)
 	{
 		cl_ent = g_edicts + 1 + i;
-		if (!cl_ent->inuse || (cl_ent->client->pers.spectator == SPECTATING))// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+		if (!cl_ent->inuse || 
+			(cl_ent->client->pers.spectator == SPECTATING && level.modeset !=  ENDGAMEVOTE && level.modeset != ENDGAME))
 			continue;
 
 /*		if (fph_scoreboard)
@@ -1328,7 +1385,10 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 
 	realtotal = total;
 
-	Com_sprintf (entry, sizeof(entry), "xm %i yt 5 dmstr 752 \"%s\" ", -5*strlen(level.mapname), level.mapname);
+	Com_sprintf (entry, sizeof(entry), 
+		"xm %i yt 5 dmstr 752 \"map: %s\" ", 
+		-100 - (strlen("map")*10),
+		level.mapname);
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
@@ -1336,13 +1396,24 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	// Send the current leader
 	if (total)
 	{
+		cl = &game.clients[sorted[0]];
 		Com_sprintf (entry, sizeof(entry),
-			"leader %i ",
-			sorted[0] );
+			"xm %i yt 22 dmstr 752 \"leader: %s\" ",
+			-100 - (strlen("leader")*10),
+			cl->pers.netname);
 		j = strlen(entry);
 		strcpy (string + stringlength, entry);
 		stringlength += j;
 	}
+
+	//skill
+	Com_sprintf (entry, sizeof(entry),
+		"xm %i yt 39 dmstr 752 \"AI Skill: %s\" ",
+		-100 - (strlen("AI Skill")*10),
+		va("%1.1f", skill->value));
+	j = strlen(entry);
+	strcpy (string + stringlength, entry);
+	stringlength += j;
 
 	// header
 	if (ent->client->showscores == SCOREBOARD)
@@ -1350,22 +1421,22 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 /*		if (fph_scoreboard)
 			Com_sprintf (entry, sizeof(entry),
 				"xr %i yv %i dmstr 663 \"NAME         ping hits   fph\" ",
-				-36*10 - 10, -60+-21 );
+				-36*10 - 10, topOfs+-21 );
 		else*/
 			Com_sprintf (entry, sizeof(entry),
-				"xr %i yv %i dmstr 663 \"stat NAME           ping time  hits\" ",	//hypov8 note: "xr" is X aligned to Right.
-				-56*10 - 10, -60+-21 );//56 was 36									//menu overlaps player display on low rez.
+				"xr %i yv %i dmstr 663 \"State NAME          ping time  hits\" ",	//hypov8 note: "xr" is X aligned to Right.
+				-56*10 - 10, topOfs+-21 );//56 was 36									//menu overlaps player display on low rez.
 	}																				//either move menu to right or use "xm" (X aligned Middle)
     else if (ent->client->showscores==SCOREBOARD2) //FREDZ							//or you can test client rez if patched and move accorodingly
     {
         Com_sprintf (entry, sizeof(entry),
-        "xr %i yv %i dmstr 663 \"dead NAME        health cash range\" ",
-            -56*10 - 10, -60+-21 );//56 was 36
+        "xr %i yv %i dmstr 663 \"Death NAME       health  cash range\" ",
+            -56*10 - 10, topOfs+-21 );//56 was 36
 	}
 	else//SCOREBOARD3 disabled
 		Com_sprintf (entry, sizeof(entry),
 			"xr %i yv %i dmstr 663 \"NAME        deaths  acc  fav\" ",
-			-56*10 - 10, -60+-21 );//56 was 36
+			-56*10 - 10, topOfs+-21 );//56 was 36
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
@@ -1379,7 +1450,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	if (ent->client->pers.patched >= 3)
 	{
 		// set Y start position and auto-increment for players list
-		Com_sprintf (entry, sizeof(entry), "yv -60 yi 17 ");
+		Com_sprintf (entry, sizeof(entry), "yv %i yi 17 ", topOfs);
 		j = strlen(entry);
 		strcpy (string + stringlength, entry);
 		stringlength += j;
@@ -1390,22 +1461,26 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		cl = &game.clients[sorted[i]];
 		cl_ent = g_edicts + 1 + sorted[i];
 
-//		if (cl_ent == ent)//FREDZ not yellow
-//			tag = "990";
         if (cl_ent->client->pers.player_dead == TRUE && level.modeset == WAVE_ACTIVE)
         {
             tag = "900";//Red
-            strcpy(status,"dead");
+            strcpy(status,"dead ");
         }
         else  if (cl_ent->client->pers.spectator == PLAYER_READY && (level.modeset == WAVE_ACTIVE||level.modeset == WAVE_START))
         {
             tag = "555";//Grey
-            strcpy(status,"wait");
+            strcpy(status,"wait ");
         }
 		else
         {
-            tag = "999";	// fullbright
-            strcpy(status,"");
+			if (cl_ent == ent)
+				tag = "990";
+			else
+				tag = "999";	// fullbright
+			if (cl_ent->client->pers.spectator == SPECTATING)
+				strcpy(status, "spec ");
+			else
+				strcpy(status,"     ");
         }
 
         if (cl_ent->client->pers.rconx[0])
@@ -1427,7 +1502,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 			{
 					Com_sprintf (entry, sizeof(entry),
 						"yv %i ds %s %i %i %i %i ",
-						-60+i*17, tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );
+						topOfs+i*17, tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );
 			}
 		}*/
         strcpy( nfill, cl->pers.netname );
@@ -1445,10 +1520,10 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 			{
 /*					Com_sprintf (entry, sizeof(entry),
 						"yv %i ds %s %i %i %i %i ",
-						-60+i*17, tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );*/
+						topOfs+i*17, tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );*/
 				Com_sprintf (entry, sizeof(entry),
-					"yv %i dmstr %s \"%4s %s %4i %4i %5i\"",
-					-60+i*17, tag, status, nfill, cl->ping, cl->resp.time/600, cl->resp.score);
+					"yv %i dmstr %s \"%s %s %4i %4i %5i\"",
+					topOfs+i*17, tag, status, nfill, cl->ping, cl->resp.time/600, cl->resp.score);
 			}
 		}
         else if (ent->client->showscores==SCOREBOARD2) //FREDZ
@@ -1472,12 +1547,12 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 			{
 				Com_sprintf (entry, sizeof(entry),
 					"yv %i ds %s %i %i %i %5.0f ",
-					-60+i*17, tag, sorted[i], cl_ent->health, cl->pers.currentcash, v );
+					topOfs+i*17, tag, sorted[i], cl_ent->health, cl->pers.currentcash, v );
 			}*/
 			{
                 Com_sprintf (entry, sizeof(entry),
-					"yv %i dmstr %s \"%4i %s %3i %5i %5.0f\"",
-					-60+i*17, tag, cl->resp.deposited, nfill, cl_ent->health, cl->pers.currentcash, v );
+					"yv %i dmstr %s \"%5i %s %3i %5i %5.0f\"",
+					topOfs+i*17, tag, cl->resp.deposited, nfill, cl_ent->health, cl->pers.currentcash, v );
 			}
 		}
 		else//SCOREBOARD3 disabled
@@ -1499,7 +1574,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 			else
 				Com_sprintf (entry, sizeof(entry),
 					"yv %i dmstr %s \"%-13s%5i %4i %4s\" ",
-					-60+i*17, tag, cl->pers.netname, cl->resp.deposited, cl->resp.accshot?cl->resp.acchit*1000/cl->resp.accshot:0, fn);
+					topOfs+i*17, tag, cl->pers.netname, cl->resp.deposited, cl->resp.accshot?cl->resp.acchit*1000/cl->resp.accshot:0, fn);
 		}
 		j = strlen(entry);
 		strcpy (string + stringlength, entry);
@@ -1510,7 +1585,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	{
 		Com_sprintf (entry, sizeof(entry),
 			"yv %i dmstr 777 \"(%i players)\" ",
-			-60+i*17+6, realtotal );
+			topOfs+i*17+6, realtotal );
 		j = strlen(entry);
 		strcpy (string + stringlength, entry);
 		stringlength += j;
@@ -1714,8 +1789,9 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 			for (i=0 ; i<maxclients->value ; i++)
 			{
 				dood = g_edicts + 1 + i;
-				if (dood->client && ((dood->inuse && dood->client->pers.spectator == SPECTATING)
-					|| (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
+				if (dood->client && (
+					/*(dood->inuse && dood->client->pers.spectator == SPECTATING) //hypov8 disabled on spec players
+					||*/ (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
 					found = true;
 			}
 			if (found)
@@ -1731,11 +1807,13 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 //	else if (ent->client->showscores == SCOREBOARD3)
 	{
 		found = false;
-		for_each_player(dood,i)
+
+		for_each_player(dood, i)
 		{
 			if (dood->client->pers.spectator == SPECTATING)
 				found = true;
 		}
+
 		if (found)
 			ent->client->showscores = SPECTATORS;
 		else

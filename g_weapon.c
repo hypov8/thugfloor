@@ -2326,7 +2326,7 @@ skip_clip:
 
 //	if (self->biketime < level.time)
 	{
-		T_RadiusDamage( self, self->owner, self->dmg * (deathmatch->value ? 3 : 1), NULL, 128, MOD_FLAMETHROWER );
+		T_RadiusDamage( self, self->owner, self->dmg * (deathmatch->value ? 3 : 1), NULL, 128, MOD_FLAMETHROWER ); //hypov8 note: 3hp ok?
 		self->biketime = level.time;
 	}
 

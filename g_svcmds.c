@@ -251,7 +251,45 @@ void SVCmd_WriteIP_f (void)
 	fclose (f);
 }
 
+//TF
+void SVcmd_NavDebug(void)
+{
+	int		i;
+	edict_t	*doot;
 
+	if (level.nav_debug_mode)
+	{
+		level.nav_debug_mode = 0;
+		gi.cvar_set("nav_debug", "0");
+	}
+	else
+	{
+		level.nav_debug_mode = 1;
+		gi.cvar_set("nav_debug", "1");
+
+		for_each_player(doot, i)
+		{
+			gi.cprintf(doot, PRINT_MEDIUM,
+				"ƒ†====================\n"
+				"ƒ† findnode gets closes #node\n"
+				"ƒ†   then copys # to movenode\n"
+				"ƒ† movenode copys #node to player origin\n"
+				"ƒ†====================\n\n");
+
+			gi.WriteByte(13);
+			gi.WriteString(
+				"bind 5 \"nav_addnode 1\";"		//1: NODE_JUMP;
+				"bind 6 \"nav_addnode 2\";"		//2: NODE_LANDING
+				"bind 7 \"nav_addnode 3\";"		//3: NODE_DUCKING
+				"bind 8 \"nav_findnode\";"
+				"bind 9 \"nav_movenode 999\";"
+				"bind 0 \"nav_addnode 0\"\n");	//0: NODE_NORMAL
+			gi.unicast(doot, true);
+		}
+	}
+	gi.dprintf("NAV: nav_debug %s\n", level.nav_debug_mode ? "ON" : "OFF");
+}
+//END TF
 /*
 =================
 ServerCommand
@@ -266,20 +304,22 @@ void	ServerCommand (void)
 	char	*cmd;
 
 	cmd = gi.argv(1);
-	if (Q_stricmp (cmd, "test") == 0)
-		Svcmd_Test_f ();
-	else if (Q_stricmp (cmd, "addip") == 0)
-		SVCmd_AddIP_f ();
-	else if (Q_stricmp (cmd, "removeip") == 0)
-		SVCmd_RemoveIP_f ();
-	else if (Q_stricmp (cmd, "listip") == 0)
-		SVCmd_ListIP_f ();
-	else if (Q_stricmp (cmd, "writeip") == 0)
-		SVCmd_WriteIP_f ();
-    else if (!Q_stricmp(cmd,"banip")) 
-        Cmd_BanDicks_f(NULL, 1);
-    else if (!Q_stricmp(cmd,"banname")) 
-        Cmd_BanDicks_f(NULL, 0);
+	if (Q_stricmp(cmd, "test") == 0)
+		Svcmd_Test_f();
+	else if (Q_stricmp(cmd, "addip") == 0)
+		SVCmd_AddIP_f();
+	else if (Q_stricmp(cmd, "removeip") == 0)
+		SVCmd_RemoveIP_f();
+	else if (Q_stricmp(cmd, "listip") == 0)
+		SVCmd_ListIP_f();
+	else if (Q_stricmp(cmd, "writeip") == 0)
+		SVCmd_WriteIP_f();
+	else if (!Q_stricmp(cmd, "banip"))
+		Cmd_BanDicks_f(NULL, 1);
+	else if (!Q_stricmp(cmd, "banname"))
+		Cmd_BanDicks_f(NULL, 0);
+	else if (!Q_stricmp(cmd, "nav_debug")) //TF
+		SVcmd_NavDebug();
 	else
 		gi.cprintf (NULL, PRINT_HIGH, "Unknown server command \"%s\"\n", cmd);
 }

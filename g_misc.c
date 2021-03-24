@@ -2449,12 +2449,38 @@ void SP_func_clock (edict_t *self)
 
 //=================================================================================
 
+//hypov8 get node closect to a vector
+node_t *NAV_GetClosestNode_Simple(vec3_t origin, short type, float dist)
+{
+	int i, index = -1;
+	float best = 9999, v;
+	for (i = 0; i < level.node_data->node_count; i++)
+	{
+		if (type && !(level.node_data->nodes[i]->node_type & type))
+			continue;
+
+		v = VectorDistance(origin, level.node_data->nodes[i]->origin);
+		if (v < best)
+		{
+			best = v;
+			index = i;
+		}
+	}
+
+	if (index != -1 && best < dist)
+		return level.node_data->nodes[index];
+	else
+		return NULL;
+}
+
+
 void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	edict_t		*dest;
 	int			i;
+	node_t	*startNode = NULL, *endNode;
 
-	if (!(other->client))
+	if (!(other->client) && !(other->svflags & SVF_MONSTER)) //TF: let cast to use teleporters
 		return;
 	dest = G_Find (NULL, FOFS(targetname), self->target);
 	if (!dest)
@@ -2462,6 +2488,26 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 		gi.dprintf ("Couldn't find destination\n");
 		return;
 	}
+
+	// BEGIN:	Xatrix/Ridah/Navigator/2020	//TF:
+	if ((nav_dynamic->value || level.nav_debug_mode) && level.node_data->node_count < MAX_NODES -5)
+	{
+		node_t	*top_node;
+		vec3_t start_pos;
+
+		VectorCopy(self->owner->s.origin, start_pos);
+		start_pos[2] += self->owner->maxs[2] + 24.0f;
+
+		// find closest node
+
+		//top_node = NAV_GetClosestNode(self->owner, VIS_LINE, false, true);
+		top_node = NAV_GetClosestNode_Simple(start_pos, NODE_TELEPORT, 32);
+		if (!top_node || top_node->node_type != NODE_TELEPORT)
+		{
+			startNode = NAV_CreateNode(other, start_pos, vec3_origin, NODE_TELEPORT, -1, other->waterlevel);
+		}
+	}
+	// END:		Xatrix/Ridah/Navigator/2020
 
 	// unlink to make sure it can't possibly interfere with KillBox
 	gi.unlinkentity (other);
@@ -2472,21 +2518,26 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 
 	// clear the velocity and hold them in place briefly
 	VectorClear (other->velocity);
-	other->client->ps.pmove.pm_time = 160>>3;		// hold time
-	other->client->ps.pmove.pm_flags |= PMF_TIME_TELEPORT;
+	if (other->client)
+	{
+		other->client->ps.pmove.pm_time = 160 >> 3;		// hold time
+		other->client->ps.pmove.pm_flags |= PMF_TIME_TELEPORT;
+	}
 
 	// draw the teleport splash at source and on the player
 	self->owner->s.event = EV_PLAYER_TELEPORT;
 	other->s.event = EV_PLAYER_TELEPORT;
 
-	// set angles
-	for (i=0 ; i<3 ; i++)
-		other->client->ps.pmove.delta_angles[i] = ANGLE2SHORT(dest->s.angles[i] - other->client->resp.cmd_angles[i]);
+	if (other->client)
+	{
+		// set angles
+		for (i = 0; i < 3; i++)
+			other->client->ps.pmove.delta_angles[i] = ANGLE2SHORT(dest->s.angles[i] - other->client->resp.cmd_angles[i]);
 
-	VectorClear (other->s.angles);
-	VectorClear (other->client->ps.viewangles);
-	VectorClear (other->client->v_angle);
-
+		VectorClear(other->s.angles);
+		VectorClear(other->client->ps.viewangles);
+		VectorClear(other->client->v_angle);
+	}
 	// MH: we don't want players being backward-reconciled back through teleporters
 	if (antilag->value)
 		G_ResetHistory(other);
@@ -2495,6 +2546,20 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 	KillBox (other);
 
 	gi.linkentity (other);
+
+	// BEGIN:	Xatrix/Ridah/Navigator/2020	//TF:
+	if ((nav_dynamic->value || level.nav_debug_mode) && startNode)
+	{
+		vec3_t end_pos;
+
+		VectorCopy(dest->s.origin, end_pos);
+		end_pos[2] += dest->maxs[2] + 24.0f;
+
+		endNode = NAV_CreateNode(other, end_pos, vec3_origin, NODE_NORMAL, -1, other->waterlevel);
+		startNode->goal_index = endNode->index;
+		startNode->goal_ent = self;
+	}
+	// END:		Xatrix/Ridah/Navigator/2020
 }
 
 /*QUAKED misc_teleporter (1 0 0) (-32 -32 -24) (32 32 -16)

@@ -598,7 +598,7 @@ void rat_die_gib (edict_t *self, edict_t *inflictor, edict_t *attacker, int dama
 	}
 	else
 	{
-		//hypov8 todo: no death animations setup yet? iten wont free
+		//hypov8 todo: no death animations setup yet? item wont free
 		self->think = G_FreeEdict;
 		self->nextthink = level.time + 10;
 	}
