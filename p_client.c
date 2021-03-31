@@ -1931,7 +1931,7 @@ void PutClientInServer (edict_t *ent)
 	client_persistant_t	saved;
 	client_respawn_t	resp;
 	edict_t *self;
-	int      count_players = 0;
+	int      count_players = 0, maxPlayers = 8;
 
 	// find a spawn point
 	// do it before setting health back up, so farthest
@@ -2009,17 +2009,24 @@ void PutClientInServer (edict_t *ent)
 	}
 	ent->nav_dontRoutePlayer = 1; //TF:
 
+	if (level.nav_TF_autoRoute == 1)
+	{
+		maxPlayers = 1;
+	}
+
 	// clear entity values
 	ent->groundentity = NULL;
 	ent->client = &game.clients[index];
 	ent->takedamage = DAMAGE_AIM;
 //	if (((deathmatch->value) && (level.modeset == MATCHSETUP) || (level.modeset == FINALCOUNT)))
 //		|| (level.modeset == FREEFORALL) || (ent->client->pers.spectator == SPECTATING))
-	if ((level.modeset == WAVE_START) ||
-		(level.modeset == PREGAME) || (ent->client->pers.spectator == SPECTATING) || level.intermissiontime
+	if (   (level.modeset == WAVE_START) 
+		|| (level.modeset == PREGAME) 
+		|| (ent->client->pers.spectator == SPECTATING) 
+		|| level.intermissiontime
 		|| (level.modeset == WAVE_ACTIVE && ent->client->pers.spectator == PLAYING) //(ent->movetype == MOVETYPE_TOSS) //was dead
 		|| (level.modeset == WAVE_ACTIVE && (!timelimit->value || ent->client->resp.enterframe == level.framenum))
-		|| (count_players >= 8)
+		|| (count_players >= maxPlayers)
         )
 	{
 		if (ent->client->pers.spectator == PLAYING) //player died mid wave
@@ -2033,8 +2040,11 @@ void PutClientInServer (edict_t *ent)
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
 		ent->client->pers.weapon = NULL;
-		if (count_players >= 8) //message
-			ent->client->pers.spectator = SPECTATING;
+		if (count_players >= maxPlayers) //message
+		{
+			ent->client->pers.spectator = SPECTATING; //(level.nav_TF_autoRoute)? PLAYER_READY: 
+			gi.dprintf("Max clients of %i reached, refused client playing\n", maxPlayers);
+		}
 	}
 	else
 	{
@@ -2052,6 +2062,40 @@ void PutClientInServer (edict_t *ent)
 		//give 3 seconds of imortality on each spawn (anti-camp)
 	    if(anti_spawncamp->value)
 		        client->invincible_framenum = level.framenum + 30;  //3 seconds
+
+//TF
+		if (level.nav_TF_autoRoute == 1 && level.node_data->node_count == 0 /*&& ent->nav_build_data*/)
+		{
+			edict_t *spawn = NULL;
+			vec3_t old_origin;
+			VectorCopy(ent->s.origin, old_origin);
+
+			if (!ent->nav_build_data)
+			{	// create the nav_build_data structure, so we can begin dropping nodes
+				ent->nav_build_data = gi.TagMalloc(sizeof(nav_build_data_t), TAG_LEVEL);
+				memset(ent->nav_build_data, 0, sizeof(ent->nav_build_data));
+
+				ent->nav_build_data->jump_ent = G_Spawn();
+				VectorCopy(ent->maxs, ent->nav_build_data->jump_ent->maxs );
+				VectorCopy(ent->mins, ent->nav_build_data->jump_ent->mins );
+			}
+
+			// add nodes to spawn locations
+			while (spawn = G_Find(spawn, FOFS(classname), "info_player_deathmatch"))
+			{
+				node_t *newNode;
+				VectorCopy(spawn->s.origin, ent->s.origin);
+				newNode =  NAV_CreateNode(ent, spawn->s.origin, vec3_origin, NODE_NORMAL, -1, 0);
+			}
+			//move back
+			VectorCopy(old_origin, ent->s.origin);
+
+			level.nav_shownode = 1;
+			gi.cvar_set("nav_debug","1"); //print messages
+			gi.cprintf(ent, PRINT_CHAT, "You are now creating \"nodes\".\nWalk around whole map once.\n**Dont jump unnecessarily**\n");
+		}
+//end TF
+
 	}
 	// RAFAEL
 	ent->viewheight = 40;
@@ -3577,12 +3621,13 @@ trace_t	__attribute__((callee_pop_aggregate_return(0))) PM_trace (vec3_t start, 
 trace_t	PM_trace (vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end)
 #endif
 {
-	if (pm_passent->health > 0 ) //hypov8 nav. allow players to walk through each other and ai
-	{
-		if (nav_dynamic->value&& (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START))	// if dynamic on, get blocked by MONSTERCLIP brushes as the AI will be
-			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_MONSTERCLIP| CONTENTS_PLAYERCLIP) /*MASK_PLAYERSOLID | CONTENTS_MONSTER*/);
+	if (pm_passent->health > 0 )	//hypov8 nav. skip CONTENTS_MONSTER allow players to walk through each other and ai
+	{								//hypov8 note: misc_teleporter_dest cant be stood on (SOLID_BBOX = CONTENTS_MONSTER)
+		if (nav_dynamic->value && 	// if dynamic on, get blocked by MONSTERCLIP brushes as the AI will be
+			(level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START))
+			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW/*|CONTENTS_MONSTER*/|CONTENTS_MONSTERCLIP) );
 		else
-			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID | CONTENTS_WINDOW| CONTENTS_PLAYERCLIP) ); //MASK_PLAYERSOLID (+CONTENTS_MONSTER)
+			return gi.trace (start, mins, maxs, end, pm_passent, (CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW/*|CONTENTS_MONSTER*/) );
 	}
 	else
 		return gi.trace (start, mins, maxs, end, pm_passent, MASK_DEADSOLID);
@@ -3946,12 +3991,14 @@ chasing:
 	}
 	if (!ent->groundentity && pm.groundentity) // client landing
 		ent->land_framenum = level.framenum;
-	if (((int)dmflags->value&DF_NO_BUNNY) && ent->land_framenum==ent->jump_framenum) {  // they did a doublejump
+	if ((((int)dmflags->value&DF_NO_BUNNY) || level.nav_TF_autoRoute)  && ent->land_framenum==ent->jump_framenum)   // they did a doublejump
+	{
 		if (ent->strafejump_count == 0)
 			ent->firstjump_frame = level.framenum;
 		ent->strafejump_count++;
 		ent->land_framenum--;  // so they wont be equal
-		if (ent->strafejump_count == 2) {
+		if (ent->strafejump_count == 2) 
+		{
 			if (ent->firstjump_frame >= level.framenum - 50) {  // they are bunnyhopping
 				float xyspeed=sqrt(ent->velocity[0]*ent->velocity[0] + ent->velocity[1]*ent->velocity[1]);
 				if (xyspeed>300.0) {              // correct their speed back down to 'normal'
@@ -4241,48 +4288,100 @@ car_resume:
 
 	Think_FlashLight (ent);
 
+//TF
 	//only route player once they hit the ground
 	if (nav_dynamic->value == 1 && ent->groundentity)
 	{
 		/*if (ent->groundentity->use && !Q_stricmp(ent->groundentity->classname, "func_plat"))
 			ent->nav_dontRoutePlayer = 1; //TF:
 		else */
-			if (ent->nav_dontRoutePlayer == 1)
-			ent->nav_dontRoutePlayer = 0; //TF:
-	}
+		if (!( ent->groundentity->use ) &&
+			!Q_stricmp(ent->groundentity->classname, "misc_teleporter_dest"))
+		{
+			ent->nav_dontRoutePlayer = 1; //TF:
+		}
+		else if (ent->nav_dontRoutePlayer == 1 && ent->nav_build_data)
+		{
+			int ix=0, iy=0;
+			node_t *v2 = NAV_GetClosestNode(ent, 1, 0, 0);
 
+			ent->nav_dontRoutePlayer = 0; //TF:
+
+			//hypov8 note: clear out old nav data
+			ent->nav_build_data->flags = 1;
+			ent->nav_build_data->current_node = NULL;
+			VectorCopy(ent->s.origin, ent->nav_build_data->old_org);
+			ent->nav_build_data->old_groundentity = NULL;
+			ent->nav_build_data->last_max_z = ent->maxs[2];
+			VectorCopy(ent->s.origin, ent->nav_build_data->ducking_org);
+			if (ent->nav_build_data->jump_ent)
+			{
+				VectorCopy(ent->s.origin, ent->nav_build_data->jump_ent->s.origin);
+				VectorCopy(vec3_origin, ent->nav_build_data->jump_ent->velocity);
+				VectorCopy(ent->s.angles, ent->nav_build_data->jump_ent->s.angles);
+				ent->nav_build_data->jump_ent->waterlevel = ent->waterlevel;
+			}
+			ent->nav_build_data->debug_dest = NULL;
+
+
+			ent->movetype; //4
+			ent->solid; //2
+			ent->active_node_data->nodes;
+			ent->nav_data.cache_node;
+			ent->groundentity->use;
+		}
+	}
+//end TF
+
+	//gi.pointcontents
 
 	// BEGIN:	Xatrix/Ridah/Navigator/18-mar-1998
-	if (/*!deathmatch->value &&*/ nav_dynamic->value && !(ent->flags & (FL_HOVERCAR_GROUND | FL_HOVERCAR | FL_BIKE | FL_CAR | FL_JETPACK))
+	if (/*!deathmatch->value && nav_dynamic->value &&*/ !(ent->flags & (FL_HOVERCAR_GROUND | FL_HOVERCAR | FL_BIKE | FL_CAR | FL_JETPACK))
 		&& (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_BUYZONE || level.modeset == WAVE_START) && !ent->nav_dontRoutePlayer
-		&& ent->client && ent->client->pers.spectator == PLAYING && ent->solid == SOLID_BBOX &&!ent->deadflag) //hypov8 nav?
+		&& ent->client && ent->client->pers.spectator == PLAYING && ent->solid == SOLID_BBOX && !ent->deadflag && ent->nav_build_data) //hypov8 nav?
 	{
-		static float alpha;
-		int routCount;
+		if (nav_dynamic->value)
+		{
+			static float alpha;
+			int routCount;
 
-		// check for nodes
-		NAV_EvaluateMove( ent );
+			// check for nodes
+			NAV_EvaluateMove(ent);
 
-		// optimize routes (flash screen if lots of optimizations
-		routCount = NAV_OptimizeRoutes(ent->active_node_data);
+			// optimize routes (flash screen if lots of optimizations)
+			routCount = NAV_OptimizeRoutes(ent->active_node_data);
 #ifdef BETADEBUG
-		if (routCount > 1)
-			routCount = routCount;
+			if (routCount > 1)
+				routCount = routCount;
 #endif 
-		if (routCount > 50)
-		{
-			alpha += 0.05;
-			if (alpha > 1)
-				alpha = 1;
-		}
-		else if (alpha > 0)
-		{
-			alpha -= 0.05;
-		}
+			if (routCount > 50)
+			{
+				alpha += 0.05;
+				if (alpha > 1)
+					alpha = 1;
+			}
+			else if (alpha > 0)
+			{
+				alpha -= 0.05;
+			}
 
-		if (nav_debug->value)
-			ent->client->bonus_alpha = alpha;
+			if (nav_debug->value)
+				ent->client->bonus_alpha = alpha;
+		}
+		else if (level.nav_TF_autoRoute && ent->active_node_data) //TF
+		{
+			int routCount = NAV_OptimizeRoutes(ent->active_node_data); //let it optimize nodes before level begins
+
+			if (routCount >= 1)
+			{
+				level.startframe++; //WAVE_BUYZONE
+#if BETADEBUG
+				gi.cprintf(ent, PRINT_MEDIUM, "optimized nodes(%i) frame(%i)\n", routCount, level.startframe);
+#endif
+			}
+		}
 	}
+
 	// END:		Xatrix/Ridah/Navigator/18-mar-1998
 
 	// Ridah, new AI

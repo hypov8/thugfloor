@@ -251,11 +251,15 @@ void SVCmd_WriteIP_f (void)
 	fclose (f);
 }
 
-//TF
+//TF "sv nav_debug"
 void SVcmd_NavDebug(void)
 {
 	int		i;
 	edict_t	*doot;
+
+	//disable rebinds in online games
+	if (level.nav_TF_autoRoute == 1)
+		return;
 
 	if (level.nav_debug_mode)
 	{

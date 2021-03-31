@@ -2516,6 +2516,9 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 	VectorCopy (dest->s.origin, other->s.old_origin);
 	other->s.origin[2] += 10;
 
+	if (nav_dynamic->value || level.nav_debug_mode)
+		other->s.origin[2] += 2; //TF shift up a little more
+
 	// clear the velocity and hold them in place briefly
 	VectorClear (other->velocity);
 	if (other->client)
@@ -2528,7 +2531,7 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 	self->owner->s.event = EV_PLAYER_TELEPORT;
 	other->s.event = EV_PLAYER_TELEPORT;
 
-	if (other->client)
+	if (other->client) //hypov8 note: add cast?
 	{
 		// set angles
 		for (i = 0; i < 3; i++)
@@ -2548,17 +2551,23 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 	gi.linkentity (other);
 
 	// BEGIN:	Xatrix/Ridah/Navigator/2020	//TF:
-	if ((nav_dynamic->value || level.nav_debug_mode) && startNode)
+	if ((nav_dynamic->value || level.nav_debug_mode) )
 	{
-		vec3_t end_pos;
+		other->nav_dontRoutePlayer = 1; //TF
+		other->groundentity = NULL; //TF
+		if (startNode)
+		{
+			vec3_t end_pos;
 
-		VectorCopy(dest->s.origin, end_pos);
-		end_pos[2] += dest->maxs[2] + 24.0f;
+			VectorCopy(dest->s.origin, end_pos);
+			end_pos[2] += dest->maxs[2] + 24.0f;
 
-		endNode = NAV_CreateNode(other, end_pos, vec3_origin, NODE_NORMAL, -1, other->waterlevel);
-		startNode->goal_index = endNode->index;
-		startNode->goal_ent = self;
+			endNode = NAV_CreateNode(other, end_pos, vec3_origin, NODE_NORMAL, -1, other->waterlevel);
+			startNode->goal_index = endNode->index;
+			startNode->goal_ent = self;
+		}
 	}
+
 	// END:		Xatrix/Ridah/Navigator/2020
 }
 

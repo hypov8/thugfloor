@@ -77,7 +77,7 @@ void Move_Done (edict_t *self)
 		{
 			if (trav->groundentity == self)
 			{	// this player is standing on us, so drop a node
-//TF hypov8add: change node droping
+//TF hypov8 add: change node droping
 				if (!Q_stricmp(self->classname, "func_plat"))
 				{
 					if (self->moveinfo.state == STATE_UP)

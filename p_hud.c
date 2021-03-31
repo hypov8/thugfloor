@@ -330,7 +330,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 	stringlength = 0;
 
 	//TF active players
-	if (level.modeset == WAVE_ACTIVE && ent->client->pers.spectator == PLAYING)
+	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator == PLAYING)
 	{
 		TF_Build_HudMessage(ent, entry);
 		j = strlen(entry);
@@ -1225,7 +1225,7 @@ void RejoinScoreboardMessage (edict_t *ent)
 
 void TF_NAV_HudMessage(char *string)
 {
-	static const char *nav_debug_help = " xr -170"
+	static const char *nav_debug_help1 = " xr -170"
 		" yv 100 string \"  *KEYS REBOUND*\""
 		" yv 110 string \" KEY 0 = ADD MOVE\""		//0: NODE_NORMAL
 		" yv 120 string \" KEY 5 = ADD JUMP\""		//1: NODE_JUMP
@@ -1237,7 +1237,7 @@ void TF_NAV_HudMessage(char *string)
 		" yv 190 string \"  *OTHER CMD*\""
 		" yv 200 string \"nav_shownode\""
 		" yv 210 string \"nav_showpath\""
-		" yv 220 string \"nav_clear\""
+		//" yv 220 string \"nav_clear\""
 		" yv 230 string \"nav_rebuild\""
 		" yv 240 string \"nav_save\" ";
 	//0: NODE_NORMAL
@@ -1245,7 +1245,17 @@ void TF_NAV_HudMessage(char *string)
 	//2: NODE_LANDING
 	//3: NODE_DUCKING
 
-	strcpy(string, nav_debug_help);
+	static const char *nav_debug_help2 = " xr -170"
+		" yv 140 string \"  *NEW NODE KEYS*\""
+		" yv 150 string \" PIPE   = ADD MOVE\""		//0: NODE_NORMAL
+		" yv 160 string \" PISTOL = ADD DUCK\""		//3: NODE_DUCKING
+		" yv 170 string \" HMG    = EXIT\" "		//3: NODE_DUCKING
+		;
+
+	if (level.nav_TF_autoRoute == 0)
+		strcpy(string, nav_debug_help1); //full debug options
+	else
+		strcpy(string, nav_debug_help2); //limited commands. use default wep keys
 }
 
 /*
@@ -1263,7 +1273,7 @@ void TF_Build_HudMessage(edict_t *ent, char *string)
 	int		i, j, count = 0, yoffs;
 	edict_t *dood;
 
-	if (level.nav_debug_mode)
+	if (level.nav_debug_mode || level.nav_TF_autoRoute)
 	{
 		TF_NAV_HudMessage(string);
 		return;
@@ -1309,7 +1319,7 @@ void TF_DeathmatchScoreboardMessage(edict_t *ent)
 	entry[0] = 0;
 	strcpy(string, " ");
 
-	if (level.modeset == WAVE_ACTIVE && ent->client->pers.spectator == PLAYING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator == PLAYING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
 	{
 		TF_Build_HudMessage(ent, entry);
 		j = strlen(entry);
@@ -1603,7 +1613,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	}
 
 skipscores:
-	if (level.modeset == WAVE_ACTIVE && ent->client->pers.spectator == PLAYING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator == PLAYING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
 	{
 		TF_Build_HudMessage(ent, entry);
 		j = strlen(entry);

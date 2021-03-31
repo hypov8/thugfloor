@@ -3461,7 +3461,6 @@ void ai_runFLASHLIGHT ( edict_t *self, float dist )
 	
 }
 
-
 void ai_run ( edict_t *self, float dist )
 {
 	static edict_t tempgoal;
@@ -3508,6 +3507,7 @@ void ai_run ( edict_t *self, float dist )
 
 		if (	!(self->cast_info.aiflags & AI_TAKE_COVER)
 			&&	!(self->goal_ent)
+			&&	(self->cast_info.currentmove)
 			&&	(self->cast_info.currentmove->frame->aifunc == ai_stand)
 			&&	(self->start_ent)
 			&&	(VectorDistance( self->s.origin, self->start_ent->s.origin) > 256))
@@ -4634,7 +4634,8 @@ done:
 			self->cast_info.pausetime = level.time + 2;	// wait for it to do something
 
 			// walk backwards
-			self->cast_info.currentmove = self->cast_info.move_avoid_reverse_walk;
+			if (self->cast_info.move_avoid_reverse_walk)
+				self->cast_info.currentmove = self->cast_info.move_avoid_reverse_walk;
 			self->ideal_yaw = (float)goal_node->yaw;	// don't turn
 
 			self->activator = NULL;		// stop going for a button
@@ -4687,19 +4688,15 @@ done:
 			return;
 		}
 
-		if (!(*goal))
-		{	// it's been cleared
-			return;
-		}
-#ifdef BETADEBUG		
-		if (!(*goal) || !(*goal)->inuse) //catch NAV_Route_EntityToEntity issue?
-		{
+		//hypov8 add: bug fix	
+		if (!(*goal) || !(*goal)->inuse)
+		{	
 			self->cast_info.currentmove = self->cast_info.move_stand;
 			return;
 		}
-#endif
+
 		// find the next waypoint
-		rval = NAV_Route_EntityToEntity( self, goal_node, (*goal), VIS_PARTIAL, false, &route);  //hypov8 posible this caused crash in nav.lib
+		rval = NAV_Route_EntityToEntity( self, goal_node, (*goal), VIS_PARTIAL, false, &route);
 
 		self->nav_data.goal_index = tempgoal.nav_data.goal_index = route.path+1;
 

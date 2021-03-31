@@ -30,6 +30,11 @@ hypov8
 
 -ai shoot nade to fast
 
+-stop team->team and cast->cast damage
+
+-change ai skill
+
+-drop heallth on death
 
 killa notes
 ===========

@@ -1401,12 +1401,15 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
  //TF
 	if (level.node_data->node_count == 0)
 	{
-		gi.dprintf ("Was not able to open %s.nav file. nav_dynamic will be 1\n", level.mapname);
+		edict_t *spawn = NULL;
+		gi.dprintf ("Was not able to open %s.nav file.\nnav_dynamic will be 1\n", level.mapname);
 		gi.cvar_set("nav_dynamic","1");
+		level.nav_TF_autoRoute = 1;
 	}
 	else
 	{	//hypov8 todo: disable if node table is specific size?
 		gi.cvar_set("nav_dynamic","0");
+		level.nav_TF_autoRoute = 0;
 	}
 //END TF
 }

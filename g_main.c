@@ -578,7 +578,7 @@ void CheckDMRules (void)
 
 	if (!deathmatch->value)
 		return;
-#ifndef HYPODEBUG
+#if 1 //ndef HYPODEBUG
 	if (level.framenum - level.lastactive == 600)
 	{
 		// the server has been idle for a minute, reset to default settings if needed
@@ -623,7 +623,7 @@ void CheckDMRules (void)
 
 	if (respawn) //clients entered wave
 		level.startframe = level.framenum;
-#ifndef HYPODEBUG
+#if 1 //ndef HYPODEBUG
 	if (!count_players)
 	{
 		gi.bprintf(PRINT_HIGH, "No players currently playing.\n");
@@ -827,11 +827,11 @@ void ExitLevel (void)
 ///////////////////////////////////////////////////////////////////////
 // Show the node for debugging (utility function)
 ///////////////////////////////////////////////////////////////////////
-void NAV_TF_ShowNode(int type , vec3_t origin)
+void NAV_TF_ShowNode(int type , vec3_t origin, int index)
 {
 	edict_t *ent;
 	int isCrouch = (type&NODE_DUCKING);
-	//static float ang = 0.0;
+	static float ang = 0.0;
 
 	//show crouch on normal nodes
 	if (isCrouch&& type != NODE_DUCKING)
@@ -840,12 +840,13 @@ void NAV_TF_ShowNode(int type , vec3_t origin)
 	ent = G_Spawn();
 	ent->movetype = MOVETYPE_NONE;
 	ent->solid = SOLID_NOT;
-	ent->s.effects = EF_ROTATE;
+	//ent->s.effects = EF_ROTATE;
 	ent->s.renderfx2 = RF2_NOSHADOW;
 	ent->s.renderfx = RF_FULLBRIGHT;
-	//ent->s.angles[YAW] = ang;
-	//ang += 4.5;
-	//if (ang > 20) ang = 0;
+	if (index == 0) 
+		ang += 4.5; // 90/20
+	ent->s.angles[YAW] = index*4 + ang;
+
 
 	if (type== NODE_NORMAL)			// walk nodes
 		ent->s.skinnum = 0; 
@@ -879,6 +880,8 @@ void NAV_TF_ShowNode(int type , vec3_t origin)
 void NAV_TF_Check_NodeData(void)
 {
 	int j, k, l;
+
+	return;
 	//hypov8 only in nav dynamic. 
 	if (nav_dynamic->value)
 	{
@@ -928,10 +931,13 @@ void NAV_TF_Check_NodeData(void)
 
 void NAV_TF_Debug_Nodes(void)
 {
-	float distToTarget;
+	float distToTarget, bestDist = 9999;
 	edict_t *firstPlayer;
-	int j, k, iPlyr;
+	int j, k, l, iPlyr;
 	static int exceded = 0;
+
+
+	int closestNode = -1;
 
 	NAV_TF_Check_NodeData();
 
@@ -950,12 +956,19 @@ void NAV_TF_Debug_Nodes(void)
 			//hypov8 show all close nodes
 			for (j = 0; j < level.node_data->node_count ; j++)
 			{
-				distToTarget = VectorDistance(firstPlayer->s.origin,level.node_data->nodes[j]->origin);
+				distToTarget = VectorDistance(firstPlayer->s.origin, level.node_data->nodes[j]->origin);
 				if (distToTarget < 160)
 				{
-					NAV_TF_ShowNode(level.node_data->nodes[j]->node_type,level.node_data->nodes[j]->origin); //hypov8 show closest node
+					NAV_TF_ShowNode(level.node_data->nodes[j]->node_type, level.node_data->nodes[j]->origin, k); //hypov8 show closest node
+					if (distToTarget < bestDist)
+					{
+						bestDist = distToTarget;
+						closestNode = j;
+					}
+
+
 					k++;
-					if (k >= 20) //only do 20 nodes
+					if (k > 20) //only do 20 nodes
 					{
 						if (!exceded)
 							gi.cprintf(firstPlayer, PRINT_MEDIUM, "*ERROR* more than 20 nodes in your area\n");
@@ -964,6 +977,25 @@ void NAV_TF_Debug_Nodes(void)
 					}
 				}
 			}
+
+			//show path
+			if (closestNode >= 0)
+			{
+				for (l = 0; l < level.node_data->nodes[closestNode]->num_visible; l++)
+				{
+					short nodeID = level.node_data->nodes[closestNode]->visible_nodes[l];
+
+					if (level.node_data->nodes[closestNode]->routes[nodeID].path >= 0)
+					{
+						gi.WriteByte(svc_temp_entity);
+						gi.WriteByte(TE_BFG_LASER);
+						gi.WritePosition(level.node_data->nodes[closestNode]->origin);
+						gi.WritePosition(level.node_data->nodes[nodeID]->origin);
+						gi.multicast(level.node_data->nodes[closestNode]->origin, MULTICAST_PVS);
+					}
+				}
+			}
+
 			break; //found first valid player
 		}
 	}
@@ -1065,7 +1097,7 @@ void G_RunFrame (void)
 			}
 			else if (ent->onfiretime > 0)
 			{
-#if 1 // new flame sfx on AI.. less network intensive then below
+#if 1 //TF new flame sfx on AI.. less network intensive then below
 				if (!ent->client)
 				{
 					vec3_t	point;

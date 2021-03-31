@@ -290,6 +290,11 @@ void WaveStart () // Starts the match
 	level.modeset = WAVE_ACTIVE;
 	cast_TF_checkEnemyState(); //will spawn 1 enemy
 
+	//finish node dropping
+	if (level.nav_TF_autoRoute == 2){
+		level.nav_TF_autoRoute = 0;
+	}
+
 	for_each_player(self,i)
 	{
 	    if ((int)wavetype->value == 0)//Short
@@ -582,6 +587,14 @@ void WaveEnd () //hypov8 end of the match
 	int     i;
 	int     count_players = 0;
 
+	if (level.nav_TF_autoRoute)
+	{
+		level.nav_shownode = 0;
+		gi.cvar_set("nav_dynamic", "0");
+		level.waveNum = 0;
+		level.nav_TF_autoRoute = 2; //reset at WaveStart(). let nav_dynamic run for a bit to clean node table
+	}
+
     level.waveNum++;
 	level.modeset = WAVE_BUYZONE;
 	cast_TF_free(); //set me free!!
@@ -591,13 +604,16 @@ void WaveEnd () //hypov8 end of the match
 		if (self->client->pers.spectator != SPECTATING)
 		{
 			count_players++;
-			self->check_idle = level.framenum; //reset idle timer. boot idle players after 55 secs in buy time
+			self->check_idle = level.framenum; //reset idle timer. this has changed...
 		}
 
 		//give cash to ppl that survived the wave
-		if (self->client->pers.spectator == PLAYING && !self->client->pers.player_died)
+		if (!level.nav_TF_autoRoute
+			&& self->client->pers.spectator == PLAYING
+			&& !self->client->pers.player_died)
+		{
 			self->client->pers.currentcash += waveGiveCash(1);
-
+		}
 
 
 		//spawn players into buying time
@@ -607,8 +623,12 @@ void WaveEnd () //hypov8 end of the match
             self->health = 0;
             meansOfDeath = MOD_RESTART;
             ClientBeginDeathmatch( self );
-			self->client->pers.currentcash += self->client->pers.player_died? 0 : waveGiveCash(2); //dead or spec
+			if (!level.nav_TF_autoRoute)
+				self->client->pers.currentcash += self->client->pers.player_died? 0 : waveGiveCash(2); //dead or spec
 		}
+
+		if (level.nav_TF_autoRoute)
+			self->client->pers.currentcash += waveGiveCash(1);
 
 		//reset player died mid wave. deny cash
 		self->client->pers.player_died = 0;
@@ -780,8 +800,10 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
         int         i;
 		int         count = 0;
 
-		for_each_player(self,i)
+		for_each_player(self, i)
+		{
 			count++;
+		}
 
 		if (!count)
 			gi.bprintf(PRINT_HIGH, "Players need to join to start a wave.\n");
@@ -818,7 +840,7 @@ void CheckBuyWave ()
 	int      count_players = 0;
 	vec3_t spot1, spot2;
 
-#if BETADEBUG
+#if 0 // BETADEBUG
 	if (level.framenum >= level.startframe + 30)//3 seconds
 #else
 	if (level.framenum >= level.startframe + 595)//60 seconds

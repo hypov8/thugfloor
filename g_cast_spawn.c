@@ -15,6 +15,7 @@ static int currWave_castMax = 0; //max enemy allowed on map
 
 //boss info
 edict_t *boss_entityID = NULL;
+edict_t *boss_entity2ID = NULL; //todo. levels with 2 boss dont show hp properly
 int boss_maxHP;
 static int boss_called_help = 0; //1 = melee, 2= pistol, 3= shotty
 
@@ -680,12 +681,10 @@ void cast_TF_checkEnemyState()
 					if (level.characters[i]->isOnTrigPush && level.characters[i]->groundentity)
 						level.characters[i]->isOnTrigPush = false;
 
-					if (level.nav_debug_mode || level.characters[i]->isOnTrigPush) //stop bots moving while debuging
+					if (level.nav_debug_mode || nav_dynamic->value || level.characters[i]->isOnTrigPush) //stop bots moving
 						level.characters[i]->nextthink = level.time + (FRAMETIME * 2);
 					count++; //count current cast
 				}
-
-
 			}
 			else //human
 			{

@@ -436,6 +436,7 @@ void Cmd_NavClear_f ( edict_t *self )
 	// clear the current nodes
 	level.node_data->modified = false;
 	NAV_PurgeActiveNodes ( level.node_data );
+	//level.node_data = NULL; //hypov8 todo: clear clients?
 
 	// create the node data structure
 	level.node_data = gi.TagMalloc (sizeof (active_node_data_t), TAG_GAME);
@@ -456,7 +457,7 @@ void Cmd_NAVRebuildRoutes_f(void)
 
 void Cmd_NavShowNode_f(edict_t *ent) 
 {
-	if (!level.nav_debug_mode || level.nav_shownode)
+	if (!level.nav_debug_mode)
 		return;
 
 	if (level.nav_shownode)
@@ -466,13 +467,13 @@ void Cmd_NavShowNode_f(edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH, "NAV: shownode %s\n", level.nav_shownode ? "ON" : "OFF");
 }
 
-void Cmd_NavAddNode_f(edict_t *ent)
+void Cmd_NavAddNode_f(edict_t *ent, short type)
 {
 	short index = -1;
-	short type = atoi(gi.argv(1));
+	//short type = atoi(gi.argv(1));
 	node_t *newNode;
 
-	if (!level.nav_debug_mode)
+	if (!level.nav_debug_mode && !(level.nav_TF_autoRoute && nav_dynamic->value ))
 		return;
 
 	if (level.node_data->node_count >= MAX_NODES - 5)
@@ -555,12 +556,10 @@ void Cmd_NavFindNode_f(edict_t *ent)
 		gi.cprintf(ent, PRINT_MEDIUM, "node: %d type: %d x: %f y: %f z %f\n", node->index, node->node_type, node->origin[0], node->origin[1], node->origin[2]);
 
 		sprintf(strWrite, "bind 9 \"nav_movenode %d\"\n$Bound key 9 to %d\n", node->index, node->index);
-
 	}
 	else
 	{
 		gi.cprintf(ent, PRINT_MEDIUM, "findnode: failed\n");
-
 		sprintf(strWrite, "bind 9 \"nav_movenode 999\"\n");
 	}
 	gi.WriteByte(13);
@@ -589,7 +588,8 @@ void Cmd_NavMoveNode_f(edict_t *ent)
 	if (nodes[node]->index == -1)
 		return;
 	if (nodes[node]->node_type == NODE_PLAT ||
-		nodes[node]->node_type == NODE_BUTTON)
+		nodes[node]->node_type == NODE_BUTTON ||
+		nodes[node]->node_type == NODE_TELEPORT)
 		return;
 
 	x = atof(gi.argv(2));
@@ -669,9 +669,6 @@ void Cmd_Spec_f (edict_t *self)
 // Papa - add plater to a team
 void Cmd_Join_f (edict_t *self, char *teamcmd)
 {
-//	int	i;
-//	char str1[MAX_QPATH], varteam[MAX_QPATH];
-
 	self->check_idle = level.framenum; // MH: reset idle timer
 
 	if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START )
@@ -692,6 +689,24 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 			gi.cprintf(self,PRINT_HIGH,"Overflow protection: Unable to join yet\n");
 			return;
 		}
+
+		//only let 1 player join. not used...
+		if (level.nav_TF_autoRoute)
+		{
+			edict_t		*dood;
+			int         i;
+			for_each_player(dood, i)
+			{
+				if (dood->client->pers.spectator == PLAYING)
+				{
+					gi.cprintf(self,PRINT_HIGH,"Player currently adding nodes.\nYou will join the next wave\n");
+					self->client->pers.spectator = PLAYER_READY;
+					return;
+				}
+			}
+		}
+
+
 		self->switch_teams_frame = level.framenum;
 		//FREDZ end
 
@@ -1982,7 +1997,7 @@ void Cmd_Key_f (edict_t *ent, int who)
 	else	// noone to talk to, so make it an order in case anyone's listening
 	{
 		int flags;
-
+//TF todo: use for team communication
 		if (Q_stricmp (cmd, "key1") == 0)		// Stay Here
 			flags = ORDER_FOLLOWME;
 		else if (Q_stricmp (cmd, "key2") == 0)	// Attack
@@ -2766,6 +2781,7 @@ void Cmd_Use_f (edict_t *ent)
 		return;
 	}
 
+
 	// MH: no item use if not in game
 	if (ent->solid == SOLID_NOT)
 		return;
@@ -2784,6 +2800,43 @@ void Cmd_Use_f (edict_t *ent)
 		gi.cprintf (ent, PRINT_HIGH, "Item is not usable.\n");
 		return;
 	}
+
+//TF
+	if (ent->client->pers.spectator == PLAYING && level.nav_TF_autoRoute && nav_dynamic->value)
+	{
+		if (!strcmp(it->pickup_name, "Pipe"))
+		{
+			Cmd_NavAddNode_f(ent, 0); //NODE_NORMAL
+			gi.cprintf (ent, PRINT_CHAT, "Node added (move).\n");
+		}
+		else if (!strcmp(it->pickup_name, "Pistol"))
+		{
+			Cmd_NavAddNode_f(ent, 3); //NODE_DUCKING
+			gi.cprintf (ent, PRINT_CHAT, "Node added (duck).\n");
+		}
+		else if (!strcmp(it->pickup_name, "Heavy machinegun"))
+		{
+			static int doubleCheck = 0;
+
+			if (doubleCheck < level.framenum)
+			{
+				doubleCheck = level.framenum +50; //5 seconds responce
+				gi.cprintf(ent, PRINT_CHAT, "ARE YOU SURE OU WANT TO EXIT?\n");
+			}
+			else
+			{
+				doubleCheck = 0;
+				//level.nav_shownode = 0;
+				//gi.cvar_set("nav_dynamic","0");
+				//level.waveNum = 0;
+				WaveEnd(); //start from begining
+				//level.nav_TF_autoRoute = 2; //reset at WaveStart(). let nav_dynamic run for a bit to clean node table
+				gi.cprintf(ent, PRINT_CHAT, "End node adding mode.\n");
+			}
+		}
+	}
+//end TF
+
 
 	index = ITEM_INDEX(it);
 	if (!ent->client->pers.inventory[index])
@@ -6361,7 +6414,7 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp(cmd, "nav_shownode") == 0)
 		Cmd_NavShowNode_f(ent);
 	else if (Q_stricmp(cmd, "nav_addnode") == 0)
-		Cmd_NavAddNode_f(ent);
+		Cmd_NavAddNode_f(ent, atoi(gi.argv(1)));
 	else if (Q_stricmp(cmd, "nav_findnode") == 0)
 		Cmd_NavFindNode_f(ent);
 	else if (Q_stricmp(cmd, "nav_movenode") == 0)

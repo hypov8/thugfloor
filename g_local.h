@@ -125,7 +125,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.31"
+#define	GAMEVERSION	"Thug Floor v0.32"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -581,7 +581,7 @@ typedef struct
 	char playerskins[MAX_CLIENTS][MAX_QPATH]; // player skin configstrings
 #endif
 
-    int		waveReady;
+//TF
 	int     waveNum;
 	int		waveEnemyCount_total;	//total enemys to kill in wave
 	int		waveEnemyCount_cur;		//current enemys in level
@@ -589,8 +589,11 @@ typedef struct
 	int		dmSpawnPointCount; //get dm spawns. guid to level size
 	int		spSpawnPointCount; //get sp spawns. atleast 1 required.
 	qboolean	buyzone;       //FREDZ disable shooting weapons in buyzone
+
 	int		nav_debug_mode; //hypov8 debug nodes. "sv nav_debug". also stops bots moving
 	int		nav_shownode;	//hypov8 show nodes "nav_shownode"
+	int		nav_TF_autoRoute; //hypov8 stops AI and lets clients run around map making paths
+
 } level_locals_t;
 
 
