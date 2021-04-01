@@ -1131,6 +1131,11 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 
 	SaveClientData ();
 
+//TF catch any abnormal events. like map vote in middle of node editing.
+	//hypov8 note: this stops nods being saved
+	if (nav_dynamic->value)
+		gi.cvar_set("nav_dynamic","0");
+
 // BEGIN:	Xatrix/Ridah/Navigator/21-mar-1998
 	NAV_PurgeActiveNodes (level.node_data);
 // END:		Xatrix/Ridah/Navigator/21-mar-1998

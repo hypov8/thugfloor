@@ -292,7 +292,8 @@ void WaveStart () // Starts the match
 
 	//finish node dropping
 	if (level.nav_TF_autoRoute == 2){
-		level.nav_TF_autoRoute = 0;
+		level.nav_TF_autoRoute = 0; 
+		NAV_WriteActiveNodes(level.node_data, level.mapname); //hypov8 note. this normaly writen with nav_dynamic ON
 	}
 
 	for_each_player(self,i)
@@ -662,13 +663,15 @@ void WaveBuy()  // start buy zone
     level.buyzone = true;//FREDZ stop shooting
 
     //Show msgs
-    for_each_player(self,i)
-	{
-		//if (self->client->pers.spectator != PLAYING) //hypov8 note. i added this because spec players would show the buyzone scoreboard
-        if (self->client->showscores == INFO_BUYZONE) //did you want to OR it? 
-            continue;
-        self->client->showscores = INFO_BUYZONE;
-        self->client->resp.scoreboard_frame = 0;
+	if (level.waveNum < 5) //only show in early rounds
+	{	for_each_player(self, i)
+		{
+			if (self->client->pers.spectator == PLAYING && self->client->showscores != INFO_BUYZONE) 
+			{
+				self->client->showscores = INFO_BUYZONE;
+				self->client->resp.scoreboard_frame = 0;
+			}
+		}
 	}
 
 	gi.WriteByte( svc_stufftext );

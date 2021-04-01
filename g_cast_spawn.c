@@ -452,8 +452,8 @@ void cast_TF_Trainyard_boss_tyrone(edict_t *self)
 void cast_TF_Radio_City_skins1(edict_t *self)//New skins
 {
 	static localteam_skins_s skins[] = {
-	//name,		//skin,			classname		flags	HP		count	head
-    "Runt",	    "058 056 058",	"cast_runt",     0,     200,    0,      0,  //pistol
+    //name,     //skin,         classname     flags     HP   count    head
+    "Runt",     "058 056 058",	"cast_runt",     0,     200,    0,      0,  //pistol
     "Runt",	    "058 056 058",	"cast_shorty",   0,     200,    0,      0,  //shotgun
     "Runt",	    "058 056 058",	"cast_shorty",  64,     200,    0,      0,  //tommygun
     "Runt",	    "057 055 059",	"cast_shorty",  16,     200,    0,      0,  //hmg
@@ -1113,15 +1113,34 @@ void cast_TF_spawn(void)
 		if (!spawn->health)
             spawn->health = 100;
 
-		//make enemy health varable
+		if (spawn->cast_group == 21)
+		{
+			float rnd1 = random();
+			if (rnd1 < 0.2f)
+				spawn->item = FindItemByClassname ("item_pack");
+			else if (rnd1> 0.7f)
+				spawn->item = FindItemByClassname ("item_health_sm");
+		}
 
+		//make enemy health varable
+#if 0
 		if ((int)wavetype->value == 0)		//5 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_SHORT-1)*2))); //50% to 100%
+			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_SHORT-1)*2))); //50% to 100% //reduce HP
 		else if ((int)wavetype->value == 1)	//8 waves
 			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_MED-1)*2))); //50% to 100%
 		else								//11 waves
 			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_LONG-1)*2))); //50% to 100%
+#else
+		//reduce HP by skill value
+		if ((int)wavetype->value == 0)		//5 waves
+			spawn->health =  (int)((float)spawn->health * (0.5f + ( 0.5f * (skill->value/4.0)))); //50% to 100% 
+		else if ((int)wavetype->value == 1)	//8 waves
+			spawn->health =  (int)((float)spawn->health * (0.5f + ( 0.5f * (skill->value/4.0)))); //50% to 100% //reduce HP by skill value
+		else								//11 waves
+			spawn->health =  (int)((float)spawn->health * (0.5f + ( 0.5f * (skill->value/4.0)))); //50% to 100% //reduce HP by skill value
 
+#endif
+		//set min health
 		if (spawn->health < 10)
             spawn->health = 10;
 

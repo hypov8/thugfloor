@@ -2831,7 +2831,7 @@ void Cmd_Use_f (edict_t *ent)
 				//level.waveNum = 0;
 				WaveEnd(); //start from begining
 				//level.nav_TF_autoRoute = 2; //reset at WaveStart(). let nav_dynamic run for a bit to clean node table
-				gi.cprintf(ent, PRINT_CHAT, "End node adding mode.\n");
+				gi.cprintf(ent, PRINT_CHAT, "Ending node adding mode.\nNodes will be saved only when wave starts");
 			}
 		}
 	}

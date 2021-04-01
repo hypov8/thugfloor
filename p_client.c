@@ -66,7 +66,7 @@ void SP_info_player_start(edict_t *self)
 		Show_Help ();
 	}
 
-#ifdef BETADEBUG
+#if 1 //def BETADEBUG //always show player spawn model
     //self->s.renderfx = RF_SHELL_RED;
     SP_info_player_show(self, 0);
 #endif
@@ -84,7 +84,7 @@ void SP_info_player_deathmatch(edict_t *self)
 		G_FreeEdict (self);
 		return;
 	}
-#ifdef BETADEBUG
+#if 1 //def BETADEBUG //always show player spawn model
     SP_info_player_show(self, 1);
 #endif
 }
@@ -95,7 +95,7 @@ potential spawning position for coop games
 void SP_info_player_coop(edict_t *self)
 {
 
-#ifdef BETADEBUG
+#if 1 //def BETADEBUG //always show player spawn model
     SP_info_player_show(self, 2);
 #endif
 

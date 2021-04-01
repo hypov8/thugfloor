@@ -2786,7 +2786,7 @@ void barmachinegun_fire (edict_t *ent)
 
 		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("HMG Cooling Mod"))])
 		{
-			ent->client->pers.hmg_shots --;
+			//ent->client->pers.hmg_shots --; //TF let mod last for ever
 
 			if (!ent->client->pers.hmg_shots)
 			{

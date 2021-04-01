@@ -205,6 +205,11 @@ void ShutdownGame (void)
 
 //	sl_GameEnd( &gi, level );	// Standard Logging
 
+//TF catch any abnormal events. like map vote in middle of node editing.
+	//hypov8 note: this stops nods being saved
+	if (nav_dynamic->value)
+		gi.cvar_set("nav_dynamic","0");
+
 // BEGIN:	Xatrix/Ridah/Navigator/21-mar-1998
 	NAV_PurgeActiveNodes (level.node_data);
 // END:		Xatrix/Ridah/Navigator/21-mar-1998
@@ -815,6 +820,11 @@ void ExitLevel (void)
 			ent->health = ent->client->pers.max_health;
 
 	}
+
+//TF catch any abnormal events. like map vote in middle of node editing.
+	//hypov8 note: this stops nods being saved
+	if (nav_dynamic->value)
+		gi.cvar_set("nav_dynamic","0");
 
 // BEGIN:	Xatrix/Ridah/19-apr-1998
 	// make sure Nav data isn't carried over to next level
