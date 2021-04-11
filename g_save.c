@@ -449,7 +449,7 @@ void InitGame (void)
 	maxclients = gi.cvar ("maxclients", "4", CVAR_SERVERINFO | CVAR_LATCH);
 	deathmatch = gi.cvar ("deathmatch", "0", CVAR_LATCH);
 	coop = gi.cvar ("coop", "0", CVAR_LATCH);
-	skill = gi.cvar ("skill", "1", CVAR_LATCH);
+	skill = gi.cvar ("skill", "1", CVAR_LATCH); //skill is 0-4 int. values are rounded down if decimal //gamemap fails to set a new value
 
 	// JOSEPH 16-OCT-98
 	maxentities = gi.cvar ("maxentities", /*"1024"*/"2048", CVAR_LATCH);

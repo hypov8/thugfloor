@@ -540,7 +540,7 @@ void whore_firehmg( edict_t *self )
 
 		// project enemy back a bit and target there
 		VectorCopy (self->enemy->s.origin, target);
-		VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);
+		VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);//TF disable
 
 		if (self->enemy->maxs[2] < self->cast_info.standing_max_z)
 			target[2] += - ( 8 * random());
@@ -680,8 +680,8 @@ void whore_firegun( edict_t *self )
 		VectorCopy (self->enemy->s.origin, target);
 
 		target[2] -= 24; // this will help create more splash damage
-
-		VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);
+		
+		//VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);//TF disable
 
 		if (self->enemy->maxs[2] < self->cast_info.standing_max_z)
 			target[2] += - ( 8 * random());
@@ -736,7 +736,7 @@ goto skipbail; // causes bazooka dude to shoot twice
 
 		// project enemy back a bit and target there
 		VectorCopy (self->enemy->s.origin, target);
-		VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);
+		//VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);//TF disable
 
 		if (self->enemy->maxs[2] < self->cast_info.standing_max_z)
 			target[2] += - ( 8 * random());
@@ -859,7 +859,11 @@ skipbail:
 	}
 	else if (self->spawnflags & WHORE_GRENADE)
 	{
+#if 1
+		cast_fire_grenade(self, start, aim, 150, 450, 2.0, 256, 0); // flashtype = ?);
+#else
 		fire_grenade (self, start, aim, 150, 450, 2.0, 256);//FREDZ should be cast_fire_grenade
+#endif
 		gi.sound(self, CHAN_AUTO, gi.soundindex("weapons/grenade_launcher/gl_fire.wav"), 1, ATTN_NORM, 0);
 	}
 	else
@@ -1288,22 +1292,22 @@ void Whorekilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//
 		}
 		if (message)
 		{
-			attacker->client->resp.score++;
+			//attacker->client->resp.score++; //TF moved to TF_giveCashOnKill.
 
             if (self->spawnflags & WHORE_SHOTGUN)//FREDZ give cash
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_SG);
+				TF_giveCashOnKill(BOT_WHORE_SG, self);
             else if (self->spawnflags & WHORE_TOMMYGUN)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_TG);
+				TF_giveCashOnKill(BOT_WHORE_TG, self);
             else if (self->spawnflags &	WHORE_HMG)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_HMG);
+				TF_giveCashOnKill(BOT_WHORE_HMG, self);
             else if (self->spawnflags & WHORE_BAZOOKA)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_RL);
+				TF_giveCashOnKill(BOT_WHORE_RL, self);
             else if (self->spawnflags & WHORE_FLAMEGUN)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_FL);
-            else if (self->spawnflags & WHORE_GRENADE)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_GL);
-            else    //Flashlight?
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_WHORE_ME);
+				TF_giveCashOnKill(BOT_WHORE_FL, self);
+			else if (self->spawnflags & WHORE_GRENADE)
+				TF_giveCashOnKill(BOT_WHORE_GL, self);
+			else    //Flashlight?
+				TF_giveCashOnKill(BOT_WHORE_ME, self);
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

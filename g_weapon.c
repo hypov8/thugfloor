@@ -2512,6 +2512,21 @@ static qboolean fire_concussion (edict_t *self, vec3_t start, vec3_t aimdir, flo
 		}
 		// END JOSEPH
 
+//TF dog bite
+#if 1
+		if (mod == MOD_DOGBITE)
+		{
+			conweap = 1;
+
+			if (tr.ent->client)
+			{
+				if (infront( tr.ent, self ))
+					tr.ent->client->kick_angles[0] = damage; //invert
+				else	/// hit from behind
+					tr.ent->client->kick_angles[0] =  -damage; //invert
+			}
+		}
+#endif
 		// see if we hit water
 		if (tr.contents & MASK_WATER)
 		{

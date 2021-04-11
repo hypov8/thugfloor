@@ -10,7 +10,7 @@ edict_t	*pawnGuy[BUYGUY_COUNT];// = {NULL, NULL, NULL}; //hypov8
 
 void cast_TF_spawn();
 static int currWave_plysCount = 0; //players
-static int currWave_length = 0; //long, med, short
+static int currWave_length = 0; //long, med, short. value 0-10
 static int currWave_castMax = 0; //max enemy allowed on map
 
 //boss info
@@ -18,6 +18,7 @@ edict_t *boss_entityID = NULL;
 edict_t *boss_entity2ID = NULL; //todo. levels with 2 boss dont show hp properly
 int boss_maxHP;
 static int boss_called_help = 0; //1 = melee, 2= pistol, 3= shotty
+
 
 #if 1
 void cast_pawn_o_matic_free()
@@ -62,6 +63,7 @@ void cast_pawn_o_matic_spawn ()//Randoms spawn testing
 			return ;
 		}
 
+		spawn->isTF_CastSpawn = TRUE;
 		ED_CallSpawn(spawn);
 
 
@@ -133,6 +135,7 @@ void cast_pawn_o_matic_spawn ()
 			return ;
 		}
 
+		spawn->isTF_CastSpawn = TRUE;
 		ED_CallSpawn(spawn);
 
 		//copy entity our list so we can free later
@@ -217,7 +220,7 @@ void cast_TF_Skidrow_courtyard(edict_t *self)//sr1 Police/Security
 	//name,		//skin,			classname		flags	HP		count	head
 	"Johnny",	"011 007 004",	"cast_thug",	64, 	80,	    0,       0, //melee
     "Bernie",   "011 012 004",  "cast_runt",	0,	    100,	1,	     0, //pistol
-    "Arnold",	"012 007 004",	"cast_punk",	0,	    200,	0,	     0, //Shotgun
+    "Arnold",	"012 007 004",	"cast_punk",	0,	    120,	0,	     0, //Shotgun
 	};
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
@@ -296,18 +299,17 @@ void cast_TF_Poisonville_skins2(edict_t *self)//New skins
 	int idx = rand() % ARYSIZE(skins);
 	cast_TF_applyRandSkin(self, skins, idx);
 }
-void cast_TF_Poisonville_boss_nikkiblanco(edict_t *self)
+void cast_TF_Poisonville_boss_nikkiblanco(edict_t *self) //wave #4
 {
 	self->name = "Nikkiblanco";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "122 122 122");
-	self->spawnflags = 4;//Flamethrower
+	self->spawnflags = (skill->value< 2.0)? 8192 : 4;//Flamethrower=4  or  PUNK_SHOTGUN=8192 or PUNK_TOMMYGUN=64//reduce boss skill
 	self->classname = "cast_punk";
 	self->moral = 5;
 //	self->scale = 1.06;
     self->cast_info.scale = 1.25;//Or will give problems?
 //	self->health = 450 * currWave_plysCount;//originale
     self->health = 400 * currWave_plysCount;
-
 	//store boss ID.
 	boss_entityID = self;
 }
@@ -343,7 +345,7 @@ void cast_TF_Shipyard_boss_popeye(edict_t *self)
 {
 	self->name = "Popeye";
 	self->art_skins = strcpy(gi.TagMalloc(12, TAG_LEVEL), "040 019 048");
-	self->spawnflags = 64; //Melee
+	self->spawnflags = 64; //Melee //todo pistol for skill >2?
 	self->classname = "cast_runt";
 	self->moral = 4;
     self->acc = 2;
@@ -546,12 +548,16 @@ void cast_TF_Crystal_Palace_boss_blunt(edict_t *self)
 }
 void cast_TF_Crystal_Palace_boss(edict_t *spawn)
 {
+	level.bossSpawned = TRUE;
+
 	switch (rand() % 4) //a little more rand!!
 	{
-	case 0:		cast_TF_Crystal_Palace_boss_kingpin(spawn);break;
-	case 1:		cast_TF_Crystal_Palace_boss_blunt(spawn);break;
-	case 2:		cast_TF_Crystal_Palace_boss_kingpin(spawn);break;
-	case 3:		cast_TF_Crystal_Palace_boss_blunt(spawn);break;
+	case 0:
+	case 2:		cast_TF_Crystal_Palace_boss_kingpin(spawn);
+		break;
+	case 1:
+	case 3:		cast_TF_Crystal_Palace_boss_blunt(spawn);
+		break;
 	}
 
 	//store boss ID.
@@ -724,19 +730,27 @@ void cast_TF_checkEnemyState()
 	}
 
 	//free slot. add enemy
-	if (count < level.waveEnemyCount_total && count < currWave_castMax)
-		cast_TF_spawn();
+	if (count < currWave_castMax && level.waveEnemyCount_total > 0)
+	{
+		if (count < level.waveEnemyCount_total ||  level.bossSpawned == FALSE)
+			cast_TF_spawn();	
+	}
 
+	if (level.waveEnemyCount_total < 0)
+		return; //debug catch error
 
 	//return level.waveEnemyCount_cur;
 }
 
 // find the closest player to pick on
+void AI_AddToMemory(edict_t *self, cast_memory_t *memory, int memory_type);
 void cast_TF_setEnemyPlayer(edict_t *spawn)
 {
 	int j, best = 1;
 	float dist = 99999;
 	edict_t *player;
+	float rann;
+	float skl;
 
 	//attack closest player.
 	for_each_player(player, j)
@@ -744,7 +758,19 @@ void cast_TF_setEnemyPlayer(edict_t *spawn)
 		if (player->health <= 0 || player->solid == SOLID_NOT) // MH: exclude spectators
 			continue;
 
-		AI_MakeEnemy(spawn, player, 0);
+		rann = random();
+		skl = ( 0.25 + (skill->value*0.1875)); //25% to 100%
+		//boss, rat, dog always seek a goal/player
+		if (( boss_entityID && boss_entityID == spawn )
+			|| spawn->cast_group == 22
+			|| spawn->cast_group == 23
+			|| rann < skl)
+		{
+			AI_MakeEnemy(spawn, player, 0);
+		}
+		//else
+			// add to enemy memory
+			//AI_AddToMemory(other, other_memory, MEMORY_TYPE_ENEMY);
 	}
 }
 
@@ -754,8 +780,10 @@ void cast_TF_spawnWave1(edict_t *spawn)//Skidrow no rats
 {
     if (skill->value < 2)
     {
-        if (level.waveEnemyCount_total == currWave_castMax)
-            cast_TF_Shipyard_boss_popeye(spawn);//use or not not use?
+		if (level.bossSpawned == FALSE && level.waveEnemyCount_total <= currWave_castMax){ //bug fix
+			cast_TF_Shipyard_boss_popeye(spawn);//use or not not use?
+			level.bossSpawned = TRUE;
+		}
         else
         {
             switch (rand() % 5)
@@ -765,18 +793,15 @@ void cast_TF_spawnWave1(edict_t *spawn)//Skidrow no rats
             case 2:	cast_TF_Skidrow_melee(spawn);break;
             case 3:	cast_TF_Skidrow_melee(spawn);break;
             case 4:	cast_TF_Skidrow_melee(spawn);break;
-    /*        case 1:	cast_TF_Skidrow_names_melee(spawn);break;
-            case 2:	cast_TF_Skidrow_names_melee(spawn);break;
-            case 3:	cast_TF_Skidrow_names_melee(spawn);break;
-            case 4:	cast_TF_Skidrow_names_melee(spawn);break;
-            case 5:	cast_TF_Skidrow_names_melee(spawn);break;*/
             }
         }
     }
     else
     {
-        if (level.waveEnemyCount_total == currWave_castMax)
-            cast_TF_Shipyard_boss_popeye(spawn);
+		if (level.bossSpawned == FALSE && level.waveEnemyCount_total <= currWave_castMax){ //bug fix
+			cast_TF_Shipyard_boss_popeye(spawn);
+			level.bossSpawned = TRUE;
+		}
         else
         {
             switch (rand() % 5)
@@ -786,20 +811,17 @@ void cast_TF_spawnWave1(edict_t *spawn)//Skidrow no rats
             case 2:	cast_TF_Skidrow_skins(spawn);break;
             case 3:	cast_TF_Skidrow_skins(spawn);break;
             case 4:	cast_TF_Skidrow_skins(spawn);break;
-     /*       case 1:	cast_TF_Skidrow_names(spawn);break;
-            case 2:	cast_TF_Skidrow_names(spawn);break;
-            case 3:	cast_TF_Skidrow_names(spawn);break;
-            case 4:	cast_TF_Skidrow_names(spawn);break;
-            case 5:	cast_TF_Skidrow_names(spawn);break;*/
             }
         }
     }
 }
 void cast_TF_spawnWave2(edict_t *spawn)//Skidrow
 {
-	if (level.waveEnemyCount_total == currWave_castMax)
+	if (level.bossSpawned == FALSE && level.waveEnemyCount_total <= currWave_castMax){ //bug fix
 		//cast_TF_Skidrow_boss(spawn);//spawn boss when almost done
 		cast_TF_Skidrow_boss_jesus(spawn);
+		level.bossSpawned = TRUE;
+	}
 	else
 	{
 		switch (rand() % 7)
@@ -811,16 +833,14 @@ void cast_TF_spawnWave2(edict_t *spawn)//Skidrow
         case 4:	cast_TF_Skidrow_courtyard(spawn);break;//Police
         case 5:	cast_TF_Skidrow_courtyard(spawn);break;//Police
         case 6:	cast_TF_Skidrow_courtyard(spawn);break;//Police
-//        case 7: cast_TF_Skidrow_names(spawn);break;
-//		case 8: cast_TF_Skidrow_names(spawn);break;
-/*		case 5:	cast_TF_Skidrow_courtyard2(spawn);break;
-		case 6:	cast_TF_Skidrow_street(spawn);break;
-		case 7:	cast_TF_Skidrow_hallway(spawn);break;*/
 		}
 	}
 }
 void cast_TF_spawnWave3(edict_t *spawn)//Poisonville
 {
+	//hypov8 note: no boss
+	level.bossSpawned = TRUE;
+
 	switch (rand() % 6)
 	{
 	case 0:	cast_TF_dog(spawn);break;
@@ -838,8 +858,10 @@ void cast_TF_spawnWave3(edict_t *spawn)//Poisonville
 }
 void cast_TF_spawnWave4(edict_t *spawn)//Poisonville
 {
-    if (level.waveEnemyCount_total == currWave_castMax)
+	if (level.bossSpawned == FALSE && level.waveEnemyCount_total <= currWave_castMax){ //bug fix
 		cast_TF_Poisonville_boss_nikkiblanco(spawn);//spawn boss when almost done
+		level.bossSpawned = TRUE;
+	}
 	else
 	{
         switch (rand() % 6)
@@ -860,6 +882,9 @@ void cast_TF_spawnWave4(edict_t *spawn)//Poisonville
 }
 void cast_TF_spawnWave5(edict_t *spawn)//Shipyard
 {
+	//hypov8 note: no boss
+	level.bossSpawned = TRUE;
+
 	switch (rand() % 6)
 	{
     case 0:	cast_TF_dog(spawn);break;
@@ -877,8 +902,10 @@ void cast_TF_spawnWave5(edict_t *spawn)//Shipyard
 }
 void cast_TF_spawnWave6(edict_t *spawn)//Shipyard
 {
-    if (level.waveEnemyCount_total == currWave_castMax)
+	if (level.bossSpawned == FALSE && level.waveEnemyCount_total <= currWave_castMax){ //bug fix
 		cast_TF_Shipyard_boss_heilman(spawn);//spawn boss when almost done
+		level.bossSpawned = TRUE;
+	}
 	else
 	{
         switch (rand() % 6)
@@ -900,8 +927,10 @@ void cast_TF_spawnWave6(edict_t *spawn)//Shipyard
 }
 void cast_TF_spawnWave7(edict_t *spawn)//Steeltown
 {
-    if (level.waveEnemyCount_total == currWave_castMax)
+	if (level.bossSpawned == FALSE && level.waveEnemyCount_total <= currWave_castMax){ //bug fix
 		cast_TF_Steeltown_boss_moker(spawn);//spawn boss when almost done
+		level.bossSpawned = TRUE;
+	}
 	else
 	{
         switch (rand() % 6)
@@ -923,8 +952,10 @@ void cast_TF_spawnWave7(edict_t *spawn)//Steeltown
 }
 void cast_TF_spawnWave8(edict_t *spawn)//Trainyard
 {
-    if (level.waveEnemyCount_total == currWave_castMax)
+	if (level.bossSpawned == FALSE && level.waveEnemyCount_total <= currWave_castMax){ //bug fix
 		cast_TF_Trainyard_boss_tyrone(spawn);//spawn boss when almost done
+		level.bossSpawned = TRUE;
+	}
 	else
 	{
         switch (rand() % 6)
@@ -946,6 +977,9 @@ void cast_TF_spawnWave8(edict_t *spawn)//Trainyard
 }
 void cast_TF_spawnWave9(edict_t *spawn)//Radiocity
 {
+	//hypov8 note: no boss
+	level.bossSpawned = TRUE;
+
 	switch (rand() % 6)
 	{
 	case 0:	cast_TF_dog(spawn);break;
@@ -965,8 +999,10 @@ void cast_TF_spawnWave9(edict_t *spawn)//Radiocity
 }
 void cast_TF_spawnWave10(edict_t *spawn)//Radiocity
 {
-    if (level.waveEnemyCount_total == currWave_castMax)
+	if (level.bossSpawned == FALSE && level.waveEnemyCount_total <= currWave_castMax){ //bug fix
 		cast_TF_Radio_City_boss_nikkiblanco(spawn);//spawn boss when almost done
+		level.bossSpawned = TRUE;
+	}
 	else
 	{
         switch (rand() % 7)
@@ -1064,128 +1100,137 @@ void cast_TF_spawnTypes(edict_t *spawn)
 	}
 }
 
+void TF_BossSounds(edict_t *spawn)
+{
+	//Sound
+	gi.WriteByte(svc_stufftext);
+	if (spawn->name_index == NAME_KINGPIN)
+		gi.WriteString("play actors/male/kingpin/funny3.wav\n");
+	else if (spawn->name_index == NAME_BLUNT)
+		gi.WriteString("play actors/female/blunt/funny1.wav\n");
+	else if (spawn->name_index == NAME_POPEYE)
+		gi.WriteString("play actors/male/popeye/whistle.wav\n");
+	else if (spawn->name_index == NAME_JESUS)
+		gi.WriteString("play actors/male/jesus/funny1.wav\n");
+	else if (spawn->name_index == NAME_LAMONT)
+		gi.WriteString("play actors/male/lamont/fuckyou.wav\n");
+	else if (spawn->name_index == NAME_NICKIBLANCO)
+		gi.WriteString("play actors/male/nicki/funny6.wav\n");
+	else if (spawn->name_index == NAME_HEILMAN)
+		gi.WriteString("play actors/male/heilman/taunt1.wav\n");
+	else if (spawn->name_index == NAME_MOKER)
+		gi.WriteString("play actors/male/moker/fight4.wav\n");
+	else if (spawn->name_index == NAME_TYRONE)
+		gi.WriteString("play actors/male/tyrone/funny3.wav\n");
+	else
+		gi.WriteString("play world/alarm.wav\n");
+
+	gi.multicast(vec3_origin, MULTICAST_ALL);
+}
+
+void TF_cast_DropItems(edict_t *spawn)
+{
+	float rnd1 = random();
+
+	//drop items from AI (cast player). more droped with later waves
+	/*if (rnd1 < 0.2f || ( rnd1 < 0.33f && level.waveNum > 4 ) || ( rnd1 < 0.45f && level.waveNum > 7 ))
+	{
+		spawn->item = FindItemByClassname("item_pack");
+	}
+	else if (rnd1> 0.7f || ( rnd1 > 0.55f && level.waveNum > 4 ) || ( rnd1 > 0.45f && level.waveNum > 7 ))*/
+	if (rnd1 < 0.4f || ( rnd1 < 0.55f && level.waveNum > 4 ) || ( rnd1 < 0.75f && level.waveNum > 7 ))
+	{
+		if (level.waveNum < 3)
+			spawn->item = FindItemByClassname("item_health_sm");
+		else if (level.waveNum < 8)
+			spawn->item = FindItemByClassname("item_health_lg");
+		else
+		{	//wave 9-11. alternate between the 2
+			rnd1 = random();
+			if (rnd1 < 0.4f)
+				spawn->item = FindItemByClassname("item_adrenaline");
+			else
+				spawn->item = FindItemByClassname("item_health_lg");
+		}
+	}
+
+	spawn->cast_group = rand() %100+25; // prevent ganging up
+}
 //spawn in a cast model
 void cast_TF_spawn(void)
 {
 	edict_t *spawn, *spawnspot;
 
-	{
-		if (level.waveEnemyCount_cur >= MAX_CHARACTERS)
-			return;
+	if (level.waveEnemyCount_cur >= MAX_CHARACTERS)
+		return;
 
-		spawn = G_Spawn();
-		spawnspot = cast_SelectRandomDeathmatchSpawnPoint(spawn);
-		if (!spawnspot)	{
-			//debug
-			gi.dprintf("\nNo spawn points for cast.\n\n");
-			G_FreeEdict(spawn);
-			return;
-		}
-		VectorCopy(spawnspot->s.angles, spawn->s.angles);
-		VectorCopy(spawnspot->s.origin, spawn->s.origin);
-		spawn->s.origin[2] += 1;
-
-		spawn->classname = "cast_dog"; //temp untill all waves are done
-
-		//spawn rand type depands on wave num
-		cast_TF_spawnTypes(spawn);
-
-		gi.linkentity(spawn);
-
-		if (level.num_characters == MAX_CHARACTERS)
-		{
-			gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
-			G_FreeEdict(spawn);
-			return;
-		}
-
-		ED_CallSpawn(spawn);
-
-		spawn->start_ent = spawnspot; // go back to spawnpoint
-
-		if(!Q_strcasecmp(spawn->classname, "cast_dog"))
-			spawn->cast_group = 23; //hypov8 does this work?
-		if(!Q_strcasecmp(spawn->classname, "cast_rat"))
-			spawn->cast_group = 22;
-		else
-			spawn->cast_group = 21;
-
-		if (!spawn->health)
-            spawn->health = 100;
-
-		if (spawn->cast_group == 21)
-		{
-			float rnd1 = random();
-			if (rnd1 < 0.2f)
-				spawn->item = FindItemByClassname ("item_pack");
-			else if (rnd1> 0.7f)
-				spawn->item = FindItemByClassname ("item_health_sm");
-		}
-
-		//make enemy health varable
-#if 0
-		if ((int)wavetype->value == 0)		//5 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_SHORT-1)*2))); //50% to 100% //reduce HP
-		else if ((int)wavetype->value == 1)	//8 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_MED-1)*2))); //50% to 100%
-		else								//11 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + (float)(level.waveNum) / ((WAVELEN_LONG-1)*2))); //50% to 100%
-#else
-		//reduce HP by skill value
-		if ((int)wavetype->value == 0)		//5 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + ( 0.5f * (skill->value/4.0)))); //50% to 100% 
-		else if ((int)wavetype->value == 1)	//8 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + ( 0.5f * (skill->value/4.0)))); //50% to 100% //reduce HP by skill value
-		else								//11 waves
-			spawn->health =  (int)((float)spawn->health * (0.5f + ( 0.5f * (skill->value/4.0)))); //50% to 100% //reduce HP by skill value
-
-#endif
-		//set min health
-		if (spawn->health < 10)
-            spawn->health = 10;
-
-		spawn->max_health = spawn->health;
-
-		//add healt after skil
-		if (boss_entityID && spawn == boss_entityID)
-		{
-			spawn->maxs[2] = 62; //increase head height on boss
-			boss_maxHP = spawn->health;
-
-			//Sound
-            gi.WriteByte(svc_stufftext);
-            if (spawn->name_index == NAME_KINGPIN)
-                gi.WriteString("play actors/male/kingpin/funny3.wav\n");
-            else if (spawn->name_index == NAME_BLUNT)
-                gi.WriteString("play actors/female/blunt/funny1.wav\n");
-            else if (spawn->name_index == NAME_POPEYE)
-                gi.WriteString("play actors/male/popeye/whistle.wav\n");
-            else if (spawn->name_index == NAME_JESUS)
-                gi.WriteString("play actors/male/jesus/funny1.wav\n");
-            else if (spawn->name_index == NAME_LAMONT)
-                gi.WriteString("play actors/male/lamont/fuckyou.wav\n");
-            else if (spawn->name_index == NAME_NICKIBLANCO)
-                gi.WriteString("play actors/male/nicki/funny6.wav\n");
-            else if (spawn->name_index == NAME_HEILMAN)
-                gi.WriteString("play actors/male/heilman/taunt1.wav\n");
-            else if (spawn->name_index == NAME_MOKER)
-                gi.WriteString("play actors/male/moker/fight4.wav\n");
-            else if (spawn->name_index == NAME_TYRONE)
-                gi.WriteString("play actors/male/tyrone/funny3.wav\n");
-            else
-                gi.WriteString("play world/alarm.wav\n");
-            gi.multicast(vec3_origin, MULTICAST_ALL);
-		}
-
-		// stop cast health increasing slowly
-		spawn->healspeed = -1;
-
-		//set what player to attack
-		cast_TF_setEnemyPlayer(spawn);
-
-		//add enemy to counter
-		level.waveEnemyCount_cur++;
+	spawn = G_Spawn();
+	spawnspot = cast_SelectRandomDeathmatchSpawnPoint(spawn);
+	if (!spawnspot)	{
+		//debug
+		gi.dprintf("\nNo spawn points for cast.\n\n");
+		G_FreeEdict(spawn);
+		return;
 	}
+	VectorCopy(spawnspot->s.angles, spawn->s.angles);
+	VectorCopy(spawnspot->s.origin, spawn->s.origin);
+	spawn->s.origin[2] += 1;
+
+	spawn->classname = "cast_dog"; //temp untill all waves are done
+
+	//spawn rand type depands on wave num
+	cast_TF_spawnTypes(spawn);
+
+	gi.linkentity(spawn);
+
+	if (level.num_characters == MAX_CHARACTERS)
+	{
+		gi.dprintf("\nMAX_CHARACTERS exceeded!!!!!.\n\n");
+		G_FreeEdict(spawn);
+		return;
+	}
+
+	spawn->isTF_CastSpawn = TRUE;
+	ED_CallSpawn(spawn);
+
+	spawn->start_ent = spawnspot; // go back to spawnpoint
+	if (!spawn->health)
+        spawn->health = 100;
+
+	if(!Q_strcasecmp(spawn->classname, "cast_dog"))
+		spawn->cast_group = 23; //hypov8 does this work?
+	else if (!Q_strcasecmp(spawn->classname, "cast_rat"))
+		spawn->cast_group = 22;
+	else
+		TF_cast_DropItems(spawn);
+
+
+	//reduce HP by skill value
+	spawn->health =  (int)((float)spawn->health * (0.5f + ( 0.5f * (skill->value/4.0)))); //50% to 100% 
+
+	//set min health. rat..
+	if (spawn->health < 10)
+        spawn->health = 10;
+
+	spawn->max_health = spawn->health;
+
+	//add health after skill multiplyer
+	if (boss_entityID && spawn == boss_entityID)
+	{
+		spawn->maxs[2] = 62; //increase head height on boss
+		boss_maxHP = spawn->health;
+		TF_BossSounds(spawn);
+	}
+
+	// stop cast health increasing slowly
+	spawn->healspeed = -1;
+
+	//set what player to attack
+	cast_TF_setEnemyPlayer(spawn); //set goal
+
+	//add enemy to counter
+	level.waveEnemyCount_cur++;
+
 }
 
 //total enemy counts per wave.
@@ -1193,6 +1238,7 @@ void cast_TF_spawn(void)
 static int wave_shortGame[5] = { 13, 16, 17, 21, 1 };
 static int wave_medGame[8] = { 13, 14, 16, 17, 17, 20, 21, 1 };
 static int wave_longGame[11] = { 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 1 };
+
 
 
 //max number of active enemy's spawned into a level.
@@ -1241,6 +1287,8 @@ void cast_TF_setupEnemyCounters(void)
 	currWave_castMax = wave_skill[sk][(playerCount<8)? playerCount : 8 ]; //skill based enemy limits. force array limit to 8
 	boss_called_help = 0;
 	boss_entityID = NULL;
+	boss_entity2ID = NULL;
+	level.bossSpawned = FALSE;
 
 	//make sure we have enough spawns(level size)
 	if (level.dmSpawnPointCount < currWave_castMax)
@@ -1250,17 +1298,17 @@ void cast_TF_setupEnemyCounters(void)
 
 
 	//get wave count
-	if ((int)wavetype->value == 0)
+	if ((int)wavetype->value == WAVETYPE_SHORT)
 	{
 		currWave_length = WAVELEN_SHORT - 1;//short wave
 		level.waveEnemyCount_total =(level.waveNum == currWave_length)? 1 :  wave_shortGame[level.waveNum] * playerCount; //force 1 boss
 	}
-	else if ((int)wavetype->value == 1)
+	else if ((int)wavetype->value == WAVETYPE_MED)
 	{
 		currWave_length = WAVELEN_MED - 1;//med wave
 		level.waveEnemyCount_total =(level.waveNum == currWave_length)? 1 :  wave_medGame[level.waveNum] * playerCount; //force 1 boss
 	}
-	else //wavetype >= 2
+	else //wavetype >= 2 WAVETYPE_LONG
 	{
 		currWave_length = WAVELEN_LONG - 1;//long wave
 		level.waveEnemyCount_total = (level.waveNum == currWave_length)? 1 : wave_longGame[level.waveNum] * playerCount; //force 1 boss

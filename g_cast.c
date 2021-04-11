@@ -11,6 +11,11 @@
 // the damages too, but I'm not sure that's such a good idea.
 void cast_fire_bullet (edict_t *self, vec3_t start, vec3_t dir, int damage, int kick, int hspread, int vspread, int flashtype)
 {
+
+#if 1	//hypov8 add. more random bullets. for all cast
+	TF_cast_AttackSkill(self, start, dir, 0); //0=bullet
+#endif
+
 	fire_bullet (self, start, dir, damage, kick, hspread, vspread, MOD_PISTOL);//FREDZ was MOD_UNKNOWN changed to MOD_PISTOL
 
 	gi.WriteByte (svc_muzzleflash2);
@@ -22,6 +27,10 @@ void cast_fire_bullet (edict_t *self, vec3_t start, vec3_t dir, int damage, int 
 
 void cast_fire_shotgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int hspread, int vspread, int count, int flashtype)
 {
+#if 1	//hypov8 add. more random bullets. for all cast
+	TF_cast_AttackSkill(self, start, aimdir, 0); //0=bullet
+#endif
+
 	fire_shotgun (self, start, aimdir, damage, kick, hspread, vspread, count, MOD_SHOTGUN);//FREDZ was MOD_UNKNOWN changed to MOD_SHOTGUN
 
 	gi.WriteByte (svc_muzzleflash2);
@@ -32,6 +41,10 @@ void cast_fire_shotgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, 
 
 void cast_fire_tommygun(edict_t *self, vec3_t start, vec3_t dir, int damage, int kick, int hspread, int vspread, int flashtype)//FREDZ new
 {
+#if 1	//hypov8 add. more random bullets. for all cast
+	TF_cast_AttackSkill(self, start, dir, 0); //0=bullet
+#endif
+
 	fire_bullet (self, start, dir, damage, kick, hspread, vspread, MOD_MACHINEGUN);
 
 	gi.WriteByte (svc_muzzleflash2);
@@ -42,6 +55,10 @@ void cast_fire_tommygun(edict_t *self, vec3_t start, vec3_t dir, int damage, int
 }
 void cast_fire_barmachinegun (edict_t *self, vec3_t start, vec3_t dir, int damage, int kick, int hspread, int vspread, int flashtype)//FREDZ new
 {
+#if 1	//hypov8 add. more random bullets. for all cast
+	TF_cast_AttackSkill(self, start, dir, 0); //0=bullet
+#endif
+
 	fire_bullet (self, start, dir, damage, kick, hspread, vspread, MOD_BARMACHINEGUN);
 
 	gi.WriteByte (svc_muzzleflash2);
@@ -62,13 +79,17 @@ void cast_fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int
 	gi.multicast (start, MULTICAST_PVS);
 }*/
 
-void cast_fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int flashtype)
+void cast_fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int timer, int radius, int flashtype)
 {
-	fire_grenade (self, start, aimdir, damage, speed, 2.5, damage+40);
+#if 1	//hypov8 add. more random bullets. for all cast
+	TF_cast_AttackSkill(self, start, aimdir, 2); //2=GL
+#endif
+
+	fire_grenade (self, start, aimdir, damage, speed, timer, radius);
 
 	gi.WriteByte (svc_muzzleflash2);
 	gi.WriteShort (self - g_edicts);
-	gi.WriteByte (flashtype);
+	gi.WriteByte(MZ2_GUNNER_MACHINEGUN_1); // flashtype); //hypov8 todo: type!!!
 	gi.multicast (start, MULTICAST_PVS);
 }
 
@@ -79,6 +100,10 @@ void cast_fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int 
 	damage = (int) ( damage / 2 ); //hypov8 100 damage is way to strong
 	damageSkill = damage + ( ( skill->value / 4 ) * damage );
 //END TF
+
+#if 1	//hypov8 add. more random bullets. for all cast
+	TF_cast_AttackSkill(self, start, dir, 1); //1=RL
+#endif
 
 	fire_rocket (self, start, dir, damage, speed, damage+20, damage);
 
@@ -112,6 +137,10 @@ void cast_fire_bfg (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 */
 void cast_fire_flamethrower (edict_t *self, vec3_t start, vec3_t dir, int damage, int kick, int flashtype)//FREDZ new
 {
+#if 1	//hypov8 add. more random bullets. for all cast
+	TF_cast_AttackSkill(self, start, dir, 3); //3=flamegun
+#endif
+
 	fire_flamethrower (self, start, dir, damage, kick, MOD_FLAMETHROWER);
 
 	gi.WriteByte (svc_muzzleflash2);
@@ -704,6 +733,8 @@ void cast_think (edict_t *self)
 {
 #include "ai_thug_sit.h"
 
+	if (level.nav_TF_autoRoute || nav_dynamic->value)
+		return; //hypov8 add
 
 	// Ridah, turn it off before each frame, so it's only on when being fired
 	self->s.renderfx2 &= ~RF2_FLAMETHROWER;
@@ -727,6 +758,7 @@ void cast_think (edict_t *self)
 		// go back to the start pos if we're not doing anything
 		if (	!(self->cast_info.aiflags & AI_TAKE_COVER)
 			&&	!(self->goal_ent)
+			&&	(self->cast_info.currentmove)
 			&&	(self->cast_info.currentmove->frame->aifunc == ai_stand)
 			&&	(self->start_ent)
 			&&	(VectorDistance( self->s.origin, self->start_ent->s.origin) > 256))
@@ -879,7 +911,7 @@ void cast_use (edict_t *self, edict_t *other, edict_t *activator)
     if (!other->client)//FREDZ
 		return;
 
-	if (strcmp(other->classname, "cast_pawn_o_matic"))//FREDZ
+	if (!strcmp(self->classname, "cast_pawn_o_matic"))//FREDZ //typo..
 	{
 		Cmd_InitMenu_f(other);
 	}

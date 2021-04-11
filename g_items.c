@@ -271,115 +271,54 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	gitem_t	*item;
 	int		index;
 	int		max=0;
-
+	char *itemNames[6] = {"Bullets", "Shells", "Gas", "Grenades", "Rockets", "308cal"}; //"Mag Slug"
+	int i, ammoCap[6];
+	int oldAmmoAddCounts[6] = {40, 25, 50, 3, 5, 30};
+	
     if (ent->solid == SOLID_NOT)
-		return true;
+		return true; //this should not happen anymore...
 
-	/*//FREDZ thugfloor don't use this part or replace with diffrent ammo
-	if (other->client->pers.max_bullets < 300)
-		other->client->pers.max_bullets = 300;
-	if (other->client->pers.max_shells < 200)
-		other->client->pers.max_shells = 200;
-	if (other->client->pers.max_rockets < 100)
-		other->client->pers.max_rockets = 100;
-	if (other->client->pers.max_grenades < 15)
-		other->client->pers.max_grenades = 15;
-	if (other->client->pers.max_gas < 300)
-		other->client->pers.max_gas = 300;
-	if (other->client->pers.max_308cal < 120)
-		other->client->pers.max_308cal = 120;*/
-	// RAFAEL
-//	if (other->client->pers.max_magslug < 100)//Q2 Xatrix mod
-//		other->client->pers.max_magslug = 100;
+	ammoCap[0] = other->client->pers.max_bullets;
+	ammoCap[1] = other->client->pers.max_shells;
+	ammoCap[2] = other->client->pers.max_gas;
+	ammoCap[3] = other->client->pers.max_grenades;
+	ammoCap[4] = other->client->pers.max_rockets;
+	ammoCap[5] = other->client->pers.max_308cal;
 
+	//check if they are full?
+	for (i = 0; i < 6; i++)
+	{
+		if (other->client->pers.inventory[ITEM_INDEX(FindItem(itemNames[i]))] < ammoCap[i])
+			break; //low
+		if (i == 5)
+			return false; //full
+	}
 
-    if ((other->client->pers.inventory[ITEM_INDEX(FindItem("Bullets"))] == other->client->pers.max_bullets) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("Shells"))] == other->client->pers.max_shells) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("Gas"))] == other->client->pers.max_gas) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("Grenades"))] == other->client->pers.max_grenades) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("Rockets"))] == other->client->pers.max_rockets) &&
-        (other->client->pers.inventory[ITEM_INDEX(FindItem("308cal"))] == other->client->pers.max_308cal))
-    {
-//        gi.dprintf("\nMax ammo!.\n\n");
-        return false;
-    }
+	//add the bulets
+	for (i = 0; i < 6; i++)
+	{
+		item = FindItem(itemNames[i]);
+		if (item)
+		{
+			//int addCount = ceil((float)ammoCap[i] /3); //pick up 3 packs to be full
+			int addCount = ammoCap[i]; //1 pack = full
+			index = ITEM_INDEX(item);
+			other->client->pers.inventory[index] += addCount;
+			if (other->client->pers.inventory[index] > ammoCap[i])
+				other->client->pers.inventory[index] = ammoCap[i];
+		}
+	}
+
 
 	//hypov8 note: maybe these should fill clip to max_ and/or lower max_ values?
 	//something to try stop 1 person picking up all the packs
 	//or a timmer on player?
-	//FREDZ: yeah maybe limit to weapon that they already have some ammo need more pickups. Shell thakes longst but people also got fast shotgun :/
+	//FREDZ: yeah maybe limit to weapon that they already have some ammo need more pickups. 
+	// Shell takes longest but people also got fast shotgun :/
 
-	item = FindItem("Bullets");
-	if (item)
-	{
-		index = ITEM_INDEX(item);
-//		other->client->pers.inventory[index] += item->quantity;
-        other->client->pers.inventory[index] += 40;//Max is 200 so 4 times pickup
-		if (other->client->pers.inventory[index] > other->client->pers.max_bullets)
-			other->client->pers.inventory[index] = other->client->pers.max_bullets;
-	}
-
-	item = FindItem("Shells");
-	if (item)
-	{
-		index = ITEM_INDEX(item);
-//		other->client->pers.inventory[index] += item->quantity;
-        other->client->pers.inventory[index] += 25;//Max is 100 so 4 times pickup
-		if (other->client->pers.inventory[index] > other->client->pers.max_shells)
-			other->client->pers.inventory[index] = other->client->pers.max_shells;
-	}
-
-	item = FindItem("Gas");
-	if (item)
-	{
-		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;//Max is 200 maybe makes 25? is 50
-		if (other->client->pers.inventory[index] > other->client->pers.max_gas)
-			other->client->pers.inventory[index] = other->client->pers.max_gas;
-	}
-
-	item = FindItem("Grenades");
-	if (item)
-	{
-		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;//Max is 12 is already 3
-		if (other->client->pers.inventory[index] > other->client->pers.max_grenades)
-			other->client->pers.inventory[index] = other->client->pers.max_grenades;
-	}
-
-	item = FindItem("Rockets");
-	if (item)
-	{
-		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;//Max is 25 maybe makes 6? is 5
-		if (other->client->pers.inventory[index] > other->client->pers.max_rockets)
-			other->client->pers.inventory[index] = other->client->pers.max_rockets;
-	}
-
-	// JOSEPH 11-APR-99
-	item = FindItem("308cal");
-	if (item)
-	{
-		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;//Max is 90 is 30
-		if (other->client->pers.inventory[index] > other->client->pers.max_308cal)
-			other->client->pers.inventory[index] = other->client->pers.max_308cal;
-	}
-	// END JOSEPH
-
-	// RAFAEL
-/*	item = FindItem ("Mag Slug");//Q2 Xatrix mod
-	if (item)
-	{
-		index = ITEM_INDEX(item);
-		other->client->pers.inventory[index] += item->quantity;
-		if (other->client->pers.inventory[index] > other->client->pers.max_magslug)
-			other->client->pers.inventory[index] = other->client->pers.max_magslug;
-	}*/
 
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->value))
-        SetRespawn (ent, 30);
-//		SetRespawn (ent, ent->item->quantity);
+        SetRespawn (ent, 30); //hypov8 note: respawn time.. use cvar? skill?
 
 	return true;
 }
@@ -808,6 +747,13 @@ qboolean Pickup_Pistol_Mods (edict_t *ent, edict_t *other)
 			return false;
 		other->client->pers.inventory[ITEM_INDEX(FindItem("HMG Cooling Mod"))]++;
 		other->client->pers.hmg_shots = 30;
+	}
+	else if (ent->count == 5)
+	{
+		if ((other->client->pers.inventory[ITEM_INDEX(FindItem("Hyper ShotGun"))]))
+			return false;
+		other->client->pers.inventory[ITEM_INDEX(FindItem("Hyper ShotGun"))]++;
+		other->client->pers.sg_shots = 1;
 	}
 	else
 	{
@@ -1707,24 +1653,6 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		}
 	}
 
-
-	//FREDZ better code probably
-    if (deathmatch->value)
-    {
-        if (item->pickup == Pickup_Armor)
-            item = FindItem("Small Health");
-
-        if (item->pickup == Pickup_Weapon)
-            item = FindItem("Ammo Pack");
-
-        if ( (item->flags & IT_AMMO) || item->pickup == Pickup_Pistol_Mods)
-        {
-            G_FreeEdict (ent);
-            return;
-        }
-    }
-
-
 	// some items will be prevented in deathmatch
 	if (deathmatch->value)
 	{
@@ -2165,8 +2093,8 @@ model="models/weapons/g_pistol/tris.md2"
 		"misc/w_pkup.wav",		// pickup sound
 		"models/pu_icon/magmod/tris.md2", EF_REFL,	// world model, effects
 		NULL,				// view model
-		"/pics/h_pistol_mag.tga",							// icon
-		"Pistol Magnum Mod",									// pickup name
+		"/pics/h_pistol_mag.tga",	// icon
+		"Pistol Magnum Mod",		// pickup name
 		0,							// number of digits to display by icon
 		0,							// how much ammo is used per shot
 		NULL,						// what kind of ammo is used
@@ -2218,6 +2146,27 @@ model="models/weapons/g_shotgun/tris.md2"
 		NULL,
 		0,
 /* precache */ "weapons/shotgun/shotgf1b.wav weapons/shotgun/shotgr1b.wav"
+	},
+
+//Hyper ShotGun
+{
+		"weapon_hyper_shotgun",	// classname
+		Pickup_Key,			// pickup
+		Use_Null,				// use
+		Drop_Weapon,			// drop
+		NULL,					// weapon think
+		"misc/w_pkup.wav",		// pickup sound
+		0, 0,	// world model, effects
+		NULL,				// view model
+		"/pics/h_shotgun.tga",							// icon
+		"Hyper ShotGun",									// pickup name
+		0,							// number of digits to display by icon
+		0,							// how much ammo is used per shot
+		NULL,						// what kind of ammo is used
+		IT_WEAPON,					// IT_ flags
+		NULL,						// info??
+		0,							// tags??
+		""					// string of precaches
 	},
 
 /*QUAKED weapon_tommygun (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -2550,7 +2499,7 @@ model="models/pu_icon/shotgun_shell/tris.md2"
 /* icon */		"/pics/h_shots.tga",
 /* pickup */	"Shells",
 /* width */		3,
-		10,
+		21,
 		NULL,
 		IT_AMMO,
 		NULL,
@@ -3015,6 +2964,68 @@ model="models/pu_icon/backpack/tris.md2"
 /* precache */ ""
 	},
 // END JOSEPH
+
+//TF
+	{
+		"item_pack_sm",
+		Pickup_Pack,
+		NULL,
+		NULL,
+		NULL,
+		"world/pickups/generic.wav",
+		"models/pu_icon/backpack/tris.md2", 0,
+		NULL,
+		"/pics/h_backpack.tga",	/* icon */
+		"Ammo Pack Small",		/* pickup_name */
+		2,						/* count_width */
+		1,						/* quantity */
+		NULL,
+		IT_NOCHEATS|IT_PACK|IT_FLASHLIGHT,
+		NULL,
+		0,
+/* precache */ ""
+	},
+//TF
+	{
+		"item_pack_med",
+		Pickup_Pack,
+		NULL,
+		NULL,
+		NULL,
+		"world/pickups/generic.wav",
+		"models/pu_icon/backpack/tris.md2", 0,
+		NULL,
+		"/pics/h_backpack.tga",	/* icon */
+		"Ammo Pack Medium",		/* pickup_name */
+		2,						/* count_width */
+		2,						/* quantity */
+		NULL,
+		IT_NOCHEATS|IT_PACK|IT_FLASHLIGHT,
+		NULL,
+		0,
+/* precache */ ""
+	},
+	//TF
+	{
+		"item_pack_lg",
+		Pickup_Pack,
+		NULL,
+		NULL,
+		NULL,
+		"world/pickups/generic.wav",
+		"models/pu_icon/backpack/tris.md2", 0,
+		NULL,
+		"/pics/h_backpack.tga",	/* icon */
+		"Ammo Pack Large",		/* pickup_name */
+		2,						/* count_width */
+		3,						/* quantity */
+		NULL,
+		IT_NOCHEATS|IT_PACK|IT_FLASHLIGHT,
+		NULL,
+		0,
+/* precache */ ""
+	},
+
 
 // JOSEPH 29-MAY-99
 /*QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -3882,6 +3893,13 @@ tank commander's head
 };
 // END JOSEPH
 
+void SP_hyper_shotgun_mod (edict_t *self)
+{
+	self->model = "models/pu_icon/coolmod/tris.md2";
+	self->count = 5;
+	SpawnItem (self, FindItem ("Pistol_Mods"));
+	self->item->icon = "/pics/h_shotgun.tga";
+}
 
 // JOSEPH 13-JUN-99
 /*QUAKED hmg_mod_cooling (.7 .3 .4) (-16 -16 -16) (16 16 16)

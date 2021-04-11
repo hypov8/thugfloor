@@ -180,6 +180,10 @@ void AI_UnloadCastMemory (edict_t *self)
 	AI_ReleaseCastMemory( self, self->cast_info.enemy_memory );
 	self->cast_info.enemy_memory = NULL;
 
+	//hypov8 free cast's home
+	if (self->start_ent && !strcmp(self->start_ent->classname, "cast_origin"))
+		G_FreeEdict(self->start_ent);
+
 	// initialize the global memory list, and delete all other memories of us
 	for ( i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++ )
 	{
@@ -1423,9 +1427,9 @@ qboolean AI_FindTarget (edict_t *self)
 
 	for (i = 0; i < MAX_CHARACTERS /*level.num_characters*/; i++)
 	{
-		if (!level.characters[i])//hypov8 todo: test ok?
+		if (!level.characters[i])
 			continue;
-		if (!level.characters[i]->client) //hypov8 only attack human?
+		if (!level.characters[i]->client) //hypov8 only attack human
 			continue;
 
 		cast_memory = level.global_cast_memory[self->character_index][i];

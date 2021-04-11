@@ -746,56 +746,34 @@ void ED_CallSpawn (edict_t *ent)
 		gi.dprintf ("ED_CallSpawn: NULL classname\n");
 		return;
 	}
-/*
-//	if (ent->count && deathmatch->value)//FREDZ Todo
-    {
-        //thugfloor singleplayer maps
-        if (!strcmp(ent->classname, "cast_bitch")  || !strcmp(ent->classname, "cast_bum_sit") ||
-            !strcmp(ent->classname, "cast_dog")  || !strcmp(ent->classname, "cast_punk") ||
-            !strcmp(ent->classname, "cast_shorty")  || !strcmp(ent->classname, "cast_thug_sit") ||
-            !strcmp(ent->classname, "cast_runt")  || !strcmp(ent->classname, "cast_thug") ||
-            !strcmp(ent->classname, "cast_whore"))
-        {
-            ent->classname = "info_player_deathmatch";
-        }
-    }*/
 
-
-    //FREDZ item_adrenaline missing by item_armor_?
-    //FREDZ thugfloor Remove all ammo and armor from the game.
-/*	if (!strncmp(ent->classname, "ammo_", 5)//Moved to SpawnItem
-	//	|| !strncmp(ent->classname, "item_armor_", 11)
-		|| !strncmp(ent->classname, "pistol_mod_", 11)
-		)
+	if (!ent->isTF_CastSpawn)
 	{
-		G_FreeEdict(ent); //hypov8 free some entities
-		return;
-	}*/
+		//TF repurpose map items
+		if (!( strncmp(ent->classname, "ammo_", 5) )
+			|| !( strncmp(ent->classname, "pistol_mod_", 11) )
+			|| !( strcmp(ent->classname, "item_flametank") ))
+		{
+			G_FreeEdict(ent); //hypov8 free some entities
+			return;
+		}
+		else if (!strncmp(ent->classname, "item_armor_", 11))
+			ent->classname = "item_health_sm";
+		else if (!strncmp(ent->classname, "weapon_", 7))
+			ent->classname = "item_health_sm"; //"item_pack"
+		else if (!strncmp(ent->classname, "hmg_mod_", 8))
+			ent->classname = "item_adrenaline";
+		else if (!strncmp(ent->classname, "cast_", 5))
+			ent->classname = "info_player_deathmatch";
 
-	//get level spawn counts
-	if (!Q_strcasecmp(ent->classname, "info_player_deathmatch"))
-		level.dmSpawnPointCount += 1;
-	else if (!Q_strcasecmp(ent->classname, "info_player_start"))
-		level.spSpawnPointCount += 1;
 
-
-  	if (!strcmp( ent->classname, "hmg_mod_cooling")  || !strcmp( ent->classname, "hmg_mod_colling" ))//FREDZ move aswell?
-        ent->classname = "item_adrenaline";
-
-	if (!Q_stricmp( ent->classname, "weapon_barmachinegun" ))
-	{
-		gi.dprintf("Hacking old BAR machine gun to grenade launcher for KPDM1-cash.bsp\n" );
-		ent->classname = "weapon_grenadelauncher"; // MH: fixed to prevent memory corruption
+		//TF get level spawn counts
+		if (!Q_strcasecmp(ent->classname, "info_player_deathmatch"))
+			level.dmSpawnPointCount += 1;
+		else if (!Q_strcasecmp(ent->classname, "info_player_start"))
+			level.spSpawnPointCount += 1;
 	}
 
-
-	// Ridah: hack, KPDM1 has "item_flametank" which are now "ammo_flametank"
-	if (!strcmp( ent->classname, "item_flametank" ))
-        ent->classname = "ammo_flametank";
-
-	//hypov8 hmg mod typo in kprad .def
-	if (!strcmp(ent->classname, "hmg_mod_colling"))
-		ent->classname = "hmg_mod_cooling";
 
 	// check item spawn functions
 	for (i=0,item=itemlist ; i<game.num_items ; i++,item++)

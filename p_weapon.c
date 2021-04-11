@@ -112,8 +112,8 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 			return false;	// leave the weapon for others to pickup
 	}
 
-    if (ent->solid == SOLID_NOT)
-		return true;
+    //if (ent->solid == SOLID_NOT) //hypov8 note: stops buy menu using new wep
+	//	return true;
 
 	// Ridah, start with gun loaded
 	if (!(other->client->pers.inventory[index]))
@@ -168,8 +168,8 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 		}
 	}
 
-	if (other->client->pers.weapon == FindItem ("Pistol Silencer"))
-			other->client->pers.silencer_shots = 20;
+	if (ent->item == FindItem ("Pistol Silencer")) //typo?
+		other->client->pers.silencer_shots = 20;
 
 	/*
 	if (other->client->pers.weapon != ent->item &&
@@ -927,7 +927,10 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 		else
 		*/
 		{
-			ent->client->ps.gunframe++;
+			if (ent->client->pers.sg_shots) //TF fast shotty mod
+				ent->client->ps.gunframe+=4;
+			else
+				ent->client->ps.gunframe++;
 			return;
 		}
 	}
@@ -1473,9 +1476,9 @@ void Weapon_Blackjack_Hit (edict_t *ent)
 	int		damage;
 
 	if (deathmatch->value && ent->client)
-		damage = 15; //hypov8 upped from 10.. ok?//FREDZ: Probably also heals player?//was 10
+		damage = 15; //was 10
 	else
-		damage = 10;//was 8
+		damage = 8;
 
 	Blackjack_Hit (ent, vec3_origin, damage);
    	ent->client->ps.gunframe++;
@@ -1542,9 +1545,9 @@ void Weapon_Crowbar_Hit (edict_t *ent)
 	int		damage;
 
 	if (deathmatch->value)
-		damage = 50;	// This should be very powerful in deathmatch
+		damage = 75; //was 50
 	else
-		damage = 12;// - (int)(skill->value-1);
+		damage = 12;
 
 	Crowbar_Hit (ent, vec3_origin, damage);
    	ent->client->ps.gunframe++;
@@ -2001,7 +2004,7 @@ void Weapon_SPistol_Fire (edict_t *ent)
 
 		SPistol_Fire (ent, vec3_origin, damage);
 		Eject_Pistol_Shell(ent);
-		ent->client->pers.silencer_shots--;
+		//ent->client->pers.silencer_shots--; //TF disable
 
 		if (!ent->client->pers.silencer_shots)
 			ent->client->ps.gunframe = 43;
@@ -2544,6 +2547,15 @@ void Weapon_Shotgun_Fire (edict_t *ent)
 			ent->client->weaponstate = WEAPON_RELOAD_CYCLE;
 		}
 	}
+//TF add hyper shotgun
+		else if (ent->client->ps.gunframe == 8
+		|| ent->client->ps.gunframe == 11
+		||ent->client->ps.gunframe == 13)
+	{
+		ent->client->ps.gunframe += 2; //advance 2 frames
+		//ent->client->ps.gunframe += 1;
+	}
+//end
 	else if (ent->client->ps.gunframe == 16)
 	{
 		if (!ent->client->pers.weapon_clip[ent->client->clip_index])
@@ -2576,6 +2588,7 @@ void Weapon_Shotgun (edict_t *ent)
 {
 	static int	pause_frames[]	= {0, 0};
 	static int	fire_frames[]	= {6, 16, 0};
+	static int	fire_frames2[] = { 6, 8, 11, 13, 16, 0 }; //TF hyper_shotgun
 	static int  kick_frames[]   = {-12, -9, -6, -4, -1};
 
 	if ((ent->client->ps.gunframe >= 6) & (ent->client->ps.gunframe <= 9))
@@ -2671,7 +2684,7 @@ void Weapon_Shotgun (edict_t *ent)
 		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/shotgun/shotgload.wav"), 1, ATTN_NORM, 0); // MH: don't clobber voice channel
 	}
 
-	Weapon_Generic (ent, 5, 32, 40, 45, pause_frames, fire_frames, Weapon_Shotgun_Fire);
+	Weapon_Generic (ent, 5, 32, 40, 45, pause_frames, (ent->client->pers.sg_shots)? fire_frames2 : fire_frames, Weapon_Shotgun_Fire);
 
 	/*
 	if (ent->client->ps.gunframe == 1)
@@ -2681,7 +2694,6 @@ void Weapon_Shotgun (edict_t *ent)
 		ent->client->ps.model_parts[PART_LEGS].invisible_objects = 0;
 	}
 	*/
-
 
 }
 
@@ -2786,7 +2798,7 @@ void barmachinegun_fire (edict_t *ent)
 
 		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("HMG Cooling Mod"))])
 		{
-			//ent->client->pers.hmg_shots --; //TF let mod last for ever
+			//ent->client->pers.hmg_shots --; //TF let mod last untill you die
 
 			if (!ent->client->pers.hmg_shots)
 			{
@@ -2961,6 +2973,7 @@ void weapon_grenadelauncher_fire (edict_t *ent)
 		}
 		return;
 	}
+
 
 	damage *= 2;		// 240 points of damage
 	radius = damage*2;	// 480 units radius
@@ -3139,7 +3152,7 @@ void weapon_rocketlauncher_fire (edict_t *ent)
 
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	fire_rocket (ent, start, forward, damage, 900, damage_radius, radius_damage);//FREDZ speed slower was 900
+	fire_rocket (ent, start, forward, damage, 900, damage_radius, radius_damage);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);

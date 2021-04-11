@@ -293,7 +293,14 @@ qboolean AI_CheckAttack(edict_t *self)
 		if (	(fabs( self->s.origin[2] - self->enemy->s.origin[2] ) > 32)
 			||	(VectorDistance( self->s.origin, self->enemy->s.origin ) > 96 ))
 		{
-			return false;
+			if (!self->gender) //dog
+			{
+				float height = ( fabs(self->s.origin[2] - self->enemy->s.origin[2]));
+				//if (height >60) //hypov8 todo. make dogs jump at low values...
+					return false;
+			}
+			else
+				return false;
 		}
 	}
 

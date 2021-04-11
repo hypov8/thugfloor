@@ -806,8 +806,8 @@ void M_ChangeYaw (edict_t *ent)
 	if (ent->enemy)
 	{
 		speed *= 4;
-		if (speed > 180) //hypov8 bots totaly miss if u strafe. bots aim is also behind 100ms bug!!! 
-			speed = 180;
+		if (speed > 80)
+			speed = 80;
 	}
 	else if (ent->cast_info.currentmove && (ent->cast_info.currentmove->frame->dist))
 	{	// dependant on speed

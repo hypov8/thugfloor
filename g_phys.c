@@ -1232,8 +1232,8 @@ void SV_Physics_Step (edict_t *ent)
 				}
 			}
 
-			if (	(ent->flags & FL_FLY) && (ent->nav_data.goal_index //hypov8 bugfix
-				&&	((land_node = level.node_data->nodes[ent->nav_data.goal_index-1]) || ((ent->flags &= ~FL_FLY) && false)))
+			if (	(ent->flags & FL_FLY) && (ent->nav_data.goal_index) //hypov8 bugfix
+				&&	((land_node = level.node_data->nodes[ent->nav_data.goal_index-1]) || ((ent->flags &= ~FL_FLY) && false))
 				/*&&	(land_node->node_type & NODE_LANDING)*/)
 			{	// if climbing ladder, and we're reached the landing position, stop
 
@@ -1243,7 +1243,7 @@ void SV_Physics_Step (edict_t *ent)
 					goto abort_climb;
 				}
 
-				if (ent->s.origin[2] > land_node->origin[2]) //hypov8 land_node was null
+				if (ent->s.origin[2] > land_node->origin[2])
 				{
 //gi.dprintf( "-> end of climb\n" );
 //					VectorSubtract( land_node->origin, ent->s.origin, ent->velocity );

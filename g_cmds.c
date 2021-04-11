@@ -5,6 +5,7 @@
 #include "voice_bitch.h"
 
 char votemap[32]; // MH: map vote
+float voteBotSkill; //skill 0 to 4
 
 #define CHECKFIXED(a)\
 if (fixed_gametype) gi.cprintf(ent,PRINT_HIGH,"This server's game type may not be changed\n");\
@@ -674,8 +675,16 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 	if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START )
 	{
 		if (self->client->pers.spectator == SPECTATING)
-			gi.cprintf(self,PRINT_HIGH,"You will join the next wave\n");
-		self->client->pers.spectator = PLAYER_READY;
+		{
+			if (!timelimit->value)
+				gi.cprintf(self, PRINT_HIGH, "You will join the next wave\n");
+			else
+				gi.cprintf(self, PRINT_HIGH, "You will join within %i seconds\n", (int)timelimit->value *60); //todo: rename?
+			
+			self->client->pers.spectator = PLAYER_READY;
+			self->client->showscores = INFO_NEW_PLAYER; //inform clients of wait time	
+			self->client->resp.scoreboard_frame = 0;
+		}
 		return;
 	}
 
@@ -690,8 +699,8 @@ void Cmd_Join_f (edict_t *self, char *teamcmd)
 			return;
 		}
 
-		//only let 1 player join. not used...
-		if (level.nav_TF_autoRoute)
+		//only let 1 player join.
+		if (level.nav_TF_autoRoute == 1)
 		{
 			edict_t		*dood;
 			int         i;
@@ -1118,7 +1127,7 @@ void Cmd_Spawn_f (edict_t *ent)
 	spawn = G_Spawn();
 
 //	name = gi.args ();
-	spawn->classname = gi.TagMalloc(sizeof(name)+1, TAG_LEVEL);
+	spawn->classname = gi.TagMalloc(strlen(name)+1, TAG_LEVEL);
 	strcpy( spawn->classname, name );
 
 	AngleVectors( ent->s.angles, forward, NULL, NULL);
@@ -2388,6 +2397,9 @@ void Cmd_Give_f (edict_t *ent)
 
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("HMG Cooling Mod"))]++;
 
+		ent->client->pers.inventory[ITEM_INDEX(FindItem("Hyper ShotGun"))]++;
+
+		ent->client->pers.sg_shots = 1;
 		ent->client->pers.hmg_shots = 30;
 
 		if (!give_all)
@@ -2520,9 +2532,12 @@ void Cmd_Give_f (edict_t *ent)
 		Touch_Item (it_ent, ent, NULL, NULL);
 		if (it->flags & IT_SILENCER)
 			ent->client->pers.silencer_shots = 20;
+
+		if (Q_stricmp(name, "Hyper ShotGun") == 0) //TF
+			ent->client->pers.sg_shots = 1;
+
 		if (it_ent->inuse)
 			G_FreeEdict(it_ent);
-
 	}
 }
 
@@ -2821,7 +2836,7 @@ void Cmd_Use_f (edict_t *ent)
 			if (doubleCheck < level.framenum)
 			{
 				doubleCheck = level.framenum +50; //5 seconds responce
-				gi.cprintf(ent, PRINT_CHAT, "ARE YOU SURE OU WANT TO EXIT?\n");
+				gi.cprintf(ent, PRINT_CHAT, "ARE YOU SURE YOU WANT TO EXIT?\nPress HMG again\n");
 			}
 			else
 			{
@@ -2831,7 +2846,7 @@ void Cmd_Use_f (edict_t *ent)
 				//level.waveNum = 0;
 				WaveEnd(); //start from begining
 				//level.nav_TF_autoRoute = 2; //reset at WaveStart(). let nav_dynamic run for a bit to clean node table
-				gi.cprintf(ent, PRINT_CHAT, "Ending node adding mode.\nNodes will be saved only when wave starts");
+				gi.cprintf(ent, PRINT_LOW, "Ending node adding mode.\nNodes will be saved only when wave starts\n");
 			}
 		}
 	}
@@ -3606,31 +3621,62 @@ startyourtriggers:
 	}
 
 	//FREDZ
-	if ((deathmatch->value) || (!deathmatch->value))
+	if ((deathmatch->value && level.modeset == WAVE_BUYZONE) || (!deathmatch->value))
 	{
 		vec3_t	start, end, dir;
 		trace_t tr;
-
-		AngleVectors( ent->client->ps.viewangles, dir, NULL, NULL );
+		int i, found = 0;
 
 		VectorCopy( ent->s.origin, start );
 		start[2] += ent->viewheight;
 
-		VectorMA( start, 2048, dir, end );
-
-		tr = gi.trace( start, NULL, NULL, end, ent, MASK_SHOT );
-
-		//FREDZ we have a bot
-		if (!Q_stricmp(tr.ent->classname, "cast_pawn_o_matic"))
+		//hypov8 new: look for cast line of sight. non blocking by players
+		for (i=0; i< MAX_CHARACTERS /*level.num_characters*/; i++)
 		{
-			ent->pawnGuyID = tr.ent;
-			tr.ent->use( tr.ent, ent, ent);
+			if (!level.characters[i])
+				continue;
+			if (level.characters[i]->client)
+				continue;
+
+			if (!Q_stricmp(level.characters[i]->classname, "cast_pawn_o_matic"))
+			{
+				VectorCopy( level.characters[i]->s.origin, end );
+				end[2] += ent->viewheight;
+
+				tr = gi.trace( start, vec3_origin, vec3_origin, end, ent, CONTENTS_SOLID ); //dont trace players
+				if (tr.fraction == 1.0)
+				{	//are we looking at him
+					if (directly_infront(ent, level.characters[i])) //check distance?
+					{
+						ent->pawnGuyID = level.characters[i];
+						level.characters[i]->use(level.characters[i], ent, ent);
+						found = 1;
+					}
+				}
+				break; //allow multiple cast_pawn?
+			}
 		}
-		//FREDZ we have a orginale pawn o matic
-		if (!Q_stricmp(tr.ent->classname, "pawn_o_matic"))
+
+		if (!found)
 		{
-			ent->pawnGuyID = tr.ent;
-			tr.ent->use( tr.ent, ent, ent);
+			AngleVectors( ent->client->ps.viewangles, dir, NULL, NULL );
+
+			start[2] += ent->viewheight;
+			VectorMA( start, 2048, dir, end );
+			tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
+
+			//FREDZ we have a bot
+			if (!Q_stricmp(tr.ent->classname, "cast_pawn_o_matic"))
+			{
+				ent->pawnGuyID = tr.ent;
+				tr.ent->use(tr.ent, ent, ent);
+			}
+			//FREDZ we have a orginale pawn o matic
+			if (!Q_stricmp(tr.ent->classname, "pawn_o_matic"))
+			{
+				ent->pawnGuyID = tr.ent;
+				tr.ent->use(tr.ent, ent, ent);
+			}
 		}
 	}
 
@@ -4019,7 +4065,7 @@ void Cmd_PutAway_f (edict_t *ent)
 		gi.WriteByte(svc_stufftext);
 		gi.WriteString(va("%s\n", string));
 		gi.unicast(ent, true);
-		ent->client->resp.scoreboard_frame = level.framenum + 50 - 30;
+		ent->client->resp.scoreboard_frame = level.framenum + 50 - 30; //prevents menu not working with mini hud
 	}
 
 	ent->client->showscores = NO_SCOREBOARD;
@@ -4702,8 +4748,8 @@ void Cmd_PrintSettings_f (edict_t *ent)
 {
     char	*sk;//FREDZ
     int numWaves;
-	gi.cprintf(ent, PRINT_HIGH,"\nCurrent Game Settings.\n");
-	gi.cprintf(ent, PRINT_HIGH,"===============================\n\n");
+	gi.cprintf(ent, PRINT_HIGH,"\nCurrent Game Settings.\n"
+						"===============================\n\n");
 	switch (level.modeset)
 	{
         case PREGAME :
@@ -4725,25 +4771,25 @@ void Cmd_PrintSettings_f (edict_t *ent)
 			gi.cprintf(ent, PRINT_HIGH,"Server State       : Wave Idle\n");
 			break;
 	}
-    if (skill->value == 0)//FREDZ
+    if ((int)skill->value == 0)//FREDZ
 		sk = "novice";
-	else if (skill->value == 1)
+	else if ((int)skill->value == 1)
 		sk = "easy";
-	else if (skill->value == 2)
+	else if ((int)skill->value == 2)
 		sk = "medium";
-	else if (skill->value == 3)
+	else if ((int)skill->value == 3)
 		sk = "hard";
-	else
+	else //4
 		sk = "real";
 
     //get wave count
-	if ((int)wavetype->value == 0)		//short
+	if ((int)wavetype->value == WAVETYPE_SHORT)		//short
 		numWaves = WAVELEN_SHORT;
-	else if ((int)wavetype->value == 1)	//med
+	else if ((int)wavetype->value == WAVETYPE_MED)	//med
 		numWaves = WAVELEN_MED;
-	else 								//long
+	else 	//WAVETYPE_LONG							//long
 		numWaves = WAVELEN_LONG;
-
+	//hypov8 todo: convert to cprintf()
 	gi.cprintf(ent, PRINT_HIGH,"Map                : %s\n", level.mapname);//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"Skill mode         : %s\n", sk);//FREDZ
 	gi.cprintf(ent, PRINT_HIGH,"Anti-Spawn Camp    : %d\n", (int)anti_spawncamp->value); //FREDZ
@@ -4892,41 +4938,49 @@ void Cmd_CurseList_f (edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH,"=============================\n\n");
 }*/
 
-
+//todo merge string then send print
 void Cmd_CommandList_f (edict_t *ent)
 {
 	if (!admincode[0] && disable_admin_voting) {
 		gi.cprintf(ent, PRINT_HIGH,"There are no admin commands enabled on this server.\n");
 		return;
 	}
-	gi.cprintf(ent, PRINT_HIGH,"\nCurrent Console Commands.\n");
-	gi.cprintf(ent, PRINT_HIGH,"===============================\n");
+	gi.cprintf(ent, PRINT_HIGH,	"\nCurrent Console Commands.\n"
+								"===============================\n");
 	if (antilag->value)
         gi.cprintf(ent, PRINT_HIGH,"antilag, "); // MH: added
 	if (admincode[0])
         gi.cprintf(ent, PRINT_HIGH,"admin, ");
 	if (!disable_admin_voting)
         gi.cprintf(ent, PRINT_HIGH,"elect, resign\n");
-	gi.cprintf(ent, PRINT_HIGH,"commands, settings, dmflagssettings\n");
-    gi.cprintf(ent, PRINT_HIGH,"resetserver, changemap, maplist, mute\n");
+	gi.cprintf(ent, PRINT_HIGH,"commands, settings, dmflagssettings\n"
+								"maplist, votemap, resetserver\n" //was changemap
+								"toggle_asc, toggle_shadows, mute\n"
+								"playerrange, castrange\n");
+
 //	gi.cprintf(ent, PRINT_HIGH,"settimelimit, setfraglimit, setcashlimit, setidletime\n");
-	gi.cprintf(ent, PRINT_HIGH,"toggle_asc,  toggle_shadows\n");
-	gi.cprintf(ent, PRINT_HIGH,"playerrange,  castrange\n");
+
 
 	if (enable_password)
         gi.cprintf(ent, PRINT_HIGH,"setpassword removepassword\n");
 	if (!fixed_gametype) {
-		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, setwavetype, settimelimit\n");
+		gi.cprintf(ent, PRINT_HIGH,"setdmflags, setdm_realmode, settimelimit\n"
+									"setwavetype (0-2)\n"
+									"  0: Short\n"
+									"  2: Long\n");
 	}
     if (!fixed_skilltype)//FREDZ
 	{
-		gi.cprintf(ent, PRINT_HIGH,"setskill\n");
-		gi.cprintf(ent, PRINT_HIGH,"   The skill settings are:\n");
-		gi.cprintf(ent, PRINT_HIGH,"       0 : Novice\n");
-		gi.cprintf(ent, PRINT_HIGH,"       1 : Easy\n");
-		gi.cprintf(ent, PRINT_HIGH,"       2 : Medium\n");
-		gi.cprintf(ent, PRINT_HIGH,"       3 : Hard\n");
-		gi.cprintf(ent, PRINT_HIGH,"       4 : Real\n");//FREDZ end
+		gi.cprintf(ent, PRINT_HIGH,	"setskill (0-4)\n"
+									"  0: Novice\n"
+									"  4: Real\n"
+
+									/*"   The skill settings are:\n"
+									"       0 : Novice\n"
+									"       1 : Easy\n"
+									"       2 : Medium\n"
+									"       3 : Hard\n"
+									"       4 : Real\n"*/);//FREDZ end
 	}
 	gi.cprintf(ent, PRINT_HIGH,"===============================\n\n");
 }
@@ -4978,7 +5032,10 @@ void Cmd_Yes_f (edict_t *ent)
 				// MH: map voting
 				case VOTE_ON_MAP:
 					gi.bprintf (PRINT_HIGH, "The map change vote has passed\n");
-					gi.AddCommandString (va("gamemap \"%s\"\n", votemap));
+					if (skill->latched_string) //
+						gi.AddCommandString (va("map \"%s\"\n", votemap)); //hypov8 force skill changes
+					else
+						gi.AddCommandString (va("gamemap \"%s\"\n", votemap));
 					break;
 			}
 			for_each_player (dude,i)
@@ -5055,30 +5112,21 @@ void Cmd_Elect_f (edict_t *ent)
 {
 	edict_t		*dude;
 	int			count=0;
-	int			i,j,found;
-	edict_t		*player;
+	int			i;
 
-
-	if (disable_admin_voting) {
-		gi.cprintf(ent,PRINT_HIGH,"Electable Admins has been disabled on this server.\n");
+	if (disable_admin_voting)
+	{
+		gi.cprintf(ent, PRINT_HIGH, "Electable admins has been disabled on this server\n");
 		return;
 	}
 
-	j = atoi (gi.argv(1));
-	found = FALSE;
-
-	for (i=0 ; i<maxclients->value ; i++)
+	dude = GetAdmin();
+	if (dude)
 	{
-		player = g_edicts + 1 + i;
-		if (!player->inuse)
-			continue;
-		if (player->client->pers.admin > NOT_ADMIN)
-			found = TRUE;
-	}
-
-	if (found)
-	{
-		gi.cprintf(ent,PRINT_HIGH,"Someone already has admin\n");
+		if (dude == ent)
+			gi.cprintf(ent, PRINT_HIGH, "You already have admin\n");
+		else
+			gi.cprintf(ent, PRINT_HIGH, "%s already has admin\n", dude->client->pers.netname);
 		return;
 	}
 
@@ -5092,18 +5140,17 @@ void Cmd_Elect_f (edict_t *ent)
 		if (count == 1)
 		{
 			ent->client->pers.admin = ELECTED;
-			gi.bprintf (PRINT_HIGH,"%s has been elected Admin.\n",ent->client->pers.netname);
+			gi.bprintf (PRINT_HIGH, "%s has been elected Admin.\n", ent->client->pers.netname);
 			Cmd_CommandList_f(ent);
 			return;
 		}
-		gi.bprintf(PRINT_CHAT,"%s has requested admin privilages. Please vote YES or NO\n",ent->client->pers.netname); // MH: moved to chat area
+		gi.bprintf(PRINT_CHAT, "%s has requested admin privilages. Please vote YES or NO\n", ent->client->pers.netname);
 		ent->vote = CALLED_VOTE;
 		level.voteframe = level.framenum;
 		level.voteset= VOTE_ON_ADMIN;
 	}
-	else if (level.voteset != NO_VOTES)
-		gi.cprintf(ent,PRINT_HIGH,"A vote is already in progress.\n"); // MH: made more generic because it could be a map vote
-
+	else
+		gi.cprintf(ent,PRINT_HIGH,"A vote is already in progress.\n");
 }
 
 
@@ -5206,7 +5253,7 @@ void Cmd_ChangeMap_f (edict_t *ent)
 	}
 
 	// only use "map" for latched variables
-	if (dm_realmode->latched_string)
+	if (dm_realmode->latched_string || skill->latched_string) //hypov8 force skill changes
 		Com_sprintf (command, sizeof(command), "map \"%s\"\n", s);
 	else
 		Com_sprintf (command, sizeof(command), "gamemap \"%s\"\n", s);
@@ -5463,11 +5510,12 @@ void Cmd_SetPassword_f (edict_t *ent, char *value)
 
 void Cmd_SetSkill_f (edict_t *ent, char *value)//FREDZ
 {
-	char	*sk;
+	static char	*sk[5] = {"novice", "easy", "medium", "hard", "real"};
 	int		i;
+	
 
 	i = atoi (value);
-	if ((i == 0) || (i == 1) || (i== 2) || (i== 3) || (i== 4))
+	if (value[0] && (i >= 0) && (i <= 4))
 	{
 		if (ent->client->pers.admin > NOT_ADMIN )
 		{
@@ -5475,18 +5523,12 @@ void Cmd_SetSkill_f (edict_t *ent, char *value)//FREDZ
 				gi.cprintf(ent,PRINT_HIGH,"This server's game type may not be changed\n");
 			else
 			{
-				if (i == 0)//FREDZ
-					sk = "novice";
-				else if (i == 1)
-					sk = "easy";
-				else if (i == 2)
-					sk = "medium";
-				else if (i == 3)
-					sk = "hard";
-				else
-					sk = "real";
-				gi.bprintf(PRINT_HIGH,"Skill has been changed to %s.\n",sk);
+				gi.bprintf(PRINT_HIGH,"Skill has been changed to %s.\n",sk[i]);
+#ifndef BETADEBUG
 				gi.cvar_set("skill",value);
+#else
+				gi.cvar_forceset("skill",value); //allow istant skill change. for testing
+#endif
 			}
 		}
 		else
@@ -6295,7 +6337,6 @@ void ClientCommand (edict_t *ent)
 	//FREDZ
 	else if (ent->client->showscrollmenu)
 	{
-
 		if (Q_stricmp (cmd, "invuse") == 0// || Q_stricmp (cmd, "key1") == 0//Talk to them?
 			||Q_stricmp (cmd, "reload") == 0 ||Q_stricmp (cmd, "holster") == 0 //any other commands to accept menu?
 		)

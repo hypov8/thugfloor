@@ -193,7 +193,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 		level.killed_monsters++;//FREDZ missing
 
 		// Ridah 5-8-99, so we can shoot through dying characters
-		targ->maxs[2] = 0;
+		targ->maxs[2] = 0; //
 		gi.linkentity( targ );
 
 		// JOSEPH 12-MAR-99
@@ -1135,6 +1135,17 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 				SpawnDamage (targ, te_sparks, sparkspoint, normal, take); // MH: using corrected position
 		}
 
+		//TF add damage values to player(split up the money you earn)
+		if (targ->svflags & SVF_MONSTER)
+		{
+			if (attacker->client && targ->health > 0 && attacker->s.number < 64)
+			{
+				int hitValue = ( take > targ->health ) ? targ->health : take;
+				targ->damageTF_Counter[attacker->s.number] += hitValue;
+			}
+		}
+		//end TF
+
 		targ->health = targ->health - take;
 
 
@@ -2074,6 +2085,16 @@ void T_DamageMDX (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t d
 				SpawnDamage (targ, te_sparks, point, normal, take);
 		}
 
+		//TF add damage values to player(split up the money you earn)
+		if (targ->svflags & SVF_MONSTER)
+		{
+			if (attacker->client && targ->health > 0 && attacker->s.number < 64)
+			{
+				int hitValue = ( take > targ->health ) ? targ->health : take;
+				targ->damageTF_Counter[attacker->s.number] += hitValue;
+			}
+		}
+		//end TF
 
 		targ->health = targ->health - take;
 

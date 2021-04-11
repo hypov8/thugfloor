@@ -147,15 +147,25 @@ void dog_end_stand( edict_t *self )
 		self->cast_info.currentmove = &dog_move_pee;
 	}
 */
+	//hypov8 add: try to stop dog standing at base of ladders
+	else if (random() <= 0.2)
+	{
+		self->cast_info.currentmove = &dog_move_trot;
+		//self->enemy = NULL;
+		self->goalentity = self->start_ent;
+	}
 	else
 	{
 		self->cast_info.currentmove = self->cast_info.move_stand;
 	}
 }
 
+void dog_TF_retreat(edict_t *self);
 void dog_backoff( edict_t *self, edict_t *other )
 {
-
+	//TF
+	dog_TF_retreat(self); //not used yet...
+	//end TF
 }
 
 void dog_pain (edict_t *self, edict_t *other, float kick, int damage, int mdx_part, int mdx_subobject)
@@ -375,9 +385,9 @@ void Dogkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 		}
 		if (message)
 		{
-			attacker->client->resp.score++;
+			//attacker->client->resp.score++; //TF moved to TF_giveCashOnKill.
 
-			attacker->client->pers.currentcash += giveCashOnKill(BOT_DOG);//FREDZ give cash
+			TF_giveCashOnKill(BOT_DOG, self);//FREDZ give cash
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;
@@ -814,7 +824,7 @@ void dog_bite (edict_t *self)
 	float damage = 8;
 
 	if (self->cast_info.currentmove == &dog_move_upr_atk)
-		damage *= 2;		// double handed attack
+		damage *= 2;		// double handed attack //hypov8 note: to strong?
 
 	// yell at them?
 	if (self->last_talk_time < (level.time - 1.0))
@@ -857,7 +867,7 @@ void dog_bite (edict_t *self)
 
 		// ok it seems to line up with the head ok now
 		// NAV_DrawLine (start, end);
-		fire_blackjack( self, start, forward, damage, 0, MOD_DOGBITE );
+		fire_blackjack( self, start, forward, damage, 13, MOD_DOGBITE ); //add kick to dog bite //hypov8 todo: add rand/skill
 		/*
 
 		if (VectorLength (aimdir) < 96)
@@ -1039,4 +1049,33 @@ void SP_cast_dog (edict_t *self)
 
 	if (self->spawnflags & DOG_NOSHADOW)//FREDZ
 		self->s.renderfx2 |= RF2_NOSHADOW;
+}
+
+/*
+===============
+dog_TF_dog_retreat
+
+dogs use AI_NO_TAKE_COVER but they also get stuck because of this
+this was added to try make them walk away for a short time..
+needs more work..
+should proabably do a few jump/bite/dodge animations..
+===============
+*/
+void dog_TF_retreat(edict_t *self)
+{
+	self->cast_info.currentmove = self->cast_info.move_runwalk;
+	self->goalentity = self->start_ent; //?
+	self->goal_ent = self->start_ent;
+	self->nav_data.goal_index = 0;
+	self->moveinfo.wait = level.time + 3;
+	self->wait = level.time + 3;
+	if (self->enemy)
+	{
+		cast_memory_t	*cast_memory;
+		cast_memory = level.global_cast_memory[self->character_index][self->enemy->character_index];
+		cast_memory->ignore_time = level.time + 3;
+		cast_memory->timestamp= level.time; //
+		self->enemy = NULL;
+	}
+
 }

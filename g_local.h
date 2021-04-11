@@ -71,9 +71,14 @@
 #define WAVE_START		6
 #define WAVE_IDLE		7
 
-#define	WAVELEN_LONG 11
-#define	WAVELEN_MED 8
 #define	WAVELEN_SHORT 5
+#define	WAVELEN_MED 8
+#define	WAVELEN_LONG 11
+
+#define	WAVETYPE_SHORT 0
+#define	WAVETYPE_MED 1
+#define	WAVETYPE_LONG 2
+
 
 // admin types
 
@@ -125,7 +130,7 @@
 #define PLAYER_READY 		2 //hypov8 ready to join, but current game is in middle of wave
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"Thug Floor v0.32"
+#define	GAMEVERSION	"Thug Floor v0.36"
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -362,6 +367,8 @@ typedef struct
 
 #define IT_NOCHEATS		256
 
+#define IT_PACK			512 //TF
+
 typedef struct gitem_s
 {
 	char		*classname;	// spawning name
@@ -593,6 +600,8 @@ typedef struct
 	int		nav_debug_mode; //hypov8 debug nodes. "sv nav_debug". also stops bots moving
 	int		nav_shownode;	//hypov8 show nodes "nav_shownode"
 	int		nav_TF_autoRoute; //hypov8 stops AI and lets clients run around map making paths
+
+	int		bossSpawned; //1 boss per wave
 
 } level_locals_t;
 
@@ -877,7 +886,7 @@ extern	cvar_t	*maxrate;
 
 extern	cvar_t	*coop;
 extern	cvar_t	*dmflags;
-extern	cvar_t	*skill;
+extern	cvar_t	*skill; //skill is 0-4 int. values are rounded down if decimal
 extern	cvar_t	*fraglimit;
 extern	cvar_t	*timelimit;
 //extern	cvar_t	*cashlimit;
@@ -1119,7 +1128,7 @@ void cast_fire_shotgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, 
 void cast_fire_tommygun (edict_t *self, vec3_t start, vec3_t dir, int damage, int kick, int hspread, int vspread, int flashtype);//FREDZ tommygun missing
 void cast_fire_barmachinegun (edict_t *self, vec3_t start, vec3_t dir, int damage, int kick, int hspread, int vspread, int flashtype);//FREDZ hmg missing
 //void cast_fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int flashtype, int effect);
-void cast_fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int flashtype);
+void cast_fire_grenade(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int timer, int radius, int flashtype); //hypov8 changed
 void cast_fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int flashtype);
 //FREDZ q2 stuff not used
 //void cast_fire_railgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int flashtype);
@@ -1429,7 +1438,7 @@ void CheckEndVoteTime ();
 qboolean CheckEndWave();
 int  CheckEndWave_GameType();
 int  waveGiveCash(int type);
-int  giveCashOnKill(int type);
+void TF_giveCashOnKill(int type, edict_t *cast);
 qboolean ResetServer();
 void WaveBuy();//FREDZ
 void WaveStart();//hypov8
@@ -1440,6 +1449,8 @@ int	CheckNameBan (char *name);
 int	CheckPlayerBan (char *userinfo);
 edict_t *GetAdmin(); // MH: get the current admin
 void UpdateTime(); //mm 2.0
+void TF_cast_AttackSkill(edict_t *cast, vec3_t startPos, vec3_t aimDir, int wepType);
+void TF_ScoreBoard(edict_t *ent); //TF
 
 
 //
@@ -1565,6 +1576,7 @@ typedef struct
 	qboolean	player_died;	//TF: store player death untill wave end. dont give loosers extra cash...
 	int			currentcash;	//TF: store cash between respawns
 	gitem_t		*weaponStore;	//TF: store pointer to wep b4 death
+	int			sg_shots;		//shotgun mod
 
 	// MH: textbuf removed (not needed now with kpded2)
 
@@ -1574,6 +1586,7 @@ typedef struct
 typedef struct
 {
 	client_persistant_t	coop_respawn;	// what to set client->pers to on a respawn
+
 	int			enterframe;			// level.framenum the client entered the game
 	int			score;				// frags, etc
 	vec3_t		cmd_angles;			// angles sent over in the last command
@@ -1597,6 +1610,8 @@ typedef struct
 	int			scoreboard_frame; // MH: added to avoid multiple scoreboard updates and overflows
 
 	int			checkdelta,checkpvs,checktime,checktex,checkfoot,checkmouse;
+
+	int			inventory_TF[MAX_ITEMS]; //TF store weps?
 	// MH: removed DOUBLECHECK stuff
 } client_respawn_t;
 
@@ -1748,6 +1763,7 @@ struct gclient_s
 	byte	scrollmenu_side_do;
 	short	scrollmenu_forward;		//FREDZ set layout stat
 	short	scrollmenu_side;		//FREDZ set layout stat
+	float	scrollmenu_timestamp;	//dont update menu so fast. msg overflows
 
 	int		botRange;	//store hud radar
 	//int		botAngle;	//store hud radar
@@ -2129,6 +2145,10 @@ struct edict_s
 	int			current_menu_side;
 	int			current_menu_left;
 	int			current_menu_right;
+
+	//TF
+	qboolean isTF_CastSpawn;
+	int		damageTF_Counter[64]; //store hit damage for all player
 
 	//client idleing (MH: removed last_origin/check_talk/check_shoot)
     int         check_idle;

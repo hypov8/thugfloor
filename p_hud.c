@@ -3,6 +3,7 @@
 #define ENABLE_INDEX_NAMES		1
 
 extern edict_t *boss_entityID;
+extern edict_t *boss_entity2ID;
 extern int boss_maxHP;
 static int topOfs = -45; //hypov8 was 60
 
@@ -93,6 +94,13 @@ int GetGameModeMessage(char *entry, int yofs)
 void GetChaseMessage(edict_t *ent, char *entry)
 {
 	entry[0]=0;
+
+	//skip at end game etc..
+	if (level.modeset != WAVE_ACTIVE && level.modeset != WAVE_BUYZONE && level.modeset != WAVE_START)
+		return;
+
+	//hypov8 todo: show clik to chase on spec players (no scoreboard)
+
 /*	if (level.modeset==MATCH && no_spec->value && !ent->client->pers.admin && !ent->client->pers.rconx[0])
 	{
 		strcpy(entry, "xm -110 yb -50 dmstr 773 \"spectating is disabled\" ");
@@ -330,7 +338,7 @@ void SpectatorScoreboardMessage (edict_t *ent)
 	stringlength = 0;
 
 	//TF active players
-	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator == PLAYING)
+	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator != SPECTATING)
 	{
 		TF_Build_HudMessage(ent, entry);
 		j = strlen(entry);
@@ -343,14 +351,14 @@ void SpectatorScoreboardMessage (edict_t *ent)
 
 	Com_sprintf (entry, sizeof(entry),
 		"xr %i yv %i dmstr 999 \"Spectators\" ",
-		-56*10-10, topOfs-49);
+		-42*10-10, topOfs-49);
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
 
 	Com_sprintf (entry, sizeof(entry),
-		"xr %i yv %i dmstr 663 \"State NAME          ping watching\" ",
-		-56*10-10, topOfs-21);
+		"xr %i yv %i dmstr 663 \"State NAME         ping watching\" ",
+		-42*10-10, topOfs-21);
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
@@ -409,10 +417,10 @@ void SpectatorScoreboardMessage (edict_t *ent)
 		}
 
 		if (player->client->chase_target)
-			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%s %s %4i %-13s\" ",
+			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%s %s %3i %-13s\" ",
 			topOfs+k*17, tag, status, nfill, player->client->ping, player->client->chase_target->client->pers.netname);
 		else
-			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%s %s %4i\" ",
+			Com_sprintf (entry, sizeof(entry), "yv %i dmstr %s \"%s %s %3i\" ",
 				topOfs+k*17, tag, status, nfill, player->client->ping);
 		j = strlen(entry);
 		if (stringlength + j >= 1024)
@@ -454,11 +462,11 @@ void SpectatorScoreboardMessage (edict_t *ent)
 		}
 	}
 
-	if (ent->client->pers.spectator == SPECTATING)// &&  ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+	if (ent->client->pers.spectator != PLAYING)
 	{
 		GetChaseMessage(ent,entry);
 		j = strlen(entry);
-		if (stringlength + j < 1024)
+		if (j && stringlength + j < 1024)
 		{
 			strcpy (string + stringlength, entry);
 			stringlength += j;
@@ -814,7 +822,7 @@ void MOTDScoreboardMessage (edict_t *ent)
 //===================================================================
 //===================================================================
 
-void InfoNewPlayerMessageBoard (edict_t *ent)
+void TF_InfoNewPlayerMessageBoard (edict_t *ent)
 {
 	char	entry[1024];
 	char	string[1400];
@@ -887,7 +895,29 @@ void InfoNewPlayerMessageBoard (edict_t *ent)
 		stringlength += j;
     }
 
+	//chasecam message
+	if (ent->client->pers.spectator != PLAYING)
+	{
+		GetChaseMessage(ent,entry);
+		j = strlen(entry);
+		if (j && stringlength + j < 1024)
+		{
+			strcpy (string + stringlength, entry);
+			stringlength += j;
+		}
+	}
 
+	//show active players
+	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator != SPECTATING)
+	{
+		TF_Build_HudMessage(ent, entry);
+		j = strlen(entry);
+		if (stringlength + j < 1024)
+		{
+			strcpy(string + stringlength, entry);
+			stringlength += j;
+		}
+	}
 
 	gi.WriteByte (svc_layout);
 	gi.WriteString (string);
@@ -973,15 +1003,15 @@ void InfoWinGameMessageBoard (edict_t *ent)//Todo
 	cl_score = g_edicts + 1 + sortedscore[0];
 	cl_death = g_edicts + 1 + sorteddeath[0];
 
-    if (skill->value == 0)
+    if ((int)skill->value == 0)
 		sk = "novice";
-	else if (skill->value == 1)
+	else if ((int)skill->value == 1)
 		sk = "easy";
-	else if (skill->value == 2)
+	else if ((int)skill->value == 2)
 		sk = "medium";
-	else if (skill->value == 3)
+	else if ((int)skill->value == 3)
 		sk = "hard";
-	else
+	else //4
 		sk = "real";
 
     yofs = 24;
@@ -1319,13 +1349,25 @@ void TF_DeathmatchScoreboardMessage(edict_t *ent)
 	entry[0] = 0;
 	strcpy(string, " ");
 
-	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator == PLAYING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator != SPECTATING)
 	{
 		TF_Build_HudMessage(ent, entry);
 		j = strlen(entry);
 		if (stringlength + j < 1024)
 		{
 			strcpy(string + stringlength, entry);
+			stringlength += j;
+		}
+	}
+
+	//add spec help
+	if (ent->client->pers.spectator != PLAYING)
+	{
+		GetChaseMessage(ent,entry);
+		j = strlen(entry);
+		if (j && stringlength + j < 1024)
+		{
+			strcpy (string + stringlength, entry);
 			stringlength += j;
 		}
 	}
@@ -1376,7 +1418,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 /*		if (fph_scoreboard)
 			score = game.clients[i].resp.time ? game.clients[i].resp.score * 36000 / game.clients[i].resp.time : 0;
 		else*/
-			score = (game.clients[i].resp.score<<8) - game.clients[i].resp.deposited;
+			score = (game.clients[i].resp.score<<8) - game.clients[i].resp.deposited; //hypov8 use cash?
 
 		for (j=0 ; j<total ; j++)
 		{
@@ -1395,10 +1437,20 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 
 	realtotal = total;
 
+	//map name
 	Com_sprintf (entry, sizeof(entry), 
-		"xm %i yt 5 dmstr 752 \"map: %s\" ", 
-		-100 - (strlen("map")*10),
+		"xm %i yt 4 dmstr 963 \"map: %s\" ", 
+		-10 - (strlen("map")*10),
 		level.mapname);
+	j = strlen(entry);
+	strcpy (string + stringlength, entry);
+	stringlength += j;
+
+	//skill
+	Com_sprintf (entry, sizeof(entry),
+		"xm %i yt 22 dmstr 963 \"AI Skill: %1i\" ",
+		-10 - (strlen("AI Skill")*10),
+		(int)skill->value);
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
@@ -1408,45 +1460,31 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 	{
 		cl = &game.clients[sorted[0]];
 		Com_sprintf (entry, sizeof(entry),
-			"xm %i yt 22 dmstr 752 \"leader: %s\" ",
-			-100 - (strlen("leader")*10),
+			"xm %i yt 40 dmstr 963 \"leader: %s\" ",
+			-10 - (strlen("leader")*10),
 			cl->pers.netname);
 		j = strlen(entry);
 		strcpy (string + stringlength, entry);
 		stringlength += j;
 	}
 
-	//skill
-	Com_sprintf (entry, sizeof(entry),
-		"xm %i yt 39 dmstr 752 \"AI Skill: %s\" ",
-		-100 - (strlen("AI Skill")*10),
-		va("%1.1f", skill->value));
-	j = strlen(entry);
-	strcpy (string + stringlength, entry);
-	stringlength += j;
-
 	// header
 	if (ent->client->showscores == SCOREBOARD)
 	{
-/*		if (fph_scoreboard)
 			Com_sprintf (entry, sizeof(entry),
-				"xr %i yv %i dmstr 663 \"NAME         ping hits   fph\" ",
-				-36*10 - 10, topOfs+-21 );
-		else*/
-			Com_sprintf (entry, sizeof(entry),
-				"xr %i yv %i dmstr 663 \"State NAME          ping time  hits\" ",	//hypov8 note: "xr" is X aligned to Right.
-				-56*10 - 10, topOfs+-21 );//56 was 36									//menu overlaps player display on low rez.
+				"xr %i yv %i dmstr 663 \"State NAME         ping time score\" ",	//hypov8 note: "xr" is X aligned to Right.
+				-42*10 - 10, topOfs+-21 );//56 was 36									//menu overlaps player display on low rez.
 	}																				//either move menu to right or use "xm" (X aligned Middle)
     else if (ent->client->showscores==SCOREBOARD2) //FREDZ							//or you can test client rez if patched and move accorodingly
     {
         Com_sprintf (entry, sizeof(entry),
-        "xr %i yv %i dmstr 663 \"Death NAME       health  cash range\" ",
-            -56*10 - 10, topOfs+-21 );//56 was 36
+        "xr %i yv %i dmstr 663 \"Death NAME       health cash range\" ",
+            -42*10 - 10, topOfs+-21 );//56 was 36
 	}
 	else//SCOREBOARD3 disabled
 		Com_sprintf (entry, sizeof(entry),
-			"xr %i yv %i dmstr 663 \"NAME        deaths  acc  fav\" ",
-			-56*10 - 10, topOfs+-21 );//56 was 36
+			"xr %i yv %i dmstr 663 \"NAME       deaths  acc  fav\" ",
+			-42*10 - 10, topOfs+-21 );//56 was 36
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
@@ -1498,23 +1536,6 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		else if (cl_ent->client->pers.admin > NOT_ADMIN)
 			tag = "779";
 
-
-/*
-		if (ent->client->showscores == SCOREBOARD)//Old
-		{
-			if (ent->client->pers.patched >= 3)
-			{
-					Com_sprintf (entry, sizeof(entry),
-						"ds %s %i %i %i %i %s",
-						tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );
-			}
-			else
-			{
-					Com_sprintf (entry, sizeof(entry),
-						"yv %i ds %s %i %i %i %i ",
-						topOfs+i*17, tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );
-			}
-		}*/
         strcpy( nfill, cl->pers.netname );
 		if (strlen(nfill) > 13)
 			nfill[13] = '\0';
@@ -1528,12 +1549,11 @@ void DeathmatchScoreboardMessage (edict_t *ent)
         if (ent->client->showscores == SCOREBOARD)
 		{
 			{
-/*					Com_sprintf (entry, sizeof(entry),
-						"yv %i ds %s %i %i %i %i ",
-						topOfs+i*17, tag, sorted[i], cl->ping, cl->resp.time/600, cl->resp.score );*/
 				Com_sprintf (entry, sizeof(entry),
-					"yv %i dmstr %s \"%s %s %4i %4i %5i\"",
-					topOfs+i*17, tag, status, nfill, cl->ping, cl->resp.time/600, cl->resp.score);
+					"yv %i dmstr %s "
+					"\"%s %s %3i %4i %5i\"",
+					topOfs+i*17, tag, 
+					status, nfill, cl->ping, cl->resp.time/600, cl->resp.score);
 			}
 		}
         else if (ent->client->showscores==SCOREBOARD2) //FREDZ
@@ -1544,26 +1564,18 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 			for_each_player(dood, idx)
 			{
 				if (cl_ent == dood)
+				{
 					v = VectorDistance(ent->s.origin, cl_ent->s.origin);
+					break;
+				}
 			}
 
-/*			if (ent->client->pers.patched >= 3)
-			{
-				Com_sprintf (entry, sizeof(entry),
-					"ds %s %i %i %i %5.0f ",
-					tag, sorted[i], cl_ent->health, cl->pers.currentcash, v );
-			}
-			else
-			{
-				Com_sprintf (entry, sizeof(entry),
-					"yv %i ds %s %i %i %i %5.0f ",
-					topOfs+i*17, tag, sorted[i], cl_ent->health, cl->pers.currentcash, v );
-			}*/
-			{
-                Com_sprintf (entry, sizeof(entry),
-					"yv %i dmstr %s \"%5i %s %3i %5i %5.0f\"",
-					topOfs+i*17, tag, cl->resp.deposited, nfill, cl_ent->health, cl->pers.currentcash, v );
-			}
+            Com_sprintf (entry, sizeof(entry),
+				"yv %i dmstr %s "
+				"\"%5i %s %3i %4i %5.0f\"",
+				topOfs+i*17, tag, 
+				cl->resp.deposited, nfill, cl_ent->health, cl->pers.currentcash, v );
+
 		}
 		else//SCOREBOARD3 disabled
 		{
@@ -1612,8 +1624,9 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 		}
 	}
 
-skipscores:
-	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator == PLAYING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+skipscores: //
+
+	if ((level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START) && ent->client->pers.spectator != SPECTATING)
 	{
 		TF_Build_HudMessage(ent, entry);
 		j = strlen(entry);
@@ -1624,11 +1637,11 @@ skipscores:
 		}
 	}
 
-	if (ent->client->pers.spectator == SPECTATING)// && ((level.modeset == WAVE_ACTIVE) || (level.modeset == WAVE_BUYZONE) || (level.modeset == PREGAME) || (level.modeset == WAVE_IDLE)))
+	if (ent->client->pers.spectator != PLAYING)
 	{
 		GetChaseMessage(ent,entry);
 		j = strlen(entry);
-		if (stringlength + j < 1024)
+		if (j && stringlength + j < 1024)
 		{
 			strcpy (string + stringlength, entry);
 			stringlength += j;
@@ -1644,11 +1657,14 @@ void TF_setScoreboard(gclient_t *client)
 {
 	//ent->client->resp.scoreboard_hide = false;
 	if (client->showscores == NO_SCOREBOARD
-		&& client->resp.scoreboard_frame < level.framenum
-		&& (level.modeset == WAVE_ACTIVE)
-		&& (client->pers.spectator != SPECTATING)) //chase scorebord
+		&& client->resp.scoreboard_frame <= level.framenum //lets esc work
+		&& (level.modeset == WAVE_ACTIVE|| level.modeset ==WAVE_START || level.modeset ==WAVE_BUYZONE)
+		&& client->pers.spectator != SPECTATING)
 	{
-		client->showscores = SCORE_TF_HUD;
+		//if (client->pers.spectator == PLAYING)
+			client->showscores = SCORE_TF_HUD;
+		//else
+		//	client->showscores == SPECTATORS;
 	}
 }
 
@@ -1672,7 +1688,7 @@ void DeathmatchScoreboard (edict_t *ent)
 	else if (ent->client->showscores == SCORE_MAP_VOTE)
 		VoteMapScoreboardMessage(ent);
     else if (ent->client->showscores == INFO_NEW_PLAYER)
-		InfoNewPlayerMessageBoard(ent);
+		TF_InfoNewPlayerMessageBoard(ent);
     else if (ent->client->showscores == INFO_WIN_GAME)
 		InfoWinGameMessageBoard(ent);
     else if (ent->client->showscores == INFO_BUYZONE)
@@ -1765,7 +1781,7 @@ Display the scoreboard
 // Papa - This is the start of the scoreboard command, this sets the showscores value
 void Cmd_Score_f (edict_t *ent)//FREDZ todo
 {
-	int		i,found;
+	int		i;
 	edict_t	*dood;
 
 	ent->client->showinventory = false;
@@ -1774,86 +1790,81 @@ void Cmd_Score_f (edict_t *ent)//FREDZ todo
 	//FREDZ For menu code
 	ent->client->showscrollmenu = false;
 
-#if 1 //mm 2.0
+	//mm 2.0 menu's
 	if (ent->client->showscores == SCORE_REJOIN)
 	{
 		ClientRejoin(ent, false);
 		return;
 	}
-#endif
 
 	if (ent->client->showscores == SCOREBOARD)
-		ent->client->showscores = SCOREBOARD2;
-	else if (level.modeset == ENDGAMEVOTE)
 	{
-		if (ent->client->showscores == SCORE_MAP_VOTE)
-//			ent->client->showscores = BESTSCORES;
-//		else if (ent->client->showscores == BESTSCORES)
-			ent->client->showscores = SCOREBOARD;
-		else if (ent->client->showscores == SCOREBOARD2)
-//			ent->client->showscores = SCOREBOARD3;
-//		else if (ent->client->showscores == SCOREBOARD3)
+		for_each_player(dood, i)
 		{
-			found = false;
-            // MH: also check for connecting players, which are included in spectators list
+			if (dood->client->resp.time && ( dood->client->pers.spectator != SPECTATING || level.intermissiontime )) //TF intermision
+			{
+				ent->client->showscores = SCOREBOARD2;
+				break;
+			}
+		}
+		if (ent->client->showscores != SCOREBOARD2) 
+			goto skipscoreboard2; //no players. dont show scoreboard 2
+	}
+	else if (ent->client->showscores == SCOREBOARD2)
+	{
+skipscoreboard2:
+		ent->client->showscores = NO_SCOREBOARD;
+		//show spec players
+		if (!level.intermissiontime)
+		{
 			for (i=0 ; i<maxclients->value ; i++)
 			{
 				dood = g_edicts + 1 + i;
-				if (dood->client && (
-					/*(dood->inuse && dood->client->pers.spectator == SPECTATING) //hypov8 disabled on spec players
-					||*/ (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
-					found = true;
+				if (dood->client && ((dood->inuse && dood->client->pers.spectator == SPECTATING) || (!dood->inuse && dood->client->pers.connected && (kpded2 || curtime - dood->client->pers.lastpacket < 120000))))
+				{
+					ent->client->showscores = SPECTATORS;
+					break;
+				}
 			}
-			if (found)
-				ent->client->showscores = SPECTATORS;
-			else
-				ent->client->showscores = SCORE_MAP_VOTE;
+			if (ent->client->showscores != SPECTATORS) //TF
+				goto skipscoreboardTF; //TF
 		}
-		else
-			ent->client->showscores = SCORE_MAP_VOTE;
 	}
-	else if (ent->client->showscores == SCOREBOARD2)
-//		ent->client->showscores = SCOREBOARD3;
-//	else if (ent->client->showscores == SCOREBOARD3)
-	{
-		found = false;
-
-		for_each_player(dood, i)
-		{
-			if (dood->client->pers.spectator == SPECTATING)
-				found = true;
-		}
-
-		if (found)
-			ent->client->showscores = SPECTATORS;
-		else
-			ent->client->showscores = NO_SCOREBOARD;
-	}
-    else if (ent->client->pers.spectator == PLAYER_READY)//Maybe need better fix? or move
-    {
-        if (ent->client->showscores == INFO_NEW_PLAYER)
-            ent->client->showscores = SCOREBOARD;
-    	else if (ent->client->showscores == SCOREBOARD)
-            ent->client->showscores = SCOREBOARD2;
-        else if (ent->client->showscores == SPECTATORS)
-            ent->client->showscores = NO_SCOREBOARD;
-        else
-            ent->client->showscores = INFO_NEW_PLAYER;
-    }
 	else if (ent->client->showscores == SPECTATORS)
 	{
-		if (level.intermissiontime)
-			ent->client->showscores = SCOREBOARD;
-		else
-			ent->client->showscores = NO_SCOREBOARD;
+skipscoreboardTF: //TF
+		ent->client->showscores = NO_SCOREBOARD;
+		if (ent->client->pers.spectator == PLAYER_READY && (level.modeset == WAVE_ACTIVE)) //TF
+			ent->client->showscores = INFO_NEW_PLAYER; //TF
 	}
+//TF
+	else if (ent->client->showscores == INFO_NEW_PLAYER)
+		ent->client->showscores = NO_SCOREBOARD;
+//end TF
 	else
 		ent->client->showscores = SCOREBOARD;
 
-	TF_setScoreboard(ent->client); //TF: hud
 
-    ent->client->resp.scoreboard_frame = 0; // MH: trigger scoreboard update instead of calling DeathmatchScoreboard
-//	DeathmatchScoreboard (ent); //hypov8 do we need this enabled?
+	//end game scoreboards
+	if (ent->client->showscores == NO_SCOREBOARD && (level.intermissiontime
+			//|| (level.modeset == MATCH && no_spec->value && !ent->client->pers.admin && !ent->client->pers.rconx[0])
+			))
+	{
+		if (level.modeset == ENDGAMEVOTE)
+			ent->client->showscores = SCORE_MAP_VOTE;
+		else
+			ent->client->showscores = SCOREBOARD;
+	}
+	//end mm2.0
+
+
+//TF
+	//new hud style scoreboard with active player names
+	if (ent->client->showscores == NO_SCOREBOARD)
+		TF_setScoreboard(ent->client); //TF: hud
+//end TF
+
+	ent->client->resp.scoreboard_frame = 0;
 }
 
 /*
@@ -2377,20 +2388,18 @@ void G_SetStats (edict_t *ent)
 	*/
 
 	//show boss health
-	if (level.modeset == WAVE_ACTIVE && boss_entityID !=NULL)
+	if (level.modeset == WAVE_ACTIVE && (boss_entityID !=NULL || boss_entity2ID !=NULL))
 	{
-		/*if (boss_entityID !=NULL &&(
-			((int)wavetype->value == 0 && level.waveNum == WAVELEN_SHORT - 1) ||
-			((int)wavetype->value == 1 && level.waveNum == WAVELEN_MED - 1) ||
-			((int)wavetype->value >= 2 && level.waveNum == WAVELEN_LONG - 1)
-			))
-		{*/
-			ent->client->ps.stats[STAT_BOSS] = boss_entityID->health;//(int)(100.0f * boss_entityID->health / (float)boss_maxHP);//testing maybe bester just show normal health
-			if (ent->client->ps.stats[STAT_BOSS] <= 0)
-				ent->client->ps.stats[STAT_BOSS] = 1; //zero dont display
-		/*}
-		else
-			ent->client->ps.stats[STAT_BOSS] = 0;*/
+		int healthTotal = 0;
+		if (boss_entityID != NULL && boss_entityID->health > 0)
+			healthTotal = boss_entityID->health;
+
+		if (boss_entity2ID != NULL && boss_entity2ID->health > 0)
+			healthTotal += boss_entity2ID->health;
+
+		ent->client->ps.stats[STAT_BOSS] = healthTotal;//(int)(100.0f * boss_entityID->health / (float)boss_maxHP);
+		if (ent->client->ps.stats[STAT_BOSS] <= 0)
+			ent->client->ps.stats[STAT_BOSS] = 1; //zero dont display
 	}
 	else
 		ent->client->ps.stats[STAT_BOSS] = 0;
@@ -2473,11 +2482,11 @@ void G_SetStats (edict_t *ent)
 	//display current/total wave numbers
 	if (level.modeset != PREGAME && level.modeset != WAVE_IDLE) //show waves left at end of match
 	{
-		if ((int)wavetype->value == 0 )			//short
+		if ((int)wavetype->value == WAVETYPE_SHORT )			//short
 			ent->client->ps.stats[STAT_WAVEROUND] = WAVELEN_SHORT;
-		else if  ((int)wavetype->value ==  1)	//med
+		else if  ((int)wavetype->value ==  WAVETYPE_MED)	//med
 			ent->client->ps.stats[STAT_WAVEROUND] = WAVELEN_MED;
-		else									//long
+		else	//WAVETYPE_LONG								//long
 			ent->client->ps.stats[STAT_WAVEROUND] = WAVELEN_LONG;
 
 		ent->client->ps.stats[STAT_WAVENUM] = level.waveNum+1;

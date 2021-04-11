@@ -621,7 +621,7 @@ void thug2_firegun( edict_t *self, vec3_t ofs )
 
 	// project enemy back a bit and target there
 	VectorCopy (self->enemy->s.origin, target);
-	VectorMA (target, (-0.5 * (random()*0.8 + 0.2)) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);
+	//VectorMA (target, (-0.5 * (random()*0.8 + 0.2)) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);//TF disable
 	target[2] += self->enemy->viewheight;
 
 	flash_number = MZ2_GUNNER_MACHINEGUN_1;
@@ -648,7 +648,7 @@ void thug2_firegun( edict_t *self, vec3_t ofs )
 	if (self->acc)
 		cast_fire_bullet (self, start, aim, 3, 0, DEFAULT_BULLET_HSPREAD>>self->acc, DEFAULT_BULLET_VSPREAD>>self->acc, flash_number);
 	else
-	cast_fire_bullet (self, start, aim, 3, 0, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
+		cast_fire_bullet (self, start, aim, 3, 0, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, flash_number);
 
 	gi.sound(self, CHAN_WEAPON, gi.soundindex("weapons/machinegun/machgf1b.wav"), 1, ATTN_NORM, 0);
 
@@ -1007,9 +1007,9 @@ void ThugSitkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)
 		}
 		if (message)
 		{
-			attacker->client->resp.score++;
+			//attacker->client->resp.score++; //TF moved to TF_giveCashOnKill.
 
-			attacker->client->pers.currentcash += giveCashOnKill(BOT_THUG_SIT);//FREDZ give cash
+			TF_giveCashOnKill(BOT_THUG_SIT, self);//FREDZ give cash
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

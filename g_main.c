@@ -33,7 +33,7 @@ cvar_t	*deathmatch;
 
 cvar_t	*coop;
 cvar_t	*dmflags;
-cvar_t	*skill;
+cvar_t	*skill; //skill is 0-4 int. values are rounded down if decimal
 cvar_t	*fraglimit;
 cvar_t	*timelimit;
 cvar_t	*cashlimit;
@@ -171,32 +171,24 @@ void ShutdownGame (void)
 	char buf[1024];
 
 	buf[0]=0;
-	for (i=0 ; i<maxclients->value ; i++) {
+	for (i=0 ; i< (int)maxclients->value ; i++)
+	{
 		ent = g_edicts + 1 + i;
-		if (!ent->inuse) continue;
-		if (ent->client->pers.rconx[0])
-			Info_SetValueForKey(buf,ent->client->pers.ip,ent->client->pers.rconx);
+		if (ent->inuse && ent->client->pers.rconx[0])
+			Info_SetValueForKey(buf, ent->client->pers.ip, ent->client->pers.rconx);
 	}
 	gi.cvar_set("rconx",buf);
 
-	if (keep_admin_status) {
-		for (i=0 ; i<maxclients->value ; i++) {
-			ent = g_edicts + 1 + i;
-			if (!ent->inuse) continue;
-			if (ent->client->pers.admin>NOT_ADMIN) {
-				gi.cvar_set("modadmin",ent->client->pers.ip);
-                if(ent->client->pers.admin==ELECTED)
-                    gi.cvar_set("admintype", "1");
-                else if(ent->client->pers.admin==ADMIN)
-                    gi.cvar_set("admintype", "2");
-				break;
-			}
+	if (keep_admin_status) //mm2.0
+	{
+		buf[0] = 0;
+		ent = GetAdmin();
+		if (ent)
+		{
+			Info_SetValueForKey(buf, "ip", ent->client->pers.ip);
+			Info_SetValueForKey(buf, "type", ent->client->pers.admin == ADMIN ? "2" : "1");
 		}
-		if (i==maxclients->value)
-        {
-			gi.cvar_set("modadmin","");
-            gi.cvar_set("admintype","");
-        }
+		gi.cvar_set("modadmin", buf);
 	}
 
 	// MH: old uptime cvars removed
@@ -550,13 +542,13 @@ done:
 void TF_ScoreBoard(edict_t *ent)
 {
 	//hypo dont include spectators
-	if (ent->client->pers.spectator != PLAYING)
+	if (ent->client->pers.spectator == SPECTATING)
 		return;
 
 	if (ent->client->showscores != NO_SCOREBOARD)
 		return;
 
-	if (ent->client->resp.scoreboard_frame > level.framenum)
+	if (ent->client->resp.scoreboard_frame > level.framenum) //esc used
 		return;
 
 	//set scoreboard
@@ -574,7 +566,7 @@ void CheckDMRules (void)
 	int		count=0;
 	int     count_players = 0; //ready to play
 	edict_t	*doot;
-	int respawntime = (int)timelimit->value * 600; //use timelimit as respawn counter
+	int respawntime = (int)timelimit->value * 600; //minutes in frametime. use timelimit as respawn counter
 	qboolean respawn = false;
 
 
@@ -631,9 +623,14 @@ void CheckDMRules (void)
 #if 1 //ndef HYPODEBUG
 	if (!count_players)
 	{
-		gi.bprintf(PRINT_HIGH, "No players currently playing.\n");
-		GameEND();
-		return;
+		if (count > 0 && level.nav_TF_autoRoute && level.waveNum == 0)
+			WaveIdle(); //routing player went to spec
+		else
+		{
+			gi.bprintf(PRINT_HIGH, "No players currently playing.\n");
+			GameEND();
+			return;
+		}
 	}
 
 	if ((count == 0) && (level.framenum > 12000))
@@ -743,40 +740,21 @@ void ExitLevel (void)
 	int		i;
 	edict_t	*ent;
 	char	command [256];
-	char buf[1024];
+	int		count = 0;
 
 	level.player_num=0;
 
-	buf[0]=0;
-	for (i=0 ; i<maxclients->value ; i++) {
-		ent = g_edicts + 1 + i;
-		if (!ent->inuse) continue;
-		if (ent->client->pers.rconx[0])
-			Info_SetValueForKey(buf,ent->client->pers.ip,ent->client->pers.rconx);
+	/*for_each_player(ent, i){ //MM2.0
+		count++;
 	}
-	gi.cvar_set("rconx",buf);
+	if (!count && ResetServer(true))
+		return;*/ // server reset instead
+	
 
-	if (keep_admin_status) {
-		for (i=0 ; i<maxclients->value ; i++) {
-			ent = g_edicts + 1 + i;
-			if (!ent->inuse) continue;
-			if (ent->client->pers.admin>NOT_ADMIN) {
-				gi.cvar_set("modadmin",ent->client->pers.ip);
-                if(ent->client->pers.admin==ELECTED)
-                    gi.cvar_set("admintype", "1");
-                else if(ent->client->pers.admin==ADMIN)
-                    gi.cvar_set("admintype", "2");
-				break;
-			}
-		}
-		if (i==maxclients->value)
-        {
-			gi.cvar_set("modadmin","");
-            gi.cvar_set("admintype","");
-        }
-	}
-
-	Com_sprintf (command, sizeof(command), "gamemap \"%s\"\n", level.changemap);
+	if (skill->latched_string) //hypov8 force skill changes
+		Com_sprintf (command, sizeof(command), "map \"%s\"\n", level.changemap);
+	else
+		Com_sprintf (command, sizeof(command), "gamemap \"%s\"\n", level.changemap);
 	gi.AddCommandString (command);
 	level.changemap = NULL;
 	level.exitintermission = 0;
@@ -1203,7 +1181,7 @@ void G_RunFrame (void)
 					}
 				}
 #endif
-			    if (!ent->deadflag && ent->onfireent->inuse )//hypov8 add: bugfix for free'd entity)
+			    if (!ent->deadflag && ent->onfireent && ent->onfireent->inuse )//hypov8 add: bugfix for free'd entity)
 				{
 					edict_t *trav=NULL;
 					float	damage = 1;
@@ -1221,7 +1199,7 @@ void G_RunFrame (void)
 
 				ent->onfiretime--;
 
-				if (ent->onfiretime <= 0 || !ent->onfireent->inuse )//hypov8 add: bugfix for free's entity
+				if (ent->onfiretime <= 0 || !ent->onfireent || !ent->onfireent->inuse )//hypov8 add: bugfix for free's entity
 				{
 					ent->onfireent = NULL;
 					ent->onfiretime = 0;

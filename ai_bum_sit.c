@@ -219,9 +219,9 @@ void BumSitkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)/
 		}
 		if (message)
 		{
-			attacker->client->resp.score++;
+			//attacker->client->resp.score++; //TF moved to TF_giveCashOnKill.
 
-			attacker->client->pers.currentcash += giveCashOnKill(BOT_BUM);//FREDZ give cash
+			TF_giveCashOnKill(BOT_BUM, self);//FREDZ give cash
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

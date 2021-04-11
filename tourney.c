@@ -223,7 +223,6 @@ void SpawnPlayer () // Here I spawn players - 1 per server frame in hopes of red
                 ClientBeginDeathmatch( self );
                 self->client->resp.is_spawn = true;
                 self->client->pers.player_dead = FALSE;//FREDZ
-				self->client->pers.player_died = 0;//reset player died mid wave. deny cash
                 break;
             }
 		}
@@ -298,7 +297,7 @@ void WaveStart () // Starts the match
 
 	for_each_player(self,i)
 	{
-	    if ((int)wavetype->value == 0)//Short
+	    if ((int)wavetype->value == WAVETYPE_SHORT)//Short
         {
             switch (level.waveNum)
             {
@@ -317,7 +316,7 @@ void WaveStart () // Starts the match
             }
 
         }
-        else if ((int)wavetype->value == 1)//Medium
+        else if ((int)wavetype->value == WAVETYPE_MED)//Medium
         {
             switch (level.waveNum)
             {
@@ -339,7 +338,7 @@ void WaveStart () // Starts the match
                     gi.centerprintf(self,"The wave %i has begun.", level.waveNum + 1);
             }
         }
-        else//Long
+        else //WAVETYPE_LONG	//Long
         {
             switch (level.waveNum)
             {
@@ -377,11 +376,10 @@ void WaveStart () // Starts the match
 			self->current_menu_side = 0;
 			self->current_menu_left = 0;
 			self->current_menu_right = 0;
-
-			//give cash to ppl entering a new game
-			if (level.waveNum == 0)
-				self->client->pers.currentcash = waveGiveCash(0);
 		}
+		//hypov8 start everyone off with 150 cash?
+		if (level.waveNum == 0)
+			self->client->pers.currentcash = waveGiveCash(0);
 	}
 
 	gi.WriteByte( svc_stufftext );
@@ -436,8 +434,140 @@ void MatchEnd () // end of the match
 }
 */
 
+//tweek cast aim. they are deadly if u stand still, even at skil=0
+void TF_cast_AttackSkill(edict_t *cast, vec3_t startPos, vec3_t aimDir, int wepType)
+{
+	//weptype 0=bullet 1=rocket 2=grenade, 3=flamegun
+	int i;
+	float skil = ( 1.0f - ( skill->value / 4.0f ) ); //1.0 to 0.0 min
+	float rnd = random();
+	float delay = ( -0.05f - ( 0.04f * ( rnd * skil ) ) ); //0.050 100% hit 0.075 100% miss
+	float result2 = crandom()* 0.1f *( 0.2f* ( rnd * skil ) );
+	if (result2 < 0.0f)
+		result2 -= ( 0.05f * ( rnd * skil ) );
+	else
+		result2 += ( 0.05f * ( rnd * skil ) );
+
+	float distMin; //maintain min velocity
+	float distMax; //max rand velocity to add
+	float rocketDist;
+	vec3_t target, shiftVel, dist; //add velocity so vectorMA can do its thing
+
+	if (!cast->enemy)
+		return;
+
+	//if (VectorCompare(enemyPos, vec3_origin))
+	VectorCopy(cast->enemy->s.origin, target); //move
+
+	
+	if (wepType == 0){ //bullets
+		distMin = 200;
+		distMax = 120;
+		target[2] += cast->enemy->viewheight;
+	}
+	else if (wepType == 1){ //rocket
+		distMin = 200;
+		distMax = 200;
+		target[2] -= 24;
+		//result *= 2; //move aim back more..
+		delay = ( -0.1f - ( 0.3f * ( rnd * skil ) ) );
+	}
+	else if (wepType == 2){ //grenade
+		distMin = 200;
+		distMax = 200;
+		target[2] += cast->enemy->viewheight;
+	}
+	else	//flamegun
+	{
+		distMin = 200;
+		distMax = 400;
+		target[2] += cast->enemy->viewheight;
+	}
+
+	//copy orig velocity
+	VectorCopy(cast->enemy->velocity, shiftVel);
+
+	//dont predict small jump/falls
+	if (shiftVel[2] > -200.0f && shiftVel[2] < 350.0f)
+		shiftVel[2] = 0.0f;
+
+	//prediction for rockets. use rocket speed/distance
+	if (wepType == 1){ 
+		VectorSubtract(cast->enemy->s.origin, cast->s.origin, dist);
+		rocketDist = VectorDistance(cast->enemy->s.origin, startPos);
+		if (rocketDist >300)
+			VectorMA(target, rocketDist/900, shiftVel, target);
+	}
+
+	for (i = 0; i < 2; i++)
+	{
+		//move player to fake bad aim..
+		if (shiftVel[i] < 300 && shiftVel[i] > -300)
+		{
+			float xy = ( 320 - ( fabs(shiftVel[i]) ) ) / 320; //speed multiplyer. based on existing speed
+			//float rand1 = distMin + ( distMax * skil ) * random(); //add randomness +min value
+			float dist1 = distMin + ( distMax*random() ); //add randomness +min value
+
+			if (shiftVel[i] < 0)
+				shiftVel[i] -= dist1 * xy * skil;
+			else if (shiftVel[i] > 0)
+				shiftVel[i] += dist1 * xy * skil;
+			else
+				shiftVel[i] = crandom() * ( ( distMin*1.5f ) + ( distMax*1.5f* skil) ) ;
+		}
+		else
+			gi.dprintf("to fast %s..\n", (i==0)? "x": "y");	
+	}
+#if 0
+	//move player to fake bad aim..
+	if (shiftVel[0] < 300 && shiftVel[0] > -300)
+	{
+		float x = ( 320 - ( fabs(shiftVel[0]) ) ) / 320; //speed multiplyer. based on existing speed
+		//float rand1 = distMin + ( distMax * skil ) * random(); //add randomness +min value
+		float dist1 = distMin + ( distMax*random() ); //add randomness +min value
+		if (shiftVel[0] < 0)
+			shiftVel[0] -= dist1 * x * skil;
+		else if (shiftVel[0] > 0)
+			shiftVel[0] += dist1 * x * skil;
+		else
+			shiftVel[0] = crandom() * ( ( distMin*1.5f ) + ( distMax*1.5f* skil) ) ;
+	}
+	else
+		gi.dprintf("to fast x..\n");
+
+	if( shiftVel[1] < 300 && shiftVel[1] > -300)
+	{
+		float y = (320-(fabs(shiftVel[1])))/320; //speed multiplyer. based on existing speed
+		float rand2 = distMin + ( distMax * random() ); //add randomness +min value
+
+		if (shiftVel[1] < 0)
+			shiftVel[1] -= rand2 * y * skil;
+		else if (shiftVel[1] > 0)
+			shiftVel[1] += rand2 * y * skil;
+		else
+			shiftVel[1] = crandom() * ((distMin*1.5f)+(distMax*1.5f * skil));
+	}
+	else
+	{
+		gi.dprintf("to fast y..\n");
+	}
+#endif
+
+	//shift aim point backwards
+	VectorMA(target, delay, shiftVel, target);
+	VectorSubtract (target, startPos, aimDir);
+	VectorNormalize (aimDir);
+
+
+	if (wepType == 2){ // lob the grenade
+		if (VectorDistance(cast->s.origin, cast->enemy->s.origin) > 512)
+			aimDir[2] += 0.4;
+	}
+}
+
+extern edict_t *boss_entityID;
 //give cash to killer. moved here for easy update
-int giveCashOnKill(int type)
+void TF_giveCashOnKill(int type , edict_t *cast)
 {
     //kf:
     //cyst 7$
@@ -456,22 +586,18 @@ int giveCashOnKill(int type)
 
 	int cashOut = 0;
 
-	int cashmelee=9;//was 6
-	int cashpistol=12;//was 8
-    int cashshotgun=15;//was 10
-    int cashtommygun=17;//was 10
-    int cashhmg=30;//was 20
-    int cashgrenade=21;//was 14
-    int cashbazooka=24;//was 16
-    int cashflamethrower=18;//was 12
-    int rat=15;//was 10
-    int dog=10;//was 6
-    int thug_sit=4;//Never used but use default pistol
-    int bum_sit=1;//Never used does not attack
-	//hypov8 note these seem low while playing
-	//if 1 player frags and other does nothing.
-	//the differnce at end round is not alot.
-	//my need to tweek waveGiveCash below
+	static const int cashmelee=9;//was 6
+	static const int cashpistol=12;//was 8
+    static const int cashshotgun=15;//was 10
+    static const int cashtommygun=17;//was 10
+    static const int cashhmg=30;//was 20
+    static const int cashgrenade=21;//was 14
+    static const int cashbazooka=24;//was 16
+    static const int cashflamethrower=18;//was 12
+    static const int cashrat=15;//was 10
+    static const int cashdog=10;//was 6
+    static const int cashthug_sit=4;//Never used but use default pistol
+    static const int cashbum_sit=1;//Never used does not attack
 	//FREDZ i think spawn_cash need to be abit higher, but not sure. first wave they can shotgun, tommygun
 	//Problem is new players that join in wave cash is abit low maybe?
 	//But yeah need maybe more tweaking. added 50% more cash
@@ -485,10 +611,10 @@ int giveCashOnKill(int type)
 
 	switch (type)
 	{
-    case BOT_RAT:			cashOut = rat; break;		/*rat*/
-    case BOT_DOG:			cashOut = dog; break;		/*dog*/
-    case BOT_BUM:			cashOut = bum_sit; break;		/*bum sit*/
-    case BOT_THUG_SIT:		cashOut = thug_sit; break;		/*thug sit*/
+    case BOT_RAT:			cashOut = cashrat; break;			/*rat*/
+    case BOT_DOG:			cashOut = cashdog; break;			/*dog*/
+    case BOT_BUM:			cashOut = cashbum_sit; break;		/*bum sit*/
+    case BOT_THUG_SIT:		cashOut = cashthug_sit; break;		/*thug sit*/
 	case BOT_BITCH_ME:		cashOut = cashmelee; break;		    /*bitch melee*/
 	case BOT_BITCH:			cashOut = cashpistol; break;	    /*bitch*/
 	case BOT_PUNK_SG:		cashOut = cashshotgun; break;		/*punk SG*/
@@ -517,7 +643,43 @@ int giveCashOnKill(int type)
 	case BOT_WHORE_GL:		cashOut = cashgrenade; break;		/*whore GL*/
 	case BOT_WHORE_ME:		cashOut = cashmelee; break;		    /*whore melee*/
 	}
-	return cashOut;
+	//return cashOut;
+
+	if (cast == boss_entityID)
+	{
+		int numWaves = WAVELEN_LONG-1;	//long
+			//get wave count
+		if ((int)wavetype->value == WAVETYPE_SHORT)		//short
+			numWaves =WAVELEN_SHORT-1;
+		else if ((int)wavetype->value == WAVETYPE_MED)	//med
+			numWaves = WAVELEN_MED-1;
+		
+		cashOut *= ceil(2.0f + (2.0f * ((float)(level.waveNum) / numWaves))); //2x to 4x
+	}
+
+	if (cashOut && cast->max_health > 0)
+	{
+		int i;
+		edict_t *dood;
+
+		for_each_player(dood, i)
+		{	//add percent of hits to calculate cash 
+			if (cast->damageTF_Counter[i])
+			{
+				float val = ( (float) cast->damageTF_Counter[i] / cast->max_health ) * cashOut;
+				dood->client->pers.currentcash += ceil(val);
+
+				//add score.
+				dood->client->resp.score++; //count as 1 hit at any damage	
+				if (cast->damageTF_Counter[i] >= (int)floor( cast->max_health / 2 ))
+					dood->client->resp.score ++; //count as 2 hits if they took most of the health
+			}
+		}
+	}
+	else
+	{
+		gi.dprintf("WARNING: invalid cashOut(%i) or max_health(%i)\n", cashOut, cast->max_health);
+	}
 }
 
 /*
@@ -536,40 +698,38 @@ See https://wiki.killingfloor2.com/index.php?title=Mechanics_(Killing_Floor_2)#G
 */
 int waveGiveCash(int type)
 {
-	int numWaves; //hypov8 note: more cash on shorter waves. make this = 11 if not desired
+	int numWaves;
+	int outCash;
 	float spawn_cash;
-	float novice	= 1900.0f / 2.5f;//Not in KF example
-	float easy		= 1750.0f / 2.5f;//2.5 is to comprise difference
-	float medium	= 1550.0f / 2.5f;
-	float hard		= 1700.0f / 2.5f;
-	float real		= 1550.0f / 2.5f;
+	static const float novice	= 1900.0f / 2.5f;//Not in KF example
+	static const float easy		= 1750.0f / 2.5f;//2.5 is to comprise difference
+	static const float medium	= 1550.0f / 2.5f;
+	static const float hard		= 1700.0f / 2.5f;
+	static const float real		= 1550.0f / 2.5f;
 
 	//get wave count
-	if ((int)wavetype->value == 0)		//short
-		numWaves =WAVELEN_SHORT;
-	else if ((int)wavetype->value == 1)	//med
+	if ((int)wavetype->value == WAVETYPE_SHORT)		//short
+		numWaves = WAVELEN_SHORT;
+	else if ((int)wavetype->value == WAVETYPE_MED)	//med
 		numWaves = WAVELEN_MED;
-	else 								//long
+	else	//WAVETYPE_LONG							//long
 		numWaves = WAVELEN_LONG;
 
 	//use skill value
-	if (skill->value == 0)			spawn_cash = novice;
-	else if (skill->value == 1)		spawn_cash = easy;
-	else if (skill->value == 2)		spawn_cash = medium;
-	else if (skill->value == 3)		spawn_cash = hard;
-	else							spawn_cash = real;
+	if ((int)skill->value == 0)			spawn_cash = novice;
+	else if ((int)skill->value == 1)		spawn_cash = easy;
+	else if ((int)skill->value == 2)		spawn_cash = medium;
+	else if ((int)skill->value == 3)		spawn_cash = hard;
+	else								spawn_cash = real;
 
+	if (type == 1) //survived the round
+		outCash = (int) ( spawn_cash * ( (float) ( level.waveNum + 1 ) / numWaves ) );
+	else if (type == 2) //died
+		outCash = (int) (( spawn_cash * ( (float) ( level.waveNum + 1 ) / numWaves ) ) * 0.5f); //halve cash
+	else //first round. give standard cash
+		outCash = 150;
 
-	switch (type)
-	{
-	case 1:		//survived the round
-		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));
-	case 2:		//dead, respawn with no existing cash. //note same as above
-		return (int)(spawn_cash * ((float)(level.waveNum + 1) / numWaves));//Todo need to check how much money it gives on wave 4 when normal people buy hmg
-	}
-
-	//first round. give standard cash
-	return 150;
+	return outCash;
 }
 
 void GameEND ()//FREDZ
@@ -582,6 +742,92 @@ void GameEND ()//FREDZ
     else
         SetupMapVote();
 }
+
+void TF_WaveEnd_GiveWeapons(edict_t *ent)
+{
+#if 1 //give back previous wep they died with 
+	int i;
+	for (i = 0; i < game.num_items; i++)
+	{
+		if (( itemlist[i].flags & IT_WEAPON ) && ent->client->resp.inventory_TF[i] && ! ent->client->pers.inventory[i] )
+		{
+			edict_t *it_ent;
+			//drop item on client
+			it_ent = G_Spawn();			
+			//it_ent->classname = strcpy(gi.TagMalloc(strlen(itemlist[i].classname)+1, TAG_LEVEL), itemlist[i].classname);
+			it_ent->classname = itemlist[i].classname;
+			SpawnItem (it_ent, &itemlist[i]);
+			Touch_Item (it_ent, ent, NULL, NULL);
+			if (it_ent->inuse)
+				G_FreeEdict(it_ent);
+
+			//ent->client->newweapon = &itemlist[i];
+			//ChangeWeapon(ent);
+			break;
+		}
+			//self->client->resp.coop_respawn.inventory[n] = self->client->pers.inventory[n];
+
+		//else if (itemlist[n].flags & (IT_WEAPON| IT_AMMO/*|IT_SILENCER|IT_POWERUP*/)) //TF keep weps?
+		//	self->client->resp.inventory_TF[n] = self->client->pers.inventory[n];
+
+		//self->client->pers.inventory[n] = 0;
+		//	int itmIdx = ITEM_INDEX(self->client->pers.weapon);
+		//self->client->resp.inventory_TF[itmIdx] = self->client->pers.inventory[itmIdx];
+	}
+
+
+
+
+#else//give free weps
+	gitem_t		*item, *ammo;
+	int i, id_item, id_ammo, gaveItem = 0;
+	char *weps[3] = {"Pistol Magnum Mod", "Shotgun", "Tommygun"};
+	int givWave[3] = { 2, 3, 4}; //end of wave # to give the weapon
+	char msg[256];
+	msg[0] = 0;
+	strcpy(msg, "You recieved a free");
+
+	for (i = 0; i < 3; i++)
+	{
+		if (level.waveNum < givWave[i])
+			continue;
+
+		item = FindItem(weps[i]);
+		id_item = ITEM_INDEX(item);
+		if (id_item && !ent->client->pers.inventory[id_item])
+		{
+			gaveItem = (1 << i);
+			strcat(msg, "\n");
+			strcat(msg, weps[i]);
+
+			ent->client->pers.inventory[id_item] = 1;
+			if (item->ammo)
+			{
+				ammo = FindItem(item->ammo);
+				id_ammo = ITEM_INDEX(ammo);
+				ent->client->pers.inventory[id_ammo] = ammo->quantity;
+				if (ent->client->pers.inventory[id_ammo] > ent->client->pers.max_bullets)
+					ent->client->pers.inventory[id_ammo] = ent->client->pers.max_bullets;
+			}
+
+			if ( i==0 && ent->client->pers.spectator == PLAYING &&
+				(ent->client->pers.weapon == FindItem ("Pistol Silencer") 
+				|| ent->client->pers.weapon == FindItem("Pistol")))
+			{
+				ent->client->newweapon = ent->client->pers.weapon;
+				ChangeWeapon (ent);
+			}
+		}
+	}
+
+	if (gaveItem)
+	{
+		strcat(msg, "\n");
+		gi.cprintf(ent, PRINT_CHAT, msg);
+	}
+#endif
+}
+
 void WaveEnd () //hypov8 end of the match
 {
 	edict_t *self;
@@ -609,32 +855,31 @@ void WaveEnd () //hypov8 end of the match
 		}
 
 		//give cash to ppl that survived the wave
-		if (!level.nav_TF_autoRoute
-			&& self->client->pers.spectator == PLAYING
-			&& !self->client->pers.player_died)
+		if (self->client->pers.spectator == PLAYING)
 		{
 			self->client->pers.currentcash += waveGiveCash(1);
+			//TF_WaveEnd_GiveWeapons(self);
 		}
-
-
 		//spawn players into buying time
-		if (self->client->pers.spectator == PLAYER_READY)
+		else if (self->client->pers.spectator == PLAYER_READY)
 		{
             self->flags &= ~FL_GODMODE;
             self->health = 0;
             meansOfDeath = MOD_RESTART;
             ClientBeginDeathmatch( self );
-			if (!level.nav_TF_autoRoute)
-				self->client->pers.currentcash += self->client->pers.player_died? 0 : waveGiveCash(2); //dead or spec
+			if (self->client->pers.player_died)
+				self->client->pers.currentcash += waveGiveCash(2); //died
+			else
+				self->client->pers.currentcash += waveGiveCash(1); //spec
 		}
 
-		if (level.nav_TF_autoRoute)
-			self->client->pers.currentcash += waveGiveCash(1);
+		if (level.nav_TF_autoRoute)//add money to all players
+			self->client->pers.currentcash = 200 + waveGiveCash(1); //bonus!!
 
 		//reset player died mid wave. deny cash
 		self->client->pers.player_died = 0;
 
-		if (self->client->showscores == SCORE_TF_HUD)
+		if (self->client->showscores == SCORE_TF_HUD) //todo show players?
 			self->client->showscores = NO_SCOREBOARD;
 	}
 
@@ -659,6 +904,11 @@ void WaveBuy()  // start buy zone
 	level.startframe = level.framenum;
 	gi.bprintf (PRINT_HIGH,"Buy zone for wave %i will end in 60 seconds.\n", level.waveNum+1);
     G_ClearUp (NULL, FOFS(classname));
+
+	//ding ding ding?
+	gi.WriteByte(svc_stufftext);
+	gi.WriteString("play world/ding.wav\n");
+	gi.multicast(vec3_origin, MULTICAST_ALL);
 
     level.buyzone = true;//FREDZ stop shooting
 
@@ -726,8 +976,16 @@ void WaveIdle()
 
 	if (count_players)
 	{
-		gi.bprintf(PRINT_HIGH,"The server is now ready to start a wave.\n");
-		WaveStart_Countdown();
+		if (level.nav_TF_autoRoute)
+		{
+			cast_TF_free();
+			WaveStart ();
+		}
+		else
+		{
+			gi.bprintf(PRINT_HIGH, "The server is now ready to start a wave.\n");
+			WaveStart_Countdown();
+		}
 	}
 }
 
@@ -758,23 +1016,28 @@ void CheckStartWave ()  // 15 countdown before matches
 		WaveStart ();
 		return;
 	}
+
 	//stop counter if nobody wants to play
 	for_each_player(self,i)
 	{
 		if (self->client->pers.spectator != SPECTATING)
 			count_players++;
+
+		TF_ScoreBoard(self); //TF: update mini hud
 	}
+
 	if (!count_players)
 	{
-	    #if DIRECTSTART
-		gi.bprintf(PRINT_HIGH,"Players need to join to start a wave.\n");
-		WaveIdle();
+		if (level.waveNum == 0)
+		{
+			WaveIdle();
+		}
+		else
+		{
+			gi.bprintf(PRINT_HIGH, "Players not playing, other map.\n");
+			GameEND();
+		}
 		return;
-        #else
-        gi.bprintf(PRINT_HIGH,"Players not playing, other map.\n");
-        GameEND ();
-		return;
-        #endif
 	}
 
 //	if ((level.framenum % 10 == 0 ) && (level.framenum > level.startframe + 105)) //150-45
@@ -793,11 +1056,11 @@ void CheckStartWave ()  // 15 countdown before matches
 void CheckStartPub () // 30 second countdown before server starts (MH: reduced from 35s)
 {
 
-    #if !DIRECTSTART
+#if !DIRECTSTART
 	if (level.framenum >= 300)
 #else
 	if (level.framenum >= 60) //hypov8 allow 6 secs to let other players join
-    #endif
+#endif
 	{
 		edict_t		*self;
         int         i;
@@ -813,7 +1076,6 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 
 		level.modeset = WAVE_SPAWN_PLYR; //spawn players straight away
 
-		#if !DIRECTSTART
 		//make sure we have enough spawns
         if (!level.spSpawnPointCount)
 		{
@@ -825,12 +1087,11 @@ void CheckStartPub () // 30 second countdown before server starts (MH: reduced f
 			gi.bprintf(PRINT_HIGH, "ERROR: No deathmatch spawn points in map.\n");
 			GameEND();
 		}
-		if (level.dmSpawnPointCount < 4)
+		else if (level.dmSpawnPointCount < 4)
 		{
 			gi.bprintf(PRINT_HIGH, "WARNING: Not enough deathmatch spawn points in map.\n");
 			//GameEND(); //hypov8 this is not 'required'. bots can spawn ontop of each other
 		}
-		#endif
 
 		return;
 	}
@@ -914,11 +1175,11 @@ void CheckBuyWave ()
 
 int CheckEndWave_GameType()
 {
-	if ((int)wavetype->value == 0) {		//short
+	if ((int)wavetype->value == WAVETYPE_SHORT) {		//short
 		if (level.waveNum == WAVELEN_SHORT -1)
 			return  1;
 	}
-	else if ((int)wavetype->value == 1) {	//med
+	else if ((int)wavetype->value == WAVETYPE_MED) {	//med
 		if (level.waveNum == WAVELEN_MED -1)
 			return 1;
 	}
@@ -1072,8 +1333,10 @@ void CheckEndVoteTime () // check the timelimit for voting next level/start next
 				wining_map = i;
 		}
 		// MH: not writing maplist (no rank to update)
-
-		Com_sprintf (command, sizeof(command), "gamemap \"%s\"\n", custom_list[vote_set[wining_map]].custom_map);
+		if (skill->latched_string) //hypov8 force skill changes
+			Com_sprintf (command, sizeof(command), "map \"%s\"\n", custom_list[vote_set[wining_map]].custom_map);
+		else
+			Com_sprintf (command, sizeof(command), "gamemap \"%s\"\n", custom_list[vote_set[wining_map]].custom_map);
 		gi.AddCommandString (command);
 	}
 }
@@ -1087,6 +1350,9 @@ void CheckVote() // check the timelimit for an admin vote
 		{
 			case VOTE_ON_ADMIN:
 				gi.bprintf(PRINT_HIGH,"The request for admin has failed!\n");
+				break;
+			case VOTE_ON_MAP:
+				gi.bprintf(PRINT_HIGH, "The request for a map change has failed\n");
 				break;
 		}
 		level.voteset = NO_VOTES;

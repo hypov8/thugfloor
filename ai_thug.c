@@ -567,7 +567,7 @@ void thug_melee( edict_t *self )
 //	if (skill->value > 1.0)
 //		damage *= 1.0 + 0.5*(float)(skill->value - 1.0);
 
-	fire_blackjack( self, start, forward, damage, 10, MOD_BLACKJACK );
+	fire_blackjack( self, start, forward, damage, 10, MOD_BLACKJACK ); //hypov8 todo: skill
 
 }
 
@@ -637,7 +637,7 @@ void thug_firegun( edict_t *self, vec3_t ofs )
 
 	// project enemy back a bit and target there
 	VectorCopy (self->enemy->s.origin, target);
-	VectorMA (target, (-0.5 * (random()*0.8 + 0.2)) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);
+	//VectorMA (target, (-0.5 * (random()*0.8 + 0.2)) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);//TF disable
 	target[2] += self->enemy->viewheight;
 
 	flash_number = MZ2_GUNNER_MACHINEGUN_1;
@@ -1016,12 +1016,12 @@ void Thugkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//F
 		}
 		if (message)
 		{
-			attacker->client->resp.score++;
+			//attacker->client->resp.score++; //TF moved to TF_giveCashOnKill.
 
 			if ((self->cast_info.aiflags & AI_MELEE))//FREDZ give cash
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_THUG_ME);
+				TF_giveCashOnKill(BOT_THUG_ME, self);
             else
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_THUG);
+				TF_giveCashOnKill(BOT_THUG, self);
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;

@@ -269,9 +269,9 @@ void Ratkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//FR
 		}
 		if (message)
 		{
-			attacker->client->resp.score++;
+			//attacker->client->resp.score++; //TF moved to TF_giveCashOnKill.
 
-			attacker->client->pers.currentcash += giveCashOnKill(BOT_RAT);//FREDZ give cash
+			TF_giveCashOnKill(BOT_RAT, self);//FREDZ give cash
 
 			//FREDZ killstreak
 /*			attacker->client->resp.killstreak++;
@@ -622,7 +622,7 @@ qboolean rat_attack (edict_t *self)
 	dist = VectorNormalize( vec );
 
 	// start panting now when we stop
-	self->cast_info.move_stand = &rat_move_run;
+	self->cast_info.move_stand = &rat_move_run; //hypov8 run?
 
 
 	{

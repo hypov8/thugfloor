@@ -3032,13 +3032,20 @@ qboolean AI_canmove( edict_t *self, vec3_t dest )
 			&&	(tr.ent != world) /* && [tr.ent is not an enemy (neutral or friend)]*/
 			&&	(tr.ent->cast_info.avoid))
 		{
-
-			if (tr.ent->cast_info.last_avoid < (level.time - 2))
-			if (	(tr.ent->cast_info.currentmove->frame[0].aifunc == ai_stand)
-				||	(tr.ent->enemy && (VectorDistance(tr.ent->enemy->s.origin, tr.ent->s.origin) > 64)))
+//CDEATH
+            if (tr.ent->cast_info.currentmove == NULL)    //CDEATH - Added this check
+            {
+                gi.dprintf("WARNING: currentmove is NULL for: %s\n", tr.ent->classname);
+            }
+//END CDEATH
+			else if (tr.ent->cast_info.last_avoid < ( level.time - 2 ))
 			{
-				// tell them to move out the way, since they're not doing much
-				tr.ent->cast_info.avoid(tr.ent, self, false);
+				if (( tr.ent->cast_info.currentmove->frame[0].aifunc == ai_stand )
+					|| ( tr.ent->enemy && ( VectorDistance(tr.ent->enemy->s.origin, tr.ent->s.origin) > 64 ) ))
+				{
+					// tell them to move out the way, since they're not doing much
+					tr.ent->cast_info.avoid(tr.ent, self, false);
+				}
 			}
 
 			// stop going for our current node
@@ -3845,7 +3852,7 @@ gonetolouie:
 					return;
 				}
 
-				if (pos = NAV_GetCombatPos( self, (*goal), self->cast_info.aiflags & AI_MELEE )) //hypov8 todo: fix crash
+				if (pos = NAV_GetCombatPos( self, (*goal), self->cast_info.aiflags & AI_MELEE ))
 				{
 					edict_t *combatent;
 
@@ -4291,10 +4298,19 @@ got_goal:
 			if (/*(*goal) ==*/ self->enemy)		// don't bother going for them if there isn't a route
 			{
 				self->combat_goalent = NULL;
-				AI_ForceTakeCover( self, self->enemy, false );
+				if (!AI_ForceTakeCover(self, self->enemy, false))
+				{
+					//
 
+					if (!self->gender) //dog #2. walks away instead on standing in 1 spot. fixme!!
+					{
+						self->cast_info.avoid(self, self->enemy, false);//hypov8 add: dog?
+						//self->cast_info.backoff //dog_TF_retreat(self);
+					}
+
+				}
 //				if (self->cast_info.aiflags & AI_TAKE_COVER)
-					return;
+				return;
 			}
 			else if (self->combat_goalent && (*goal) == self->combat_goalent)
 			{
@@ -4431,10 +4447,18 @@ got_goal:
 							self->cast_info.currentmove = self->cast_info.move_start_climb;
 					}
 					else	// abort running for a bit
-					{
-						self->cast_info.currentmove = self->cast_info.move_stand;
-						self->cast_info.pausetime = level.time + 1.0;
-						self->nav_data.goal_index = 0;
+					{ //hypov8 stop dogs chasing target(they just stand at base)
+						if (!self->gender) //dog. walks away instead on standing in 1 spot. fixme!!
+						{
+							self->cast_info.avoid(self, self->enemy, false);
+							//self->cast_info.backoff	//dog_TF_retreat(self);
+						}
+						else
+						{
+							self->cast_info.currentmove = self->cast_info.move_stand;
+							self->cast_info.pausetime = level.time + 1.0;
+							self->nav_data.goal_index = 0;
+						}
 
 						return;
 					}
@@ -4456,7 +4480,7 @@ got_goal:
 						vec3_t	vec;
 						float	length;
 
-						AI_jump (self, 200);
+						AI_jump (self, speed); //hypov8 was 200
 
 						VectorCopy(goal_node->jump_vel, vec);
 
@@ -4484,7 +4508,7 @@ got_goal:
 						self->velocity[2] = goal_node->jump_vel[2];
 
 						if (goal_node->jump_vel[2] > 200)
-							self->velocity[2] = 300;
+							self->velocity[2] = 350; //hypov8 they dont make it at 300
 						else if (goal_node->jump_vel[2] < 180)
 							self->velocity[2] = 180;
 					}

@@ -12,6 +12,7 @@
 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 static int CheckClientRejoin(edict_t *ent);
+void TF_WaveEnd_GiveWeapons(edict_t *ent); //TF
 
 // MH: cloud spawning functions
 void think_new_first_raincloud_client (edict_t *self, edict_t *clent);
@@ -515,7 +516,7 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 					}
 					else
 					{
-						attacker->client->resp.score++;
+						attacker->client->resp.score++; //hypov8 moved to TF_giveCashOnKill, given to highest damage..
 
 						//FREDZ killstreak
 /*						attacker->client->resp.killstreak++;
@@ -994,12 +995,29 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 			(!self->client->showscores || self->client->showscores == SCORE_TF_HUD)) // MH: only if not already showing scores
 			Cmd_Help_f (self, 0);		// show scores
 
-		// clear inventory
-		// this is kind of ugly, but it's how we want to handle keys in coop
-		for (n = 0; n < game.num_items; n++)
+
+		//TF store last weapon
+		n = ITEM_INDEX(self->client->pers.weapon);
+		self->client->resp.inventory_TF[n] = self->client->pers.inventory[n];
+#if 0 // also store ammo counts? packs might cause issue here
+		if (self->client->pers.weapon->ammo)
 		{
+			gitem_t *ammo;
+			ammo = FindItem(self->client->pers.weapon->ammo);
+			itmIdx = ITEM_INDEX(ammo);
+			self->client->resp.inventory_TF[n] = self->client->pers.inventory[n];
+		}
+#endif
+
+		// clear inventory
+		for (n = 0; n < game.num_items; n++)
+		{	// this is kind of ugly, but it's how we want to handle keys in coop
 			if (coop->value && itemlist[n].flags & IT_KEY)
 				self->client->resp.coop_respawn.inventory[n] = self->client->pers.inventory[n];
+#if 0 // store all weapons?
+			else if (itemlist[n].flags & (IT_WEAPON| IT_AMMO/*|IT_SILENCER|IT_POWERUP*/)) //TF keep weps?
+				self->client->resp.inventory_TF[n] = self->client->pers.inventory[n];
+#endif
 			self->client->pers.inventory[n] = 0;
 		}
 
@@ -1152,48 +1170,7 @@ void InitClientPersistant (gclient_t *client)
 			client->pers.inventory[client->ammo_index] = 50;
 			client->pers.weapon = item;
 			ammo = FindItem (item->ammo);
-
-			if ((level.waveNum >= 2) && (timelimit->value)) //todo. players in wave dont get this!!!!
-			{
-				item = FindItem("Shotgun");
-				client->pers.selected_item = ITEM_INDEX(item);
-				client->pers.inventory[client->pers.selected_item] = 1;
-				client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
-				client->pers.inventory[client->ammo_index] = 50;
-				client->pers.weapon = item;
-				ammo = FindItem(item->ammo);
-			}
-
-			if ((level.waveNum >= 4) && (timelimit->value)) //todo. players in wave dont get this!!!!
-			{
-				item = FindItem("Tommygun");
-				client->pers.selected_item = ITEM_INDEX(item);
-				client->pers.inventory[client->pers.selected_item] = 1;
-				client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
-				client->pers.inventory[client->ammo_index] = 50;
-				client->pers.weapon = item;
-				ammo = FindItem(item->ammo);
-			}
-
-
-			//give weapon back to client. minimal ammo and no mods etc..
-			//should this be the first selected wep?
-			if (client->pers.weaponStore)
-			{
-				item = client->pers.weaponStore;
-				client->pers.selected_item = ITEM_INDEX(item);
-				client->pers.inventory[client->pers.selected_item] = 1;
-
-                if (item->ammo)
-				{
-					client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
-					client->pers.inventory[client->ammo_index] = ammo->quantity;
-					ammo = FindItem (item->ammo);
-				}
-				client->pers.weapon = item;
-
-			}
-			AutoLoadWeapon( client, item, ammo );
+			AutoLoadWeapon( client, item, ammo );			
 	}
 	else	// start holstered in single player
 	{
@@ -1201,17 +1178,23 @@ void InitClientPersistant (gclient_t *client)
 		client->pers.weapon = NULL;
 	}
 
-
 	client->pers.health			= 100;
 	client->pers.max_health		= 100;
-
+#if 0
 	client->pers.max_bullets	= 200;
 	client->pers.max_shells		= 100;
 	client->pers.max_rockets	= 25;
 	client->pers.max_grenades	= 12;
 	client->pers.max_gas		= 200;
 	client->pers.max_308cal		= 90;
-
+#else //TF force low values to make peope buy packs
+	client->pers.max_bullets	= 50;
+	client->pers.max_shells		= 15;
+	client->pers.max_rockets	= 5;
+	client->pers.max_grenades	= 3;
+	client->pers.max_gas		= 25;
+	client->pers.max_308cal		= 30;
+#endif
 	// RAFAEL
 //	client->pers.max_magslug	= 50;//Q2 Xatrix MOD
 //	client->pers.max_trap		= 5;
@@ -1643,7 +1626,7 @@ void SelectSpawnPoint (edict_t *ent, vec3_t origin, vec3_t angles)
 
 
 //thugfloor
-float cast_PlayersRangeFromSpot(edict_t *spot)
+float TF_cast_PlayersRangeFromSpot(edict_t *spot)
 {
 	edict_t	*player;
 	float	bestplayerdistance;
@@ -1679,6 +1662,42 @@ float cast_PlayersRangeFromSpot(edict_t *spot)
 }
 
 //duplicate of dm spawn. but also tests for ai presence
+edict_t *TF_cast_SelectFarthestDeathmatchSpawnPoint(edict_t *ent)
+{
+		edict_t	*bestspot;
+	float	bestdistance, bestplayerdistance;
+	edict_t	*spot;
+
+	// prevent respawning where they died
+	if (ent->health <= 0 && ent->solid)
+		ent->health = 1;
+
+spotagain:
+
+	spot = NULL;
+	bestspot = NULL;
+	bestdistance = -1;
+	while ((spot = G_Find (spot, FOFS(classname), "info_player_deathmatch")) != NULL)
+	{
+		bestplayerdistance = TF_cast_PlayersRangeFromSpot (spot);
+
+		if ((0.8 * bestplayerdistance) > bestdistance
+			|| (bestplayerdistance >= (0.8 * bestdistance) && !(rand() & 3)))
+		{
+			bestspot = spot;
+			bestdistance = bestplayerdistance;
+		}
+	}
+
+	if (!bestspot)
+	{
+		goto spotagain;
+	}
+
+	return bestspot;
+}
+
+//duplicate of dm spawn. but also tests for ai presence
 edict_t *cast_SelectRandomDeathmatchSpawnPoint(edict_t *ent)
 {
 	edict_t	*spot, *spot1, *spot2;
@@ -1693,25 +1712,23 @@ edict_t *cast_SelectRandomDeathmatchSpawnPoint(edict_t *ent)
 	while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL)
 	{
 		count++;
-		//if (ent->client->pers.spectator != SPECTATING)
+
+		range = TF_cast_PlayersRangeFromSpot(spot);
+		if (range < range1)
 		{
-			range = cast_PlayersRangeFromSpot(spot);
-			if (range < range1)
-			{
-				range2 = range1;
-				spot2 = spot1;
-				range1 = range;
-				spot1 = spot;
-			}
-			else if (range < range2)
-			{
-				range2 = range;
-				spot2 = spot;
-			}
-			// count occupied spots
-			if (!range)
-				count0++;
+			range2 = range1;
+			spot2 = spot1;
+			range1 = range;
+			spot1 = spot;
 		}
+		else if (range < range2)
+		{
+			range2 = range;
+			spot2 = spot;
+		}
+		// count occupied spots
+		if (!range)
+			count0++;
 	}
 	//hypov8 todo: should we spawn around the boss?
 	if (!count)
@@ -1731,7 +1748,7 @@ edict_t *cast_SelectRandomDeathmatchSpawnPoint(edict_t *ent)
 	do
 	{
 		spot = G_Find(spot, FOFS(classname), "info_player_deathmatch");
-		if (spot == spot1 || spot == spot2 || (count0 > 2 && !cast_PlayersRangeFromSpot(spot)))
+		if (spot == spot1 || spot == spot2 || (count0 > 2 && !TF_cast_PlayersRangeFromSpot(spot)))
 			selection++;
 	} while (selection--);
 
@@ -1944,12 +1961,21 @@ void PutClientInServer (edict_t *ent)
 	// deathmatch wipes most client data every spawn
 	if (deathmatch->value)
 	{
+		int n;
 		char		userinfo[MAX_INFO_STRING];
 		resp = client->resp;
 		memcpy (userinfo, client->pers.userinfo, sizeof(userinfo));
 		InitClientPersistant (client);
 		ent->move_frame=0;
         ent->name_change_frame = -80;  //just to be sure
+
+		//TF add stored weps
+		for (n = 0; n < game.num_items; n++)
+		{		
+			if ((itemlist[n].flags & (IT_WEAPON| IT_AMMO)) 
+			&& client->resp.inventory_TF[n] > client->pers.inventory[n])
+				client->pers.inventory[n] = client->resp.inventory_TF[n]; //TF
+		}
 		ClientUserinfoChanged (ent, userinfo);
 	}
 /*
@@ -2035,19 +2061,23 @@ void PutClientInServer (edict_t *ent)
 			ent->client->pers.spectator = PLAYER_READY;
 			ent->client->pers.player_died = true;//reset player died mid wave. deny cash
 		}
+		if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START)
+			ent->client->showscores = INFO_NEW_PLAYER;
+
 //		ent->movetype = MOVETYPE_NOCLIP;
         ent->movetype = MOVETYPE_SPECTATOR;//FREDZ example
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
 		ent->client->pers.weapon = NULL;
-		if (count_players >= maxPlayers) //message
+		if (count_players >= maxPlayers) //client message?
 		{
-			ent->client->pers.spectator = SPECTATING; //(level.nav_TF_autoRoute)? PLAYER_READY: 
+			ent->client->pers.spectator = SPECTATING;
 			gi.dprintf("Max clients of %i reached, refused client playing\n", maxPlayers);
 		}
 	}
 	else
 	{
+		TF_WaveEnd_GiveWeapons(ent);
 		ent->client->pers.spectator = PLAYING;
 		ent->movetype = MOVETYPE_WALK;
 		ent->solid = SOLID_BBOX;
@@ -2063,36 +2093,40 @@ void PutClientInServer (edict_t *ent)
 	    if(anti_spawncamp->value)
 		        client->invincible_framenum = level.framenum + 30;  //3 seconds
 
-//TF
-		if (level.nav_TF_autoRoute == 1 && level.node_data->node_count == 0 /*&& ent->nav_build_data*/)
+//TF nav
+		if (level.nav_TF_autoRoute == 1 /*&& ent->nav_build_data*/)
 		{
-			edict_t *spawn = NULL;
-			vec3_t old_origin;
-			VectorCopy(ent->s.origin, old_origin);
-
 			if (!ent->nav_build_data)
 			{	// create the nav_build_data structure, so we can begin dropping nodes
 				ent->nav_build_data = gi.TagMalloc(sizeof(nav_build_data_t), TAG_LEVEL);
 				memset(ent->nav_build_data, 0, sizeof(ent->nav_build_data));
 
 				ent->nav_build_data->jump_ent = G_Spawn();
-				VectorCopy(ent->maxs, ent->nav_build_data->jump_ent->maxs );
-				VectorCopy(ent->mins, ent->nav_build_data->jump_ent->mins );
+				VectorCopy(ent->maxs, ent->nav_build_data->jump_ent->maxs);
+				VectorCopy(ent->mins, ent->nav_build_data->jump_ent->mins);
 			}
 
-			// add nodes to spawn locations
-			while (spawn = G_Find(spawn, FOFS(classname), "info_player_deathmatch"))
+			//setup nodes  at each spawn point
+			if (level.node_data->node_count == 0)
 			{
-				node_t *newNode;
-				VectorCopy(spawn->s.origin, ent->s.origin);
-				newNode =  NAV_CreateNode(ent, spawn->s.origin, vec3_origin, NODE_NORMAL, -1, 0);
+				edict_t *spawn = NULL;
+				vec3_t old_origin;
+				VectorCopy(ent->s.origin, old_origin);
+
+				// add nodes to spawn locations
+				while (spawn = G_Find(spawn, FOFS(classname), "info_player_deathmatch"))
+				{
+					node_t *newNode;
+					VectorCopy(spawn->s.origin, ent->s.origin);
+					newNode = NAV_CreateNode(ent, spawn->s.origin, vec3_origin, NODE_NORMAL, -1, 0);
+				}
+				//move back
+				VectorCopy(old_origin, ent->s.origin);
 			}
-			//move back
-			VectorCopy(old_origin, ent->s.origin);
 
 			level.nav_shownode = 1;
 			gi.cvar_set("nav_debug","1"); //print messages
-			gi.cprintf(ent, PRINT_CHAT, "You are now creating \"nodes\".\nWalk around whole map once.\n**Dont jump unnecessarily**\n");
+			gi.cprintf(ent, PRINT_CHAT, "You are now creating \"nodes\".\nWalk around whole map once.\n** Dont jump unnecessarily **\n");
 		}
 //end TF
 
@@ -2455,9 +2489,9 @@ void ClientBeginDeathmatch (edict_t *ent)
 	G_InitEdict (ent);
 
 #if 1 //mm 2.0
-	if ((ent->client->pers.spectator != SPECTATING && (level.modeset == WAVE_BUYZONE || level.modeset == WAVE_SPAWN_PLYR)) //|| level.modeset == WAVE_START
+	if ((ent->client->pers.spectator != SPECTATING && (level.modeset == WAVE_BUYZONE || level.modeset == WAVE_SPAWN_PLYR || level.modeset == WAVE_IDLE))
 		|| (ent->client->ps.pmove.pm_type >= PM_DEAD)
-		|| (level.modeset == WAVE_ACTIVE && timelimit->value)
+		|| (level.modeset == WAVE_ACTIVE && timelimit->value) //let clients join mid wave
 		|| (ent->client->resp.enterframe == level.framenum)
 		)
 	{
@@ -2591,34 +2625,31 @@ void ClientBegin (edict_t *ent)
 // Papa - either show rejoin or MOTF scoreboards
 	if (ent->client->showscores != SCORE_REJOIN || !level.player_num) // MH: check player_num in case map changed
 		ent->client->showscores = SCORE_MOTD;
+	
+	//level.modeset == WAVE_START //INFO_NEW_PLAYER
 
 	ent->client->pers.fakeThief = 0;
 
-	if (keep_admin_status) {
-		a=gi.cvar("modadmin","",0)->string;
-		if (a[0]) {
-			edict_t *player;
-			for (i=0 ; i<maxclients->value ; i++) {
-				player = g_edicts + 1 + i;
-				if (!player->inuse) continue;
-				if (player->client->pers.admin>NOT_ADMIN) {
-					gi.cvar_set("modadmin","");
-                    gi.cvar_set("admintype","");
-					break;
-				}
-			}
-			if (i==maxclients->value) {
-				if (!strcmp(a,ent->client->pers.ip)) {
-					ent->client->pers.admin = atoi(gi.cvar("admintype", "", 0)->string);
-                    gi.cvar_set("modadmin","");
-                    gi.cvar_set("admintype","");
-                    gi.bprintf(PRINT_HIGH,"%s is now admin.\n",ent->client->pers.netname);
-				}
+	if (keep_admin_status) //MM2.0
+	{
+		edict_t *admin = GetAdmin();
+		if (admin)
+		{
+			gi.cvar_set("modadmin", "");
+			ent->client->pers.admin = NOT_ADMIN;
+		}
+		else
+		{	//hypo note: to use auto admin //set modadmin "\ip\loopback\type\2"
+			a = gi.cvar("modadmin", "", 0)->string;
+			if (a[0] && !strcmp(Info_ValueForKey(a, "ip"), ent->client->pers.ip))
+			{
+				ent->client->pers.admin = atoi(Info_ValueForKey(a, "type"));
+				gi.cvar_set("modadmin", "");
 			}
 		}
 	}
 	else
-		ent->client->pers.admin=NOT_ADMIN; // MH: moved here from above (fix)
+		ent->client->pers.admin = NOT_ADMIN;
 
 	a=gi.cvar("rconx","",0)->string;
 	if (a[0]) {
@@ -3182,14 +3213,15 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 
 		Info_SetValueForKey( userinfo, "skin", tempstr );
 		strncpy(ent->skins,tempstr,31);
-	}*/
+	}
 //	else
     if (!deathmatch->value)	// enforce thug with single player skin set
 	{
-		static char *singleplayerskin = "male_thug/018 016 010";
+		static char *singleplayerskin = "male_thug/018 016 010"; //041 026 010 default thug
 
 		Info_SetValueForKey( userinfo, "skin", singleplayerskin );
-	} else
+	} 
+	else
 		strncpy(ent->skins,s,31);
 
 	// now check it again after the filtering, and set the Gender accordingly
@@ -3199,7 +3231,11 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 	else if ((strstr(s, "male") == s) || (strstr(s, "thug")))
 		ent->gender = GENDER_MALE;
 	else
-		ent->gender = GENDER_NONE;
+		ent->gender = GENDER_NONE;*/
+
+//TF force skin. so clients can tell the differnce between friends or foe
+	Info_SetValueForKey( userinfo, "skin", "male_thug/041 026 010" );
+	ent->gender = GENDER_MALE;
 
 	extras=Info_ValueForKey (userinfo, "extras");
 
@@ -3349,8 +3385,7 @@ loadgames will.
 */
 qboolean ClientConnect (edict_t *ent, char *userinfo)
 {
-	char	*value, *skinvalue; //*command;
-	int		i;
+	char	*value;
 	edict_t	*doot; int j;
 
 	ent->client = NULL;
@@ -3472,24 +3507,16 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 //	if (teamplay->value)
 //		ent->client->pers.team = 0;
 
-// check to see if a player was disconnected
-	i = 0;
-	skinvalue = Info_ValueForKey (userinfo, "skin");
-	while (i < level.player_num)
-	{
-		// MH: not checking skins because they are random
-		if (Q_stricmp (ent->client->pers.netname,playerlist[i].player) == 0)
-			ent->client->showscores = SCORE_REJOIN;
-
-		i++;
-	}
-
 	// MH: fix to allow rejoin in DM
 /*	if (teamplay->value || ent->client->showscores == SCORE_REJOIN)
 		ent->client->pers.spectator = SPECTATING;
 	else*/
 
     ent->client->pers.spectator = PLAYER_READY; //hypov8 dont enter a current wave
+
+	if (level.modeset == WAVE_ACTIVE || level.modeset == WAVE_START)
+		ent->client->showscores = INFO_NEW_PLAYER;
+
 #if 1 //mm 2.0
 	// check to see if a player was disconnected
 	if (CheckClientRejoin(ent) >= 0)
@@ -3560,11 +3587,8 @@ void ClientDisconnect (edict_t *ent)
 			}
 			playerlist[level.player_num].team = ent->client->pers.team;
 			playerlist[level.player_num].time = ent->client->resp.time; // MH: changed
-/* // MH: not used
-			skinvalue = Info_ValueForKey (ent->client->pers.userinfo, "skin");
-			strcpy (playerlist[level.player_num].skin, skinvalue);
-*/
 			strcpy (playerlist[level.player_num].player, level.playerskins[playernum]); //ent->client->pers.netname
+			
 			level.player_num++;
 		}
 
@@ -3750,9 +3774,19 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			ent->client->scrollmenu_side = ucmd->sidemove;
 		}
 
-		//client->ps.pmove.pm_type = PM_FREEZE;
-		client->ps.pmove.pm_type = PM_DEAD;
-		return;
+		client->ps.pmove.pm_type = PM_FREEZE;
+		//client->ps.pmove.pm_type = PM_DEAD;
+
+		ucmd->forwardmove = ucmd->sidemove = ucmd->upmove = 0;
+		for (i=0 ; i<3 ; i++)
+			client->ps.pmove.delta_angles[i] = ANGLE2SHORT(client->ps.viewangles[i] - SHORT2ANGLE(ucmd->angles[i]));
+
+		//hypov8 let server send some client data then stop player moving
+		if (ent->velocity[0] == 0&&	ent->velocity[1] == 0)
+		{
+			//client->ps.pmove.pm_type = PM_FREEZE;
+			return;
+		}
 	}
 
 	pm_passent = ent;
@@ -4524,8 +4558,8 @@ void ClientBeginServerFrame (edict_t *ent)
         else
 			ent->client->resp.time++;
     }
-
-
+#else
+			ent->client->resp.time++;
 #endif
 	// Ridah, hack, make sure we duplicate the episode flags
 	ent->episode_flags |= ent->client->pers.episode_flags;

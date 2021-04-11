@@ -534,7 +534,7 @@ void punk_firehmg( edict_t *self )
 
 		// project enemy back a bit and target there
 		VectorCopy (self->enemy->s.origin, target);
-		VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);
+		//VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);//TF disable
 
 		if (self->enemy->maxs[2] < self->cast_info.standing_max_z)
 			target[2] += - ( 8 * random());
@@ -679,7 +679,7 @@ void punk_firegun( edict_t *self )
 
 		target[2] -= 24; // this will help create more splash damage
 
-		VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);
+		//VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);//TF disable
 
 		if (self->enemy->maxs[2] < self->cast_info.standing_max_z)
 			target[2] += - ( 8 * random());
@@ -736,7 +736,7 @@ void punk_firegun( edict_t *self )
 
 		// project enemy back a bit and target there
 		VectorCopy (self->enemy->s.origin, target);
-		VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);
+		//VectorMA (target, (-0.5 * (crandom())) * (1.0 - (skill->value/4.0)), self->enemy->velocity, target);//TF disable
 
 		if (self->enemy->maxs[2] < self->cast_info.standing_max_z)
 			target[2] += - ( 8 * random());
@@ -863,8 +863,11 @@ skipbail:
 		// Ridah, lob it higher if they're further away
 		if (VectorDistance(self->s.origin, self->enemy->s.origin) > 512)
 			aim[2] += 0.4;
-
+#if 1
+		cast_fire_grenade(self, start, aim, 150, 450, 2.0, 256, 0); // flashtype = ?);
+#else
 		fire_grenade (self, start, aim, 150, 450, 2.0, 256);//FREDZ should be cast_fire_grenade
+#endif
 		gi.sound(self, CHAN_AUTO, gi.soundindex("weapons/grenade_launcher/gl_fire.wav"), 1, ATTN_NORM, 0);
 	}
 	else
@@ -1302,22 +1305,22 @@ void Punkkilledmessage (edict_t *self, edict_t *inflictor, edict_t *attacker)//F
 		}
 		if (message)
 		{
-			attacker->client->resp.score++;
+			//attacker->client->resp.score++; //TF moved to TF_giveCashOnKill.
 
             if (self->spawnflags & PUNK_SHOTGUN)//FREDZ give cash
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_SG);
+				TF_giveCashOnKill(BOT_PUNK_SG, self);
             else if (self->spawnflags & PUNK_TOMMYGUN)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_TG);
+				TF_giveCashOnKill(BOT_PUNK_TG, self);
             else if (self->spawnflags &	PUNK_HMG)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_HMG);
+				TF_giveCashOnKill(BOT_PUNK_HMG, self);
             else if (self->spawnflags & PUNK_BAZOOKA)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_RL);
+				TF_giveCashOnKill(BOT_PUNK_RL, self);
             else if (self->spawnflags & PUNK_FLAMEGUN)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_FL);
+				TF_giveCashOnKill(BOT_PUNK_FL, self);
             else if (self->spawnflags & PUNK_GRENADE)
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_GL);
+				TF_giveCashOnKill(BOT_PUNK_GL, self);
             else    //Flashlight?
-				attacker->client->pers.currentcash += giveCashOnKill(BOT_PUNK_ME);
+				TF_giveCashOnKill(BOT_PUNK_ME, self);
 
 
 

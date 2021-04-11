@@ -106,8 +106,8 @@ mframe_t	dog_frames_low_atk[] =
 	ai_turn2,	  8.570, dog_bite,	// frame 1
 	ai_turn2,	 11.397, dog_bite,	// frame 2
 	ai_turn2,	  5.512, NULL,	// frame 3
-	ai_turn2,	  1.776, dog_bite,	// frame 4
-	ai_turn2,	 -0.788, dog_bite,	// frame 5
+	ai_turn2,	  1.776, NULL,	// frame 4 //dog_bite
+	ai_turn2,	 -0.788, NULL,	// frame 5 //dog_bite
 	ai_turn2,	  0.808, NULL,	// frame 6
 	ai_turn2,	 -1.987, NULL,	// frame 7
 };
@@ -116,11 +116,11 @@ mmove_t	dog_move_low_atk = {FRAME_low_atk_01, FRAME_low_atk_08, dog_frames_low_a
 mframe_t	dog_frames_med_atk[] =
 {
 	ai_turn2,	  0.000, NULL,	// frame 0
-	ai_turn2,	 16.169, NULL,	// frame 1
+	ai_turn2,	 16.169, dog_bite,	// frame 1 //NULL
 	ai_turn2,	  6.894, dog_bite,	// frame 2
 	ai_turn2,	  3.803, dog_bite,	// frame 3
-	ai_turn2,	 -4.625, dog_bite,	// frame 4
-	ai_turn2,	  1.215, dog_bite,	// frame 5
+	ai_turn2,	 -4.625, NULL,	// frame 4 //dog_bite
+	ai_turn2,	  1.215, NULL,	// frame 5 //dog_bite
 	ai_turn2,	  0.501, NULL,	// frame 6
 };
 mmove_t	dog_move_med_atk = {FRAME_med_atk_01, FRAME_med_atk_07, dog_frames_med_atk, AI_EndAttack};
@@ -132,11 +132,11 @@ mframe_t	dog_frames_upr_atk[] =
 	NULL,	  0.102, dog_pounce,	// frame 2
 	NULL,	  8.523, dog_pounce,	// frame 3
 	NULL,	 19.589, dog_bite,	// frame 4
-	NULL,	  3.179, dog_pounce,	// frame 5
-	NULL,	 18.590, dog_bite,	// frame 6
-	NULL,	  4.629, dog_pounce,	// frame 7
-	NULL,	 -4.434, dog_bite,	// frame 8
-	NULL,	  3.514, dog_bite,	// frame 9
+	NULL,	  3.179, dog_bite,	// frame 5 //dog_pounce
+	NULL,	 18.590, dog_pounce,	// frame 6 //dog_bite
+	NULL,	  4.629, dog_pounce,	// frame 7 //dog_pounce
+	NULL,	 -4.434, dog_pounce,	// frame 8 //dog_bite
+	NULL,	  3.514, dog_pounce,	// frame 9 //dog_bite
 };
 mmove_t	dog_move_upr_atk = {FRAME_upr_atk_01, FRAME_upr_atk_10, dog_frames_upr_atk, AI_EndAttack};
 
